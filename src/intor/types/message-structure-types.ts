@@ -40,8 +40,7 @@ export type RawLocale<Messages extends LocaleNamespaceMessages> =
 /**
  * Defines which fallback locales should be used for each base locale.
  */
-export type FallbackLocalesMap<Messages extends LocaleNamespaceMessages> =
-  Partial<Record<RawLocale<Messages>, RawLocale<Messages>[]>>;
+export type FallbackLocalesMap = Partial<Record<Locale, Locale[]>>;
 
 // =====================================
 // Helpers

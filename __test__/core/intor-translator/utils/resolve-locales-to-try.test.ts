@@ -21,13 +21,12 @@ describe("resolveLocalesToTry", () => {
   });
 
   it("excludes primary locale if it appears in fallback list", () => {
-    const customFallbackLocales: FallbackLocalesMap<MockLocaleNamespaceMessages> =
-      {
-        "en-US": ["en-US", "fr-FR", "zh-TW"],
-        "fr-FR": ["fr-FR", "en-US"],
-        "zh-TW": ["zh-TW", "en-US"],
-        "ja-JP": ["ja-JP"],
-      };
+    const customFallbackLocales: FallbackLocalesMap = {
+      "en-US": ["en-US", "fr-FR", "zh-TW"],
+      "fr-FR": ["fr-FR", "en-US"],
+      "zh-TW": ["zh-TW", "en-US"],
+      "ja-JP": ["ja-JP"],
+    };
 
     const result = resolveLocalesToTry<MockLocaleNamespaceMessages>(
       "en-US",
@@ -37,13 +36,12 @@ describe("resolveLocalesToTry", () => {
   });
 
   it("returns only primary locale if no fallback is defined", () => {
-    const emptyFallbackLocales: FallbackLocalesMap<MockLocaleNamespaceMessages> =
-      {
-        "en-US": [],
-        "fr-FR": [],
-        "zh-TW": [],
-        "ja-JP": [],
-      };
+    const emptyFallbackLocales: FallbackLocalesMap = {
+      "en-US": [],
+      "fr-FR": [],
+      "zh-TW": [],
+      "ja-JP": [],
+    };
 
     const result = resolveLocalesToTry<MockLocaleNamespaceMessages>(
       "zh-TW",
@@ -55,7 +53,7 @@ describe("resolveLocalesToTry", () => {
   it("handles undefined fallbackLocales safely", () => {
     const result = resolveLocalesToTry<MockLocaleNamespaceMessages>(
       "fr-FR",
-      {} as FallbackLocalesMap<MockLocaleNamespaceMessages>,
+      {} as FallbackLocalesMap,
     );
     expect(result).toEqual(["fr-FR"]);
   });

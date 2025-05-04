@@ -18,7 +18,7 @@ import type {
  */
 export const resolveLocalesToTry = <Messages extends LocaleNamespaceMessages>(
   locale: RawLocale<Messages>,
-  fallbackLocales: FallbackLocalesMap<Messages>,
+  fallbackLocales: FallbackLocalesMap,
 ): RawLocale<Messages>[] => {
   const fallbacks = fallbackLocales[locale] || [];
   return [locale, ...fallbacks.filter((l) => l !== locale)];

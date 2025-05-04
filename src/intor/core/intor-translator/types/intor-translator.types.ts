@@ -14,7 +14,7 @@ import type {
 export type TranslatorOptions<Messages extends LocaleNamespaceMessages> = {
   messages: Readonly<Messages>;
   locale: RawLocale<Messages>;
-  fallbackLocales: FallbackLocalesMap<Messages>;
+  fallbackLocales: FallbackLocalesMap;
   isLoading?: boolean;
   loadingMessage: string;
   placeholder?: string;
