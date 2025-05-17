@@ -1,20 +1,91 @@
 {
   "name": "intor",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "A lightweight and flexible i18n core utility for JavaScript/TypeScript projects. Intor lets you inject custom messages and create your own translation logic, with support for both backend and frontend environments.",
+  "author": "Yiming Liao",
+  "license": "MIT",
+  "homepage": "https://github.com/yiming-liao/intor#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yiming-liao/intor"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "bugs": {
+    "url": "https://github.com/yiming-liao/intor/issues"
+  },
+  "keywords": [
+    "i18n",
+    "internationalization",
+    "translation",
+    "typescript",
+    "node",
+    "nextjs",
+    "react",
+    "translator",
+    "i18n core",
+    "custom messages"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./config": {
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs"
+    },
+    "./translator": {
+      "import": "./dist/translator.js",
+      "require": "./dist/translator.cjs"
+    },
+    "./error": {
+      "import": "./dist/error.js",
+      "require": "./dist/error.cjs"
+    },
+    "./logger": {
+      "import": "./dist/logger.js",
+      "require": "./dist/logger.cjs"
+    },
+    "./messages-loader": {
+      "import": "./dist/messages-loader.js",
+      "require": "./dist/messages-loader.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:coverage": "jest --coverage && open coverage/lcov-report/index.html",
+    "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "p-limit": "^6.2.0"
+  },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-fetch-mock": "^3.0.3",
+    "next": "^15.3.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

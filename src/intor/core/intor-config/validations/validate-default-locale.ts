@@ -1,29 +1,25 @@
-import type { IntorInitConfig } from "@/intor/core/intor-config/types/define-intor-config.types";
-import type { IntorLogger } from "@/intor/core/intor-logger/intor-logger";
-import type {
-  LocaleNamespaceMessages,
-  RawLocale,
-} from "@/intor/types/message-structure-types";
-import { IntorError, IntorErrorCode } from "@/intor/core/intor-error";
+import type { IntorLogger } from "../../../core/intor-logger/intor-logger";
+import type { Locale } from "../../../types/message-structure-types";
+import type { IntorInitConfig } from "../types/define-intor-config-types";
+import { IntorError, IntorErrorCode } from "../../../core/intor-error";
 
-type ValidateDefaultLocaleOptions<Messages extends LocaleNamespaceMessages> = {
+type ValidateDefaultLocaleOptions = {
   config: IntorInitConfig;
-  supportedLocales?: readonly RawLocale<Messages>[];
+  supportedLocales?: readonly Locale[];
   logger: IntorLogger;
 };
 
-export const validateDefaultLocale = <
-  Messages extends LocaleNamespaceMessages,
->({
+export const validateDefaultLocale = ({
   config,
   supportedLocales,
-  logger,
-}: ValidateDefaultLocaleOptions<Messages>) => {
+  logger: baseLogger,
+}: ValidateDefaultLocaleOptions) => {
   const { id, defaultLocale } = config;
+  const logger = baseLogger.child({ prefix: "validateDefaultLocale" });
 
   // Throw error if defaultLocale is undefined
   if (!defaultLocale) {
-    logger.error("The defaultLocale is undefined:", { defaultLocale });
+    void logger.error("The defaultLocale is undefined.", { defaultLocale });
     throw new IntorError({
       id,
       code: IntorErrorCode.MISSING_DEFAULT_LOCALE,
@@ -33,10 +29,13 @@ export const validateDefaultLocale = <
 
   // Throw error if defaultLocale is not listed in supportedLocales
   if (!supportedLocales?.includes(defaultLocale)) {
-    logger.error("The defaultLocale is not included in the supportedLocales:", {
-      defaultLocale,
-      supportedLocales,
-    });
+    void logger.error(
+      "The defaultLocale is not included in the supportedLocales.",
+      {
+        defaultLocale,
+        supportedLocales,
+      },
+    );
     throw new IntorError({
       id,
       code: IntorErrorCode.UNSUPPORTED_DEFAULT_LOCALE,

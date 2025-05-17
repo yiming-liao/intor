@@ -1,0 +1,9 @@
+src/
+__test__/
+*.test.ts
+*.test.tsx
+coverage/
+node_modules/
+tsconfig.json
+jest.config.ts
+yarn.lock

@@ -1,8 +1,5 @@
-import type {
-  LocaleNamespaceMessages,
-  NestedKeyPaths,
-  RawLocale,
-} from "@/intor/types/message-structure-types";
+import type { LocaleNamespaceMessages } from "../../../types/message-structure-types";
+import type { NestedKeyPaths, RawLocale } from "../types/locale-types";
 
 export const getFullKey = <
   Messages extends LocaleNamespaceMessages,

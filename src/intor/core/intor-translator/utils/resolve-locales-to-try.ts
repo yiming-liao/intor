@@ -1,8 +1,8 @@
 import type {
   FallbackLocalesMap,
   LocaleNamespaceMessages,
-  RawLocale,
-} from "@/intor/types/message-structure-types";
+} from "../../../types/message-structure-types";
+import type { RawLocale } from "../types/locale-types";
 
 /**
  * Resolves a prioritized list of locales to try based on the given primary locale.

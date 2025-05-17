@@ -1,15 +1,15 @@
 import type {
   IntorInitConfig,
   IntorResolvedConfig,
-} from "@/intor/core/intor-config/types/define-intor-config.types";
-import { DEFAULT_PREFIX_PLACEHOLDER } from "@/intor/constants/prefix-placeholder.constants";
-import { resolveCookieOptions } from "@/intor/core/intor-config/resolvers/resolve-cookie-options";
-import { resolveFallbackLocales } from "@/intor/core/intor-config/resolvers/resolve-fallback-locales";
-import { resolveRoutingOptions } from "@/intor/core/intor-config/resolvers/resolve-routing-options";
-import { resolveTranslatorOptions } from "@/intor/core/intor-config/resolvers/resolve-translator-options";
-import { validateDefaultLocale } from "@/intor/core/intor-config/validations/validate-default-locale";
-import { validateSupportedLocales } from "@/intor/core/intor-config/validations/validate-supported-locales";
-import { getIntorLogger } from "@/intor/core/intor-logger/get-intor-logger";
+} from "./types/define-intor-config-types";
+import { initializeLogger } from "./initialize-logger";
+import { resolveCookieOptions } from "./resolvers/resolve-cookie-options";
+import { resolveFallbackLocales } from "./resolvers/resolve-fallback-locales";
+import { resolvePrefixPlaceholder } from "./resolvers/resolve-prefix-placeholder";
+import { resolveRoutingOptions } from "./resolvers/resolve-routing-options";
+import { resolveTranslatorOptions } from "./resolvers/resolve-translator-options";
+import { validateDefaultLocale } from "./validations/validate-default-locale";
+import { validateSupportedLocales } from "./validations/validate-supported-locales";
 
 /**
  * Define intor config
@@ -21,9 +21,11 @@ export const defineIntorConfig = (
   const id = config.id || `ID${Math.random().toString(36).slice(2, 6)}`;
 
   // Initialize intorLogger
-  const logger = getIntorLogger(id);
-  logger.setLevel(config.log?.level || "warn");
-  logger.setLogPrefix("defineIntorConfig");
+  const logger = initializeLogger({
+    id,
+    loggerOptions: config.logger,
+    prefix: "defineIntorConfig",
+  });
 
   // Validaters
   const supportedLocales = validateSupportedLocales({ config, logger });
@@ -42,6 +44,9 @@ export const defineIntorConfig = (
   const resolvedTranslatorOptions = resolveTranslatorOptions(config.translator);
   const resolvedCookieOptions = resolveCookieOptions(config.cookie);
   const resolvedRoutingOptions = resolveRoutingOptions(config.routing);
+  const resolvedPrefixPlaceHolder = resolvePrefixPlaceholder(
+    config.prefixPlaceHolder,
+  );
 
   return {
     id,
@@ -54,6 +59,6 @@ export const defineIntorConfig = (
     cookie: resolvedCookieOptions,
     routing: resolvedRoutingOptions,
     adapter: config.adapter || "next-client",
-    prefixPlaceHolder: config.prefixPlaceHolder ?? DEFAULT_PREFIX_PLACEHOLDER,
+    prefixPlaceHolder: resolvedPrefixPlaceHolder,
   };
 };

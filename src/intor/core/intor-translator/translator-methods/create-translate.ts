@@ -1,23 +1,23 @@
 import type {
+  LocaleNamespaceMessages,
+  Replacement,
+  RichReplacement,
+} from "../../../types/message-structure-types";
+import type {
   LocaleRef,
   TranslatorOptions,
-} from "@/intor/core/intor-translator/types/intor-translator.types";
-import type { TranslatorHandlers } from "@/intor/core/intor-translator/types/translator-handlers.types";
-import type {
-  LocaleNamespaceMessages,
-  NestedKeyPaths,
-  RawLocale,
-  Replacement,
-} from "@/intor/types/message-structure-types";
-import { getValueByKey } from "@/intor/core/intor-translator/utils/get-value-by-key";
-import { replaceValues } from "@/intor/core/intor-translator/utils/replace-values";
-import { resolveLocalesToTry } from "@/intor/core/intor-translator/utils/resolve-locales-to-try";
+} from "../types/intor-translator-types";
+import type { NestedKeyPaths, RawLocale } from "../types/locale-types";
+import type { TranslatorHandlers } from "../types/translator-handlers-types";
+import { getValueByKey } from "../utils/get-value-by-key";
+import { replaceValues } from "../utils/replace-values";
+import { resolveLocalesToTry } from "../utils/resolve-locales-to-try";
 
 export type Translate<Messages extends LocaleNamespaceMessages> = <
   Locale extends RawLocale<Messages>,
 >(
   key?: NestedKeyPaths<Messages[Locale]>,
-  replacements?: Replacement,
+  replacements?: Replacement | RichReplacement,
 ) => string;
 
 /**
@@ -37,17 +37,16 @@ export const createTranslate = <Messages extends LocaleNamespaceMessages>(
     debugHandler,
   } = translatorOptions;
 
-  const handlers = translatorOptions.handlers as TranslatorHandlers<
-    string,
-    string,
-    string
-  >; // Assert all generics to string
   const { messageFormatter, loadingMessageHandler, placeholderHandler } =
-    handlers;
+    (translatorOptions.handlers as TranslatorHandlers<
+      string,
+      string,
+      string
+    >) || {};
 
   const t = <Locale extends RawLocale<Messages>>(
     key: NestedKeyPaths<Messages[Locale]> | string = "",
-    replacements?: Replacement,
+    replacements?: Replacement | RichReplacement,
   ): string => {
     // Resolve the locales to try (current locale + fallback locales)
     const localesToTry = resolveLocalesToTry(
@@ -63,7 +62,7 @@ export const createTranslate = <Messages extends LocaleNamespaceMessages>(
         continue;
       }
 
-      const messageCandidate = getValueByKey(localeMessages, key);
+      const messageCandidate = getValueByKey(loc, localeMessages, key);
 
       // If message found, break the loop
       if (typeof messageCandidate === "string") {
@@ -72,25 +71,25 @@ export const createTranslate = <Messages extends LocaleNamespaceMessages>(
       }
     }
 
-    // If no message found, handle accordingly
-    if (!message) {
-      // Check if it's loading dynamic messages
-      if (isLoading) {
-        // Handle loading state with provided handler or fallback message
-        if (loadingMessageHandler) {
-          return loadingMessageHandler({
-            key,
-            locale: localeRef.current as string,
-            replacements,
-          });
-        }
-
-        // Return loadingMessage if provided from defined config
-        if (loadingMessage) {
-          return loadingMessage;
-        }
+    // Check if it's loading dynamic messages
+    if (isLoading) {
+      // Handle loading state with provided handler or fallback message
+      if (loadingMessageHandler) {
+        return loadingMessageHandler({
+          key,
+          locale: localeRef.current as string,
+          replacements,
+        });
       }
 
+      // Return loadingMessage if provided from defined config
+      if (loadingMessage) {
+        return loadingMessage;
+      }
+    }
+
+    // If no message found, handle accordingly
+    if (!message) {
       // Debug
       if (debugHandler) {
         debugHandler(key, localeRef.current);
@@ -114,7 +113,7 @@ export const createTranslate = <Messages extends LocaleNamespaceMessages>(
       return key;
     }
 
-    // If a message is found, apply message formatter or replace values
+    // If a message is found, apply message formatter or replace values (Rich replacement)
     if (messageFormatter) {
       return messageFormatter({
         message,
@@ -122,10 +121,12 @@ export const createTranslate = <Messages extends LocaleNamespaceMessages>(
         locale: localeRef.current as string,
         replacements,
       });
+    } else {
+      // Apply replacements if provided (Basic replacement)
+      return replacements
+        ? replaceValues(message, replacements as Replacement)
+        : message;
     }
-
-    // Apply replacements if provided
-    return replacements ? replaceValues(message, replacements) : message;
   };
 
   return t;

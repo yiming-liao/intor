@@ -1,12 +1,10 @@
-import type { IntorInitConfig } from "@/intor/core/intor-config/types/define-intor-config.types";
-import type { IntorLogger } from "@/intor/core/intor-logger/intor-logger";
-import { validateSupportedLocales } from "@/intor/core/intor-config/validations/validate-supported-locales";
-import { IntorError } from "@/intor/core/intor-error";
+import type { IntorInitConfig } from "../../../../src/intor/core/intor-config/types/define-intor-config-types";
+import { mockIntorLogger } from "../../../mock/mock-intor-logger";
+import { validateSupportedLocales } from "../../../../src/intor/core/intor-config/validations/validate-supported-locales";
+import { IntorError } from "../../../../src/intor/core/intor-error";
 
 describe("validateSupportedLocales", () => {
-  const mockLogger = {
-    error: jest.fn(),
-  };
+  const { mockLogError, mockLogger } = mockIntorLogger();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -19,7 +17,7 @@ describe("validateSupportedLocales", () => {
     } as unknown as IntorInitConfig;
     const result = validateSupportedLocales({
       config,
-      logger: mockLogger as unknown as IntorLogger,
+      logger: mockLogger,
     });
     expect(result).toEqual(["en", "fr"]);
   });
@@ -34,7 +32,7 @@ describe("validateSupportedLocales", () => {
     } as unknown as IntorInitConfig;
     const result = validateSupportedLocales({
       config,
-      logger: mockLogger as unknown as IntorLogger,
+      logger: mockLogger,
     });
     expect(result).toEqual(["en", "fr"]);
   });
@@ -48,10 +46,10 @@ describe("validateSupportedLocales", () => {
     expect(() =>
       validateSupportedLocales({
         config: config as IntorInitConfig,
-        logger: mockLogger as unknown as IntorLogger,
+        logger: mockLogger,
       }),
     ).toThrow(IntorError);
-    expect(mockLogger.error).toHaveBeenCalled();
+    expect(mockLogError).toHaveBeenCalled();
   });
 
   it("returns empty array when no supportedLocales or messages are provided", () => {
@@ -60,7 +58,7 @@ describe("validateSupportedLocales", () => {
     } as unknown as IntorInitConfig;
     const result = validateSupportedLocales({
       config,
-      logger: mockLogger as unknown as IntorLogger,
+      logger: mockLogger,
     });
     expect(result).toEqual([]);
   });

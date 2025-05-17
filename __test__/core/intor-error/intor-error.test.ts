@@ -1,4 +1,7 @@
-import { IntorError, IntorErrorCode } from "@/intor/core/intor-error";
+import {
+  IntorError,
+  IntorErrorCode,
+} from "../../../src/intor/core/intor-error";
 
 describe("IntorError", () => {
   it("should create an error with message and name", () => {
@@ -29,5 +32,31 @@ describe("IntorError", () => {
     const error = new IntorError({ message: "Test" });
     expect(error instanceof IntorError).toBe(true);
     expect(error instanceof Error).toBe(true);
+  });
+
+  it("should not include id in the message if id is undefined", () => {
+    const error = new IntorError({
+      message: "Fallback message only",
+      id: undefined,
+    });
+    expect(error.message).toBe("Fallback message only");
+    expect(error.id).toBeUndefined();
+  });
+
+  it("should not include id in the message if id is undefined", () => {
+    const error = new IntorError({
+      message: "Fallback message only",
+      id: undefined,
+    });
+    expect(error.message).toBe("Fallback message only");
+    expect(error.id).toBeUndefined();
+  });
+
+  it("should not include id in the message if id is not provided", () => {
+    const error = new IntorError({
+      message: "Missing required locale",
+    });
+    expect(error.message).toBe("Missing required locale");
+    expect(error.id).toBeUndefined();
   });
 });

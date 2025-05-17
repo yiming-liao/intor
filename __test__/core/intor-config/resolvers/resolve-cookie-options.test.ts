@@ -1,5 +1,5 @@
-import { DEFAULT_COOKIE_OPTIONS } from "@/intor/constants/cookie-options.constants";
-import { resolveCookieOptions } from "@/intor/core/intor-config/resolvers/resolve-cookie-options";
+import { DEFAULT_COOKIE_OPTIONS } from "../../../../src/intor/constants/cookie-options-constants";
+import { resolveCookieOptions } from "../../../../src/intor/core/intor-config/resolvers/resolve-cookie-options";
 
 describe("resolveCookieOptions", () => {
   it("should return default options when cookie is undefined", () => {

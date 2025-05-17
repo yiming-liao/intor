@@ -7,6 +7,18 @@ export type Namespace = string;
 export type Message = string;
 export type Replacement = { [key: string]: string | number | Replacement };
 
+// Rich types replacement, support formatJS
+export type RichPrimitive = string | number | boolean | Date;
+export type RichSerializable = { toString(): string };
+export type RichFormatterFunction = (chunks: string) => unknown;
+export type ReplacementValue =
+  | RichPrimitive
+  | RichSerializable
+  | RichFormatterFunction
+  | null
+  | undefined;
+export type RichReplacement = { [key: string]: ReplacementValue | Replacement };
+
 // =====================================
 // Locale and Message Types
 // =====================================
@@ -32,28 +44,6 @@ export type NamespaceMessages = Record<Namespace, NestedMessage>;
 export type LocaleNamespaceMessages = Record<Locale, NamespaceMessages>;
 
 /**
- * Locale keys extracted from message map.
- */
-export type RawLocale<Messages extends LocaleNamespaceMessages> =
-  keyof Messages & string;
-
-/**
  * Defines which fallback locales should be used for each base locale.
  */
 export type FallbackLocalesMap = Partial<Record<Locale, Locale[]>>;
-
-// =====================================
-// Helpers
-// =====================================
-
-/**
- * All possible nested key paths of an object.
- * Example: "a", "a.b", "a.b.c"
- */
-export type NestedKeyPaths<Messages> = Messages extends object
-  ? {
-      [Key in keyof Messages]:
-        | `${Key & string}`
-        | `${Key & string}.${NestedKeyPaths<Messages[Key]>}`;
-    }[keyof Messages]
-  : never;

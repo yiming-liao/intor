@@ -1,14 +1,11 @@
+import type { LocaleNamespaceMessages } from "../../../types/message-structure-types";
 import type {
   LocaleRef,
   TranslatorOptions,
-} from "@/intor/core/intor-translator/types/intor-translator.types";
-import type {
-  LocaleNamespaceMessages,
-  NestedKeyPaths,
-  RawLocale,
-} from "@/intor/types/message-structure-types";
-import { getValueByKey } from "@/intor/core/intor-translator/utils/get-value-by-key";
-import { resolveLocalesToTry } from "@/intor/core/intor-translator/utils/resolve-locales-to-try";
+} from "../types/intor-translator-types";
+import type { NestedKeyPaths, RawLocale } from "../types/locale-types";
+import { getValueByKey } from "../utils/get-value-by-key";
+import { resolveLocalesToTry } from "../utils/resolve-locales-to-try";
 
 export type HasKey<Messages extends LocaleNamespaceMessages> = <
   Locale extends RawLocale<Messages>,
@@ -40,7 +37,7 @@ export const createHasKey = <Messages extends LocaleNamespaceMessages>(
         continue;
       }
 
-      const messageCandidate = getValueByKey(localeMessages, key);
+      const messageCandidate = getValueByKey(loc, localeMessages, key);
 
       if (typeof messageCandidate === "string") {
         return true;

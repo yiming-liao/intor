@@ -5,8 +5,8 @@ const config: Config = {
   preset: "ts-jest",
 
   coverageProvider: "v8",
-  // testEnvironment: "jsdom",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
+  // testEnvironment: "node",
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {

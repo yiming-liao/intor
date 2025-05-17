@@ -1,6 +1,6 @@
-import type { InitRoutingOptions } from "@/intor/core/intor-config/types/routing-options.types";
-import { DEFAULT_ROUTING_OPTIONS } from "@/intor/constants/routing-options.constants";
-import { resolveRoutingOptions } from "@/intor/core/intor-config/resolvers/resolve-routing-options";
+import type { InitRoutingOptions } from "../../../../src/intor/core/intor-config/types/routing-options-types";
+import { DEFAULT_ROUTING_OPTIONS } from "../../../../src/intor/constants/routing-options-constants";
+import { resolveRoutingOptions } from "../../../../src/intor/core/intor-config/resolvers/resolve-routing-options";
 
 describe("resolveRoutingOptions", () => {
   it("should return default routing options if no input is provided", () => {
@@ -23,6 +23,7 @@ describe("resolveRoutingOptions", () => {
         ...DEFAULT_ROUTING_OPTIONS.firstVisit,
         ...custom.firstVisit,
       },
+      basePath: "/",
     });
   });
 });

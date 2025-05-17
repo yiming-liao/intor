@@ -1,9 +1,9 @@
-import type { IntorInitConfig } from "@/intor/core/intor-config/types/define-intor-config.types";
-import type { IntorLogger } from "@/intor/core/intor-logger/intor-logger";
+import type { IntorLogger } from "../../../core/intor-logger/intor-logger";
 import type {
   Locale,
   FallbackLocalesMap,
-} from "@/intor/types/message-structure-types";
+} from "../../../types/message-structure-types";
+import type { IntorInitConfig } from "../types/define-intor-config-types";
 
 type Params = {
   config: IntorInitConfig;
@@ -14,9 +14,10 @@ type Params = {
 export const resolveFallbackLocales = ({
   config,
   supportedLocales,
-  logger,
+  logger: baseLogger,
 }: Params): FallbackLocalesMap => {
   const { defaultLocale, fallbackLocales } = config;
+  const logger = baseLogger.child({ prefix: "resolveFallbackLocales" });
 
   if (!fallbackLocales || typeof fallbackLocales !== "object") {
     return {};
@@ -56,7 +57,7 @@ export const resolveFallbackLocales = ({
 
   // Log out invalid fallback locales
   for (const [locale, invalids] of invalidFallbackMap.entries()) {
-    logger.warn(
+    void logger.warn(
       `Invalid fallback locales for "${locale}": ${invalids.join(", ")}`,
     );
   }

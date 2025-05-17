@@ -1,29 +1,29 @@
-import type { IntorLogger } from "@/intor/core/intor-logger/intor-logger";
-import { resolveFallbackLocales } from "@/intor/core/intor-config/resolvers/resolve-fallback-locales";
-
-const mockLogger = () => {
-  return {
-    warn: jest.fn(),
-  } as unknown as IntorLogger;
-};
+import { mockIntorLogger } from "../../../mock/mock-intor-logger";
+import { resolveFallbackLocales } from "../../../../src/intor/core/intor-config/resolvers/resolve-fallback-locales";
 
 describe("resolveFallbackLocales", () => {
+  const { mockLogWarn, mockLogger } = mockIntorLogger();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   const supportedLocales = ["en", "zh", "fr"] as const;
 
   it("should return empty object if fallbackLocales is undefined", () => {
-    const logger = mockLogger();
     const result = resolveFallbackLocales({
       config: { defaultLocale: "en" },
       supportedLocales,
-      logger,
+      logger: mockLogger,
     });
 
     expect(result).toEqual({});
-    expect(logger.warn).not.toHaveBeenCalled();
+    expect(mockLogger.child).toHaveBeenCalledWith({
+      prefix: "resolveFallbackLocales",
+    });
   });
 
   it("should filter valid fallback locales", () => {
-    const logger = mockLogger();
     const result = resolveFallbackLocales({
       config: {
         defaultLocale: "en",
@@ -33,7 +33,7 @@ describe("resolveFallbackLocales", () => {
         },
       },
       supportedLocales,
-      logger,
+      logger: mockLogger,
     });
 
     expect(result).toEqual({
@@ -41,13 +41,12 @@ describe("resolveFallbackLocales", () => {
       fr: ["zh"],
     });
 
-    expect(logger.warn).toHaveBeenCalledWith(
+    expect(mockLogWarn).toHaveBeenCalledWith(
       'Invalid fallback locales for "fr": nonexistent',
     );
   });
 
   it("should handle fallback pointing to defaultLocale", () => {
-    const logger = mockLogger();
     const result = resolveFallbackLocales({
       config: {
         defaultLocale: "en",
@@ -56,18 +55,17 @@ describe("resolveFallbackLocales", () => {
         },
       },
       supportedLocales,
-      logger,
+      logger: mockLogger,
     });
 
     expect(result).toEqual({
       fr: ["en"],
     });
 
-    expect(logger.warn).not.toHaveBeenCalled();
+    expect(mockLogWarn).not.toHaveBeenCalled();
   });
 
   it("should skip non-array fallback entries", () => {
-    const logger = mockLogger();
     const result = resolveFallbackLocales({
       config: {
         defaultLocale: "en",
@@ -76,25 +74,24 @@ describe("resolveFallbackLocales", () => {
         },
       },
       supportedLocales,
-      logger,
+      logger: mockLogger,
     });
 
     expect(result).toEqual({});
-    expect(logger.warn).not.toHaveBeenCalled();
+    expect(mockLogWarn).not.toHaveBeenCalled();
   });
 
   it("should return empty object if fallbackLocales is not an object", () => {
-    const logger = mockLogger();
     const result = resolveFallbackLocales({
       config: {
         defaultLocale: "en",
         fallbackLocales: null as unknown as Partial<Record<string, string[]>>,
       },
       supportedLocales,
-      logger,
+      logger: mockLogger,
     });
 
     expect(result).toEqual({});
-    expect(logger.warn).not.toHaveBeenCalled();
+    expect(mockLogWarn).not.toHaveBeenCalled();
   });
 });

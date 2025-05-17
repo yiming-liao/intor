@@ -1,6 +1,6 @@
-import type { InitTranslatorOptions } from "@/intor/core/intor-config/types/translator-options.types";
-import { DEFAULT_TRANSLATOR_OPTIONS } from "@/intor/constants/translator-options.constants";
-import { resolveTranslatorOptions } from "@/intor/core/intor-config/resolvers/resolve-translator-options";
+import type { InitTranslatorOptions } from "../../../../src/intor/core/intor-config/types/translator-options-types";
+import { DEFAULT_TRANSLATOR_OPTIONS } from "../../../../src/intor/constants/translator-options-constants";
+import { resolveTranslatorOptions } from "../../../../src/intor/core/intor-config/resolvers/resolve-translator-options";
 
 describe("resolveTranslatorOptions", () => {
   it("should return default translator options if no input is provided", () => {

@@ -1,14 +1,14 @@
 import type {
   Translator,
   TranslatorOptions,
-} from "@/intor/core/intor-translator/types/intor-translator.types";
-import type { LocaleNamespaceMessages } from "@/intor/types/message-structure-types";
-import { createGetLocale } from "@/intor/core/intor-translator/translator-methods/create-get-locale";
-import { createGetMessages } from "@/intor/core/intor-translator/translator-methods/create-get-messages";
-import { createHasKey } from "@/intor/core/intor-translator/translator-methods/create-has-key";
-import { createScoped } from "@/intor/core/intor-translator/translator-methods/create-scoped";
-import { createSetLocale } from "@/intor/core/intor-translator/translator-methods/create-set-locale";
-import { createTranslate } from "@/intor/core/intor-translator/translator-methods/create-translate";
+} from "./types/intor-translator-types";
+import type { LocaleNamespaceMessages } from "../../types/message-structure-types";
+import { createGetLocale } from "./translator-methods/create-get-locale";
+import { createGetMessages } from "./translator-methods/create-get-messages";
+import { createHasKey } from "./translator-methods/create-has-key";
+import { createScoped } from "./translator-methods/create-scoped";
+import { createSetLocale } from "./translator-methods/create-set-locale";
+import { createTranslate } from "./translator-methods/create-translate";
 
 /**
  * Factory function to create an translator instance

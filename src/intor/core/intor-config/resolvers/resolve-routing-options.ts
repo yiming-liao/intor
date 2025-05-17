@@ -1,10 +1,9 @@
 import type {
   InitRoutingOptions,
   ResolvedRoutingOptions,
-} from "@/intor/core/intor-config/types/routing-options.types";
-import { DEFAULT_ROUTING_OPTIONS } from "@/intor/constants/routing-options.constants";
-import { EMPTY_OBJECT } from "@/intor/constants/shared.constants";
-import { normalizePathname } from "@/intor/core/utils/pathname/normalize-pathname";
+} from "../types/routing-options-types";
+import { DEFAULT_ROUTING_OPTIONS } from "../../../constants/routing-options-constants";
+import { normalizePathname } from "../../../core/utils/pathname/normalize-pathname";
 
 /**
  * Resolves routing options by merging default routing options with the provided custom options.
@@ -18,17 +17,15 @@ import { normalizePathname } from "@/intor/core/utils/pathname/normalize-pathnam
  *   This includes the normalized `basePath` and any customized `firstVisit` settings.
  */
 export const resolveRoutingOptions = (
-  routing: InitRoutingOptions = EMPTY_OBJECT,
+  routing: InitRoutingOptions = {},
 ): ResolvedRoutingOptions => {
   return {
     ...DEFAULT_ROUTING_OPTIONS,
     ...routing,
     firstVisit: {
       ...DEFAULT_ROUTING_OPTIONS.firstVisit,
-      ...(routing.firstVisit || EMPTY_OBJECT),
+      ...(routing.firstVisit || {}),
     },
-    basePath: routing?.basePath
-      ? normalizePathname(routing?.basePath ?? "") // Normalize the basePath if provided
-      : "", // If no basePath, default to an empty string
+    basePath: normalizePathname(routing?.basePath || ""),
   };
 };

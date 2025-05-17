@@ -1,21 +1,33 @@
-import { messageKeyCache } from "@/intor/core/intor-translator/cache/message-key-cache";
+import type {
+  Locale,
+  NamespaceMessages,
+} from "../../../types/message-structure-types";
+import { getMessageKeyCache } from "../../intor-cache";
 
 /**
  * Get value by key
  */
 export const getValueByKey = (
-  messages: unknown,
+  locale: Locale,
+  messages: NamespaceMessages,
   key: string,
-  useCache = true,
+  useCache: boolean = true,
 ): unknown => {
+  const cache = getMessageKeyCache();
+  useCache = Boolean(useCache && cache);
+
   const cacheKey = `${key}`;
 
-  // If useCache is true and cache exists
-  if (useCache && messageKeyCache?.has(cacheKey)) {
-    return messageKeyCache?.get(cacheKey);
+  const currentLocale = cache?.get("locale");
+  if (currentLocale !== locale) {
+    cache?.clear();
+    cache?.set("locale", locale);
   }
 
-  // Find value by key path
+  if (useCache && cache?.has(cacheKey)) {
+    return cache?.get(cacheKey);
+  }
+
   const value = key.split(".").reduce<unknown>((acc, key) => {
     if (acc && typeof acc === "object" && key in acc) {
       return (acc as Record<string, unknown>)[key];
@@ -23,9 +35,8 @@ export const getValueByKey = (
     return undefined;
   }, messages);
 
-  // Cache the result if useCache is true
   if (useCache && value !== undefined) {
-    messageKeyCache?.set(cacheKey, value);
+    cache?.set(cacheKey, value);
   }
 
   return value;

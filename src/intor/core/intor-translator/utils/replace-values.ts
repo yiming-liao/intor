@@ -1,4 +1,4 @@
-import type { Replacement } from "@/intor/types/message-structure-types";
+import type { Replacement } from "../../../types/message-structure-types";
 
 export const replaceValues = (
   message: string,

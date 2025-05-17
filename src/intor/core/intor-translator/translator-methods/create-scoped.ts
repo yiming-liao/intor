@@ -1,18 +1,18 @@
-import type { HasKey } from "@/intor/core/intor-translator/translator-methods/create-has-key";
-import type { Translate } from "@/intor/core/intor-translator/translator-methods/create-translate";
+import type {
+  LocaleNamespaceMessages,
+  Replacement,
+  RichReplacement,
+} from "../../../types/message-structure-types";
+import type { HasKey } from "../translator-methods/create-has-key";
+import type { Translate } from "../translator-methods/create-translate";
 import type {
   LocaleRef,
   TranslatorOptions,
-} from "@/intor/core/intor-translator/types/intor-translator.types";
-import type {
-  LocaleNamespaceMessages,
-  NestedKeyPaths,
-  RawLocale,
-  Replacement,
-} from "@/intor/types/message-structure-types";
-import { createHasKey } from "@/intor/core/intor-translator/translator-methods/create-has-key";
-import { createTranslate } from "@/intor/core/intor-translator/translator-methods/create-translate";
-import { getFullKey } from "@/intor/core/intor-translator/utils/get-full-key";
+} from "../types/intor-translator-types";
+import type { NestedKeyPaths, RawLocale } from "../types/locale-types";
+import { createHasKey } from "../translator-methods/create-has-key";
+import { createTranslate } from "../translator-methods/create-translate";
+import { getFullKey } from "../utils/get-full-key";
 
 export type Scoped<Messages extends LocaleNamespaceMessages> = <
   Locale extends RawLocale<Messages>,
@@ -37,7 +37,7 @@ export const createScoped = <Messages extends LocaleNamespaceMessages>(
       // t (Scoped)
       t: (
         key?: NestedKeyPaths<Messages[Locale]>,
-        replacements?: Replacement,
+        replacements?: Replacement | RichReplacement,
       ): string => {
         const fullKey = getFullKey(preKey, key);
         return t(fullKey, replacements);
@@ -50,7 +50,7 @@ export const createScoped = <Messages extends LocaleNamespaceMessages>(
       ): boolean => {
         const fullKey = getFullKey(preKey, key);
         return hasKey(
-          fullKey as unknown as NestedKeyPaths<Messages[Locale]>, // Asert to fix the type
+          fullKey as unknown as NestedKeyPaths<Messages[Locale]>,
           locale,
         );
       },

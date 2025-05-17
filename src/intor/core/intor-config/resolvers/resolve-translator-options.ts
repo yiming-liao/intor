@@ -1,9 +1,8 @@
 import type {
   InitTranslatorOptions,
   ResolvedTranslatorOptions,
-} from "@/intor/core/intor-config/types/translator-options.types";
-import { EMPTY_OBJECT } from "@/intor/constants/shared.constants";
-import { DEFAULT_TRANSLATOR_OPTIONS } from "@/intor/constants/translator-options.constants";
+} from "../types/translator-options-types";
+import { DEFAULT_TRANSLATOR_OPTIONS } from "../../../constants/translator-options-constants";
 
 /**
  * Resolves translator options by merging the default translator options with the provided custom options.
@@ -17,7 +16,7 @@ import { DEFAULT_TRANSLATOR_OPTIONS } from "@/intor/constants/translator-options
  *   This includes all options required to configure the translator, with defaults applied where necessary.
  */
 export const resolveTranslatorOptions = (
-  translator: InitTranslatorOptions = EMPTY_OBJECT,
+  translator: InitTranslatorOptions = {},
 ): ResolvedTranslatorOptions => {
   return {
     ...DEFAULT_TRANSLATOR_OPTIONS,

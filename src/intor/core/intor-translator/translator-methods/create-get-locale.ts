@@ -1,8 +1,6 @@
-import type { LocaleRef } from "@/intor/core/intor-translator/types/intor-translator.types";
-import type {
-  LocaleNamespaceMessages,
-  RawLocale,
-} from "@/intor/types/message-structure-types";
+import type { LocaleNamespaceMessages } from "../../../types/message-structure-types";
+import type { LocaleRef } from "../types/intor-translator-types";
+import type { RawLocale } from "../types/locale-types";
 
 export type GetLocale<Messages extends LocaleNamespaceMessages> =
   () => RawLocale<Messages>;

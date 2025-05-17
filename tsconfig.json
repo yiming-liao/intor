@@ -5,12 +5,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "strict": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "@/*": ["./src/*"],
-      "test/*": ["./__test__/*"]
-    }
+    "resolveJsonModule": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "__test__", "coverage", "**/*.test.ts"]
 }

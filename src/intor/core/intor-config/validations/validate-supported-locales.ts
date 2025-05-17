@@ -1,6 +1,6 @@
-import type { IntorInitConfig } from "@/intor/core/intor-config/types/define-intor-config.types";
-import type { IntorLogger } from "@/intor/core/intor-logger/intor-logger";
-import { IntorError, IntorErrorCode } from "@/intor/core/intor-error";
+import type { IntorLogger } from "../../../core/intor-logger/intor-logger";
+import type { IntorInitConfig } from "../types/define-intor-config-types";
+import { IntorError, IntorErrorCode } from "../../../core/intor-error";
 
 type ValidateSupportedLocalesOptions = {
   config: IntorInitConfig;
@@ -14,17 +14,16 @@ type ValidateSupportedLocalesOptions = {
  */
 export const validateSupportedLocales = ({
   config,
-  logger,
+  logger: baseLogger,
 }: ValidateSupportedLocalesOptions): readonly string[] => {
   const { id, loaderOptions, supportedLocales } = config;
+  const logger = baseLogger.child({ prefix: "validateSupportedLocales" });
 
   // Ensure supportedLocales is set when using loaderOptions
   if (loaderOptions && !supportedLocales) {
-    logger.error(
-      "supportedLocales is required when using loaderOptions, but it is missing:",
-      {
-        supportedLocales: supportedLocales,
-      },
+    void logger.error(
+      "supportedLocales is required when using loaderOptions, but it is missing.",
+      { supportedLocales },
     );
     throw new IntorError({
       id,

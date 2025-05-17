@@ -1,115 +1,92 @@
-export type LogLevel = "silent" | "error" | "warn" | "info" | "debug";
+import type { LogLevel } from "./intor-logger-types";
+import type { LogMeta } from "./write-log";
+import type { WriteLogOptions } from "./write-log/weite-log-types";
+import { LOG_LEVEL_PRIORITY } from "./intor-logger-constants";
+import { IntorLoggerCore } from "./intor-logger-core/intor-logger-core";
+import { writeLog } from "./write-log/write-log";
 
-const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
-  silent: 0,
-  error: 1,
-  warn: 2,
-  info: 3,
-  debug: 4,
-};
-
-const LEVEL_COLOR_CODE: Record<LogLevel, string> = {
-  silent: "8",
-  error: "9",
-  warn: "214",
-  info: "34",
-  debug: "33",
+type LogOptions = {
+  prefix?: string;
+  writeLogOptions?: WriteLogOptions;
 };
 
 /**
- * Minimal logger with level, id, and prefix.
+ * A logger class that handles logging at different levels and supports child loggers.
+ * It also ensures that logs are written only if they meet the required level priority.
  */
 export class IntorLogger {
-  private level: LogLevel;
-  private id: string;
-  private prefix: string;
+  private readonly level: LogLevel;
+  private readonly prefix?: string;
+  private readonly writeLogOptions?: WriteLogOptions;
 
-  /**
-   * Create a logger.
-   * @param level Log level (default: "warn")
-   * @param id Logger ID (default: "undefined")
-   * @param prefix Optional prefix, usually set as the file name.
-   */
-  constructor(level: LogLevel = "warn", id = "undefined", prefix = "") {
-    this.level = level;
-    this.id = id;
+  constructor(
+    private readonly core: IntorLoggerCore,
+    level?: LogLevel,
+    prefix?: string,
+    writeLogOptions?: WriteLogOptions,
+  ) {
+    this.level = level ?? core.level;
     this.prefix = prefix;
+    this.writeLogOptions = writeLogOptions;
   }
 
-  /** Set logger ID. */
-  setId(id: string) {
-    this.id = id;
-  }
-
-  /** Set log prefix. */
-  setLogPrefix(prefix: string) {
-    this.prefix = prefix;
-  }
-
-  /** Get current log level. */
-  getLevel(): LogLevel {
-    return this.level;
-  }
-
-  /** Set log level. */
-  setLevel(level: LogLevel): void {
-    this.level = level;
-  }
-
-  /** Check if message should be logged. */
   private shouldLog(level: LogLevel): boolean {
     return LOG_LEVEL_PRIORITY[level] <= LOG_LEVEL_PRIORITY[this.level];
   }
 
-  /**
-   * Log a message.
-   * @param level Log level
-   * @param message Text message
-   * @param meta Optional meta data
-   */
-  log(level: LogLevel, message: string, meta?: unknown): void {
-    if (!this.shouldLog(level)) {
-      return;
+  private createLogger(
+    level: LogLevel,
+    prefix?: string,
+    writeLogOptions?: WriteLogOptions,
+  ): IntorLogger {
+    return new IntorLogger(this.core, level, prefix, writeLogOptions);
+  }
+
+  child(params?: {
+    level?: LogLevel;
+    prefix?: string;
+    writeLogOptions?: WriteLogOptions;
+  }): IntorLogger {
+    const {
+      level = this.level,
+      prefix = this.prefix,
+      writeLogOptions = this.writeLogOptions,
+    } = params || {};
+
+    return this.createLogger(level, prefix, writeLogOptions);
+  }
+
+  async log(
+    level: LogLevel,
+    message: string,
+    meta?: LogMeta,
+    options?: LogOptions,
+  ) {
+    IntorLoggerCore.assertValidLevel(level);
+    if (this.shouldLog(level)) {
+      await writeLog({
+        level,
+        id: this.core.id,
+        prefix: options?.prefix || this.prefix,
+        message,
+        meta,
+        writeLogOptions: {
+          ...this.core.writeLogOptions,
+          ...this.writeLogOptions,
+          ...options?.writeLogOptions,
+        },
+      });
     }
-
-    const timestamp = new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-
-    const levelTag = `[${level.toUpperCase()}]`;
-    const idTag = `[${this.id}]`;
-    const prefixTag = this.prefix ? `[${this.prefix}] ` : "";
-    const colorCode = LEVEL_COLOR_CODE[level];
-
-    const formatted =
-      `[${timestamp}] ` +
-      `\x1b[38;5;${colorCode}m${levelTag}\x1b[0m ` +
-      `\x1b[38;5;245m${idTag}\x1b[0m ` +
-      `${prefixTag}${message}`;
-
-    console.log(formatted, ...(meta !== undefined ? [meta] : []));
   }
 
-  /** Debug log. */
-  debug(message: string, meta?: unknown) {
-    this.log("debug", message, meta);
+  private logWithLevel(level: LogLevel) {
+    return async (msg: string, meta?: LogMeta, options?: LogOptions) => {
+      await this.log(level, msg, meta, options);
+    };
   }
 
-  /** Info log. */
-  info(message: string, meta?: unknown) {
-    this.log("info", message, meta);
-  }
-
-  /** Warn log. */
-  warn(message: string, meta?: unknown) {
-    this.log("warn", message, meta);
-  }
-
-  /** Error log. */
-  error(message: string, meta?: unknown) {
-    this.log("error", message, meta);
-  }
+  debug = this.logWithLevel("debug");
+  info = this.logWithLevel("info");
+  warn = this.logWithLevel("warn");
+  error = this.logWithLevel("error");
 }

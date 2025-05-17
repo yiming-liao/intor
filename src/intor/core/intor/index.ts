@@ -1,0 +1,1 @@
+export { intor } from "./intor";

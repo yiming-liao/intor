@@ -1,9 +1,8 @@
 import type {
   InitCookieOptions,
   ResolvedCookieOptions,
-} from "@/intor/core/intor-config/types/cookie-options.types";
-import { DEFAULT_COOKIE_OPTIONS } from "@/intor/constants/cookie-options.constants";
-import { EMPTY_OBJECT } from "@/intor/constants/shared.constants";
+} from "../types/cookie-options-types";
+import { DEFAULT_COOKIE_OPTIONS } from "../../../constants/cookie-options-constants";
 
 /**
  * Resolves the final cookie options by merging the provided options with the default ones.
@@ -15,7 +14,7 @@ import { EMPTY_OBJECT } from "@/intor/constants/shared.constants";
  * @returns The resolved cookie options, merging the defaults and the provided options.
  */
 export const resolveCookieOptions = (
-  cookie: InitCookieOptions = EMPTY_OBJECT,
+  cookie: InitCookieOptions = {},
 ): ResolvedCookieOptions => {
   return {
     ...DEFAULT_COOKIE_OPTIONS,
