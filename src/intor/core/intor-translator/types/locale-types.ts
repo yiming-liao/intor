@@ -17,3 +17,8 @@ export type NestedKeyPaths<Messages> = Messages extends object
         | `${Key & string}.${NestedKeyPaths<Messages[Key]>}`;
     }[keyof Messages]
   : never;
+
+// Ref of current locale
+export type LocaleRef<Messages extends LocaleNamespaceMessages> = {
+  current: RawLocale<Messages>;
+};

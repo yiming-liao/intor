@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import type { LocaleNamespaceMessages } from "../../../../src/intor/types/message-structure-types";
 import { fetchFallbackMessages } from "../../../../src/intor/core/intor-messages-loader/fetch-api-messages/fetch-fallback-messages";
 import { fetcher } from "../../../../src/intor/core/intor-messages-loader/fetch-api-messages/fetcher";

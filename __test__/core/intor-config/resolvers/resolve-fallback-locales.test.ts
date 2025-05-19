@@ -1,5 +1,5 @@
-import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 import { resolveFallbackLocales } from "../../../../src/intor/core/intor-config/resolvers/resolve-fallback-locales";
+import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 
 describe("resolveFallbackLocales", () => {
   const { mockLogWarn, mockLogger } = mockIntorLogger();

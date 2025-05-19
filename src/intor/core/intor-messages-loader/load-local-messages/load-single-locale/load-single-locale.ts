@@ -7,8 +7,8 @@ import type {
 import type pLimit from "p-limit";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { prepareNamespaceGroups } from "../prepare-namespace-groups";
 import { loadNamespaceGroup } from "../load-namespace-group";
+import { prepareNamespaceGroups } from "../prepare-namespace-groups";
 
 type LoadSingleLocaleOptions = {
   basePath: string;

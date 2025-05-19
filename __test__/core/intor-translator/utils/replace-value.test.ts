@@ -1,5 +1,5 @@
-import { mockMessage } from "../../../mock/mock-messages";
 import { replaceValues } from "../../../../src/intor/core/intor-translator/utils/replace-values";
+import { mockMessage } from "../../../mock/mock-messages";
 
 describe("replaceValues", () => {
   it("should return the same message if params is not provided", () => {

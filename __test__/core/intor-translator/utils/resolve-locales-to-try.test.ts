@@ -1,7 +1,7 @@
 import type { FallbackLocalesMap } from "../../../../src/intor/types/message-structure-types";
 import type { MockLocaleNamespaceMessages } from "../../../mock/mock-locale-namespace-messages";
-import { mockFallbackLocales } from "../../../mock/mock-fallback-locales";
 import { resolveLocalesToTry } from "../../../../src/intor/core/intor-translator/utils/resolve-locales-to-try";
+import { mockFallbackLocales } from "../../../mock/mock-fallback-locales";
 
 describe("resolveLocalesToTry", () => {
   it("returns primary locale first without fallback", () => {

@@ -13,18 +13,14 @@ export const readMessageRecordFile = async <T extends MessageRecord>(
   filePath: string,
 ): Promise<{ fileName: string; content: T }> => {
   const fileName = path.basename(filePath, ".json");
-  try {
-    const content = await fs.readFile(filePath, "utf-8");
+  const content = await fs.readFile(filePath, "utf-8");
 
-    const parsed = JSON.parse(content);
+  const parsed = JSON.parse(content);
 
-    // Not a MessageObject, throw error
-    if (typeof parsed !== "object" || parsed === null) {
-      throw new Error(`Invalid message format`);
-    }
-
-    return { fileName, content: parsed as T };
-  } catch (error) {
-    throw error;
+  // Not a MessageObject, throw error
+  if (typeof parsed !== "object" || parsed === null) {
+    throw new Error(`Invalid message format`);
   }
+
+  return { fileName, content: parsed as T };
 };

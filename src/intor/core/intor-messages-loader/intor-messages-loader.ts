@@ -1,9 +1,9 @@
+import type { LocaleNamespaceMessages } from "../../types/message-structure-types";
 import type { LoaderOptions } from "../intor-config/types/loader-options-types";
 import type {
   IntorMessagesOptions,
   IntorMessagesResult,
 } from "../intor-messages-loader/intor-messages-loader-types";
-import type { LocaleNamespaceMessages } from "../../types/message-structure-types";
 import { IntorError, IntorErrorCode } from "../intor-error";
 import { getOrCreateLogger } from "../intor-logger";
 import { createLocalMessagesLoader } from "../intor-messages-loader/create-local-messages-loader/create-local-messages-loader";

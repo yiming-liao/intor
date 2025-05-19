@@ -2,27 +2,15 @@ import type { GetLocale } from "../../../core/intor-translator/translator-method
 import type { GetMessages } from "../../../core/intor-translator/translator-methods/create-get-messages";
 import type { HasKey } from "../../../core/intor-translator/translator-methods/create-has-key";
 import type { SetLocale } from "../../../core/intor-translator/translator-methods/create-set-locale";
-import type { Translate } from "../../../core/intor-translator/translator-methods/create-translate";
+import type {
+  Translate,
+  UntypedTranslate,
+} from "../../../core/intor-translator/translator-methods/create-translate";
 import type {
   NestedKeyPaths,
   RawLocale,
 } from "../../../core/intor-translator/types/locale-types";
-import type { TranslatorHandlers } from "../../../core/intor-translator/types/translator-handlers-types";
-import type {
-  FallbackLocalesMap,
-  LocaleNamespaceMessages,
-} from "../../../types/message-structure-types";
-
-export type TranslatorOptions<Messages extends LocaleNamespaceMessages> = {
-  messages: Readonly<Messages>;
-  locale: RawLocale<Messages>;
-  fallbackLocales: FallbackLocalesMap;
-  isLoading?: boolean;
-  loadingMessage: string;
-  placeholder?: string;
-  handlers?: TranslatorHandlers;
-  debugHandler?: (key: string, locale: string) => void;
-};
+import type { LocaleNamespaceMessages } from "../../../types/message-structure-types";
 
 export type Translator<
   Messages extends LocaleNamespaceMessages = LocaleNamespaceMessages,
@@ -38,12 +26,7 @@ export type Translator<
   scoped: <Locale extends RawLocale<Messages>>(
     preKey?: NestedKeyPaths<Messages[Locale]>,
   ) => {
-    t: Translate<Messages>;
+    t: UntypedTranslate;
     hasKey: HasKey<Messages>;
   };
-};
-
-// Ref of current locale
-export type LocaleRef<Messages extends LocaleNamespaceMessages> = {
-  current: RawLocale<Messages>;
 };

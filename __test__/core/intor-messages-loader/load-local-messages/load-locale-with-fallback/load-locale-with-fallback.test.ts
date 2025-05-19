@@ -1,8 +1,8 @@
 import type { Namespace } from "../../../../../src/intor/types/message-structure-types";
 import type pLimit from "p-limit";
-import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 import { loadLocaleWithFallback } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/load-locale-with-fallback";
 import { loadSingleLocale } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/load-single-locale";
+import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 
 jest.mock(
   "../../../../../src/intor/core/intor-messages-loader/load-local-messages/load-single-locale",

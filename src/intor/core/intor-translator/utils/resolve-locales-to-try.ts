@@ -18,8 +18,8 @@ import type { RawLocale } from "../types/locale-types";
  */
 export const resolveLocalesToTry = <Messages extends LocaleNamespaceMessages>(
   locale: RawLocale<Messages>,
-  fallbackLocales: FallbackLocalesMap,
+  fallbackLocales?: FallbackLocalesMap,
 ): RawLocale<Messages>[] => {
-  const fallbacks = fallbackLocales[locale] || [];
+  const fallbacks = fallbackLocales?.[locale] || [];
   return [locale, ...fallbacks.filter((l) => l !== locale)];
 };

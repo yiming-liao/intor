@@ -1,13 +1,11 @@
 import type {
-  LocaleRef,
-  TranslatorOptions,
-} from "../../../../src/intor/core/intor-translator/types/intor-translator-types";
-import type {
   LocaleNamespaceMessages,
   NamespaceMessages,
 } from "../../../../src/intor/types/message-structure-types";
-import { mockLocaleNamespaceMessages } from "../../../mock/mock-locale-namespace-messages";
 import { createHasKey } from "../../../../src/intor/core/intor-translator/translator-methods/create-has-key";
+import { TranslatorOptions } from "../../../../src/intor/core/intor-translator/types/intor-translator-options-types";
+import { LocaleRef } from "../../../../src/intor/core/intor-translator/types/locale-types";
+import { mockLocaleNamespaceMessages } from "../../../mock/mock-locale-namespace-messages";
 
 jest.mock(
   "../../../../src/intor/core/intor-translator/utils/get-value-by-key",

@@ -1,5 +1,5 @@
 import type { LocaleNamespaceMessages } from "../../../types/message-structure-types";
-import type { TranslatorOptions } from "../types/intor-translator-types";
+import type { TranslatorOptions } from "../types/intor-translator-options-types";
 
 export type GetMessages = () => Readonly<LocaleNamespaceMessages>;
 

@@ -6,7 +6,7 @@ export const getFullKey = <
   Locale extends RawLocale<Messages>,
 >(
   preKey?: NestedKeyPaths<Messages[Locale]>,
-  key?: NestedKeyPaths<Messages[Locale]>,
+  key?: NestedKeyPaths<Messages[Locale]> | string,
 ): NestedKeyPaths<Messages[Locale]> => {
   if (!preKey) {
     return key as NestedKeyPaths<Messages[Locale]>;

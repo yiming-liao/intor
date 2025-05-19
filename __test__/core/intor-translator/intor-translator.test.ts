@@ -1,4 +1,3 @@
-import type { TranslatorOptions } from "../../../src/intor/core/intor-translator/types/intor-translator-types";
 import type { LocaleNamespaceMessages } from "../../../src/intor/types/message-structure-types";
 import { intorTranslator } from "../../../src/intor/core/intor-translator/intor-translator";
 import * as createGetLocaleModule from "../../../src/intor/core/intor-translator/translator-methods/create-get-locale";
@@ -7,6 +6,7 @@ import * as createHasKeyModule from "../../../src/intor/core/intor-translator/tr
 import * as createScopedModule from "../../../src/intor/core/intor-translator/translator-methods/create-scoped";
 import * as createSetLocaleModule from "../../../src/intor/core/intor-translator/translator-methods/create-set-locale";
 import * as createTranslateModule from "../../../src/intor/core/intor-translator/translator-methods/create-translate";
+import { TranslatorOptions } from "../../../src/intor/core/intor-translator/types/intor-translator-options-types";
 
 jest.mock(
   "../../../src/intor/core/intor-translator/translator-methods/create-get-locale",

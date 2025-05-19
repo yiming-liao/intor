@@ -1,10 +1,8 @@
-import type {
-  LocaleRef,
-  TranslatorOptions,
-} from "../../../../src/intor/core/intor-translator/types/intor-translator-types";
 import type { LocaleNamespaceMessages } from "../../../../src/intor/types/message-structure-types";
-import { mockLocaleNamespaceMessages } from "../../../mock/mock-locale-namespace-messages";
 import { createSetLocale } from "../../../../src/intor/core/intor-translator/translator-methods/create-set-locale";
+import { TranslatorOptions } from "../../../../src/intor/core/intor-translator/types/intor-translator-options-types";
+import { LocaleRef } from "../../../../src/intor/core/intor-translator/types/locale-types";
+import { mockLocaleNamespaceMessages } from "../../../mock/mock-locale-namespace-messages";
 
 describe("createSetLocale", () => {
   type Messages = LocaleNamespaceMessages;

@@ -1,5 +1,5 @@
-import type { ApiLoader } from "../../intor-config/types/loader-options-types";
 import type { LocaleNamespaceMessages } from "../../../types/message-structure-types";
+import type { ApiLoader } from "../../intor-config/types/loader-options-types";
 import { getOrCreateLogger } from "../../intor-logger";
 import { buildSearchParams } from "../../intor-messages-loader/fetch-api-messages/build-search-params";
 import { fetchFallbackMessages } from "../../intor-messages-loader/fetch-api-messages/fetch-fallback-messages";

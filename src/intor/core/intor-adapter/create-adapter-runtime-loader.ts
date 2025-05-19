@@ -15,23 +15,19 @@ export const createAdapterRuntimeLoader = async ({
     prefix: "createAdapterRuntimeLoader",
   });
 
-  try {
-    // Real path example: "../../adapters/next-client/runtime.ts"
-    const loadedRuntime = await loadAdapterRuntime(adapter);
+  // Real path example: "../../adapters/next-client/runtime.ts"
+  const loadedRuntime = await loadAdapterRuntime(adapter);
 
-    if (typeof loadedRuntime.default !== "function") {
-      void logger.error(
-        `Adapter "${adapter}" does not export a valid runtime function.`,
-      );
-      throw new IntorError({
-        id,
-        code: IntorErrorCode.ADAPTER_RUNTIME_LOAD_FAILED,
-        message: `Adapter "${adapter}" does not export a valid runtime function.`,
-      });
-    }
-
-    return loadedRuntime.default as IntorAdapterRuntimeResult;
-  } catch (error) {
-    throw error;
+  if (typeof loadedRuntime.default !== "function") {
+    void logger.error(
+      `Adapter "${adapter}" does not export a valid runtime function.`,
+    );
+    throw new IntorError({
+      id,
+      code: IntorErrorCode.ADAPTER_RUNTIME_LOAD_FAILED,
+      message: `Adapter "${adapter}" does not export a valid runtime function.`,
+    });
   }
+
+  return loadedRuntime.default as IntorAdapterRuntimeResult;
 };

@@ -1,10 +1,10 @@
 import type { LocaleNamespaceMessages } from "../../../../../src/intor/types/message-structure-types";
 import type pLimit from "p-limit";
 import fs from "node:fs/promises";
-import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 import { loadNamespaceGroup } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/load-namespace-group";
 import { loadSingleLocale } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/load-single-locale";
 import { prepareNamespaceGroups } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/prepare-namespace-groups";
+import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 
 jest.mock("node:fs/promises");
 jest.mock(

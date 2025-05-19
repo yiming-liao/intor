@@ -1,7 +1,7 @@
 import type { LocaleNamespaceMessages } from "../../../../src/intor/types/message-structure-types";
 import fetchMock from "jest-fetch-mock";
-import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 import { fetcher } from "../../../../src/intor/core/intor-messages-loader/fetch-api-messages/fetcher";
+import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 
 fetchMock.enableMocks();
 const { mockLogWarn } = mockIntorLogger();

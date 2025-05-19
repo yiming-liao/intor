@@ -2,9 +2,9 @@ import type { PrepareNamespaceGroupsOptions } from "../../../../../src/intor/cor
 import type pLimit from "p-limit";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 import { addToNamespaceGroup } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/prepare-namespace-groups";
 import { traverseDirectory } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/prepare-namespace-groups/traverse-directory";
+import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 
 jest.mock(
   "../../../../../src/intor/core/intor-messages-loader/load-local-messages/prepare-namespace-groups",
@@ -137,7 +137,6 @@ describe("traverseDirectory", () => {
       { name: "subdir", isFile: () => false, isDirectory: () => true },
     ]);
 
-    // eslint-disable-next-line @typescript-eslint/require-await
     const fakeLimit = jest.fn().mockImplementation(async () => {
       throw new Error("error during recursion");
     });

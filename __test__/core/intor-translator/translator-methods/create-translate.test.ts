@@ -1,7 +1,7 @@
-import type { LocaleRef } from "../../../../src/intor/core/intor-translator/types/intor-translator-types";
 import type { LocaleNamespaceMessages } from "../../../../src/intor/types/message-structure-types";
-import { mockLocaleNamespaceMessages } from "../../../mock/mock-locale-namespace-messages";
 import { createTranslate } from "../../../../src/intor/core/intor-translator/translator-methods/create-translate";
+import { LocaleRef } from "../../../../src/intor/core/intor-translator/types/locale-types";
+import { mockLocaleNamespaceMessages } from "../../../mock/mock-locale-namespace-messages";
 
 describe("createTranslate", () => {
   const localeRef: LocaleRef<LocaleNamespaceMessages> = { current: "en-US" };
@@ -13,7 +13,6 @@ describe("createTranslate", () => {
     isLoading: false,
     loadingMessage: "Loading...",
     placeholder: "N/A",
-    debugHandler: jest.fn(),
     handlers: {
       messageFormatter: undefined,
       loadingMessageHandler: undefined,
@@ -44,14 +43,6 @@ describe("createTranslate", () => {
 
   it("should replace placeholders when replacements provided", () => {
     expect(t("profile.greeting", { name: "Alice" })).toBe("Hello, Alice!");
-  });
-
-  it("should call debugHandler if key not found", () => {
-    t("common.missing");
-    expect(translatorOptions.debugHandler).toHaveBeenCalledWith(
-      "common.missing",
-      "en-US",
-    );
   });
 
   it("should handle placeholderHandler when provided", () => {

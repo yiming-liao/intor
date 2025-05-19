@@ -1,7 +1,7 @@
 import type pLimit from "p-limit";
-import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 import { prepareNamespaceGroups } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/prepare-namespace-groups";
 import { traverseDirectory } from "../../../../../src/intor/core/intor-messages-loader/load-local-messages/prepare-namespace-groups/traverse-directory";
+import { mockIntorLogger } from "../../../../mock/mock-intor-logger";
 
 jest.mock(
   "../../../../../src/intor/core/intor-messages-loader/load-local-messages/prepare-namespace-groups/traverse-directory",

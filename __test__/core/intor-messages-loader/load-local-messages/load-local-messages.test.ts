@@ -1,8 +1,8 @@
 import type pLimit from "p-limit";
 import path from "node:path";
-import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 import { loadLocalMessages } from "../../../../src/intor/core/intor-messages-loader/load-local-messages/load-local-messages";
 import { loadLocaleWithFallback } from "../../../../src/intor/core/intor-messages-loader/load-local-messages/load-locale-with-fallback";
+import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 
 jest.mock(
   "../../../../src/intor/core/intor-messages-loader/load-local-messages/load-locale-with-fallback",

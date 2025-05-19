@@ -5,18 +5,25 @@ import type {
 } from "../../../types/message-structure-types";
 import type {
   LocaleRef,
-  TranslatorOptions,
-} from "../types/intor-translator-types";
-import type { NestedKeyPaths, RawLocale } from "../types/locale-types";
+  NestedKeyPaths,
+  RawLocale,
+} from "../types/locale-types";
 import type { TranslatorHandlers } from "../types/translator-handlers-types";
+import { TranslatorOptions } from "../types/intor-translator-options-types";
 import { getValueByKey } from "../utils/get-value-by-key";
 import { replaceValues } from "../utils/replace-values";
 import { resolveLocalesToTry } from "../utils/resolve-locales-to-try";
 
-export type Translate<Messages extends LocaleNamespaceMessages> = <
-  Locale extends RawLocale<Messages>,
->(
-  key?: NestedKeyPaths<Messages[Locale]>,
+export type Translate<Messages extends LocaleNamespaceMessages> = {
+  <Locale extends RawLocale<Messages>>(
+    key: NestedKeyPaths<Messages[Locale]>,
+    replacements?: Replacement | RichReplacement,
+  ): string;
+  (key: string, replacements?: Replacement | RichReplacement): string;
+};
+
+export type UntypedTranslate = (
+  key?: string,
   replacements?: Replacement | RichReplacement,
 ) => string;
 
@@ -28,14 +35,8 @@ export const createTranslate = <Messages extends LocaleNamespaceMessages>(
   localeRef: LocaleRef<Messages>,
   translatorOptions: TranslatorOptions<Messages>,
 ): Translate<Messages> => {
-  const {
-    messages,
-    fallbackLocales,
-    isLoading,
-    loadingMessage,
-    placeholder,
-    debugHandler,
-  } = translatorOptions;
+  const { messages, fallbackLocales, isLoading, loadingMessage, placeholder } =
+    translatorOptions;
 
   const { messageFormatter, loadingMessageHandler, placeholderHandler } =
     (translatorOptions.handlers as TranslatorHandlers<
@@ -90,11 +91,6 @@ export const createTranslate = <Messages extends LocaleNamespaceMessages>(
 
     // If no message found, handle accordingly
     if (!message) {
-      // Debug
-      if (debugHandler) {
-        debugHandler(key, localeRef.current);
-      }
-
       // Handle placeholder if defined
       if (placeholderHandler) {
         return placeholderHandler({

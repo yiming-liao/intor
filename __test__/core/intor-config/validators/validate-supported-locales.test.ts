@@ -1,7 +1,7 @@
 import type { IntorInitConfig } from "../../../../src/intor/core/intor-config/types/define-intor-config-types";
-import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 import { validateSupportedLocales } from "../../../../src/intor/core/intor-config/validations/validate-supported-locales";
 import { IntorError } from "../../../../src/intor/core/intor-error";
+import { mockIntorLogger } from "../../../mock/mock-intor-logger";
 
 describe("validateSupportedLocales", () => {
   const { mockLogError, mockLogger } = mockIntorLogger();

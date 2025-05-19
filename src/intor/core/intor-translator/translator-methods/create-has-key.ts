@@ -1,18 +1,25 @@
-import type { LocaleNamespaceMessages } from "../../../types/message-structure-types";
+import type {
+  Locale,
+  LocaleNamespaceMessages,
+} from "../../../types/message-structure-types";
+import type { TranslatorOptions } from "../types/intor-translator-options-types";
 import type {
   LocaleRef,
-  TranslatorOptions,
-} from "../types/intor-translator-types";
-import type { NestedKeyPaths, RawLocale } from "../types/locale-types";
+  NestedKeyPaths,
+  RawLocale,
+} from "../types/locale-types";
 import { getValueByKey } from "../utils/get-value-by-key";
 import { resolveLocalesToTry } from "../utils/resolve-locales-to-try";
 
-export type HasKey<Messages extends LocaleNamespaceMessages> = <
-  Locale extends RawLocale<Messages>,
->(
-  key: NestedKeyPaths<Messages[Locale]>,
-  locale?: Locale,
-) => boolean;
+export type HasKey<Messages extends LocaleNamespaceMessages> = {
+  <Locale extends RawLocale<Messages>>(
+    key: NestedKeyPaths<Messages[Locale]>,
+    locale?: Locale,
+  ): boolean;
+  (key: string, locale?: Locale): boolean;
+};
+
+export type UntypedHasKey = (key?: string, locale?: Locale) => boolean;
 
 /**
  * Factory function to create a hasKey function
@@ -47,5 +54,5 @@ export const createHasKey = <Messages extends LocaleNamespaceMessages>(
     return false;
   };
 
-  return hasKey;
+  return hasKey as HasKey<Messages>;
 };
