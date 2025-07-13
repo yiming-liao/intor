@@ -1,4 +1,4 @@
-import type { FallbackLocalesMap } from "../../src/intor/types/message-structure-types";
+import { FallbackLocalesMap } from "intor-translator";
 
 export const mockFallbackLocales: FallbackLocalesMap = {
   "en-US": ["fr-FR", "zh-TW"],

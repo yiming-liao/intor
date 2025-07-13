@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "1.0.1",
+  "version": "1.0.35",
   "description": "A modular and extensible i18n core designed for TypeScript and JavaScript projects. Intor enables custom translation logic with support for both frontend and backend environments, featuring runtime configuration, caching, adapters, and message loaders.",
   "author": "Yiming Liao",
   "license": "MIT",
@@ -24,38 +24,47 @@
     "i18n core",
     "custom messages"
   ],
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
     "./config": {
-      "import": "./dist/config.js",
-      "require": "./dist/config.cjs"
+      "types": "./dist/config/index.d.ts",
+      "import": "./dist/config/index.js",
+      "require": "./dist/config/index.cjs"
     },
-    "./translator": {
-      "import": "./dist/translator.js",
-      "require": "./dist/translator.cjs"
+    "./next": {
+      "types": "./dist/next/index.d.ts",
+      "import": "./dist/next/index.js",
+      "require": "./dist/next/index.cjs"
     },
-    "./error": {
-      "import": "./dist/error.js",
-      "require": "./dist/error.cjs"
+    "./next/middleware": {
+      "types": "./dist/next/middleware/index.d.ts",
+      "import": "./dist/next/middleware/index.js",
+      "require": "./dist/next/middleware/index.cjs"
     },
-    "./logger": {
-      "import": "./dist/logger.js",
-      "require": "./dist/logger.cjs"
+    "./next/provider": {
+      "types": "./exports/next/provider/intor-provider.tsx",
+      "import": "./exports/next/provider/intor-provider.tsx"
     },
-    "./messages-loader": {
-      "import": "./dist/messages-loader.js",
-      "require": "./dist/messages-loader.cjs"
+    "./next/translate-handlers-provider": {
+      "types": "./exports/next/provider/translate-handlers-provider.tsx",
+      "import": "./exports/next/provider/translate-handlers-provider.tsx"
     }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "exports/next/provider/intor-provider.tsx",
+    "exports/next/provider/translate-handlers-provider.tsx",
+    "README.md",
+    "LICENSE"
   ],
+  "type": "module",
   "scripts": {
     "build": "tsup",
     "lint": "eslint",
@@ -65,6 +74,8 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
+    "intor-translator": "^1.0.15",
+    "logry": "^1.1.10",
     "p-limit": "^6.2.0"
   },
   "devDependencies": {
@@ -75,6 +86,7 @@
     "@types/jest": "^29.5.14",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
+    "esbuild": "^0.25.6",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
@@ -88,6 +100,7 @@
     "prettier": "^3.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "source-map-explorer": "^2.5.3",
     "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
     "tsup": "^8.4.0",

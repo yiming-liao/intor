@@ -1,4 +1,4 @@
-import type { IntorLogger } from "../../src/intor/core/intor-logger";
+import { Logger } from "logry";
 
 export const mockIntorLogger = () => {
   const mockLogDebug = jest.fn();
@@ -14,7 +14,7 @@ export const mockIntorLogger = () => {
   });
 
   return {
-    mockLogger: { child } as unknown as IntorLogger,
+    mockLogger: { child } as unknown as Logger,
     mockLogDebug,
     mockLogInfo,
     mockLogWarn,

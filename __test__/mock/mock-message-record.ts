@@ -1,4 +1,4 @@
-import type { MessageRecord } from "../../src/intor/types/message-structure-types";
+import { MessageRecord } from "intor-translator";
 
 export const mockMessageRecord: MessageRecord = {
   user: {
