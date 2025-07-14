@@ -1,6 +1,6 @@
 import type { InitLoggerOptions } from "./types/logger-options-types";
-import type { Logger } from "logry";
-import { logry } from "logry";
+import type { Logger } from "logry/edge";
+import { logry } from "logry/edge";
 
 type InitializeLoggerOptions = {
   id: string;

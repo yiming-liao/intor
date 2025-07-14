@@ -1,5 +1,5 @@
-import type { Logger } from "logry";
 import { FallbackLocalesMap, Locale } from "intor-translator";
+import { Logger } from "logry/edge";
 import { IntorInitConfig } from "@/modules/intor-config/types/define-intor-config-types";
 
 type Params = {

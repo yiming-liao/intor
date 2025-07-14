@@ -3,7 +3,7 @@ import {
   type Level,
   type LoggerPreset,
   type NormalizerConfig,
-} from "logry";
+} from "logry/edge";
 
 // Init logger options
 export type InitLoggerOptions = {
@@ -13,4 +13,4 @@ export type InitLoggerOptions = {
   preset?: LoggerPreset;
 };
 
-export type ResolvedLoggerOptions = Required<InitLoggerOptions>;
+export type ResolvedLoggerOptions = InitLoggerOptions;

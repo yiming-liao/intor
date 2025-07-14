@@ -11,7 +11,11 @@ export const intor = async ({
   request,
   config,
 }: IntorOptions): Promise<IntorResult> => {
-  const logger = logry({ id: config.id, scope: "intor" });
+  const logger = logry({
+    id: config.id,
+    scope: "intor",
+    ...config.logger,
+  });
   logger.info("Starting Intor initialization:", {
     adapter: config.adapter,
   });

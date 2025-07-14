@@ -3168,6 +3168,15 @@ intor-translator@^1.0.15:
   resolved "https://registry.yarnpkg.com/intor-translator/-/intor-translator-1.0.15.tgz#1c6576487e8fec6e7d746ee63f8767c561ed73b2"
   integrity sha512-9LeTK8OlgcQQRyhTJ93qK+jaG5zss3qTTMChFfGc39VPR7sGasnrWfSVI3gtGSjOmNjRQdsnOcPD6EShxINazw==
 
+intor@^1.0.36:
+  version "1.0.36"
+  resolved "https://registry.yarnpkg.com/intor/-/intor-1.0.36.tgz#c88636851d917103004c315c15003dbeb8f33e30"
+  integrity sha512-fQkACHyXya+5T+rDuRtvISX/WP9ApLwgLkof7K9mMg2hKWrMBrghtVbyvgHV2Jy+97WXiTbL0iTd+Lu7A/qmOg==
+  dependencies:
+    intor-translator "^1.0.15"
+    logry "^1.1.12"
+    p-limit "^6.2.0"
+
 is-array-buffer@^3.0.4, is-array-buffer@^3.0.5:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/is-array-buffer/-/is-array-buffer-3.0.5.tgz#65742e1e687bd2cc666253068fd8707fe4d44280"
@@ -4022,10 +4031,15 @@ lodash@^4.17.20, lodash@^4.17.21:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-logry@^1.1.10:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/logry/-/logry-1.1.10.tgz#0b45ec958d0be8b98e694916851cd3eed726ae7e"
-  integrity sha512-6Em3cy5fAkmpRvG3BLEmUwLy/MSaZnPNGkRCczGAAM05QGzGKGBCvSUVmThxZaKsv5wdBBfDBffhWQmGjCMc5Q==
+logry@^1.1.12:
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/logry/-/logry-1.1.12.tgz#25ed3620f1cd63773f8a5594a61939bbe6361cc1"
+  integrity sha512-2P6UJCQwmJtWf1Lv6JjlTTlGRM14nIssMk7Uc7U3YOqYE4QGGcL/szmUpB3sziInSyra7adAYYyIp34QwqOL3g==
+
+logry@^1.1.14:
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/logry/-/logry-1.1.14.tgz#7b84b304ea4b06696f22ffa9c504da7d2b394272"
+  integrity sha512-xRrbAyrYeWAI768NPJvP4r9aVE/ZOr4IhrhUtX4vbU5q6m+v5yVkN0isP1iTp2KMbaGgIoFYBKV8WAD89B5Fgw==
 
 lru-cache@^10.2.0:
   version "10.4.3"

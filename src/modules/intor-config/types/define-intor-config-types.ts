@@ -4,7 +4,10 @@ import type {
 } from "./cookie-options-types";
 import type { IntorAdapter } from "./intor-adapter-types";
 import type { LoaderOptions } from "./loader-options-types";
-import type { InitLoggerOptions } from "./logger-options-types";
+import type {
+  InitLoggerOptions,
+  ResolvedLoggerOptions,
+} from "./logger-options-types";
 import type {
   InitRoutingOptions,
   ResolvedRoutingOptions,
@@ -64,5 +67,6 @@ export type IntorResolvedConfig = (
   readonly cookie: ResolvedCookieOptions;
   readonly routing: ResolvedRoutingOptions;
   readonly adapter: IntorAdapter;
+  readonly logger?: ResolvedLoggerOptions;
   readonly prefixPlaceHolder: string;
 };

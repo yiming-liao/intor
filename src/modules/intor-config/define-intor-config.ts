@@ -53,6 +53,7 @@ export const defineIntorConfig = (
     cookie: resolvedCookieOptions,
     routing: resolvedRoutingOptions,
     adapter: config.adapter || "next-client",
+    logger: config.logger,
     prefixPlaceHolder: resolvedPrefixPlaceHolder,
   };
 };
