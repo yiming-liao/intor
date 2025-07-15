@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "A modular and extensible i18n core designed for TypeScript and JavaScript projects. Intor enables custom translation logic with support for both frontend and backend environments, featuring runtime configuration, caching, adapters, and message loaders.",
   "author": "Yiming Liao",
   "license": "MIT",
@@ -76,7 +76,7 @@
   "dependencies": {
     "intor": "^1.0.36",
     "intor-translator": "^1.0.15",
-    "logry": "^1.1.14",
+    "logry": "^1.1.15",
     "p-limit": "^6.2.0"
   },
   "devDependencies": {

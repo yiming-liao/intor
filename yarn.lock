@@ -4036,10 +4036,10 @@ logry@^1.1.12:
   resolved "https://registry.yarnpkg.com/logry/-/logry-1.1.12.tgz#25ed3620f1cd63773f8a5594a61939bbe6361cc1"
   integrity sha512-2P6UJCQwmJtWf1Lv6JjlTTlGRM14nIssMk7Uc7U3YOqYE4QGGcL/szmUpB3sziInSyra7adAYYyIp34QwqOL3g==
 
-logry@^1.1.14:
-  version "1.1.14"
-  resolved "https://registry.yarnpkg.com/logry/-/logry-1.1.14.tgz#7b84b304ea4b06696f22ffa9c504da7d2b394272"
-  integrity sha512-xRrbAyrYeWAI768NPJvP4r9aVE/ZOr4IhrhUtX4vbU5q6m+v5yVkN0isP1iTp2KMbaGgIoFYBKV8WAD89B5Fgw==
+logry@^1.1.15:
+  version "1.1.15"
+  resolved "https://registry.yarnpkg.com/logry/-/logry-1.1.15.tgz#4dc722b6c85e2e48463486267f59bf511e8fe0b1"
+  integrity sha512-4DYmuqUxAe71k2UOWSCnEApKKRA7aMafbnNPSA9f0Hfuk+JtoVCCUfJPTORylUnw6OcjLyYtkSJURNc4YtkI+A==
 
 lru-cache@^10.2.0:
   version "10.4.3"

@@ -35,3 +35,12 @@ export type { IntorAdapterRuntime } from "@/modules/intor-adapter/types";
 
 // --- Adapter: next-server
 export { createIntor } from "@/adapters/next-server";
+
+// Logry
+export {
+  loggerMap,
+  coreMap,
+  inspectLoggers,
+  inspectLoggerCores,
+  inspectHandlerManagerConfig,
+} from "logry";
