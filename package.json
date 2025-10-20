@@ -68,7 +68,7 @@
   "scripts": {
     "build": "tsup",
     "lint": "eslint",
-    "type-check": "tsc --noEmit",
+    "type": "tsc --noEmit",
     "test": "jest",
     "test:coverage": "jest --coverage && open coverage/lcov-report/index.html",
     "prepublishOnly": "yarn build"
@@ -76,7 +76,7 @@
   "dependencies": {
     "intor": "^1.0.36",
     "intor-translator": "^1.0.15",
-    "logry": "^1.1.15",
+    "logry": "^1.2.3",
     "p-limit": "^6.2.0"
   },
   "devDependencies": {
