@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { IntorResolvedConfig } from "@/modules/intor-config/types/define-intor-config-types";
 

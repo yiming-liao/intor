@@ -1,3 +1,5 @@
+"use client";
+
 import { LocaleNamespaceMessages } from "intor-translator";
 import {
   fetchApiMessages,

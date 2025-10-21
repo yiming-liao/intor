@@ -1,3 +1,5 @@
+"use client";
+
 import { Locale } from "intor-translator";
 import * as React from "react";
 import { useIntorMessages } from "@/adapters/next-client/contexts/intor-messages";
