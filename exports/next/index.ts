@@ -16,7 +16,7 @@ export {
   useIntorTranslator,
   IntorTranslatorProvider,
 } from "@/adapters/next-client/contexts/intor-translator";
-
+export { IntorProvider } from "@/adapters/next-client/contexts/intor-provider";
 export type { IntorProviderProps } from "@/adapters/next-client/contexts/intor-provider-types";
 
 export { TranslateHandlersContext } from "@/adapters/next-client/contexts/translate-handlers";
