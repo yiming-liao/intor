@@ -1,20 +1,17 @@
 import { LocaleNamespaceMessages } from "intor-translator";
-import { mergeStaticAndDynamicMessages } from "@/shared/utils/merge-static-and-dynamic-messages";
+import { mergeMessages } from "@/shared/utils/merge-messages";
 
-describe("mergeStaticAndDynamicMessages", () => {
-  it("merges static and dynamic messages with no overlap", () => {
+describe("mergeMessages", () => {
+  it("merges static and loaded messages with no overlap", () => {
     const staticMessages: LocaleNamespaceMessages = {
       en: { common: { hello: "Hello" } },
     };
 
-    const dynamicMessages: LocaleNamespaceMessages = {
+    const loadedMessages: LocaleNamespaceMessages = {
       zh: { common: { hello: "你好" } },
     };
 
-    const result = mergeStaticAndDynamicMessages(
-      staticMessages,
-      dynamicMessages,
-    );
+    const result = mergeMessages(staticMessages, loadedMessages);
 
     expect(result).toEqual({
       en: { common: { hello: "Hello" } },
@@ -22,7 +19,7 @@ describe("mergeStaticAndDynamicMessages", () => {
     });
   });
 
-  it("overrides static messages with dynamic messages", () => {
+  it("overrides static messages with loaded messages", () => {
     const staticMessages: LocaleNamespaceMessages = {
       en: {
         common: { hello: "Hello" },
@@ -30,17 +27,14 @@ describe("mergeStaticAndDynamicMessages", () => {
       },
     };
 
-    const dynamicMessages: LocaleNamespaceMessages = {
+    const loadedMessages: LocaleNamespaceMessages = {
       en: {
         common: { hello: "Hi" },
         footer: { contact: "Contact Us" },
       },
     };
 
-    const result = mergeStaticAndDynamicMessages(
-      staticMessages,
-      dynamicMessages,
-    );
+    const result = mergeMessages(staticMessages, loadedMessages);
 
     expect(result).toEqual({
       en: {
@@ -51,8 +45,8 @@ describe("mergeStaticAndDynamicMessages", () => {
     });
   });
 
-  it("returns only dynamic messages if static is empty", () => {
-    const result = mergeStaticAndDynamicMessages(
+  it("returns only loaded messages if static is empty", () => {
+    const result = mergeMessages(
       {},
       {
         ja: {
@@ -67,7 +61,7 @@ describe("mergeStaticAndDynamicMessages", () => {
   });
 
   it("returns empty object if both inputs are empty", () => {
-    const result = mergeStaticAndDynamicMessages({}, {});
+    const result = mergeMessages({}, {});
     expect(result).toEqual({});
   });
 });

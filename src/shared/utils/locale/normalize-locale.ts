@@ -9,18 +9,18 @@ export const normalizeLocale = <Locale extends string>(
   locale: string = "",
   supportedLocales: readonly Locale[] = [],
 ): Locale | undefined => {
-  if (!locale || supportedLocales.length === 0) return undefined;
+  if (!locale || supportedLocales.length === 0) return;
 
   const toCanonical = (input: string): string | undefined => {
     try {
       return Intl.getCanonicalLocales(input)[0]?.toLowerCase();
     } catch {
-      return undefined;
+      return;
     }
   };
 
   const canonicalLocale = toCanonical(locale);
-  if (!canonicalLocale) return undefined;
+  if (!canonicalLocale) return;
 
   const supportedCanonicalMap = new Map<string, Locale>();
   for (const l of supportedLocales) {
@@ -46,5 +46,5 @@ export const normalizeLocale = <Locale extends string>(
   }
 
   // 3. No match
-  return undefined;
+  return;
 };

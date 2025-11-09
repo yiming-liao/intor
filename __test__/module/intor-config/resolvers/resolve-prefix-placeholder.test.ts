@@ -1,5 +1,5 @@
-import { DEFAULT_PREFIX_PLACEHOLDER } from "@/modules/intor-config/constants/prefix-placeholder-constants";
-import { resolvePrefixPlaceholder } from "@/modules/intor-config/resolvers/resolve-prefix-placeholder";
+import { DEFAULT_PREFIX_PLACEHOLDER } from "@/modules/config/constants/prefix-placeholder.constants";
+import { resolvePrefixPlaceholder } from "@/modules/config/resolvers/resolve-prefix-placeholder";
 
 describe("resolvePrefixPlaceholder", () => {
   it("should remove all slashes from the input string", () => {

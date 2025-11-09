@@ -1,15 +1,15 @@
-import { IntorResolvedConfig } from "@/modules/intor-config/types/define-intor-config-types";
+import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import {
   LoaderOptions,
   RouteNamespaces,
-} from "@/modules/intor-config/types/loader-options-types";
+} from "@/modules/config/types/loader.types";
 import { extractPathname } from "@/shared/utils/pathname/extract-pathname";
 import { standardizePathname } from "@/shared/utils/pathname/standardize-pathname";
 
-type ResolveNamespacesOptions = {
+interface ResolveNamespacesOptions {
   config: IntorResolvedConfig;
   pathname: string;
-};
+}
 
 /**
  * Resolves namespaces based on pathname.
@@ -21,13 +21,14 @@ export const resolveNamespaces = ({
   config,
   pathname,
 }: ResolveNamespacesOptions): string[] => {
-  const { loaderOptions, prefixPlaceHolder } = config;
+  const { loader, prefixPlaceHolder } = config;
   const {
     routeNamespaces = {} as RouteNamespaces,
     namespaces: fallbackNamespaces,
-  } = loaderOptions as LoaderOptions;
+  } = loader as LoaderOptions;
 
   const { unprefixedPathname } = extractPathname({ config, pathname });
+
   const standardizedPathname = standardizePathname({
     config,
     pathname: unprefixedPathname,

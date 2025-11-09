@@ -1,4 +1,4 @@
-import { IntorResolvedConfig } from "@/modules/intor-config/types/define-intor-config-types";
+import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { normalizePathname } from "@/shared/utils/pathname/normalize-pathname";
 
 type StandardizePathnameOptions = {

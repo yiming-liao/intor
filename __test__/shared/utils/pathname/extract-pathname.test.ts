@@ -1,5 +1,5 @@
-import { IntorResolvedConfig } from "@/modules/intor-config/types/define-intor-config-types";
-import { InitRoutingOptions } from "@/modules/intor-config/types/routing-options-types";
+import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import { RoutingRawOptions } from "@/modules/config/types/routing.types";
 import { extractPathname } from "@/shared/utils/pathname/extract-pathname";
 
 const mockConfig = (
@@ -9,7 +9,7 @@ const mockConfig = (
     routing: {
       basePath: "/app",
       prefix,
-    } as unknown as Required<InitRoutingOptions>,
+    } as unknown as Required<RoutingRawOptions>,
     defaultLocale: "en",
     supportedLocales: ["en", "fr", "de"],
   }) as unknown as IntorResolvedConfig;

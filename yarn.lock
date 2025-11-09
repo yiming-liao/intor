@@ -1042,6 +1042,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@keyv/serialize@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@keyv/serialize/-/serialize-1.1.1.tgz#0c01dd3a3483882af7cf3878d4e71d505c81fc4a"
+  integrity sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==
+
 "@next/env@15.5.6":
   version "15.5.6"
   resolved "https://registry.npmjs.org/@next/env/-/env-15.5.6.tgz"
@@ -3934,6 +3939,13 @@ keyv@^4.5.4:
   dependencies:
     json-buffer "3.0.1"
 
+keyv@^5.5.3:
+  version "5.5.3"
+  resolved "https://registry.yarnpkg.com/keyv/-/keyv-5.5.3.tgz#db7b7f89b3e13ade5a8d0fe59d765aebb596e84b"
+  integrity sha512-h0Un1ieD+HUrzBH6dJXhod3ifSghk5Hw/2Y4/KHBziPlZecrFyE9YOTPU6eOs0V9pYl8gOs86fkr/KN8lUX39A==
+  dependencies:
+    "@keyv/serialize" "^1.1.1"
+
 kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.npmjs.org/kleur/-/kleur-3.0.3.tgz"
@@ -4001,10 +4013,10 @@ lodash@^4.17.20, lodash@^4.17.21:
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-logry@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.npmjs.org/logry/-/logry-1.2.3.tgz"
-  integrity sha512-6NH4fznUK/gXdQPymtLZxDP5M2kuJcYqM85GrZESGjd6zrvc/6Jt314TKDAbj9cmDplxOLwRxR4VYF/DvgcAxg==
+logry@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/logry/-/logry-2.0.1.tgz#6191746fa7854405c38c8f1aa77f6b7c3b8471fa"
+  integrity sha512-cjHKfzuLsEKgY39R+Bv4t3L8fHcMDA/2QbO3NtJdsIaGjvcW6oEDK14SsruuqAl/63v84wRMzRm1HwONBZ1+Fw==
 
 lru-cache@^10.2.0:
   version "10.4.3"

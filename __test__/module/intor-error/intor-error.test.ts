@@ -1,4 +1,4 @@
-import { IntorError, IntorErrorCode } from "@/modules/intor-error";
+import { IntorError, IntorErrorCode } from "@/shared/error";
 
 describe("IntorError", () => {
   it("should create an error with message and name", () => {

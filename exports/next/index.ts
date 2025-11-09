@@ -1,31 +1,18 @@
-// --- Adapter: next-client
-// Contexts
-export {
-  useIntorConfig,
-  IntorConfigProvider,
-} from "@/adapters/next-client/contexts/intor-config";
-export {
-  useIntorLocale,
-  IntorLocaleProvider,
-} from "@/adapters/next-client/contexts/intor-locale";
-export {
-  useIntorMessages,
-  IntorMessagesProvider,
-} from "@/adapters/next-client/contexts/intor-messages";
-export {
-  useIntorTranslator,
-  IntorTranslatorProvider,
-} from "@/adapters/next-client/contexts/intor-translator";
-export { IntorProvider } from "@/adapters/next-client/contexts/intor-provider";
-export type { IntorProviderProps } from "@/adapters/next-client/contexts/intor-provider-types";
+//====== Contexts ======
+export { useConfig } from "@/adapters/next/contexts/config";
+export { useLocale } from "@/adapters/next/contexts/locale";
+export { useMessages } from "@/adapters/next/contexts/messages";
+export { useTranslator } from "@/adapters/next/contexts/translator";
+// Custom handlers
+export { TranslateHandlersProvider } from "@/adapters/next/contexts/translate-handlers";
+export type { TranslateHandlersProviderProps } from "@/adapters/next/contexts/translate-handlers";
 
-export { TranslateHandlersContext } from "@/adapters/next-client/contexts/translate-handlers";
-export type { TranslateHandlersProviderProps } from "@/adapters/next-client/contexts/translate-handlers/types";
+//====== Providers ======
+export { IntorProvider } from "@/adapters/next/providers/intor-provider";
+export type { IntorProviderProps } from "@/adapters/next/providers/intor-provider";
+export { useIntor } from "@/adapters/next/providers/use-intor";
 
-// Hooks
-export { useIntor } from "@/adapters/next-client/hooks/use-intor/use-intor";
-
-// Tools
-export { Link } from "@/adapters/next-client/tools/Link";
-export { usePathname } from "@/adapters/next-client/tools/usePathname";
-export { useRouter } from "@/adapters/next-client/tools/useRouter";
+//====== Tools ======
+export { Link } from "@/adapters/next/tools/Link";
+export { usePathname } from "@/adapters/next/tools/usePathname";
+export { useRouter } from "@/adapters/next/tools/useRouter";

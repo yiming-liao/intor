@@ -45,13 +45,10 @@
       "import": "./dist/next/middleware/index.js",
       "require": "./dist/next/middleware/index.cjs"
     },
-    "./next/provider": {
-      "types": "./exports/next/provider/intor-provider.jsx",
-      "import": "./exports/next/provider/intor-provider.jsx"
-    },
-    "./next/translate-handlers-provider": {
-      "types": "./exports/next/provider/translate-handlers-provider.jsx",
-      "import": "./exports/next/provider/translate-handlers-provider.jsx"
+    "./next/server": {
+      "types": "./dist/next/server/index.d.ts",
+      "import": "./dist/next/server/index.js",
+      "require": "./dist/next/server/index.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -74,9 +71,9 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "intor": "^1.0.36",
     "intor-translator": "^1.0.15",
-    "logry": "^1.2.3",
+    "keyv": "^5.5.3",
+    "logry": "^2.0.1",
     "p-limit": "^6.2.0"
   },
   "devDependencies": {

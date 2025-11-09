@@ -1,45 +1,69 @@
-import { logry } from "logry";
-import { IntorOptions, IntorResult } from "@/modules/intor/intor-types";
-import { IntorError, IntorErrorCode } from "@/modules/intor-error";
-import { intorRuntime } from "@/modules/intor-runtime";
+import { LocaleNamespaceMessages } from "intor-translator";
+import {
+  AdapterRuntime,
+  IntorOptions,
+  IntorResult,
+} from "@/modules/intor/types";
+import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
+import { getMessages } from "@/modules/messages-loader/get-messages";
+import { getLogger } from "@/shared/logger/get-logger";
+import { mergeMessages } from "@/shared/utils/merge-messages";
 
 /**
- * Entry point for initializing Intor (the i18n system )
- * Determines runtime context and returns a translator or runtime object based on adapter
+ * Entry point for initializing Intor.
+ *
+ * 1. Resolve runtime via adapter or fallback values
+ * 2. Load messages if loader enabled
+ * 3. Merge static and loaded messages
  */
 export const intor = async ({
-  request,
   config,
+  adapter,
+  adapterRuntime,
 }: IntorOptions): Promise<IntorResult> => {
-  const logger = logry({
-    id: config.id,
-    scope: "intor",
-    ...config.logger,
-  });
-  logger.info("Starting Intor initialization:", {
-    adapter: config.adapter,
-  });
+  const baseLogger = getLogger({ id: config.id, ...config.logger });
+  const logger = baseLogger.child({ scope: "intor" });
+  logger.info("Start Intor initialization.");
 
-  // Intor runtime
-  const runtime = await intorRuntime({ config, request });
+  const { messages, loader } = config;
 
-  /* ▼ Adapters */
-  switch (config.adapter) {
-    case "next-server": {
-      return runtime;
-    }
-
-    case "next-client": {
-      return runtime;
-    }
-
-    default: {
-      logger.error("Unsupported adapter:", { adapter: config.adapter });
-      throw new IntorError({
-        id: config.id,
-        code: IntorErrorCode.UNSUPPORTED_ADAPTER,
-        message: `Unsupported adapter: ${config.adapter}`,
-      });
-    }
+  // 1. Resolve runtime via adapter or fallback values
+  let runtime: AdapterRuntime;
+  if (adapter) {
+    runtime = await adapter(config);
+  } else {
+    runtime = {
+      locale: adapterRuntime?.locale || config.defaultLocale,
+      pathname: adapterRuntime?.pathname || "",
+    };
   }
+  const { locale, pathname } = runtime;
+  logger.debug("Runtime resolved via adapter/fallback", runtime as object);
+
+  // 2. Load messages if loader enabled
+  let loadedMessages: LocaleNamespaceMessages | undefined;
+  if (shouldLoadMessages(loader)) {
+    loadedMessages = await getMessages({ config, locale, pathname });
+  }
+
+  // 3. Merge static and loaded messages
+  const mergedMessages = mergeMessages(messages, loadedMessages);
+
+  logger.info("Messages initialized.", {
+    staticMessages: { enabled: !!messages },
+    loadedMessages: {
+      enabled: !!loadedMessages,
+      ...(loader
+        ? { loaderType: loader.type, lazyLoad: !!loader.lazyLoad }
+        : null),
+    },
+    mergedMessages,
+  });
+
+  return {
+    config,
+    initialLocale: locale,
+    pathname,
+    messages: mergedMessages,
+  };
 };

@@ -1,2 +1,2 @@
 // Define condfig
-export { defineIntorConfig } from "@/modules/intor-config";
+export { defineIntorConfig } from "@/modules/config";

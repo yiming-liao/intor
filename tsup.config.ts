@@ -52,4 +52,10 @@ export default defineConfig([
     outDir: "dist/next/middleware",
     clean: true,
   },
+  {
+    ...base,
+    entry: ["exports/next/server/index.ts"],
+    outDir: "dist/next/server",
+    clean: true,
+  },
 ]);

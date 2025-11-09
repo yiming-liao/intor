@@ -1,6 +1,6 @@
-import { DEFAULT_ROUTING_OPTIONS } from "@/modules/intor-config/constants/routing-options-constants";
-import { resolveRoutingOptions } from "@/modules/intor-config/resolvers/resolve-routing-options";
-import { InitRoutingOptions } from "@/modules/intor-config/types/routing-options-types";
+import { DEFAULT_ROUTING_OPTIONS } from "@/modules/config/constants/routing.constants";
+import { resolveRoutingOptions } from "@/modules/config/resolvers/resolve-routing-options";
+import { RoutingRawOptions } from "@/modules/config/types/routing.types";
 
 describe("resolveRoutingOptions", () => {
   it("should return default routing options if no input is provided", () => {
@@ -11,7 +11,7 @@ describe("resolveRoutingOptions", () => {
   });
 
   it("should merge custom routing options correctly", () => {
-    const custom: InitRoutingOptions = {
+    const custom: RoutingRawOptions = {
       prefix: "all",
       basePath: "",
     };

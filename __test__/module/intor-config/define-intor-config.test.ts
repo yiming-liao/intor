@@ -1,21 +1,18 @@
-import { defineIntorConfig } from "@/modules/intor-config";
-import { DEFAULT_PREFIX_PLACEHOLDER } from "@/modules/intor-config/constants/prefix-placeholder-constants";
-import { initializeLogger } from "@/modules/intor-config/initialize-logger";
-import { resolveCookieOptions } from "@/modules/intor-config/resolvers/resolve-cookie-options";
-import { resolveFallbackLocales } from "@/modules/intor-config/resolvers/resolve-fallback-locales";
-import { resolvePrefixPlaceholder } from "@/modules/intor-config/resolvers/resolve-prefix-placeholder";
-import { resolveRoutingOptions } from "@/modules/intor-config/resolvers/resolve-routing-options";
-import { IntorAdapter } from "@/modules/intor-config/types/intor-adapter-types";
-import { validateDefaultLocale } from "@/modules/intor-config/validators/validate-default-locale";
-import { validateSupportedLocales } from "@/modules/intor-config/validators/validate-supported-locales";
+import { defineIntorConfig } from "@/modules/config";
+import { DEFAULT_PREFIX_PLACEHOLDER } from "@/modules/config/constants/prefix-placeholder.constants";
+import { resolveCookieOptions } from "@/modules/config/resolvers/resolve-cookie-options";
+import { resolveFallbackLocales } from "@/modules/config/resolvers/resolve-fallback-locales";
+import { resolvePrefixPlaceholder } from "@/modules/config/resolvers/resolve-prefix-placeholder";
+import { resolveRoutingOptions } from "@/modules/config/resolvers/resolve-routing-options";
+import { validateDefaultLocale } from "@/modules/config/validators/validate-default-locale";
+import { validateSupportedLocales } from "@/modules/config/validators/validate-supported-locales";
 
-jest.mock("@/modules/intor-config/resolvers/resolve-cookie-options");
-jest.mock("@/modules/intor-config/resolvers/resolve-fallback-locales");
-jest.mock("@/modules/intor-config/resolvers/resolve-prefix-placeholder");
-jest.mock("@/modules/intor-config/resolvers/resolve-routing-options");
-jest.mock("@/modules/intor-config/validators/validate-default-locale");
-jest.mock("@/modules/intor-config/validators/validate-supported-locales");
-jest.mock("@/modules/intor-config/initialize-logger");
+jest.mock("@/modules/config/resolvers/resolve-cookie-options");
+jest.mock("@/modules/config/resolvers/resolve-fallback-locales");
+jest.mock("@/modules/config/resolvers/resolve-prefix-placeholder");
+jest.mock("@/modules/config/resolvers/resolve-routing-options");
+jest.mock("@/modules/config/validators/validate-default-locale");
+jest.mock("@/modules/config/validators/validate-supported-locales");
 
 describe("defineIntorConfig", () => {
   beforeEach(() => {
@@ -27,7 +24,6 @@ describe("defineIntorConfig", () => {
     (resolveCookieOptions as jest.Mock).mockReturnValue({ some: "cookie" });
     (resolveRoutingOptions as jest.Mock).mockReturnValue({ some: "routing" });
     (resolvePrefixPlaceholder as jest.Mock).mockReturnValue("i18n");
-    (initializeLogger as jest.Mock).mockImplementation();
   });
 
   it("should resolve all config fields correctly", () => {
@@ -48,7 +44,6 @@ describe("defineIntorConfig", () => {
       translator: { loadingMessage: "Loading...", placeholder: "MISSING" },
       cookie: { some: "cookie" },
       routing: { some: "routing" },
-      adapter: "next-client",
       prefixPlaceHolder: "i18n",
     });
 
@@ -56,11 +51,6 @@ describe("defineIntorConfig", () => {
     expect(resolveCookieOptions).toHaveBeenCalled();
     expect(resolveRoutingOptions).toHaveBeenCalled();
     expect(resolveFallbackLocales).toHaveBeenCalled();
-    expect(initializeLogger).toHaveBeenCalledWith({
-      id: expect.any(String),
-      loggerOptions: undefined,
-      scope: "defineIntorConfig",
-    });
   });
 
   it("should fallback to default prefix placeholder if none provided", () => {
@@ -89,29 +79,12 @@ describe("defineIntorConfig", () => {
     expect(result.id).toBe("CUSTOM_ID");
   });
 
-  it("should use provided adapter if given", () => {
-    const result = defineIntorConfig({
-      adapter: "node" as IntorAdapter,
-      messages: {},
-      supportedLocales: ["en"],
-      defaultLocale: "en",
-    });
-
-    expect(result.adapter).toBe("node");
-  });
-
   it("should initialize logger with custom log level", () => {
     defineIntorConfig({
       logger: { level: "info" },
       messages: {},
       supportedLocales: ["en"],
       defaultLocale: "en",
-    });
-
-    expect(initializeLogger).toHaveBeenCalledWith({
-      id: expect.any(String),
-      loggerOptions: { level: "info" },
-      scope: "defineIntorConfig",
     });
   });
 
@@ -122,7 +95,7 @@ describe("defineIntorConfig", () => {
     });
 
     expect(result.messages).toBeUndefined();
-    expect(result.loaderOptions).toBeUndefined();
+    expect(result.loader).toBeUndefined();
   });
 
   it("should throw if validateSupportedLocales fails", () => {
@@ -152,16 +125,5 @@ describe("defineIntorConfig", () => {
     });
 
     expect(result.messages).toEqual(messages);
-  });
-
-  it("should use provided adapter if given", () => {
-    const result = defineIntorConfig({
-      adapter: "node" as IntorAdapter,
-      messages: {},
-      supportedLocales: ["en"],
-      defaultLocale: "en",
-    });
-
-    expect(result.adapter).toBe("node");
   });
 });

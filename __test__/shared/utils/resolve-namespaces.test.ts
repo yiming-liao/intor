@@ -1,9 +1,9 @@
-import { IntorResolvedConfig } from "@/modules/intor-config/types/define-intor-config-types";
+import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
 
 const baseConfig = {
   prefixPlaceHolder: "[locale]",
-  loaderOptions: {
+  loader: {
     routeNamespaces: {
       default: ["ui", "error"],
       "/cms": ["cms"],
@@ -76,7 +76,7 @@ describe("resolveNamespaces", () => {
   it("should return [] if no match and no default", () => {
     const configEmpty = {
       prefixPlaceHolder: "__",
-      loaderOptions: {
+      loader: {
         routeNamespaces: {},
         namespaces: undefined,
       },
@@ -93,7 +93,7 @@ describe("resolveNamespaces", () => {
   it("should return fallback only when no match and default is undefined", () => {
     const config: IntorResolvedConfig = {
       prefixPlaceHolder: "__",
-      loaderOptions: {
+      loader: {
         routeNamespaces: {},
         namespaces: ["fallbackOnly"],
       },
