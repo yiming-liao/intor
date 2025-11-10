@@ -1,35 +1,32 @@
 import { normalizePathname } from "./normalize-pathname";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 
-type ExtractPathnameOptions = {
+interface ExtractPathnameOptions {
   config: IntorResolvedConfig;
   pathname: string;
-};
+}
 
-export type ExtractPathnameResult = {
+interface ExtractPathnameResult {
   basePath: string;
   prefixedPathname: string;
   unprefixedPathname: string;
   maybeLocale: string;
   isLocalePrefixed: boolean;
-};
+}
 
 /**
  * Extracts basePath and locale info from a raw pathname.
  *
- * @param options.config - App config (with basePath, prefix, locales)
- * @param options.pathname - Raw input pathname (e.g., '/app/en/about')
- * @returns Result with basePath, prefixed/unprefixed path, maybeLocale, and locale flag
- *
- * @example
+ * ```ts
  * extractPathname({ config, pathname: '/app/en/about' });
- * // Result => {
- * //   basePath: '/app',
- * //   prefixedPathname: '/en/about',
- * //   unprefixedPathname: '/about',
- * //   maybeLocale: 'en',
- * //   isLocalePrefixed: true
- * // }
+ * => {
+ *   basePath: '/app',
+ *   prefixedPathname: '/en/about',
+ *   unprefixedPathname: '/about',
+ *   maybeLocale: 'en',
+ *   isLocalePrefixed: true
+ * }
+ * ```
  */
 export const extractPathname = ({
   config,

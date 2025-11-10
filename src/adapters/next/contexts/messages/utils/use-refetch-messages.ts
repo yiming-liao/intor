@@ -1,11 +1,8 @@
-"use client";
-
 import { LocaleNamespaceMessages } from "intor-translator";
 import * as React from "react";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { loadApiMessages } from "@/modules/messages-loader";
-import { mergeMessages } from "@/shared/utils/merge-messages";
-import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
+import { loadApiMessages } from "@/modules/messages";
+import { mergeMessages, resolveNamespaces } from "@/shared/utils";
 
 type UseRefetchMessagesParams = {
   config: IntorResolvedConfig;
@@ -43,7 +40,7 @@ export const useRefetchMessages = ({
           locale: newLocale,
           fallbackLocales: config.fallbackLocales[newLocale] || [],
           namespaces,
-          configId: config.id,
+          logger: { id: config.id },
         });
 
         const messages = mergeMessages(staticMessages, loadedMessages);

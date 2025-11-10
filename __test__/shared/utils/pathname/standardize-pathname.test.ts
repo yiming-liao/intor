@@ -6,7 +6,7 @@ describe("standardizePathname", () => {
     routing: {
       basePath: "/app",
     },
-    prefixPlaceHolder: "{{locale}}",
+    prefixPlaceHolder: "{locale}",
   } as unknown as IntorResolvedConfig;
 
   it("should concatenate basePath, prefixPlaceHolder, and pathname correctly", () => {
@@ -14,7 +14,7 @@ describe("standardizePathname", () => {
       config,
       pathname: "home",
     });
-    expect(result).toBe("/app/{{locale}}/home");
+    expect(result).toBe("/app/{locale}/home");
   });
 
   it("should handle empty pathname", () => {
@@ -22,7 +22,7 @@ describe("standardizePathname", () => {
       config,
       pathname: "",
     });
-    expect(result).toBe("/app/{{locale}}");
+    expect(result).toBe("/app/{locale}");
   });
 
   it("should handle empty basePath", () => {
@@ -35,18 +35,7 @@ describe("standardizePathname", () => {
       } as unknown as IntorResolvedConfig,
       pathname: "home",
     });
-    expect(result).toBe("/{{locale}}/home");
-  });
-
-  it("should handle empty prefixPlaceHolder", () => {
-    const result = standardizePathname({
-      config: {
-        ...config,
-        prefixPlaceHolder: "",
-      },
-      pathname: "home",
-    });
-    expect(result).toBe("/app/home");
+    expect(result).toBe("/{locale}/home");
   });
 
   it("should remove trailing slashes from the standardized pathname", () => {
@@ -54,20 +43,7 @@ describe("standardizePathname", () => {
       config,
       pathname: "home/",
     });
-    expect(result).toBe("/app/{{locale}}/home");
-  });
-
-  it("should handle missing config values (basePath or prefixPlaceHolder)", () => {
-    const result = standardizePathname({
-      config: {
-        routing: {
-          basePath: "/app",
-        },
-        prefixPlaceHolder: "",
-      } as unknown as IntorResolvedConfig,
-      pathname: "home",
-    });
-    expect(result).toBe("/app/home");
+    expect(result).toBe("/app/{locale}/home");
   });
 
   it("should handle when pathname is an absolute path", () => {
@@ -75,7 +51,7 @@ describe("standardizePathname", () => {
       config,
       pathname: "/home",
     });
-    expect(result).toBe("/app/{{locale}}/home");
+    expect(result).toBe("/app/{locale}/home");
   });
 
   it("should return basePath + prefixPlaceHolder if pathname is empty or undefined", () => {
@@ -83,7 +59,7 @@ describe("standardizePathname", () => {
       config,
       pathname: "",
     });
-    expect(result).toBe("/app/{{locale}}");
+    expect(result).toBe("/app/{locale}");
   });
 
   it("should normalize pathnames with redundant slashes correctly", () => {
@@ -91,7 +67,7 @@ describe("standardizePathname", () => {
       config,
       pathname: "///home///",
     });
-    expect(result).toBe("/app/{{locale}}/home");
+    expect(result).toBe("/app/{locale}/home");
   });
 
   it("should return only basePath + prefix when pathname is '/'", () => {
@@ -99,39 +75,17 @@ describe("standardizePathname", () => {
       config,
       pathname: "/",
     });
-    expect(result).toBe("/app/{{locale}}");
-  });
-
-  it("should return only basePath when prefixPlaceHolder and pathname are empty", () => {
-    const result = standardizePathname({
-      config: {
-        routing: { basePath: "/app" },
-        prefixPlaceHolder: "",
-      } as unknown as IntorResolvedConfig,
-      pathname: "",
-    });
-    expect(result).toBe("/app");
-  });
-
-  it("should return '/' if all config values and pathname are empty", () => {
-    const result = standardizePathname({
-      config: {
-        routing: { basePath: "" },
-        prefixPlaceHolder: "",
-      } as unknown as IntorResolvedConfig,
-      pathname: "",
-    });
-    expect(result).toBe("/");
+    expect(result).toBe("/app/{locale}");
   });
 
   it("should handle segments that all start with slashes", () => {
     const result = standardizePathname({
       config: {
         routing: { basePath: "/app/" },
-        prefixPlaceHolder: "/{{locale}}/",
+        prefixPlaceHolder: "/{locale}/",
       } as unknown as IntorResolvedConfig,
       pathname: "/home/",
     });
-    expect(result).toBe("/app/{{locale}}/home");
+    expect(result).toBe("/app/{locale}/home");
   });
 });

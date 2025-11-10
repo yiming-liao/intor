@@ -2,10 +2,6 @@ import { Locale } from "intor-translator";
 
 /**
  * Resolves the preferred locale based on the Accept-Language header and supported locales.
- *
- * @param {string | undefined} acceptLanguageHeader - The Accept-Language header from the request.
- * @param {readonly Locale[] | undefined} supportedLocales - A list of supported locales.
- * @returns {string | undefined} The preferred locale, or undefined if no match is found.
  */
 export const resolvePreferredLocale = (
   acceptLanguageHeader: string | undefined,

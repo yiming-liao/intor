@@ -1,19 +1,16 @@
-// Providers
-export { IntorProvider } from "@/adapters/next/providers/intor-provider/intor-provider";
+// Contexts
+export { IntorProvider } from "@/adapters/next/contexts/intor-provider";
+export type { IntorProviderProps } from "@/adapters/next/contexts/intor-provider";
 export { TranslateHandlersProvider } from "@/adapters/next/contexts/translate-handlers";
+export type { TranslateHandlersProviderProps } from "@/adapters/next/contexts/translate-handlers";
 
 // Hooks
-export { useIntor } from "@/adapters/next/providers/use-intor/use-intor";
-export { useConfig as useIntorConfig } from "@/adapters/next/contexts/config";
-export { useLocale as useIntorLocale } from "@/adapters/next/contexts/locale";
-export { useMessages as useIntorMessages } from "@/adapters/next/contexts/messages";
-export { useTranslator as useIntorTranslator } from "@/adapters/next/contexts/translator";
-export { useTranslateHandlers } from "@/adapters/next/contexts/translate-handlers";
-
-// Middleware
-export { intorMiddleware } from "@/adapters/next/routing/intor-middleware";
+export { useIntor } from "@/adapters/next/hooks/use-intor/use-intor";
 
 // Tools
-export { Link } from "@/adapters/next/tools/Link";
-export { usePathname } from "@/adapters/next/tools/usePathname";
-export { useRouter } from "@/adapters/next/tools/useRouter";
+export { Link } from "@/adapters/next/tools/link";
+export { usePathname } from "@/adapters/next/tools/use-pathname";
+export { useRouter } from "@/adapters/next/tools/use-router";
+
+// Constants
+export { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";

@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { setLocaleCookieClient } from "@/adapters/next/utils/set-locale-cookie-client";
+import { setLocaleCookieBrowser } from "@/adapters/next/shared/utils/set-locale-cookie-browser";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 
 /**
@@ -32,6 +30,6 @@ export const useInitLocaleCookie = ({
     // Cookie is disabled or autoSetCookie is disabled
     if (cookie.disabled || !cookie.autoSetCookie) return;
 
-    setLocaleCookieClient({ cookie, locale });
+    setLocaleCookieBrowser({ cookie, locale });
   }, []); // Mount only once
 };

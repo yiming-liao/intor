@@ -3,7 +3,7 @@ import {
   RoutingRawOptions,
   RoutingResolvedOptions,
 } from "@/modules/config/types/routing.types";
-import { normalizePathname } from "@/shared/utils/pathname/normalize-pathname";
+import { normalizePathname } from "@/shared/utils";
 
 /**
  * Resolves routing options by merging default routing options with the provided custom options.

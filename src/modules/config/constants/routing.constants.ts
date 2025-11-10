@@ -2,7 +2,7 @@ import { RoutingResolvedOptions } from "@/modules/config/types/routing.types";
 
 // Default routing options
 export const DEFAULT_ROUTING_OPTIONS: RoutingResolvedOptions = {
-  prefix: "all",
+  prefix: "none",
   firstVisit: {
     localeSource: "browser",
     redirect: true,

@@ -5,7 +5,6 @@ import type {
 import { resolveCacheOptions } from "@/modules/config/resolvers/resolve-cache-options";
 import { resolveCookieOptions } from "@/modules/config/resolvers/resolve-cookie-options";
 import { resolveFallbackLocales } from "@/modules/config/resolvers/resolve-fallback-locales";
-import { resolvePrefixPlaceholder } from "@/modules/config/resolvers/resolve-prefix-placeholder";
 import { resolveRoutingOptions } from "@/modules/config/resolvers/resolve-routing-options";
 import { validateDefaultLocale } from "@/modules/config/validators/validate-default-locale";
 import { validateSupportedLocales } from "@/modules/config/validators/validate-supported-locales";
@@ -24,7 +23,6 @@ export const defineIntorConfig = (
   const fallbackLocales = resolveFallbackLocales(config, supportedLocales);
   const cookie = resolveCookieOptions(config.cookie);
   const routing = resolveRoutingOptions(config.routing);
-  const prefixPlaceHolder = resolvePrefixPlaceholder(config.prefixPlaceHolder);
   const cache = resolveCacheOptions(config.cache);
 
   return {
@@ -38,7 +36,6 @@ export const defineIntorConfig = (
     cookie,
     routing,
     logger: config.logger,
-    prefixPlaceHolder,
     cache,
   };
 };

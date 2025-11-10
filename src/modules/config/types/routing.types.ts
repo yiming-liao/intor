@@ -1,11 +1,9 @@
 export const routingPrefix = ["none", "all", "except-default"] as const;
-export type RoutingPrefix = (typeof routingPrefix)[number];
-
 export const routingFirstVisitLocaleSource = ["default", "browser"] as const;
 
 // Routing raw options
 export type RoutingRawOptions = {
-  /** default: "all" */
+  /** default: "none" */
   prefix?: (typeof routingPrefix)[number];
   firstVisit?: {
     /** default: "browser" */

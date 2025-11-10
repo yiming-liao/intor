@@ -1,15 +1,12 @@
 import { defineIntorConfig } from "@/modules/config";
-import { DEFAULT_PREFIX_PLACEHOLDER } from "@/modules/config/constants/prefix-placeholder.constants";
 import { resolveCookieOptions } from "@/modules/config/resolvers/resolve-cookie-options";
 import { resolveFallbackLocales } from "@/modules/config/resolvers/resolve-fallback-locales";
-import { resolvePrefixPlaceholder } from "@/modules/config/resolvers/resolve-prefix-placeholder";
 import { resolveRoutingOptions } from "@/modules/config/resolvers/resolve-routing-options";
 import { validateDefaultLocale } from "@/modules/config/validators/validate-default-locale";
 import { validateSupportedLocales } from "@/modules/config/validators/validate-supported-locales";
 
 jest.mock("@/modules/config/resolvers/resolve-cookie-options");
 jest.mock("@/modules/config/resolvers/resolve-fallback-locales");
-jest.mock("@/modules/config/resolvers/resolve-prefix-placeholder");
 jest.mock("@/modules/config/resolvers/resolve-routing-options");
 jest.mock("@/modules/config/validators/validate-default-locale");
 jest.mock("@/modules/config/validators/validate-supported-locales");
@@ -23,7 +20,6 @@ describe("defineIntorConfig", () => {
     (resolveFallbackLocales as jest.Mock).mockReturnValue({ en: ["zh"] });
     (resolveCookieOptions as jest.Mock).mockReturnValue({ some: "cookie" });
     (resolveRoutingOptions as jest.Mock).mockReturnValue({ some: "routing" });
-    (resolvePrefixPlaceholder as jest.Mock).mockReturnValue("i18n");
   });
 
   it("should resolve all config fields correctly", () => {
@@ -31,7 +27,6 @@ describe("defineIntorConfig", () => {
       messages: {},
       supportedLocales: ["en", "zh"],
       defaultLocale: "en",
-      prefixPlaceHolder: "/i18n/",
       translator: { loadingMessage: "Loading...", placeholder: "MISSING" },
     });
 
@@ -44,28 +39,11 @@ describe("defineIntorConfig", () => {
       translator: { loadingMessage: "Loading...", placeholder: "MISSING" },
       cookie: { some: "cookie" },
       routing: { some: "routing" },
-      prefixPlaceHolder: "i18n",
     });
 
-    expect(resolvePrefixPlaceholder).toHaveBeenCalledWith("/i18n/");
     expect(resolveCookieOptions).toHaveBeenCalled();
     expect(resolveRoutingOptions).toHaveBeenCalled();
     expect(resolveFallbackLocales).toHaveBeenCalled();
-  });
-
-  it("should fallback to default prefix placeholder if none provided", () => {
-    (resolvePrefixPlaceholder as jest.Mock).mockReturnValue(
-      DEFAULT_PREFIX_PLACEHOLDER,
-    );
-
-    const result = defineIntorConfig({
-      messages: {},
-      supportedLocales: ["en"],
-      defaultLocale: "en",
-    });
-
-    expect(resolvePrefixPlaceholder).toHaveBeenCalledWith(undefined);
-    expect(result.prefixPlaceHolder).toBe(DEFAULT_PREFIX_PLACEHOLDER);
   });
 
   it("should use provided id if given", () => {

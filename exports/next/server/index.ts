@@ -1,4 +1,5 @@
 export {
+  // Server
   nextAdapter,
   getMessages,
   getTranslation,

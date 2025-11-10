@@ -1,25 +1,63 @@
 // Intor
-export { intor } from "@/modules/intor";
+export {
+  intor,
+  type AdapterRuntime,
+  type IntorOptions,
+  type IntorResult,
+} from "@/modules/intor";
 
-// Messages loader
-export { loadLocalMessages, getMessages } from "@/modules/messages-loader";
-export type { LoadLocalMessagesOptions } from "@/modules/messages-loader";
+// Messages
+export {
+  getMessages,
+  loadLocalMessages,
+  type LoadLocalMessagesOptions,
+  loadApiMessages,
+  type LoadApiMessagesOptions,
+} from "@/modules/messages";
+
+// Constants
+export { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
 
 // Utils
-export { mergeMessages } from "@/shared/utils/merge-messages";
-export { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
-export { normalizeLocale } from "@/shared/utils/locale/normalize-locale";
-export { resolvePreferredLocale } from "@/shared/utils/locale/resolve-preferred-locale";
-export { extractPathname } from "@/shared/utils/pathname/extract-pathname";
-export { normalizePathname } from "@/shared/utils/pathname/normalize-pathname";
-export { standardizePathname } from "@/shared/utils/pathname/standardize-pathname";
+export {
+  mergeMessages,
+  normalizeCacheKey,
+  resolveNamespaces,
+  normalizeLocale,
+  resolvePreferredLocale,
+  extractPathname,
+  normalizePathname,
+  standardizePathname,
+} from "@/shared/utils";
+
+// Cache
+export { clearLoggerPool } from "@/shared/logger/global-logger-pool";
+export { clearMessagesPool } from "@/shared/messages/global-messages-pool";
 
 // Intor translator
-export type {
-  TranslateHandlers,
-  FormatMessage,
-  OnLoading,
-  OnMissing,
-  TranslateContext,
+export {
+  Translator,
+  // Translate config
+  type TranslateHandlers,
+  type FormatMessage,
+  type OnLoading,
+  type OnMissing,
+  type TranslateContext,
+  // basic
+  type Locale,
+  type Message,
+  type Namespace,
+  type Replacement,
+  // rich replacement
+  type RichReplacement,
+  // message structure
+  type NestedMessage,
+  type MessageRecord,
+  type NamespaceMessages,
+  type LocaleNamespaceMessages,
+  type UnionLocaleMessages,
+  // locale
+  type LocaleKey,
+  type StrictLocaleKey,
+  type FallbackLocalesMap,
 } from "intor-translator";
-export { Translator } from "intor-translator";

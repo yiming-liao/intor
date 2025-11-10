@@ -1,5 +1,5 @@
 import { Locale } from "intor-translator";
-import { setLocaleCookieClient } from "@/adapters/next/utils/set-locale-cookie-client";
+import { setLocaleCookieBrowser } from "@/adapters/next/shared/utils/set-locale-cookie-browser";
 import { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
 import { LoaderOptions } from "@/modules/config/types/loader.types";
 
@@ -47,7 +47,7 @@ export const changeLocale = ({
   setLocale(newLocale);
 
   // Set the locale cookie on client side
-  setLocaleCookieClient({ cookie, locale: newLocale });
+  setLocaleCookieBrowser({ cookie, locale: newLocale });
 
   // Update the <html lang> attribute
   document.documentElement.lang = newLocale;

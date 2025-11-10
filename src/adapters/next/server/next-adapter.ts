@@ -1,10 +1,9 @@
 import { cookies, headers } from "next/headers";
-import { DEFAULT_PATHNAME_HEADER_NAME } from "@/adapters/next/constants/header-name";
+import { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { AdapterRuntime } from "@/modules/intor/types";
 import { getLogger } from "@/shared/logger/get-logger";
-import { normalizeLocale } from "@/shared/utils/locale/normalize-locale";
-import { resolvePreferredLocale } from "@/shared/utils/locale/resolve-preferred-locale";
+import { normalizeLocale, resolvePreferredLocale } from "@/shared/utils";
 
 /**
  * Prepares runtime data for Next.js.
@@ -40,7 +39,7 @@ export const nextAdapter = async (
   }
 
   // Retrieve pathname from headers (next/headers)
-  const pathname = headersStore.get(DEFAULT_PATHNAME_HEADER_NAME);
+  const pathname = headersStore.get(PATHNAME_HEADER_NAME);
   if (pathname) {
     logger.trace("Pathname retrieved from header.", { pathname });
   }

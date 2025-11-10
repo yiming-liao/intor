@@ -3,8 +3,8 @@ import {
   LoaderOptions,
   RouteNamespaces,
 } from "@/modules/config/types/loader.types";
-import { extractPathname } from "@/shared/utils/pathname/extract-pathname";
-import { standardizePathname } from "@/shared/utils/pathname/standardize-pathname";
+import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
+import { extractPathname, standardizePathname } from "@/shared/utils";
 
 interface ResolveNamespacesOptions {
   config: IntorResolvedConfig;
@@ -21,7 +21,7 @@ export const resolveNamespaces = ({
   config,
   pathname,
 }: ResolveNamespacesOptions): string[] => {
-  const { loader, prefixPlaceHolder } = config;
+  const { loader } = config;
   const {
     routeNamespaces = {} as RouteNamespaces,
     namespaces: fallbackNamespaces,
@@ -35,7 +35,7 @@ export const resolveNamespaces = ({
   });
 
   const placeholderRemovedPathname = standardizedPathname.replace(
-    `/${prefixPlaceHolder}`,
+    `/${PREFIX_PLACEHOLDER}`,
     "",
   );
 

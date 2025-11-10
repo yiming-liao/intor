@@ -5,9 +5,9 @@ import {
   IntorResult,
 } from "@/modules/intor/types";
 import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
-import { getMessages } from "@/modules/messages-loader/get-messages";
+import { getMessages } from "@/modules/messages";
 import { getLogger } from "@/shared/logger/get-logger";
-import { mergeMessages } from "@/shared/utils/merge-messages";
+import { mergeMessages } from "@/shared/utils";
 
 /**
  * Entry point for initializing Intor.

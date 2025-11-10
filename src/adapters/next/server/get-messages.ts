@@ -1,7 +1,7 @@
 import { nextAdapter } from "@/adapters/next/server/next-adapter";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { getMessages as rawGetMessages } from "@/modules/messages-loader";
-import { MessagesLoaderResult } from "@/modules/messages-loader/types";
+import { getMessages as rawGetMessages } from "@/modules/messages";
+import { MessagesLoaderResult } from "@/modules/messages/types";
 
 /**
  * Retrieves messages in a Next.js SSR environment.

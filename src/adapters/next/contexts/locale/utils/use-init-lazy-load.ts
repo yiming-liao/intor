@@ -1,5 +1,3 @@
-"use client";
-
 import { Locale } from "intor-translator";
 import * as React from "react";
 import { useMessages } from "@/adapters/next/contexts/messages";

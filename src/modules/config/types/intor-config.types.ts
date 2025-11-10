@@ -16,12 +16,12 @@ import {
 } from "@/modules/config/types/cache.types";
 import { TranslatorOptions } from "@/modules/config/types/translator.types";
 
-export type WithoutLoader = {
+type WithoutLoader = {
   loader?: undefined;
   supportedLocales?: readonly Locale[]; // Optional
 };
 
-export type WithLoader = {
+type WithLoader = {
   loader: LoaderOptions;
   supportedLocales: readonly Locale[]; // Required
 };
@@ -39,7 +39,6 @@ export type IntorRawConfig = (WithLoader | WithoutLoader) & {
   readonly cookie?: CookieRawOptions;
   readonly routing?: RoutingRawOptions;
   readonly logger?: LoggerOptions;
-  readonly prefixPlaceHolder?: string;
   readonly cache?: CacheRawOptions;
 };
 
@@ -56,6 +55,5 @@ export type IntorResolvedConfig = (WithLoader | WithoutLoader) & {
   readonly cookie: CookieResolvedOptions;
   readonly routing: RoutingResolvedOptions;
   readonly logger?: LoggerOptions;
-  readonly prefixPlaceHolder: string;
   readonly cache: CacheResolvedOptions;
 };

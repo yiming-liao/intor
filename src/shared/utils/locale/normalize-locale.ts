@@ -1,9 +1,5 @@
 /**
  * Normalizes and finds the best matching locale from the supported locales list.
- *
- * @param locale - The input locale to normalize, typically from the user's browser or request header.
- * @param supportedLocales - An array of supported locales.
- * @returns The best matching locale or undefined if no match is found.
  */
 export const normalizeLocale = <Locale extends string>(
   locale: string = "",

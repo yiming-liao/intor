@@ -6,20 +6,11 @@
  * - Ensures a leading slash and removes trailing slashes.
  * - Optionally removes the leading slash.
  * - Avoids intermediate array allocations for performance.
- *
- * @param rawPathname - The input pathname to normalize.
- * @param options - Options to customize normalization behavior.
- * @returns A normalized pathname, with optional removal of leading slash.
- * @throws TypeError if the input is not a string.
  */
 export const normalizePathname = (
   rawPathname: string,
   options: { removeLeadingSlash?: boolean } = {},
 ): string => {
-  if (typeof rawPathname !== "string") {
-    throw new TypeError("Expected rawPathname to be a string");
-  }
-
   const length = rawPathname.length;
   let start = 0;
   let end = length - 1;

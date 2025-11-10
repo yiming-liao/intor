@@ -1,7 +1,7 @@
 import { TranslateConfig, Translator } from "intor-translator";
 import { nextAdapter } from "@/adapters/next/server/next-adapter";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { getMessages as rawGetMessages } from "@/modules/messages-loader";
+import { getMessages as rawGetMessages } from "@/modules/messages";
 
 /**
  * Creates a ready-to-use translation function (`t`) for the current

@@ -1,5 +1,4 @@
 /**
- * @example
  * ```ts
  * {
  *  default: ["ui", "meta"],
@@ -12,6 +11,12 @@
 export type RouteNamespaces =
   | { [key: string]: string[] }
   | { [key: string]: string[]; default: string[] };
+
+export interface ApiHeaders {
+  authorization?: string; // Bearer token
+  "x-api-key"?: string; // API Key
+  [key: string]: string | undefined; // Custom header
+}
 
 type BaseLoaderOptions = {
   basePath?: string;
@@ -30,6 +35,7 @@ type ImportLoader = BaseLoaderOptions & {
 export type ApiLoader = BaseLoaderOptions & {
   type: "api";
   apiUrl: string;
+  apiHeaders?: ApiHeaders;
   fullReload?: boolean;
 };
 
