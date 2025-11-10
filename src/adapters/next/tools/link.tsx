@@ -12,11 +12,11 @@ import { usePathname } from "@/adapters/next/tools/use-pathname";
 import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import { Url } from "next/dist/shared/lib/router/router";
 
-interface LinkProps extends Omit<NextLinkProps, "href"> {
+interface LinkProps
+  extends Omit<NextLinkProps, "href">,
+    Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
   href?: Url;
   locale?: string;
-  children: React.ReactNode;
-  onClick?: React.AnchorHTMLAttributes<HTMLAnchorElement>["onClick"];
 }
 
 /**
