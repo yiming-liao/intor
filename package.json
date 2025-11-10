@@ -56,8 +56,6 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "exports/next/provider/intor-provider.jsx",
-    "exports/next/provider/translate-handlers-provider.jsx",
     "README.md",
     "LICENSE"
   ],
