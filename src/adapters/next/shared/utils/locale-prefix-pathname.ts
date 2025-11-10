@@ -1,5 +1,6 @@
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
+import { normalizePathname } from "@/shared/utils";
 
 interface LocalePrefixPathnameOptions {
   pathname: string;
@@ -29,18 +30,26 @@ export const localePrefixPathname = ({
 
   // context: "all"
   if (prefix === "all") {
-    return standardizedPathname.replace(PREFIX_PLACEHOLDER, locale!);
+    return normalizePathname(
+      standardizedPathname.replaceAll(PREFIX_PLACEHOLDER, locale!),
+    );
   }
 
   // context: "except-default"
   if (prefix === "except-default") {
     if (locale === config.defaultLocale) {
-      return standardizedPathname.replace(`/${PREFIX_PLACEHOLDER}`, "");
+      return normalizePathname(
+        standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
+      );
     } else {
-      return standardizedPathname.replace(PREFIX_PLACEHOLDER, locale!);
+      return normalizePathname(
+        standardizedPathname.replaceAll(PREFIX_PLACEHOLDER, locale!),
+      );
     }
   }
 
   // context: "none"
-  return standardizedPathname.replace(`/${PREFIX_PLACEHOLDER}`, "");
+  return normalizePathname(
+    standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
+  );
 };
