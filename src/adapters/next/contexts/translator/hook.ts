@@ -9,7 +9,7 @@ export function useTranslator<M>() {
     | undefined;
   if (!context)
     throw new Error(
-      "useIntorTranslator must be used within IntorTranslatorProvider",
+      "useTranslator must be used within IntorTranslatorProvider",
     );
   return context;
 }
