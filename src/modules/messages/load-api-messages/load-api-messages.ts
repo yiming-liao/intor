@@ -10,6 +10,9 @@ import { normalizeCacheKey } from "@/shared/utils";
 
 /**
  * Load locale messages from a remote API.
+ *
+ * - Fetch messages for a target locale with optional fallback locales.
+ * - Cache messages if enabled.
  */
 export const loadApiMessages = async <
   Messages extends LocaleNamespaceMessages,
@@ -32,7 +35,10 @@ export const loadApiMessages = async <
   }
 
   //====== Cache ======
-  const pool = getGlobalMessagesPool();
+  let pool;
+  if (cache.enabled) {
+    pool = getGlobalMessagesPool();
+  }
   const key = normalizeCacheKey([
     loggerOptions.id,
     basePath,
@@ -41,7 +47,7 @@ export const loadApiMessages = async <
     [...(namespaces ?? [])].sort().join(","),
   ]);
   if (cache.enabled && key) {
-    const cached = await pool.get(key);
+    const cached = await pool?.get(key);
     if (cached) {
       logger.debug("Messages cache hit.", { key });
       return cached as Messages;
@@ -62,7 +68,7 @@ export const loadApiMessages = async <
   if (messages) {
     //====== Cache ======
     if (cache.enabled && key) {
-      await pool.set(key, messages, cache.ttl);
+      await pool?.set(key, messages, cache.ttl);
     }
     return messages;
   }
@@ -84,7 +90,7 @@ export const loadApiMessages = async <
     });
     //====== Cache ======
     if (cache.enabled && key) {
-      await pool.set(key, fallbackResult.messages, cache.ttl);
+      await pool?.set(key, fallbackResult.messages, cache.ttl);
     }
     return fallbackResult.messages;
   }

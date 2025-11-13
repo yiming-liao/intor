@@ -6,12 +6,13 @@ export {
   type TranslateHandlersProviderProps,
 
   // Hooks
-  useIntor,
+  useTranslator,
 
   // Tools
   Link,
   usePathname,
   useRouter,
+  redirect,
 
   // Constants
   PATHNAME_HEADER_NAME,

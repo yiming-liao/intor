@@ -1,5 +1,4 @@
 import { LocaleNamespaceMessages } from "intor-translator";
-import { LoaderOptions } from "@/modules/config/types/loader.types";
 import { createLoadLocalMessages } from "@/modules/messages/create-load-local-messages";
 import { loadApiMessages } from "@/modules/messages/load-api-messages";
 import {
@@ -7,20 +6,33 @@ import {
   MessagesLoaderResult,
 } from "@/modules/messages/types";
 import { getLogger } from "@/shared/logger/get-logger";
+import { GenConfigKeys, GenMessages } from "@/shared/types/generated.types";
 import { resolveNamespaces } from "@/shared/utils";
 
 /**
- * Get messages (import / api)
+ * Load messages for a given locale and pathname.
+ *
+ * - Resolve namespaces based on config and pathname.
+ * - Support both **local import** and **remote API** loaders.
+ * - Apply fallback locales if needed.
+ * - Cache messages if enabled (handled by underlying loader, not this function directly).
  */
-export const getMessages = async ({
+export const loadMessages = async <C extends GenConfigKeys = "__default__">({
   config,
   locale,
   pathname,
-}: MessagesLoaderOptions): MessagesLoaderResult => {
-  const baseLogger = getLogger({ id: config.id });
+}: MessagesLoaderOptions): MessagesLoaderResult<C> => {
+  const baseLogger = getLogger({ id: config.id, ...config.logger });
   const logger = baseLogger.child({ scope: "messages-loader" });
 
-  const loaderOptions = config.loader as LoaderOptions; // Assert as required
+  if (!config.loader) {
+    logger.warn(
+      "No loader options have been configured in the current config.",
+    );
+    return;
+  }
+
+  const { loader } = config;
   const fallbackLocales = config.fallbackLocales[locale] || []; // fallback locales fro the pass-in target locale
   const namespaces = resolveNamespaces({ config, pathname }); // Resolve namespaces with pathname
 
@@ -30,16 +42,16 @@ export const getMessages = async ({
         ? { count: namespaces.length, list: [...namespaces] }
         : "All Namespaces",
   });
-  logger.debug("Loader type selected.", { loaderType: loaderOptions.type });
+  logger.debug("Loader type selected.", { loaderType: loader.type });
 
   let loadedMessages: LocaleNamespaceMessages | undefined;
 
   //====== loader type: import ======
-  if (loaderOptions.type === "import") {
+  if (loader.type === "import") {
     // Create load local messages (make basePath static)
-    const loadLocalMessages = createLoadLocalMessages(loaderOptions.basePath);
+    const loadLocalMessages = createLoadLocalMessages(loader.basePath);
     loadedMessages = await loadLocalMessages({
-      ...loaderOptions,
+      ...loader,
       locale,
       fallbackLocales,
       namespaces,
@@ -48,10 +60,10 @@ export const getMessages = async ({
     });
   }
   //====== loader type: api ======
-  else if (loaderOptions.type === "api") {
+  else if (loader.type === "api") {
     // Fetch messages from API
     loadedMessages = await loadApiMessages({
-      ...loaderOptions,
+      ...loader,
       locale,
       fallbackLocales,
       namespaces,
@@ -64,5 +76,5 @@ export const getMessages = async ({
     logger.warn("No messages found.", { locale, namespaces });
   }
 
-  return loadedMessages;
+  return loadedMessages as GenMessages<C>;
 };

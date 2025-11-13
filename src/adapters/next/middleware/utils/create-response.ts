@@ -4,24 +4,27 @@ import { setPathnameHeader } from "@/adapters/next/middleware/utils/set-pathname
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 
-type CreateResponseOptions = {
-  request: NextRequest;
+interface CreateResponseOptions<Req extends NextRequest = NextRequest> {
+  request: Req;
   config: IntorResolvedConfig;
   locale?: string;
   responseType?: "next" | "redirect";
   setCookieOptions?: { override?: boolean };
-};
+}
 
 /**
  * Create a Next.js response with locale handling.
  */
-export const createResponse = ({
+export const createResponse = <
+  Req extends NextRequest = NextRequest,
+  Res extends NextResponse = NextResponse,
+>({
   request,
   config,
   locale,
   responseType = "next",
   setCookieOptions = { override: false },
-}: CreateResponseOptions): NextResponse => {
+}: CreateResponseOptions<Req>): Response => {
   const { cookie } = config;
   const { override } = setCookieOptions;
   const url = request.nextUrl.clone(); // Clone URL to avoid mutating original
@@ -34,7 +37,7 @@ export const createResponse = ({
   });
   url.pathname = localePrefixedPathname;
 
-  let response: NextResponse;
+  let response;
 
   // Create response based on the responseType
   if (responseType === "redirect") {
@@ -55,6 +58,9 @@ export const createResponse = ({
   }
 
   // Set pathname header
-  const finalResponse = setPathnameHeader({ request, response });
+  const finalResponse = setPathnameHeader<Req, Res>({
+    request,
+    response: response as Res,
+  });
   return finalResponse;
 };

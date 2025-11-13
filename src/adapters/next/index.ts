@@ -5,12 +5,15 @@ export { TranslateHandlersProvider } from "@/adapters/next/contexts/translate-ha
 export type { TranslateHandlersProviderProps } from "@/adapters/next/contexts/translate-handlers";
 
 // Hooks
-export { useIntor } from "@/adapters/next/hooks/use-intor/use-intor";
+export { useTranslator } from "@/adapters/next/hooks/use-translator";
 
 // Tools
-export { Link } from "@/adapters/next/tools/link";
-export { usePathname } from "@/adapters/next/tools/use-pathname";
-export { useRouter } from "@/adapters/next/tools/use-router";
+export {
+  Link,
+  usePathname,
+  useRouter,
+  redirect,
+} from "@/adapters/next/navigation";
 
 // Constants
 export { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";

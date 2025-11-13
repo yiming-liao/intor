@@ -1,13 +1,8 @@
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
+import { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { extractPathname } from "@/shared/utils";
-
-interface Params {
-  request: NextRequest;
-  config: IntorResolvedConfig;
-}
 
 /**
  * Handle routing for "all" prefix.
@@ -18,10 +13,10 @@ interface Params {
  *   - If redirect enabled → detect initial locale and redirect.
  * - If no prefix but cookie exists → redirect using cookie locale.
  */
-export const handlePrefixAll = async ({
+export const handlePrefixAll = async <Req extends NextRequest = NextRequest>({
   request,
   config,
-}: Params): Promise<Response> => {
+}: IntorMiddlewareParams<Req>): Promise<Response> => {
   const { cookie, routing } = config;
   const { maybeLocale, isLocalePrefixed } = extractPathname({
     config,
@@ -33,7 +28,7 @@ export const handlePrefixAll = async ({
 
   if (isLocalePrefixed) {
     // ▶ Go directly and override cookie
-    return createResponse({
+    return createResponse<Req>({
       request,
       config,
       locale: maybeLocale,
@@ -48,7 +43,7 @@ export const handlePrefixAll = async ({
     // Not using redirect (Do not set cookie)
     if (!routing.firstVisit.redirect) {
       // ▶ Go directly
-      return createResponse({ request, config });
+      return createResponse<Req>({ request, config });
     }
 
     // Decide to use locale from browser or defaultLocale
@@ -56,7 +51,7 @@ export const handlePrefixAll = async ({
 
     // Using redirect for the first visit
     // ▶ Redirect to URL (set cookie for the first visit)
-    return createResponse({
+    return createResponse<Req>({
       request,
       config,
       locale: initialLocale, // Use locale from 'browser' | 'default'
@@ -65,7 +60,7 @@ export const handlePrefixAll = async ({
   }
 
   // ▶ Redirect to URL
-  return createResponse({
+  return createResponse<Req>({
     request,
     config,
     locale: localeFromCookie, // Use locale from cookie

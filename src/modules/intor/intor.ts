@@ -1,49 +1,52 @@
 import { LocaleNamespaceMessages } from "intor-translator";
+import { IntorResolvedConfig } from "@/modules/config";
 import {
-  AdapterRuntime,
-  IntorOptions,
+  I18nContext,
+  GetI18nContext,
   IntorResult,
 } from "@/modules/intor/types";
 import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
-import { getMessages } from "@/modules/messages";
+import { loadMessages } from "@/modules/messages";
 import { getLogger } from "@/shared/logger/get-logger";
+import { GenLocale } from "@/shared/types/generated.types";
 import { mergeMessages } from "@/shared/utils";
 
 /**
  * Entry point for initializing Intor.
  *
- * 1. Resolve runtime via adapter or fallback values
- * 2. Load messages if loader enabled
- * 3. Merge static and loaded messages
+ * 1. Resolve context via adapter or fallback values.
+ * 2. Load messages if loader is enabled.
+ * 3. Merge static messages with loaded messages.
  */
-export const intor = async ({
-  config,
-  adapter,
-  adapterRuntime,
-}: IntorOptions): Promise<IntorResult> => {
+export const intor = async (
+  config: IntorResolvedConfig,
+  i18nContext: GetI18nContext | Partial<I18nContext>,
+): Promise<IntorResult> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
 
   const { messages, loader } = config;
+  const isI18nContextFunction = typeof i18nContext === "function";
 
-  // 1. Resolve runtime via adapter or fallback values
-  let runtime: AdapterRuntime;
-  if (adapter) {
-    runtime = await adapter(config);
+  // 1. Resolve context via adapter or fallback values
+  let context: I18nContext;
+  if (isI18nContextFunction) {
+    context = await i18nContext(config);
   } else {
-    runtime = {
-      locale: adapterRuntime?.locale || config.defaultLocale,
-      pathname: adapterRuntime?.pathname || "",
+    context = {
+      locale: (i18nContext?.locale || config.defaultLocale) as GenLocale,
+      pathname: i18nContext?.pathname || "",
     };
   }
-  const { locale, pathname } = runtime;
-  logger.debug("Runtime resolved via adapter/fallback", runtime as object);
+  const { locale, pathname } = context;
+  const source = isI18nContextFunction ? "[function]" : "[static object]";
+  logger.debug(`Context resolved via ${source}.`, context as object);
 
   // 2. Load messages if loader enabled
   let loadedMessages: LocaleNamespaceMessages | undefined;
   if (shouldLoadMessages(loader)) {
-    loadedMessages = await getMessages({ config, locale, pathname });
+    loadedMessages = await loadMessages({ config, locale, pathname });
   }
 
   // 3. Merge static and loaded messages

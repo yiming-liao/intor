@@ -1,4 +1,4 @@
-export { getMessages } from "./get-messages";
+export { loadMessages } from "./load-messages";
 
 export { loadLocalMessages } from "./load-local-messages";
 export type { LoadLocalMessagesOptions } from "./load-local-messages";

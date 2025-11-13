@@ -1,9 +1,12 @@
 import type { NextRequest, NextResponse } from "next/server";
 import { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";
 
-interface SetPathnameHeaderOptions {
-  request: NextRequest;
-  response: NextResponse;
+interface SetPathnameHeaderOptions<
+  Req extends NextRequest = NextRequest,
+  Res extends NextResponse = NextResponse,
+> {
+  request: Req;
+  response: Res;
   key?: string;
 }
 
@@ -11,11 +14,14 @@ interface SetPathnameHeaderOptions {
  * Set the pathname in the response header.
  * - For Next.js edge middleware.
  */
-export const setPathnameHeader = ({
+export const setPathnameHeader = <
+  Req extends NextRequest = NextRequest,
+  Res extends NextResponse = NextResponse,
+>({
   request,
   response,
   key = PATHNAME_HEADER_NAME,
-}: SetPathnameHeaderOptions): NextResponse => {
+}: SetPathnameHeaderOptions<Req, Res>): Response => {
   const pathname = request.nextUrl.pathname;
   response.headers.set(key, pathname);
   return response;

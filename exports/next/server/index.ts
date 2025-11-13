@@ -1,6 +1,5 @@
 export {
   // Server
-  nextAdapter,
-  getMessages,
-  getTranslation,
+  getI18nContext,
+  getTranslator,
 } from "@/adapters/next/server";

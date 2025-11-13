@@ -1,18 +1,17 @@
 import { Locale, LocaleNamespaceMessages } from "intor-translator";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import { GenLocale } from "@/shared/types/generated.types";
 
-// Adapter runtime
-export interface AdapterRuntime {
-  locale: Locale;
+// i18n context
+export interface I18nContext {
+  locale: GenLocale;
   pathname: string;
 }
 
-// Intor options
-export interface IntorOptions {
-  config: IntorResolvedConfig;
-  adapter?: (config: IntorResolvedConfig) => Promise<AdapterRuntime>;
-  adapterRuntime?: Partial<AdapterRuntime>;
-}
+// Get i18n context function
+export type GetI18nContext = (
+  config: IntorResolvedConfig,
+) => Promise<I18nContext>;
 
 // Intor result
 export interface IntorResult {

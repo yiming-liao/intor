@@ -50,17 +50,17 @@ export const extractPathname = ({
   const maybeLocale = pathParts[0] || "";
   const isLocalePrefixed = config.supportedLocales?.includes(maybeLocale); // Check by supportedLocales
 
-  // context: "none"
+  // prefix: "none"
   let unprefixedPathname: string = prefixedPathname;
 
-  // context: "all"
+  // prefix: "all"
   if (prefix === "all") {
     if (isLocalePrefixed) {
       unprefixedPathname =
         prefixedPathname.slice(maybeLocale.length + 1) || "/";
     }
   }
-  // context: "except-default",
+  // prefix: "except-default",
   else if (prefix === "except-default") {
     if (maybeLocale && maybeLocale !== defaultLocale && isLocalePrefixed) {
       unprefixedPathname =

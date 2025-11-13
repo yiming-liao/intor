@@ -1,16 +1,19 @@
 import { cookies, headers } from "next/headers";
 import { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { AdapterRuntime } from "@/modules/intor/types";
+import { I18nContext } from "@/modules/intor/types";
 import { getLogger } from "@/shared/logger/get-logger";
+import { GenLocale } from "@/shared/types/generated.types";
 import { normalizeLocale, resolvePreferredLocale } from "@/shared/utils";
 
 /**
- * Prepares runtime data for Next.js.
+ * Retrieves the i18n context for the current request.
+ *
+ * Next.js adapter implementation: uses `next/headers` and `next/cookies`.
  */
-export const nextAdapter = async (
+export const getI18nContext = async (
   config: IntorResolvedConfig,
-): Promise<AdapterRuntime> => {
+): Promise<I18nContext> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
   const logger = baseLogger.child({ scope: "next-adapter" });
 
@@ -45,7 +48,7 @@ export const nextAdapter = async (
   }
 
   return {
-    locale: locale || defaultLocale,
+    locale: (locale || defaultLocale) as GenLocale,
     pathname: pathname || "",
   };
 };

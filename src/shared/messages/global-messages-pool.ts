@@ -4,7 +4,7 @@ import Keyv from "keyv";
 /**
  * Global messages pool (cross-module + hot-reload safe)
  */
-type MessagesPool = Keyv<LocaleNamespaceMessages>;
+export type MessagesPool = Keyv<LocaleNamespaceMessages>;
 
 declare global {
   var __INTOR_MESSAGES_POOL__: MessagesPool | undefined;

@@ -13,7 +13,8 @@ const DEFAULT_FORMATTER_CONFIG: FormatterConfig = {
  */
 export function getLogger({
   id,
-  formatterConfig = DEFAULT_FORMATTER_CONFIG,
+  formatterConfig,
+  preset,
   ...options
 }: { id: string; scope?: string } & LoggerOptions): Logger {
   const pool = getGlobalLoggerPool();
@@ -21,7 +22,15 @@ export function getLogger({
   let logger = pool.get(id);
 
   if (!logger) {
-    logger = logry({ id, formatterConfig, ...options });
+    logger = logry({
+      id,
+      formatterConfig:
+        !formatterConfig && !preset
+          ? DEFAULT_FORMATTER_CONFIG
+          : formatterConfig,
+      preset,
+      ...options,
+    });
 
     pool.set(id, logger);
 

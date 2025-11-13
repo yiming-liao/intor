@@ -1,13 +1,8 @@
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
+import { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { extractPathname } from "@/shared/utils";
-
-interface Params {
-  request: NextRequest;
-  config: IntorResolvedConfig;
-}
 
 /**
  * Handle routing for "except-default" prefix.
@@ -22,10 +17,12 @@ interface Params {
  *   - If cookie locale is default → respond directly.
  *   - Else → redirect to locale URL.
  */
-export const handlePrefixExceptDefault = async ({
+export const handlePrefixExceptDefault = async <
+  Req extends NextRequest = NextRequest,
+>({
   request,
   config,
-}: Params): Promise<Response> => {
+}: IntorMiddlewareParams<Req>): Promise<Response> => {
   const { defaultLocale, cookie, routing } = config;
   const { maybeLocale, isLocalePrefixed } = extractPathname({
     config,
@@ -37,7 +34,7 @@ export const handlePrefixExceptDefault = async ({
 
   if (isLocalePrefixed && maybeLocale !== defaultLocale) {
     // ▶ Go directly and override cookie
-    return createResponse({
+    return createResponse<Req>({
       request,
       config,
       locale: maybeLocale,
@@ -52,7 +49,7 @@ export const handlePrefixExceptDefault = async ({
     // Not using redirect (Do not set cookie)
     if (!routing.firstVisit.redirect) {
       // ▶ Go directly
-      return createResponse({ request, config });
+      return createResponse<Req>({ request, config });
     }
 
     // Using redirect for the first visit
@@ -63,7 +60,7 @@ export const handlePrefixExceptDefault = async ({
     // Is defaultLocale
     if (isDefaultLocale) {
       // ▶ Go directly, no prefix (set cookie for the first visit)
-      return createResponse({
+      return createResponse<Req>({
         request,
         config,
         locale: defaultLocale,
@@ -71,7 +68,7 @@ export const handlePrefixExceptDefault = async ({
     }
     // Not defaultLocale
     // ▶ Redirect to URL (set cookie for the first visit)
-    return createResponse({
+    return createResponse<Req>({
       request,
       config,
       locale: initialLocale, // Use locale from 'browser' | 'default'
@@ -84,11 +81,11 @@ export const handlePrefixExceptDefault = async ({
 
   if (isDefaultLocale) {
     // ▶ Go directly
-    return createResponse({ request, config, locale: localeFromCookie });
+    return createResponse<Req>({ request, config, locale: localeFromCookie });
   }
 
   // ▶ Redirect to URL
-  return createResponse({
+  return createResponse<Req>({
     request,
     config,
     locale: localeFromCookie, // Use locale from cookie

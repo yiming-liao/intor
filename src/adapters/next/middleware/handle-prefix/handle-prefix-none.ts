@@ -1,12 +1,7 @@
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
+import { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-
-interface Params {
-  request: NextRequest;
-  config: IntorResolvedConfig;
-}
 
 /**
  * Handle routing for "none" prefix.
@@ -15,10 +10,10 @@ interface Params {
  * determines initial locale via config.
  * Returns response with locale.
  */
-export const handlePrefixNone = async ({
+export const handlePrefixNone = async <Req extends NextRequest = NextRequest>({
   request,
   config,
-}: Params): Promise<Response> => {
+}: IntorMiddlewareParams<Req>): Promise<Response> => {
   let locale = request.cookies.get(config.cookie.name)?.value;
 
   // No cookie, so is first visit
@@ -28,5 +23,5 @@ export const handlePrefixNone = async ({
   }
 
   // ▶ Go directly (set cookie only for the first time, no override)
-  return createResponse({ request, config, locale });
+  return createResponse<Req>({ request, config, locale });
 };

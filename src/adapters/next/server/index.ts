@@ -1,3 +1,2 @@
-export { nextAdapter } from "./next-adapter";
-export { getMessages } from "./get-messages";
-export { getTranslation } from "./get-translation";
+export { getI18nContext } from "./get-i18n-context";
+export { getTranslator } from "./get-translator";

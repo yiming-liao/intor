@@ -9,6 +9,14 @@ import { getLogger } from "@/shared/logger/get-logger";
 import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
 import { normalizeCacheKey, normalizePathname } from "@/shared/utils";
 
+/**
+ * Load local messages from the file system.
+ *
+ * - Load messages for a target locale with optional fallback locales.
+ * - Support filtering by specific namespaces.
+ * - Cache messages if enabled.
+ * - Limit concurrent file reads for performance.
+ */
 export const loadLocalMessages = async ({
   basePath,
   locale,
@@ -44,7 +52,10 @@ export const loadLocalMessages = async ({
   });
 
   //====== Cache ======
-  const pool = getGlobalMessagesPool();
+  let pool;
+  if (cache.enabled) {
+    pool = getGlobalMessagesPool();
+  }
   const key = normalizeCacheKey([
     loggerOptions.id,
     resolvedBasePath,
@@ -53,7 +64,7 @@ export const loadLocalMessages = async ({
     [...(namespaces ?? [])].sort().join(","),
   ]);
   if (cache.enabled && key) {
-    const cached = await pool.get(key);
+    const cached = await pool?.get(key);
     if (cached) {
       logger.debug("Messages cache hit.", { key });
       return cached;
@@ -74,7 +85,7 @@ export const loadLocalMessages = async ({
 
   //====== Cache ======
   if (cache.enabled && key) {
-    await pool.set(key, messages, cache.ttl);
+    await pool?.set(key, messages, cache.ttl);
   }
 
   const end = performance.now();

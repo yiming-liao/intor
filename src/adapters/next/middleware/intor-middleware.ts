@@ -4,30 +4,30 @@ import { handlePrefixExceptDefault } from "@/adapters/next/middleware/handle-pre
 import { handlePrefixNone } from "@/adapters/next/middleware/handle-prefix/handle-prefix-none";
 import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 
-interface IntorMiddlewareParams {
-  request: NextRequest;
+export interface IntorMiddlewareParams<Req extends NextRequest = NextRequest> {
+  request: Req;
   config: IntorResolvedConfig;
 }
 
 /**
  * Handle locale routing based on prefix config
  */
-export async function intorMiddleware({
+export async function intorMiddleware<Req extends NextRequest = NextRequest>({
   request,
   config,
-}: IntorMiddlewareParams) {
+}: IntorMiddlewareParams<Req>) {
   const { prefix } = config.routing;
 
   // ===== Prefix: none =====
   if (prefix === "none") {
-    return handlePrefixNone({ request, config });
+    return handlePrefixNone<Req>({ request, config });
   }
 
   // ===== Prefix: except-default =====
   if (prefix === "except-default") {
-    return await handlePrefixExceptDefault({ request, config });
+    return await handlePrefixExceptDefault<Req>({ request, config });
   }
 
   // ===== Prefix: all =====
-  return await handlePrefixAll({ request, config });
+  return await handlePrefixAll<Req>({ request, config });
 }

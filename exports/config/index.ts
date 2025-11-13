@@ -1,4 +1,10 @@
-// Config
+/**
+ * Global Config Module
+ *
+ * Exports all config-related utilities, constants, and types.
+ * Separated for independent export, particularly for Edge environments.
+ */
+
 export {
   defineIntorConfig,
 

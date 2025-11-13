@@ -4,11 +4,9 @@ import { useLocale } from "@/adapters/next/contexts/locale";
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
 
 /**
- * Custom hook to get the localized pathname.
+ * usePathname hook
  *
- * It fetches the raw pathname from Next.js,
- * then prefixes it with the current locale
- * based on the app's configuration and locale context.
+ * Wraps Next.js usePathname and returns the current pathname prefixed with the active locale.
  */
 export const usePathname = (): string => {
   const { config } = useConfig();

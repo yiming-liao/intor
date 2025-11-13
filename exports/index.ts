@@ -1,19 +1,17 @@
 // Intor
-export {
-  intor,
-  type AdapterRuntime,
-  type IntorOptions,
-  type IntorResult,
-} from "@/modules/intor";
+export { intor, type I18nContext, type IntorResult } from "@/modules/intor";
 
 // Messages
 export {
-  getMessages,
+  loadMessages,
   loadLocalMessages,
   type LoadLocalMessagesOptions,
   loadApiMessages,
   type LoadApiMessagesOptions,
 } from "@/modules/messages";
+
+// Tools
+export { getTranslator } from "@/modules/tools";
 
 // Constants
 export { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
