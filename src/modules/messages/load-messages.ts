@@ -32,7 +32,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
     return;
   }
 
-  const { loader } = config;
+  const { id, loader, cache } = config;
   const fallbackLocales = config.fallbackLocales[locale] || []; // fallback locales fro the pass-in target locale
   const namespaces = resolveNamespaces({ config, pathname }); // Resolve namespaces with pathname
 
@@ -55,8 +55,8 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
       locale,
       fallbackLocales,
       namespaces,
-      cache: config.cache,
-      logger: { id: config.id },
+      cache,
+      logger: { id },
     });
   }
   //====== loader type: api ======
@@ -67,7 +67,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
       locale,
       fallbackLocales,
       namespaces,
-      logger: { id: config.id },
+      logger: { id },
     });
   }
 

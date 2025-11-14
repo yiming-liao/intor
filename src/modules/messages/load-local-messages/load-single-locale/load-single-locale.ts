@@ -62,7 +62,7 @@ export const loadSingleLocale = async ({
     namespaceGroups: [...namespaceGroups.entries()].map(([ns, val]) => ({
       namespace: ns,
       isAtRoot: val.isAtRoot,
-      fileCounts: val.filePaths.length,
+      fileCount: val.filePaths.length,
     })),
   });
 

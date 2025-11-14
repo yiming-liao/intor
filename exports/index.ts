@@ -50,7 +50,6 @@ export {
   type RichReplacement,
   // message structure
   type NestedMessage,
-  type MessageRecord,
   type NamespaceMessages,
   type LocaleNamespaceMessages,
   type UnionLocaleMessages,

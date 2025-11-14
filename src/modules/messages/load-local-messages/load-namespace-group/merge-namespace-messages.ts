@@ -1,7 +1,7 @@
 import path from "node:path";
-import { MessageRecord } from "intor-translator";
 import { parseMessageFile } from "./parse-message-file";
 import { LoggerOptions } from "@/modules/config/types/logger.types";
+import { StringKeyedMessages } from "@/modules/messages/load-local-messages/load-namespace-group/types";
 
 /**
  * Merges the content of multiple namespace message files into a base and sub message record.
@@ -10,9 +10,9 @@ export const mergeNamespaceMessages = async (
   filePaths: string[],
   isAtRoot: boolean,
   loggerOptions: LoggerOptions & { id: string },
-): Promise<{ base: MessageRecord; sub: MessageRecord }> => {
-  const baseContent: MessageRecord = {};
-  const subEntries: MessageRecord = {};
+): Promise<{ base: StringKeyedMessages; sub: StringKeyedMessages }> => {
+  const baseContent: StringKeyedMessages = {};
+  const subEntries: StringKeyedMessages = {};
 
   // Process each file and merge content into respective records
   await Promise.all(

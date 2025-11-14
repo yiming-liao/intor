@@ -1,18 +1,19 @@
+import fs from "node:fs/promises";
 import path from "node:path";
-import { MessageRecord } from "intor-translator";
 import { LoggerOptions } from "@/modules/config/types/logger.types";
-import { readMessageRecordFile } from "@/modules/messages/load-local-messages/utils/read-message-record-file";
+import { StringKeyedMessages } from "@/modules/messages/load-local-messages/load-namespace-group/types";
+import { IntorError, IntorErrorCode } from "@/shared/error";
 import { getLogger } from "@/shared/logger/get-logger";
 
 const MAX_PATH_LENGTH = 260;
 
 /**
- * Parses a local JSON message file into a MessageRecord.
+ * Parses a local JSON message file into a StringKeyedMessages.
  */
 export const parseMessageFile = async (
   filePath: string,
   loggerOptions: LoggerOptions & { id: string },
-): Promise<MessageRecord | null> => {
+): Promise<StringKeyedMessages | null> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "parse-message-file" });
   const trimmedPath = filePath.trim();
@@ -35,9 +36,19 @@ export const parseMessageFile = async (
   }
 
   try {
-    const { content } = await readMessageRecordFile(trimmedPath, loggerOptions);
-    logger.trace(`Message file loaded.`, { filePath: trimmedPath });
-    return content;
+    // const { content } = await readMessageRecordFile(trimmedPath, loggerOptions);
+    const content = await fs.readFile(trimmedPath, "utf-8");
+    const parsed = JSON.parse(content) as StringKeyedMessages;
+    // Not a MessageObject, throw error
+    if (typeof parsed !== "object" || parsed === null) {
+      throw new IntorError({
+        id: loggerOptions.id,
+        code: IntorErrorCode.INVALID_MESSAGE_FORMAT,
+        message: "Invalid message format",
+      });
+    }
+    logger.trace("Message file loaded.", { filePath: trimmedPath });
+    return parsed;
   } catch (error) {
     logger.warn("Failed to parse message file.", {
       filePath: trimmedPath,
