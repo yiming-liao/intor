@@ -1,4 +1,4 @@
-export const CACHE_KEY_DELIMITER = "|";
+const CACHE_KEY_DELIMITER = "|";
 
 // Helper FC
 const sanitize = (k: string) =>
@@ -7,9 +7,7 @@ const sanitize = (k: string) =>
     .replaceAll(/[\r\n]/g, "")
     .trim();
 
-export type RawCacheKey =
-  | string
-  | Array<string | number | boolean | undefined | null>;
+type RawCacheKey = string | Array<string | number | boolean | undefined | null>;
 
 export const normalizeCacheKey = (
   key?: RawCacheKey,

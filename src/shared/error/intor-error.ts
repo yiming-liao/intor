@@ -1,4 +1,4 @@
-export type IntorErrorOptions = {
+type IntorErrorOptions = {
   message: string;
   code?: string;
   id?: string;
@@ -24,7 +24,6 @@ export enum IntorErrorCode {
   MISSING_SUPPORTED_LOCALES = "INTOR_MISSING_SUPPORTED_LOCALES",
   MISSING_DEFAULT_LOCALE = "INTOR_MISSING_DEFAULT_LOCALE",
   UNSUPPORTED_DEFAULT_LOCALE = "INTOR_UNSUPPORTED_DEFAULT_LOCALE",
-  UNSUPPORTED_ADAPTER = "INTOR_UNSUPPORTED_ADAPTER",
   // message-loader
   INVALID_MESSAGE_FORMAT = "INTOR_INVALID_MESSAGE_FORMAT",
 }

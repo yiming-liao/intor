@@ -1,7 +1,7 @@
-import type { TranslateHandlers } from "intor-translator";
+import type { TranslateHandlersContextValue } from "./types";
 import * as React from "react";
 
 // Context
 export const TranslateHandlersContext = React.createContext<
-  TranslateHandlers | undefined
+  TranslateHandlersContextValue | undefined
 >(undefined);
