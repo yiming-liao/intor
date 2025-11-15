@@ -1,4 +1,4 @@
-import type { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
+import type { IntorResolvedConfig } from "@/modules/config";
 import type { NextRequest } from "next/server";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
@@ -19,10 +19,10 @@ import { extractPathname } from "@/shared/utils";
  */
 export const handlePrefixExceptDefault = async <
   Req extends NextRequest = NextRequest,
->({
-  request,
-  config,
-}: IntorMiddlewareParams<Req>): Promise<Response> => {
+>(
+  config: IntorResolvedConfig,
+  request: Req,
+): Promise<Response> => {
   const { defaultLocale, cookie, routing } = config;
   const { maybeLocale, isLocalePrefixed } = extractPathname({
     config,

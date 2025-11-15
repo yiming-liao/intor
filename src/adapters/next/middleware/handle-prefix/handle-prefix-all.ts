@@ -1,4 +1,4 @@
-import type { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
+import type { IntorResolvedConfig } from "@/modules/config";
 import type { NextRequest } from "next/server";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
@@ -13,10 +13,10 @@ import { extractPathname } from "@/shared/utils";
  *   - If redirect enabled → detect initial locale and redirect.
  * - If no prefix but cookie exists → redirect using cookie locale.
  */
-export const handlePrefixAll = async <Req extends NextRequest = NextRequest>({
-  request,
-  config,
-}: IntorMiddlewareParams<Req>): Promise<Response> => {
+export const handlePrefixAll = async <Req extends NextRequest = NextRequest>(
+  config: IntorResolvedConfig,
+  request: Req,
+): Promise<Response> => {
   const { cookie, routing } = config;
   const { maybeLocale, isLocalePrefixed } = extractPathname({
     config,

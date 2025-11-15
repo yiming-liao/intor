@@ -1,4 +1,4 @@
-import type { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
+import type { IntorResolvedConfig } from "@/modules/config";
 import type { NextRequest } from "next/server";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
@@ -10,10 +10,10 @@ import { determineInitialLocale } from "@/adapters/next/middleware/utils/determi
  * determines initial locale via config.
  * Returns response with locale.
  */
-export const handlePrefixNone = async <Req extends NextRequest = NextRequest>({
-  request,
-  config,
-}: IntorMiddlewareParams<Req>): Promise<Response> => {
+export const handlePrefixNone = async <Req extends NextRequest = NextRequest>(
+  config: IntorResolvedConfig,
+  request: Req,
+): Promise<Response> => {
   let locale = request.cookies.get(config.cookie.name)?.value;
 
   // No cookie, so is first visit
