@@ -1,4 +1,3 @@
-import { Namespace } from "intor-translator";
 import { LoadLocaleWithFallbackOptions } from "./types";
 import { loadSingleLocale } from "@/modules/messages/load-local-messages/load-single-locale";
 import { getLogger } from "@/shared/logger/get-logger";
@@ -11,7 +10,7 @@ export const loadLocaleWithFallback = async ({
   messages,
   limit,
   logger: loggerOptions = { id: "default" },
-}: LoadLocaleWithFallbackOptions): Promise<Namespace[] | undefined> => {
+}: LoadLocaleWithFallbackOptions): Promise<string[] | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-locale-with-fallback" });
 

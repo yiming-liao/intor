@@ -1,12 +1,12 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import * as React from "react";
 
 // Context value
 export type MessagesContextValue = {
-  messages: Readonly<LocaleNamespaceMessages> | null;
+  messages: Readonly<LocaleMessages> | null;
   isLoading: boolean;
   setLoadedMessages: React.Dispatch<
-    React.SetStateAction<LocaleNamespaceMessages | null>
+    React.SetStateAction<LocaleMessages | null>
   >;
   setIsLoadingMessages: React.Dispatch<React.SetStateAction<boolean>>;
   refetchMessages: (newLocale: string) => Promise<void>;
@@ -14,6 +14,6 @@ export type MessagesContextValue = {
 
 // Provider props
 export type MessagesProviderProps = {
-  value: { messages: Readonly<LocaleNamespaceMessages> };
+  value: { messages: Readonly<LocaleMessages> };
   children: React.ReactNode;
 };

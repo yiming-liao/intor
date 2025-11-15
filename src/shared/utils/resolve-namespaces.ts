@@ -1,5 +1,5 @@
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import {
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type {
   LoaderOptions,
   RouteNamespaces,
 } from "@/modules/config/types/loader.types";

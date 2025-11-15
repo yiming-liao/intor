@@ -1,4 +1,4 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { IntorResolvedConfig } from "@/modules/config";
 import {
   I18nContext,
@@ -44,7 +44,7 @@ export const intor = async (
   logger.debug(`Context resolved via ${source}.`, context as object);
 
   // 2. Load messages if loader enabled
-  let loadedMessages: LocaleNamespaceMessages | undefined;
+  let loadedMessages: LocaleMessages | undefined;
   if (shouldLoadMessages(loader)) {
     loadedMessages = await loadMessages({ config, locale, pathname });
   }

@@ -1,35 +1,44 @@
-import { Locale, LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
 
-// If generated util
+/**
+ * Conditional type for generated types.
+ * - Returns `Then` if `IntorGeneratedTypes` exists, otherwise `Else`.
+ */
 export type IfGen<Then, Else = never> = IntorGeneratedTypes extends void
   ? Else
   : Then;
 
-// Config keys
+/**
+ * Union of all configuration keys.
+ * - Defaults to `string` if `IntorGeneratedTypes` does not exist.
+ */
 export type GenConfigKeys = IfGen<keyof IntorGeneratedTypes, string>;
 
-// Config
-export type GenConfig<C extends GenConfigKeys = "__default__"> =
+/**
+ * Configuration shape for a given config key.
+ * - If `IntorGeneratedTypes` is not defined, falls back to default shape.
+ * Otherwise, picks `Locales` and `Messages` according to the key.
+ */
+export type GenConfig<CK extends GenConfigKeys = "__default__"> =
   IntorGeneratedTypes extends void
-    ? { Locales: string; Messages: LocaleNamespaceMessages } // fallback
-    : C extends keyof IntorGeneratedTypes
+    ? {
+        Locales: string;
+        Messages: LocaleMessages;
+      }
+    : CK extends keyof IntorGeneratedTypes
       ? {
-          Locales: IntorGeneratedTypes[C]["Locales"];
+          Locales: IntorGeneratedTypes[CK]["Locales"];
           Messages: {
-            [K in IntorGeneratedTypes[C]["Locales"]]: IntorGeneratedTypes[C]["Messages"][typeof PREFIX_PLACEHOLDER];
+            [K in IntorGeneratedTypes[CK]["Locales"]]: IntorGeneratedTypes[CK]["Messages"][typeof PREFIX_PLACEHOLDER];
           };
         }
-      : never;
+      : never; // Returns `never` when the key does not exist.
 
-//====== Messages ======
-export type GenMessages<C extends GenConfigKeys = "__default__"> =
-  GenConfig<C>["Messages"];
+/** Extracts messages for a given config key */
+export type GenMessages<CK extends GenConfigKeys = "__default__"> =
+  GenConfig<CK>["Messages"];
 
-//====== Locale ======
-type GenLocaleFallback = Locale;
-
-export type GenLocale<Config extends string = "__default__"> =
-  Config extends keyof IntorGeneratedTypes
-    ? IntorGeneratedTypes[Config]["Locales"]
-    : GenLocaleFallback;
+/** Extracts locales for a given config key */
+export type GenLocale<CK extends GenConfigKeys = "__default__"> =
+  GenConfig<CK>["Locales"];

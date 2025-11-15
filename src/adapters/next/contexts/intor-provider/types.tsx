@@ -1,13 +1,13 @@
 import * as React from "react";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { Locale, LocaleNamespaceMessages } from "intor-translator";
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import { Locale, LocaleMessages } from "intor-translator";
 
 export interface IntorProviderProps {
   value: {
     config: IntorResolvedConfig;
     initialLocale: Locale;
     pathname: string;
-    messages: Readonly<LocaleNamespaceMessages>;
+    messages: Readonly<LocaleMessages>;
   };
   children: React.ReactNode;
 }

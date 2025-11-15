@@ -5,16 +5,16 @@ import type {
   RoutingRawOptions,
   RoutingResolvedOptions,
 } from "./routing.types";
-import {
-  FallbackLocalesMap,
-  Locale,
-  LocaleNamespaceMessages,
-} from "intor-translator";
-import {
+import type {
   CacheRawOptions,
   CacheResolvedOptions,
 } from "@/modules/config/types/cache.types";
-import { TranslatorOptions } from "@/modules/config/types/translator.types";
+import type { TranslatorOptions } from "@/modules/config/types/translator.types";
+import type {
+  FallbackLocalesMap,
+  Locale,
+  LocaleMessages,
+} from "intor-translator";
 
 type WithoutLoader = {
   loader?: undefined;
@@ -32,7 +32,7 @@ type WithLoader = {
 
 export type IntorRawConfig = (WithLoader | WithoutLoader) & {
   readonly id?: string; // Identifier for the intor instance
-  readonly messages?: LocaleNamespaceMessages; // Static messages
+  readonly messages?: LocaleMessages; // Static messages
   readonly defaultLocale: Locale;
   readonly fallbackLocales?: FallbackLocalesMap;
   readonly translator?: TranslatorOptions;
@@ -48,7 +48,7 @@ export type IntorRawConfig = (WithLoader | WithoutLoader) & {
 
 export type IntorResolvedConfig = (WithLoader | WithoutLoader) & {
   readonly id: string;
-  readonly messages?: LocaleNamespaceMessages;
+  readonly messages?: LocaleMessages;
   readonly defaultLocale: Locale;
   readonly fallbackLocales: FallbackLocalesMap;
   readonly translator?: TranslatorOptions;

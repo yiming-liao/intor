@@ -1,17 +1,12 @@
 import type pLimit from "p-limit";
-import {
-  Locale,
-  LocaleNamespaceMessages,
-  Namespace,
-  NestedMessage,
-} from "intor-translator";
+import { Locale, LocaleMessages, NestedMessage } from "intor-translator";
 import { NamespaceGroupValue } from "../prepare-namespace-groups";
 import { LoggerOptions } from "@/modules/config/types/logger.types";
 
 export interface LoadNamespaceGroupOptions {
   locale: Locale;
-  namespace: Namespace;
-  messages: LocaleNamespaceMessages;
+  namespace: string;
+  messages: LocaleMessages;
   namespaceGroupValue: NamespaceGroupValue;
   limit: ReturnType<typeof pLimit>;
   logger?: LoggerOptions & { id: string };

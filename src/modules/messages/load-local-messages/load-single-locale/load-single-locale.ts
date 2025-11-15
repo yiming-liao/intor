@@ -1,6 +1,5 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { Namespace } from "intor-translator";
 import { LoadSingleLocaleOptions } from "./types";
 import { loadNamespaceGroup } from "@/modules/messages/load-local-messages/load-namespace-group";
 import { prepareNamespaceGroups } from "@/modules/messages/load-local-messages/prepare-namespace-groups";
@@ -17,12 +16,12 @@ export const loadSingleLocale = async ({
   messages,
   limit,
   logger: loggerOptions = { id: "default" },
-}: LoadSingleLocaleOptions): Promise<Namespace[] | undefined> => {
+}: LoadSingleLocaleOptions): Promise<string[] | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-single-locale" });
 
   const localePath = path.join(basePath, locale);
-  const validNamespaces: Namespace[] = [];
+  const validNamespaces: string[] = [];
 
   // Check the dir at localePath
   try {

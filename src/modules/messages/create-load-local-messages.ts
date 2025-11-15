@@ -1,4 +1,4 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import {
   loadLocalMessages,
   LoadLocalMessagesOptions,
@@ -12,9 +12,7 @@ import {
  */
 export const createLoadLocalMessages = (
   basePath?: string,
-): ((
-  options: LoadLocalMessagesOptions,
-) => Promise<LocaleNamespaceMessages>) => {
+): ((options: LoadLocalMessagesOptions) => Promise<LocaleMessages>) => {
   return (options: LoadLocalMessagesOptions) =>
     loadLocalMessages({ basePath, ...options }); // Load messages with the fixed basePath
 };

@@ -1,4 +1,4 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { createLoadLocalMessages } from "@/modules/messages/create-load-local-messages";
 import { loadApiMessages } from "@/modules/messages/load-api-messages";
 import {
@@ -44,7 +44,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
   });
   logger.debug("Loader type selected.", { loaderType: loader.type });
 
-  let loadedMessages: LocaleNamespaceMessages | undefined;
+  let loadedMessages: LocaleMessages | undefined;
 
   //====== loader type: import ======
   if (loader.type === "import") {

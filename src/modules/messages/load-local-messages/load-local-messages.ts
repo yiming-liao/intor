@@ -1,6 +1,6 @@
 import path from "node:path";
 import { performance } from "node:perf_hooks";
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import pLimit from "p-limit";
 import { LoadLocalMessagesOptions } from "./types";
 import { DEFAULT_CACHE_OPTIONS } from "@/modules/config/constants/cache.constants";
@@ -25,14 +25,14 @@ export const loadLocalMessages = async ({
   concurrency = 10,
   cache = DEFAULT_CACHE_OPTIONS,
   logger: loggerOptions = { id: "default" },
-}: LoadLocalMessagesOptions): Promise<LocaleNamespaceMessages> => {
+}: LoadLocalMessagesOptions): Promise<LocaleMessages> => {
   basePath = basePath ?? "messages";
   if (!locale || locale.trim() === "") return {};
 
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-locale-messages" });
 
-  const messages: LocaleNamespaceMessages = {};
+  const messages: LocaleMessages = {};
   const resolvedBasePath = path.resolve(
     process.cwd(),
     normalizePathname(basePath, { removeLeadingSlash: true }),

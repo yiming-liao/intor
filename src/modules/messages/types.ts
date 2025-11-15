@@ -1,5 +1,5 @@
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { Locale } from "intor-translator";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { GenConfigKeys, GenMessages } from "@/shared/types/generated.types";
 
 export type MessagesLoaderOptions = {

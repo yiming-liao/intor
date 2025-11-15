@@ -35,26 +35,24 @@ export { clearMessagesPool } from "@/shared/messages/global-messages-pool";
 // Intor translator
 export {
   Translator,
-  // Translate config
+  // Translate handlers
   type TranslateHandlers,
-  type FormatMessage,
-  type OnLoading,
-  type OnMissing,
-  type TranslateContext,
-  // basic
+  type FormatHandler,
+  type LoadingHandler,
+  type MissingHandler,
+  type TranslateHandlerContext,
+  // Locale
   type Locale,
-  type Message,
-  type Namespace,
-  type Replacement,
-  // rich replacement
-  type RichReplacement,
-  // message structure
-  type NestedMessage,
-  type NamespaceMessages,
-  type LocaleNamespaceMessages,
-  type UnionLocaleMessages,
-  // locale
-  type LocaleKey,
-  type StrictLocaleKey,
   type FallbackLocalesMap,
+  // Messages
+  type NestedMessage,
+  type LocaleMessages,
+  type LocalizedMessagesUnion,
+  // Replacement
+  type Replacement,
+  // Keys
+  type NodeKeys,
+  type LeafKeys,
+  type LocalizedLeafKeys,
+  type ScopedLeafKeys,
 } from "intor-translator";

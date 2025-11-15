@@ -1,4 +1,4 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { LoadApiMessagesOptions } from "./types";
 import { DEFAULT_CACHE_OPTIONS } from "@/modules/config/constants/cache.constants";
 import { fetchFallbackMessages } from "@/modules/messages/load-api-messages/fetch-fallback-messages";
@@ -14,9 +14,7 @@ import { normalizeCacheKey } from "@/shared/utils";
  * - Fetch messages for a target locale with optional fallback locales.
  * - Cache messages if enabled.
  */
-export const loadApiMessages = async <
-  Messages extends LocaleNamespaceMessages,
->({
+export const loadApiMessages = async <Messages extends LocaleMessages>({
   apiUrl,
   apiHeaders,
   basePath,

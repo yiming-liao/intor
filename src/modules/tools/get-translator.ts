@@ -1,16 +1,18 @@
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import {
-  LocaleKey,
-  LocaleNamespaceMessages,
+  LocalizedNodeKeys,
+  TranslateHandlers,
   Translator,
 } from "intor-translator";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { loadMessages } from "@/modules/messages";
-import { GenConfigKeys, GenMessages } from "@/shared/types/generated.types";
 import {
-  ScopedTranslatorInstance,
-  TranslatorBaseProps,
+  GenConfigKeys,
+  GenLocale,
+  GenMessages,
+} from "@/shared/types/generated.types";
+import {
   TranslatorInstance,
-  PreKey,
+  TranslatorBaseProps,
 } from "@/shared/types/translator-instance.types";
 
 /**
@@ -23,54 +25,52 @@ import {
  */
 
 // Signature: Without preKey
-export function getTranslator<C extends GenConfigKeys = "__default__">(opts: {
+export function getTranslator<CK extends GenConfigKeys = "__default__">(opts: {
   config: IntorResolvedConfig;
-  locale: LocaleKey<GenMessages<C>>;
+  locale: GenLocale;
   pathname?: string;
-}): Promise<TranslatorInstance<GenMessages<C>>>;
+  handlers?: TranslateHandlers;
+}): Promise<TranslatorInstance<GenMessages<CK>>>;
 
 // Signature: With preKey
 export function getTranslator<
-  C extends GenConfigKeys = "__default__",
-  K extends PreKey<C> = PreKey<C>,
+  CK extends GenConfigKeys = "__default__",
+  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(opts: {
   config: IntorResolvedConfig;
-  locale: LocaleKey<GenMessages<C>>;
+  locale: GenLocale;
   pathname?: string;
-  preKey?: K;
-}): Promise<ScopedTranslatorInstance<GenMessages<C>, K>>;
+  handlers?: TranslateHandlers;
+  preKey?: PK;
+}): Promise<TranslatorInstance<GenMessages<CK>, PK>>;
 
 // Implementation
 export async function getTranslator(opts: {
   config: IntorResolvedConfig;
   locale: string;
   pathname?: string;
+  handlers?: TranslateHandlers;
   preKey?: string;
 }) {
-  const { config, locale, pathname = "", preKey } = opts;
+  const { config, locale, pathname = "", preKey, handlers } = opts;
   const messages = await loadMessages({ config, locale, pathname });
 
-  const translator = new Translator<LocaleNamespaceMessages>({
+  // Create a Translator instance
+  const translator = new Translator<unknown>({
     locale,
     messages,
     fallbackLocales: config.fallbackLocales,
     loadingMessage: config.translator?.loadingMessage,
     placeholder: config.translator?.placeholder,
+    handlers,
   });
 
-  const props: TranslatorBaseProps<LocaleNamespaceMessages> = {
-    messages: messages as LocaleNamespaceMessages,
-    locale,
-  };
+  const props: TranslatorBaseProps = { messages, locale };
 
-  if (preKey) {
-    const scoped = translator.scoped(preKey);
-    return { ...props, ...scoped };
-  } else {
-    return {
-      ...props,
-      t: translator.t,
-      hasKey: translator.hasKey,
-    };
-  }
+  const scoped = translator.scoped(preKey);
+  return {
+    ...props,
+    hasKey: preKey ? scoped.hasKey : translator.hasKey,
+    t: preKey ? scoped.t : translator.t,
+  };
 }

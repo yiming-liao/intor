@@ -1,6 +1,6 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import { LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { loadApiMessages } from "@/modules/messages";
 import { mergeMessages, resolveNamespaces } from "@/shared/utils";
 
@@ -8,7 +8,7 @@ type UseRefetchMessagesParams = {
   config: IntorResolvedConfig;
   pathname: string;
   setLoadedMessages: React.Dispatch<
-    React.SetStateAction<LocaleNamespaceMessages | null>
+    React.SetStateAction<LocaleMessages | null>
   >;
   setIsLoadingMessages: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -35,7 +35,7 @@ export const useRefetchMessages = ({
       if (config.loader?.type === "api") {
         setIsLoadingMessages(true);
 
-        const loadedMessages = await loadApiMessages<LocaleNamespaceMessages>({
+        const loadedMessages = await loadApiMessages<LocaleMessages>({
           ...config.loader,
           locale: newLocale,
           fallbackLocales: config.fallbackLocales[newLocale] || [],

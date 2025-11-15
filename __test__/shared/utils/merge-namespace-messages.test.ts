@@ -1,13 +1,13 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { mergeMessages } from "@/shared/utils/merge-messages";
 
 describe("mergeMessages", () => {
   it("merges static and loaded messages with no overlap", () => {
-    const staticMessages: LocaleNamespaceMessages = {
+    const staticMessages: LocaleMessages = {
       en: { common: { hello: "Hello" } },
     };
 
-    const loadedMessages: LocaleNamespaceMessages = {
+    const loadedMessages: LocaleMessages = {
       zh: { common: { hello: "你好" } },
     };
 
@@ -20,14 +20,14 @@ describe("mergeMessages", () => {
   });
 
   it("overrides static messages with loaded messages", () => {
-    const staticMessages: LocaleNamespaceMessages = {
+    const staticMessages: LocaleMessages = {
       en: {
         common: { hello: "Hello" },
         homepage: { title: "Welcome" },
       },
     };
 
-    const loadedMessages: LocaleNamespaceMessages = {
+    const loadedMessages: LocaleMessages = {
       en: {
         common: { hello: "Hi" },
         footer: { contact: "Contact Us" },

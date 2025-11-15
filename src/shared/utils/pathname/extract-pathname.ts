@@ -1,5 +1,5 @@
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { normalizePathname } from "./normalize-pathname";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 
 interface ExtractPathnameOptions {
   config: IntorResolvedConfig;

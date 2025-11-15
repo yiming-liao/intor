@@ -1,11 +1,11 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { FetcherOptions } from "@/modules/messages/load-api-messages/types";
 import { getLogger } from "@/shared/logger/get-logger";
 
 /**
  * Fetches locale messages from a remote API.
  */
-export const fetchMessages = async <Messages extends LocaleNamespaceMessages>({
+export const fetchMessages = async <Messages extends LocaleMessages>({
   apiUrl,
   apiHeaders,
   locale,

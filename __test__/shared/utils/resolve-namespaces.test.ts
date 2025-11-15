@@ -1,4 +1,4 @@
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
 
 const baseConfig = {

@@ -1,10 +1,10 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import Keyv from "keyv";
 
 /**
  * Global messages pool (cross-module + hot-reload safe)
  */
-export type MessagesPool = Keyv<LocaleNamespaceMessages>;
+export type MessagesPool = Keyv<LocaleMessages>;
 
 declare global {
   var __INTOR_MESSAGES_POOL__: MessagesPool | undefined;
@@ -12,7 +12,7 @@ declare global {
 
 export function getGlobalMessagesPool(): MessagesPool {
   if (!globalThis.__INTOR_MESSAGES_POOL__) {
-    globalThis.__INTOR_MESSAGES_POOL__ = new Keyv<LocaleNamespaceMessages>();
+    globalThis.__INTOR_MESSAGES_POOL__ = new Keyv<LocaleMessages>();
   }
   return globalThis.__INTOR_MESSAGES_POOL__;
 }

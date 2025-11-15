@@ -1,14 +1,14 @@
-import { LocaleNamespaceMessages, NamespaceMessages } from "intor-translator";
+import type { LocaleMessages } from "intor-translator";
 
 /**
  * Merge static and loaded namespace messages by locale.
  * Loaded messages override static ones on conflict.
  */
 export const mergeMessages = (
-  staticMessages: LocaleNamespaceMessages = {},
-  loadedMessages: LocaleNamespaceMessages | null = {},
-): LocaleNamespaceMessages => {
-  const result: LocaleNamespaceMessages = Object.keys(staticMessages).length
+  staticMessages: LocaleMessages = {},
+  loadedMessages: LocaleMessages | null = {},
+): LocaleMessages => {
+  const result: LocaleMessages = Object.keys(staticMessages).length
     ? { ...staticMessages }
     : {};
 
@@ -17,7 +17,7 @@ export const mergeMessages = (
 
     // If the locale doesn't exist in static messages
     if (!result[locale]) {
-      result[locale] = loaded as NamespaceMessages;
+      result[locale] = loaded;
       continue;
     }
 
@@ -25,7 +25,7 @@ export const mergeMessages = (
     result[locale] = {
       ...result[locale],
       ...loaded,
-    } as NamespaceMessages;
+    };
   }
 
   return result;

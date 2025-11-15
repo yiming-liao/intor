@@ -1,6 +1,6 @@
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { cookies, headers } from "next/headers";
 import { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { I18nContext } from "@/modules/intor/types";
 import { getLogger } from "@/shared/logger/get-logger";
 import { GenLocale } from "@/shared/types/generated.types";
@@ -11,7 +11,7 @@ import { normalizeLocale, resolvePreferredLocale } from "@/shared/utils";
  *
  * Next.js adapter implementation: uses `next/headers` and `next/cookies`.
  */
-export const getI18nContext = async (
+export const getI18nContext = async <CK extends string = "__default__">(
   config: IntorResolvedConfig,
 ): Promise<I18nContext> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
@@ -48,7 +48,7 @@ export const getI18nContext = async (
   }
 
   return {
-    locale: (locale || defaultLocale) as GenLocale,
+    locale: (locale || defaultLocale) as GenLocale<CK>,
     pathname: pathname || "",
   };
 };

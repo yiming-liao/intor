@@ -1,4 +1,4 @@
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
 import { normalizePathname } from "@/shared/utils";
 

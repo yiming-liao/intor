@@ -63,19 +63,21 @@
   "scripts": {
     "build": "tsup",
     "lint": "eslint",
+    "lint:debug": "eslint --debug",
     "type": "tsc --noEmit",
     "test": "jest",
     "test:coverage": "jest --coverage && open coverage/lcov-report/index.html",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "intor-translator": "^1.0.15",
+    "intor-translator": "^1.1.2",
     "keyv": "^5.5.3",
     "logry": "^2.0.1",
     "p-limit": "^6.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
+    "@intor/cli": "../@intor:cli",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",

@@ -1,13 +1,13 @@
-import { LocaleKey } from "intor-translator";
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import { LocalizedNodeKeys } from "intor-translator";
 import { getI18nContext } from "@/adapters/next/server/get-i18n-context";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { getTranslator as rawGetTranslator } from "@/modules/tools";
-import { GenConfigKeys, GenMessages } from "@/shared/types/generated.types";
 import {
-  PreKey,
-  ScopedTranslatorInstance,
-  TranslatorInstance,
-} from "@/shared/types/translator-instance.types";
+  GenConfigKeys,
+  GenMessages,
+  IfGen,
+} from "@/shared/types/generated.types";
+import { TranslatorInstance } from "@/shared/types/translator-instance.types";
 
 /**
  * Create a translator instance ready for the current Next.js SSR environment.
@@ -20,29 +20,29 @@ import {
  */
 
 // Signature: Without preKey
-export function getTranslator<C extends GenConfigKeys = "__default__">(
+export function getTranslator<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-): Promise<TranslatorInstance<GenMessages<C>>>;
+): Promise<TranslatorInstance<GenMessages<CK>>>;
 
 // Signature: With preKey
 export function getTranslator<
-  C extends GenConfigKeys = "__default__",
-  K extends PreKey<C> = PreKey<C>,
+  CK extends GenConfigKeys = "__default__",
+  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,
-  preKey?: K,
-): Promise<ScopedTranslatorInstance<GenMessages<C>, K>>;
+  preKey: IfGen<PK, string>,
+): Promise<TranslatorInstance<GenMessages<CK>, PK>>;
 
 // Implementation
 export async function getTranslator<
-  C extends GenConfigKeys = "__default__",
-  K extends PreKey<C> = PreKey<C>,
->(config: IntorResolvedConfig, preKey?: K) {
-  const { locale, pathname } = await getI18nContext(config);
+  CK extends GenConfigKeys = "__default__",
+  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
+>(config: IntorResolvedConfig, preKey?: PK) {
+  const { locale, pathname } = await getI18nContext<CK>(config);
 
-  const translatorInstance = rawGetTranslator<C, K>({
+  const translatorInstance = rawGetTranslator<CK, PK>({
     config,
-    locale: locale as LocaleKey<GenMessages<C>>,
+    locale,
     pathname,
     preKey,
   });

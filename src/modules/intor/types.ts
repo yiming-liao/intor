@@ -1,5 +1,5 @@
-import { Locale, LocaleNamespaceMessages } from "intor-translator";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import { Locale, LocaleMessages } from "intor-translator";
 import { GenLocale } from "@/shared/types/generated.types";
 
 // i18n context
@@ -18,5 +18,5 @@ export interface IntorResult {
   config: IntorResolvedConfig;
   initialLocale: Locale;
   pathname: string;
-  messages: LocaleNamespaceMessages;
+  messages: LocaleMessages;
 }

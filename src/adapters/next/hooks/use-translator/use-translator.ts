@@ -1,4 +1,4 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocalizedNodeKeys } from "intor-translator";
 import { useLocale } from "@/adapters/next/contexts/locale";
 import { useTranslator as useTranslatorContext } from "@/adapters/next/contexts/translator";
 import {
@@ -7,10 +7,8 @@ import {
   GenMessages,
 } from "@/shared/types/generated.types";
 import {
-  ScopedTranslatorInstance,
-  TranslatorBaseProps,
   TranslatorInstance,
-  PreKey,
+  TranslatorBaseProps,
   TranslatorClientProps,
 } from "@/shared/types/translator-instance.types";
 
@@ -24,33 +22,31 @@ import {
 
 // Signature: Without preKey
 export function useTranslator<
-  C extends GenConfigKeys = "__default__",
->(): TranslatorInstance<GenMessages<C>>;
+  CK extends GenConfigKeys = "__default__",
+>(): TranslatorInstance<GenMessages<CK>>;
 
 // Signature: With preKey
 export function useTranslator<
-  C extends GenConfigKeys = "__default__",
-  K extends PreKey<C> = PreKey<C>,
->(preKey: IfGen<K, string>): ScopedTranslatorInstance<GenMessages<C>, K>;
+  CK extends GenConfigKeys = "__default__",
+  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
+>(preKey: IfGen<PK, string>): TranslatorInstance<GenMessages<CK>, PK>;
 
 // Implementation
 export function useTranslator(preKey?: string) {
-  const { translator } = useTranslatorContext<LocaleNamespaceMessages>();
+  const { translator } = useTranslatorContext();
   const { setLocale } = useLocale();
 
-  const props: TranslatorBaseProps<LocaleNamespaceMessages> &
-    TranslatorClientProps<LocaleNamespaceMessages> = {
-    messages: translator.messages as LocaleNamespaceMessages,
+  const props: TranslatorBaseProps & TranslatorClientProps = {
+    messages: translator.messages,
     locale: translator.locale,
     isLoading: translator.isLoading,
     setLocale,
   };
 
-  if (preKey) {
-    const { hasKey, t } = translator.scoped(preKey);
-    return { ...props, hasKey, t };
-  } else {
-    const { hasKey, t } = translator;
-    return { ...props, hasKey, t };
-  }
+  const scoped = translator.scoped(preKey);
+  return {
+    ...props,
+    hasKey: preKey ? scoped.hasKey : translator.hasKey,
+    t: preKey ? scoped.t : translator.t,
+  };
 }

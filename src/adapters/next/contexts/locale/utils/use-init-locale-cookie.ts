@@ -1,6 +1,6 @@
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import * as React from "react";
 import { setLocaleCookieBrowser } from "@/adapters/next/shared/utils/set-locale-cookie-browser";
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 
 /**
  * Init locale cookie

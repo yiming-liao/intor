@@ -3,7 +3,7 @@
 import type { MessagesProviderProps } from "./types";
 import * as React from "react";
 import { MessagesContext } from "./context";
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { useConfig } from "@/adapters/next/contexts/config";
 import { useRefetchMessages } from "@/adapters/next/contexts/messages/utils/use-refetch-messages";
 
@@ -15,7 +15,7 @@ export function MessagesProvider({
   const { config, pathname } = useConfig();
 
   const [loadedMessages, setLoadedMessages] =
-    React.useState<LocaleNamespaceMessages | null>(null);
+    React.useState<LocaleMessages | null>(null);
   const [isLoadingMessages, setIsLoadingMessages] =
     React.useState<boolean>(false);
 

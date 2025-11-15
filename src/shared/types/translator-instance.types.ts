@@ -1,57 +1,46 @@
 import {
-  type LocaleKey,
+  type Locale,
   type Replacement,
-  type RichReplacement,
   type ScopedLeafKeys,
-  type NodeKeys,
-  type UnionLocaleMessages,
-  type InferTranslatorKey,
+  type LocalizedLeafKeys,
 } from "intor-translator";
-import {
-  GenConfigKeys,
-  GenMessages,
-  IfGen,
-} from "@/shared/types/generated.types";
+import { IfGen } from "@/shared/types/generated.types";
 
-// PreKey
-export type PreKey<C extends GenConfigKeys = "__default__"> = NodeKeys<
-  UnionLocaleMessages<GenMessages<C>>
+/** Base properties shared by all translator instances. */
+export interface TranslatorBaseProps<M = unknown> {
+  /** `messages`: The message object containing all translations. */
+  messages: M;
+  /** Current locale in use. */
+  locale: Locale<M>;
+}
+
+/** Properties specific to client-side translator behavior. */
+export interface TranslatorClientProps<M = unknown> {
+  /** `isLoading`: Indicates whether translations are currently loading. */
+  isLoading: boolean;
+  /** `setLocale`: Function to update the current locale. */
+  setLocale: (locale: Locale<M>) => void;
+}
+
+/**
+ * Conditional key type for TranslatorInstance.
+ * - Resolves to `ScopedLeafKeys` if a pre-key `PK` is provided,
+ * otherwise resolves to `LocalizedLeafKeys`.
+ */
+type Key<M, PK> = IfGen<
+  PK extends string ? ScopedLeafKeys<M, PK> : LocalizedLeafKeys<M>,
+  string
 >;
 
-// Base props
-export interface TranslatorBaseProps<M> {
-  messages: M;
-  locale: LocaleKey<M>;
-}
+/**
+ * Translator instance type.
+ * Combines base props, client props, and core translation methods.
+ */
+export type TranslatorInstance<M, PK extends string | undefined = undefined> = {
+  /** Check if a given key exists in the messages. */
+  hasKey: (key?: Key<M, PK>, targetLocale?: Locale<M>) => boolean;
 
-// Client props
-export interface TranslatorClientProps<M> {
-  isLoading: boolean;
-  setLocale: (locale: LocaleKey<M>) => void;
-}
-
-// Non-scoped
-export type TranslatorInstance<M> = {
-  hasKey: (
-    key?: IfGen<InferTranslatorKey<M>, string>,
-    targetLocale?: LocaleKey<M> | undefined,
-  ) => boolean;
-  t: <Result = string>(
-    key?: IfGen<InferTranslatorKey<M>, string>,
-    replacements?: Replacement | RichReplacement,
-  ) => Result;
-} & TranslatorBaseProps<M> &
-  TranslatorClientProps<M>;
-
-// Scoped
-export type ScopedTranslatorInstance<M, K extends string> = {
-  hasKey: (
-    key?: IfGen<ScopedLeafKeys<M, K> & string, string>,
-    targetLocale?: LocaleKey<M>,
-  ) => boolean;
-  t: (
-    key?: IfGen<ScopedLeafKeys<M, K> & string, string>,
-    replacements?: Replacement | RichReplacement,
-  ) => string;
+  /** Translate a given key into its string representation. */
+  t: <Result = string>(key?: Key<M, PK>, replacements?: Replacement) => Result;
 } & TranslatorBaseProps<M> &
   TranslatorClientProps<M>;

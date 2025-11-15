@@ -1,4 +1,4 @@
-import { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import { RoutingRawOptions } from "@/modules/config/types/routing.types";
 import { extractPathname } from "@/shared/utils/pathname/extract-pathname";
 

@@ -1,4 +1,4 @@
-import { LocaleNamespaceMessages } from "intor-translator";
+import { LocaleMessages } from "intor-translator";
 import { fetchMessages } from "@/modules/messages/load-api-messages/fetch-messages";
 import { FetchFallbackMessagesOptions } from "@/modules/messages/load-api-messages/types";
 
@@ -6,9 +6,7 @@ import { FetchFallbackMessagesOptions } from "@/modules/messages/load-api-messag
  * Try to fetch messages from fallback locales in order.
  * Returns the first successful result, or undefined if all fail.
  */
-export const fetchFallbackMessages = async <
-  Messages extends LocaleNamespaceMessages,
->({
+export const fetchFallbackMessages = async <Messages extends LocaleMessages>({
   apiUrl,
   apiHeaders,
   searchParams,
