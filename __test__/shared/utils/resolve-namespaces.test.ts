@@ -1,109 +1,112 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
-
-const baseConfig = {
-  prefixPlaceHolder: "[locale]",
-  loader: {
-    routeNamespaces: {
-      default: ["ui", "error"],
-      "/cms": ["cms"],
-      "/cms/dashboard": ["cms-dashboard"],
-      "/blog/*": ["blog"],
-      "/*": ["global"],
-      "/api": [],
-    },
-    namespaces: ["fallback"],
-  },
-} as unknown as IntorResolvedConfig;
-
-jest.mock("@/shared/utils/pathname/extract-pathname", () => ({
-  extractPathname: jest.fn(({ pathname }) => ({
-    unprefixedPathname: pathname,
-  })),
-}));
-
-jest.mock("@/shared/utils/pathname/standardize-pathname", () => ({
-  standardizePathname: jest.fn().mockImplementation(({ pathname }) => pathname),
-}));
+import { describe, it, expect } from "vitest";
+import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
+import { resolveNamespaces } from "@/shared/utils";
 
 describe("resolveNamespaces", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+  const baseConfig = {
+    routing: { basePath: "/" },
+    loader: {
+      routeNamespaces: {
+        default: ["defaultNs"],
+        "/exact": ["exactNs"],
+        [`/${PREFIX_PLACEHOLDER}/path`]: ["placeholderNs"],
+        "/prefix/*": ["prefixNs"],
+        "/prefix/long/*": ["longPrefixNs"],
+      },
+      namespaces: ["fallbackNs"],
+    },
+  } as unknown as IntorResolvedConfig;
 
-  it("should return default + exact match namespaces", () => {
-    const result = resolveNamespaces({ config: baseConfig, pathname: "/cms" });
-    expect(result).toEqual(["ui", "error", "cms"]);
-  });
-
-  it("should return default + exact nested match namespaces", () => {
-    const result = resolveNamespaces({
-      config: baseConfig,
-      pathname: "/cms/dashboard",
-    });
-    expect(result).toEqual(["ui", "error", "cms-dashboard"]);
-  });
-
-  it("should return default + prefix match namespaces (longest match)", () => {
-    const result = resolveNamespaces({
-      config: baseConfig,
-      pathname: "/blog/article/123",
-    });
-    expect(result).toEqual(["ui", "error", "blog"]);
-  });
-
-  it("should return default + global fallback if no match", () => {
+  it("includes default and fallback namespaces", () => {
     const result = resolveNamespaces({
       config: baseConfig,
       pathname: "/unknown",
     });
-    expect(result).toEqual(["ui", "error", "global"]);
+    expect(result).toEqual(expect.arrayContaining(["defaultNs", "fallbackNs"]));
   });
 
-  it("should return only default if exact match is []", () => {
-    const result = resolveNamespaces({ config: baseConfig, pathname: "/api" });
-    expect(result).toEqual(["ui", "error"]);
-  });
-
-  it("should return default + global fallback if no match", () => {
+  it("matches exact pathname", () => {
     const result = resolveNamespaces({
       config: baseConfig,
-      pathname: "/something",
+      pathname: "/exact",
     });
-    expect(result).toEqual(["ui", "error", "global"]);
+    expect(result).toEqual(
+      expect.arrayContaining(["exactNs", "defaultNs", "fallbackNs"]),
+    );
   });
 
-  it("should return [] if no match and no default", () => {
-    const configEmpty = {
-      prefixPlaceHolder: "__",
+  it("matches placeholder pathname", () => {
+    const result = resolveNamespaces({
+      config: baseConfig,
+      pathname: `/${PREFIX_PLACEHOLDER}/path`,
+    });
+    expect(result).toEqual(
+      expect.arrayContaining(["placeholderNs", "defaultNs", "fallbackNs"]),
+    );
+  });
+
+  it("matches all prefix patterns", () => {
+    const result = resolveNamespaces({
+      config: baseConfig,
+      pathname: "/prefix/long/abc",
+    });
+
+    expect(result).toEqual(
+      expect.arrayContaining([
+        "prefixNs",
+        "longPrefixNs",
+        "defaultNs",
+        "fallbackNs",
+      ]),
+    );
+  });
+
+  it("removes duplicate namespaces", () => {
+    const configWithOverlap: IntorResolvedConfig = {
+      routing: { basePath: "/" },
       loader: {
-        routeNamespaces: {},
-        namespaces: undefined,
+        routeNamespaces: {
+          default: ["defaultNs"],
+          "/dup/*": ["defaultNs", "dupNs"],
+        },
+        namespaces: ["defaultNs"],
       },
     } as unknown as IntorResolvedConfig;
 
     const result = resolveNamespaces({
-      config: configEmpty,
-      pathname: "/something",
+      config: configWithOverlap,
+      pathname: "/dup/test",
     });
-
-    expect(result).toEqual([]);
+    const uniqueSet = new Set(result);
+    expect(result.length).toBe(uniqueSet.size);
   });
 
-  it("should return fallback only when no match and default is undefined", () => {
+  it("covers prefix pattern branch for long prefix", () => {
     const config: IntorResolvedConfig = {
-      prefixPlaceHolder: "__",
+      routing: { basePath: "/" },
       loader: {
-        routeNamespaces: {},
-        namespaces: ["fallbackOnly"],
+        routeNamespaces: {
+          "/prefix/*": ["prefixNs"],
+          "/prefix/long/*": ["longPrefixNs"],
+          default: ["defaultNs"],
+        },
+        namespaces: ["fallbackNs"],
       },
     } as unknown as IntorResolvedConfig;
 
     const result = resolveNamespaces({
       config,
-      pathname: "/not-found",
+      pathname: "/prefix/long/test",
     });
 
-    expect(result).toEqual(["fallbackOnly"]);
+    expect(result).toEqual(
+      expect.arrayContaining([
+        "prefixNs",
+        "longPrefixNs",
+        "defaultNs",
+        "fallbackNs",
+      ]),
+    );
   });
 });

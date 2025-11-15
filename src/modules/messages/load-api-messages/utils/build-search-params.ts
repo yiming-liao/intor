@@ -3,11 +3,14 @@
  * Supports string or string[] values. Ignores undefined/null.
  */
 export const buildSearchParams = (
-  params: Record<string, string | string[] | undefined>,
+  params: Record<string, string | string[] | undefined | null>,
 ) => {
   const searchParams = new URLSearchParams();
 
-  const appendParam = (key: string, value: string | string[] | undefined) => {
+  const appendParam = (
+    key: string,
+    value: string | string[] | undefined | null,
+  ) => {
     if (value === undefined || value === null) return;
     if (Array.isArray(value) && value.length === 0) return;
 

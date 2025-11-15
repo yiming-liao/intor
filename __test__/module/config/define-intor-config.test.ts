@@ -1,3 +1,6 @@
+import type { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
+import type { RoutingResolvedOptions } from "@/modules/config/types/routing.types";
+import { describe, it, expect, beforeEach } from "vitest";
 import { defineIntorConfig } from "@/modules/config";
 import { resolveCookieOptions } from "@/modules/config/resolvers/resolve-cookie-options";
 import { resolveFallbackLocales } from "@/modules/config/resolvers/resolve-fallback-locales";
@@ -5,21 +8,27 @@ import { resolveRoutingOptions } from "@/modules/config/resolvers/resolve-routin
 import { validateDefaultLocale } from "@/modules/config/validators/validate-default-locale";
 import { validateSupportedLocales } from "@/modules/config/validators/validate-supported-locales";
 
-jest.mock("@/modules/config/resolvers/resolve-cookie-options");
-jest.mock("@/modules/config/resolvers/resolve-fallback-locales");
-jest.mock("@/modules/config/resolvers/resolve-routing-options");
-jest.mock("@/modules/config/validators/validate-default-locale");
-jest.mock("@/modules/config/validators/validate-supported-locales");
+vi.mock("@/modules/config/resolvers/resolve-cookie-options");
+vi.mock("@/modules/config/resolvers/resolve-fallback-locales");
+vi.mock("@/modules/config/resolvers/resolve-routing-options");
+vi.mock("@/modules/config/validators/validate-default-locale");
+vi.mock("@/modules/config/validators/validate-supported-locales");
 
 describe("defineIntorConfig", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    (validateSupportedLocales as jest.Mock).mockReturnValue(["en", "zh"]);
-    (validateDefaultLocale as jest.Mock).mockReturnValue("en");
-    (resolveFallbackLocales as jest.Mock).mockReturnValue({ en: ["zh"] });
-    (resolveCookieOptions as jest.Mock).mockReturnValue({ some: "cookie" });
-    (resolveRoutingOptions as jest.Mock).mockReturnValue({ some: "routing" });
+    vi.mocked(validateSupportedLocales).mockReturnValue(["en", "zh"]);
+    vi.mocked(validateDefaultLocale).mockReturnValue("en");
+    vi.mocked(resolveFallbackLocales).mockReturnValue({
+      en: ["zh"],
+    });
+    vi.mocked(resolveCookieOptions).mockReturnValue({
+      some: "cookie",
+    } as unknown as CookieResolvedOptions);
+    vi.mocked(resolveRoutingOptions).mockReturnValue({
+      some: "routing",
+    } as unknown as RoutingResolvedOptions);
   });
 
   it("should resolve all config fields correctly", () => {
@@ -77,7 +86,7 @@ describe("defineIntorConfig", () => {
   });
 
   it("should throw if validateSupportedLocales fails", () => {
-    (validateSupportedLocales as jest.Mock).mockImplementation(() => {
+    vi.mocked(validateSupportedLocales).mockImplementation(() => {
       throw new Error("Invalid supported locales");
     });
 

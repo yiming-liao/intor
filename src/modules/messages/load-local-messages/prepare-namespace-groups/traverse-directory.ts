@@ -12,6 +12,7 @@ type TraverseDirectoryOptions = {
   currentDirPath: string;
   namespaceGroups: Map<string, NamespaceGroupValue>;
   namespacePathSegments: string[];
+  readdir?: (typeof fs)["readdir"];
 };
 
 export const traverseDirectory = async ({
@@ -19,6 +20,7 @@ export const traverseDirectory = async ({
   currentDirPath,
   namespaceGroups,
   namespacePathSegments,
+  readdir = fs.readdir,
 }: TraverseDirectoryOptions): Promise<void> => {
   const { limit } = options;
   const loggerOptions = options.logger || { id: "default" };
@@ -26,7 +28,7 @@ export const traverseDirectory = async ({
   const logger = baseLogger.child({ scope: "traverse-directory" });
 
   try {
-    const dirents = await fs.readdir(currentDirPath, { withFileTypes: true });
+    const dirents = await readdir(currentDirPath, { withFileTypes: true });
 
     const dirPromises = dirents.map((dirent) =>
       limit(async () => {
@@ -49,6 +51,7 @@ export const traverseDirectory = async ({
             currentDirPath: filePath,
             namespacePathSegments: [...namespacePathSegments, dirent.name],
             options,
+            readdir,
           });
         }
       }).catch((error) => {

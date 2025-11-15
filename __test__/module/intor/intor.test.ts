@@ -1,0 +1,138 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { LocaleMessages } from "intor-translator";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { intor } from "@/modules/intor/intor";
+import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
+import { loadMessages } from "@/modules/messages";
+import { getLogger } from "@/shared/logger/get-logger";
+import { mergeMessages } from "@/shared/utils";
+
+vi.mock("@/shared/logger/get-logger");
+vi.mock("@/modules/intor/utils/should-load-messages");
+vi.mock("@/modules/messages");
+vi.mock("@/shared/utils");
+
+describe("intor", () => {
+  let mockLogger: any;
+  let mockChildLogger: any;
+
+  beforeEach(() => {
+    mockChildLogger = {
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+    };
+    mockLogger = {
+      child: vi.fn().mockReturnValue(mockChildLogger),
+    };
+    vi.mocked(getLogger).mockReturnValue(mockLogger);
+    vi.mocked(shouldLoadMessages).mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should resolve context from object and load messages", async () => {
+    const config = {
+      id: "test",
+      defaultLocale: "en",
+      messages: { static: "msg" },
+      loader: { type: "api" },
+      logger: {},
+    };
+    const i18nContext = { locale: "fr", pathname: "/home" };
+    const loadedMessages: LocaleMessages = { hello: "world" } as any;
+    vi.mocked(loadMessages).mockResolvedValue(loadedMessages);
+    vi.mocked(mergeMessages).mockImplementation((a, b) => ({
+      ...a,
+      ...b,
+    }));
+
+    const result = await intor(config as any, i18nContext);
+
+    expect(result.initialLocale).toBe("fr");
+    expect(result.pathname).toBe("/home");
+    expect(result.messages).toEqual({ static: "msg", hello: "world" });
+    expect(loadMessages).toHaveBeenCalledWith(
+      expect.objectContaining({ config, locale: "fr", pathname: "/home" }),
+    );
+    expect(mockChildLogger.info).toHaveBeenCalledWith(
+      "Start Intor initialization.",
+    );
+    expect(mockChildLogger.debug).toHaveBeenCalledWith(
+      "Context resolved via [static object].",
+      {
+        locale: "fr",
+        pathname: "/home",
+      },
+    );
+  });
+
+  it("should resolve context from function and load messages", async () => {
+    const config = {
+      id: "test",
+      defaultLocale: "en",
+      messages: {},
+      loader: { type: "api" },
+      logger: {},
+    };
+    const i18nContextFn = vi
+      .fn()
+      .mockResolvedValue({ locale: "de", pathname: "/dashboard" });
+    const loadedMessages: LocaleMessages = { greet: "hi" } as any;
+    vi.mocked(loadMessages).mockResolvedValue(loadedMessages);
+    vi.mocked(mergeMessages).mockImplementation((a, b) => ({
+      ...a,
+      ...b,
+    }));
+
+    const result = await intor(config as any, i18nContextFn);
+
+    expect(i18nContextFn).toHaveBeenCalledWith(config);
+    expect(result.initialLocale).toBe("de");
+    expect(result.pathname).toBe("/dashboard");
+    expect(result.messages).toEqual({ greet: "hi" });
+    expect(mockChildLogger.debug).toHaveBeenCalledWith(
+      "Context resolved via [function].",
+      {
+        locale: "de",
+        pathname: "/dashboard",
+      },
+    );
+  });
+
+  it("should skip loadMessages if loader disabled", async () => {
+    vi.mocked(shouldLoadMessages).mockReturnValue(false);
+    const config = {
+      id: "test",
+      defaultLocale: "en",
+      messages: { only: "static" },
+      loader: null,
+      logger: {},
+    };
+    const result = await intor(config as any, { locale: "en" });
+
+    expect(loadMessages).not.toHaveBeenCalled();
+    expect(result.messages).toEqual({ only: "static" });
+  });
+
+  it("should handle empty loaded messages", async () => {
+    const config = {
+      id: "test",
+      defaultLocale: "en",
+      messages: { a: 1 },
+      loader: { type: "api" },
+      logger: {},
+    };
+    vi.mocked(loadMessages).mockResolvedValue({});
+    vi.mocked(mergeMessages).mockImplementation((a, b) => ({
+      ...a,
+      ...b,
+    }));
+
+    const result = await intor(config as any, { locale: "en" });
+
+    expect(result.messages).toEqual({ a: 1 });
+  });
+});

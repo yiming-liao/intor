@@ -7,13 +7,16 @@ const sanitize = (k: string) =>
     .replaceAll(/[\r\n]/g, "")
     .trim();
 
-type RawCacheKey = string | Array<string | number | boolean | undefined | null>;
+type RawCacheKey =
+  | string
+  | boolean
+  | Array<string | number | boolean | undefined | null>;
 
 export const normalizeCacheKey = (
   key?: RawCacheKey,
   delimiter: string = CACHE_KEY_DELIMITER,
 ): string | null => {
-  if (!key) return null;
+  if (key === null || key === undefined) return null;
 
   if (Array.isArray(key)) {
     if (key.length === 0) return null;

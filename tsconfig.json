@@ -17,7 +17,8 @@
     "noEmit": true,
     "isolatedModules": true,
     "plugins": [{ "name": "next" }],
-    "incremental": false
+    "incremental": false,
+    "types": ["vitest/globals"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": [

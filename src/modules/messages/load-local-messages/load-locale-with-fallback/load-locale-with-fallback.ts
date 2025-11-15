@@ -14,9 +14,9 @@ export const loadLocaleWithFallback = async ({
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-locale-with-fallback" });
 
-  const localesToTry = [targetLocale, ...fallbackLocales];
+  const candidateLocales = [targetLocale, ...fallbackLocales];
 
-  for (const locale of localesToTry) {
+  for (const locale of candidateLocales) {
     try {
       const validNamespaces = await loadSingleLocale({
         basePath,
@@ -37,7 +37,7 @@ export const loadLocaleWithFallback = async ({
 
   // Log out all attempted locales are failed
   logger.warn("All fallback locales failed.", {
-    attemptedLocales: localesToTry,
+    attemptedLocales: candidateLocales,
   });
 
   return;

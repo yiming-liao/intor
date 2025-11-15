@@ -1,4 +1,4 @@
-import type { IntorRawConfig } from "../types/intor-config.types";
+import type { IntorRawConfig } from "@/modules/config/types/intor-config.types";
 import type { Locale } from "intor-translator";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 

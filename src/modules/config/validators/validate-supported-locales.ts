@@ -1,4 +1,4 @@
-import type { IntorRawConfig } from "../types/intor-config.types";
+import type { IntorRawConfig } from "@/modules/config/types/intor-config.types";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 
 /**
