@@ -1,8 +1,9 @@
-import { redirect as nextRedirect, RedirectType } from "next/navigation";
+import type { IntorResolvedConfig } from "@/modules/config";
+import type { GenLocale } from "@/shared/types/generated.types";
+import type { RedirectType } from "next/navigation";
+import { redirect as nextRedirect } from "next/navigation";
 import { getI18nContext } from "@/adapters/next/server";
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
-import { IntorResolvedConfig } from "@/modules/config";
-import { GenLocale } from "@/shared/types/generated.types";
 
 /**
  * redirect utility.

@@ -1,7 +1,7 @@
+import type { LoggerOptions } from "@/modules/config/types/logger.types";
+import type { StringKeyedMessages } from "@/modules/messages/load-local-messages/load-namespace-group/types";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { LoggerOptions } from "@/modules/config/types/logger.types";
-import { StringKeyedMessages } from "@/modules/messages/load-local-messages/load-namespace-group/types";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 import { getLogger } from "@/shared/logger/get-logger";
 
@@ -37,7 +37,7 @@ export const parseMessageFile = async (
 
   try {
     // const { content } = await readMessageRecordFile(trimmedPath, loggerOptions);
-    const content = await fs.readFile(trimmedPath, "utf-8");
+    const content = await fs.readFile(trimmedPath, "utf8");
     const parsed = JSON.parse(content) as StringKeyedMessages;
     // Not a MessageObject, throw error
     if (typeof parsed !== "object" || parsed === null) {

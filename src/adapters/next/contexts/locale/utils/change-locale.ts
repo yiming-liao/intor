@@ -1,7 +1,7 @@
-import { Locale } from "intor-translator";
+import type { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
+import type { LoaderOptions } from "@/modules/config/types/loader.types";
+import type { Locale } from "intor-translator";
 import { setLocaleCookieBrowser } from "@/adapters/next/shared/utils/set-locale-cookie-browser";
-import { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
-import { LoaderOptions } from "@/modules/config/types/loader.types";
 
 type Params = {
   currentLocale: Locale;

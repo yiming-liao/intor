@@ -1,4 +1,4 @@
-import { Locale } from "intor-translator";
+import type { Locale } from "intor-translator";
 import { useConfig } from "@/adapters/next/contexts/config";
 import { useLocale } from "@/adapters/next/contexts/locale";
 import { usePathname } from "@/adapters/next/navigation/use-pathname";
@@ -47,7 +47,7 @@ export const useLocaleSwitch = () => {
     if (isExternal) return;
     if (shouldFullReload({ config, targetPathname, locale, currentLocale })) {
       setLocaleCookieBrowser({ cookie: config.cookie, locale: targetLocale });
-      window.location.href = resolvedHref; // Full reload navigation
+      globalThis.location.href = resolvedHref; // Full reload navigation
       return;
     } else {
       setLocale(targetLocale);

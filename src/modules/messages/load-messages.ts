@@ -1,12 +1,15 @@
-import { LocaleMessages } from "intor-translator";
-import { createLoadLocalMessages } from "@/modules/messages/create-load-local-messages";
-import { loadApiMessages } from "@/modules/messages/load-api-messages";
-import {
+import type {
   MessagesLoaderOptions,
   MessagesLoaderResult,
 } from "@/modules/messages/types";
+import type {
+  GenConfigKeys,
+  GenMessages,
+} from "@/shared/types/generated.types";
+import type { LocaleMessages } from "intor-translator";
+import { createLoadLocalMessages } from "@/modules/messages/create-load-local-messages";
+import { loadApiMessages } from "@/modules/messages/load-api-messages";
 import { getLogger } from "@/shared/logger/get-logger";
-import { GenConfigKeys, GenMessages } from "@/shared/types/generated.types";
 import { resolveNamespaces } from "@/shared/utils";
 
 /**

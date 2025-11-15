@@ -1,81 +1,34 @@
 import js from "@eslint/js";
-import { defineConfig } from "eslint/config";
-import prettierConfig from "eslint-config-prettier";
-import importPlugin from "eslint-plugin-import";
+import { defineConfig, globalIgnores } from "eslint/config";
 import prettierPlugin from "eslint-plugin-prettier";
-import unusedImportsPlugin from "eslint-plugin-unused-imports";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import { importConfig } from "./.config/eslint/import.mjs";
+import { typescriptConfig } from "./.config/eslint/typescript.mjs";
+import { unicornConfig } from "./.config/eslint/unicorn.mjs";
+import { unusedImportsConfig } from "./.config/eslint/unused-imports.mjs";
 
-export default defineConfig([
-  // ignores
+const eslintConfig = defineConfig([
+  globalIgnores([".yarn/**", ".config/**", "eslint.config.mjs", "dist"]),
+
+  // JS
+  js.configs.recommended,
+  ...typescriptConfig,
+  ...unicornConfig,
+  ...importConfig,
+  ...unusedImportsConfig,
+
   {
-    ignores: ["dist/**", "coverage/**"],
+    settings: {
+      "import/resolver": {
+        typescript: { project: "./tsconfig.json" },
+      },
+    },
   },
-  // basic js
+
+  // Prettier
   {
-    files: ["**/*.{js,mjs,cjs,ts}"],
-    plugins: { js },
-    extends: ["js/recommended"],
-  },
-  // prettier
-  {
-    files: ["**/*.{js,mjs,cjs,ts}"],
     plugins: { prettier: prettierPlugin },
-    extends: [prettierConfig],
-    rules: {
-      "prettier/prettier": "error",
-    },
+    rules: { "prettier/prettier": "warn" },
   },
-  // import sort
-  {
-    files: ["**/*.{js,mjs,cjs,ts}"],
-    plugins: { import: importPlugin },
-    rules: {
-      "import/named": "off",
-      "import/no-named-as-default": "off",
-      "import/newline-after-import": "error",
-      "import/order": [
-        "warn",
-        {
-          groups: [
-            "type",
-            "builtin",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-            "object",
-            "unknown",
-          ],
-          "newlines-between": "never",
-          alphabetize: { order: "asc", caseInsensitive: true },
-        },
-      ],
-    },
-  },
-  // unused imports
-  {
-    plugins: { "unused-imports": unusedImportsPlugin },
-    rules: {
-      "no-unused-vars": "off",
-      "unused-imports/no-unused-imports": "warn",
-      "unused-imports/no-unused-vars": [
-        "warn",
-        {
-          vars: "all",
-          varsIgnorePattern: "^_",
-          args: "after-used",
-          argsIgnorePattern: "^_",
-        },
-      ],
-    },
-  },
-  // Default
-  {
-    files: ["**/*.{js,mjs,cjs,ts}"],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-  },
-  tseslint.configs.recommended,
 ]);
+
+export default eslintConfig;

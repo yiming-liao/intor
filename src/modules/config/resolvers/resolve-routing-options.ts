@@ -1,8 +1,8 @@
-import { DEFAULT_ROUTING_OPTIONS } from "@/modules/config/constants/routing.constants";
-import {
+import type {
   RoutingRawOptions,
   RoutingResolvedOptions,
 } from "@/modules/config/types/routing.types";
+import { DEFAULT_ROUTING_OPTIONS } from "@/modules/config/constants/routing.constants";
 import { normalizePathname } from "@/shared/utils";
 
 /**
@@ -24,7 +24,7 @@ export const resolveRoutingOptions = (
     ...routing,
     firstVisit: {
       ...DEFAULT_ROUTING_OPTIONS.firstVisit,
-      ...(routing.firstVisit || {}),
+      ...routing.firstVisit,
     },
     basePath: normalizePathname(routing?.basePath || ""),
   };

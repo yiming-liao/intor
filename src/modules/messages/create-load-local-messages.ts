@@ -1,8 +1,6 @@
-import { LocaleMessages } from "intor-translator";
-import {
-  loadLocalMessages,
-  LoadLocalMessagesOptions,
-} from "@/modules/messages/load-local-messages";
+import type { LoadLocalMessagesOptions } from "@/modules/messages/load-local-messages";
+import type { LocaleMessages } from "intor-translator";
+import { loadLocalMessages } from "@/modules/messages/load-local-messages";
 
 /**
  * Create a loader for local messages.

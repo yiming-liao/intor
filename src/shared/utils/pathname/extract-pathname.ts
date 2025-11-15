@@ -46,8 +46,8 @@ export const extractPathname = ({
   }
 
   // Extract potential locale from pathname
-  const pathParts = prefixedPathname.split("/").filter(Boolean);
-  const maybeLocale = pathParts[0] || "";
+  const pathPart = prefixedPathname.split("/").find(Boolean);
+  const maybeLocale = pathPart || "";
   const isLocalePrefixed = config.supportedLocales?.includes(maybeLocale); // Check by supportedLocales
 
   // prefix: "none"

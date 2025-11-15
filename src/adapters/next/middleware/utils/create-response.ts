@@ -1,5 +1,6 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { setLocaleCookieEdge } from "@/adapters/next/middleware/utils/set-locale-cookie-edge";
 import { setPathnameHeader } from "@/adapters/next/middleware/utils/set-pathname-header";
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
@@ -37,14 +38,11 @@ export const createResponse = <
   });
   url.pathname = localePrefixedPathname;
 
-  let response;
-
   // Create response based on the responseType
-  if (responseType === "redirect") {
-    response = NextResponse.redirect(url);
-  } else {
-    response = NextResponse.next();
-  }
+  const response =
+    responseType === "redirect"
+      ? NextResponse.redirect(url)
+      : NextResponse.next();
 
   // Set locale cookie if locale is provided
   if (locale) {

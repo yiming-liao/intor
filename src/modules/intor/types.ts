@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { Locale, LocaleMessages } from "intor-translator";
-import { GenLocale } from "@/shared/types/generated.types";
+import type { GenLocale } from "@/shared/types/generated.types";
+import type { Locale, LocaleMessages } from "intor-translator";
 
 // i18n context
 export interface I18nContext {

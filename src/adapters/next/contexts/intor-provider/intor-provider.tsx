@@ -1,11 +1,11 @@
 "use client";
 
+import type { IntorProviderProps } from "./types";
 import * as React from "react";
 import { ConfigProvider } from "../../contexts/config";
 import { LocaleProvider } from "../../contexts/locale";
 import { MessagesProvider } from "../../contexts/messages";
 import { TranslatorProvider } from "../../contexts/translator";
-import type { IntorProviderProps } from "./types";
 
 export const IntorProvider = ({
   value: { config, pathname, initialLocale, messages },

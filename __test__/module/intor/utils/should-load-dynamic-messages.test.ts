@@ -1,4 +1,5 @@
-import { LoaderOptions } from "@/modules/config/types/loader.types";
+/* eslint-disable unicorn/no-useless-undefined */
+import type { LoaderOptions } from "@/modules/config/types/loader.types";
 import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
 
 describe("shouldLoadMessages", () => {

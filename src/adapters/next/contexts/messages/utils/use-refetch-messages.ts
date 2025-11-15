@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { LocaleMessages } from "intor-translator";
+import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { loadApiMessages } from "@/modules/messages";
 import { mergeMessages, resolveNamespaces } from "@/shared/utils";

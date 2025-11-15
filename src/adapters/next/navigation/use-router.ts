@@ -1,8 +1,8 @@
+import type { GenLocale } from "@/shared/types/generated.types";
+import type { Locale } from "intor-translator";
 import type { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Locale } from "intor-translator";
 import { useRouter as useNextRouter } from "next/navigation";
 import { useLocaleSwitch } from "@/adapters/next/navigation/utils/use-locale-switch";
-import { GenLocale } from "@/shared/types/generated.types";
 
 /**
  * useRouter hook.

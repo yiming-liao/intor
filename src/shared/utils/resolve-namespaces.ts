@@ -73,9 +73,7 @@ export const resolveNamespaces = ({
   const matchedNamespaces: string[] =
     bestNamespaces ?? routeNamespaces["/*"] ?? fallbackNamespaces ?? [];
 
-  if (matchedNamespaces.length > 0) {
-    return [...defaultNamespaces, ...matchedNamespaces];
-  } else {
-    return [...defaultNamespaces];
-  }
+  return matchedNamespaces.length > 0
+    ? [...defaultNamespaces, ...matchedNamespaces]
+    : [...defaultNamespaces];
 };

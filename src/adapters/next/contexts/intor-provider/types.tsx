@@ -1,6 +1,6 @@
-import * as React from "react";
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import { Locale, LocaleMessages } from "intor-translator";
+import type { Locale, LocaleMessages } from "intor-translator";
+import type * as React from "react";
 
 export interface IntorProviderProps {
   value: {

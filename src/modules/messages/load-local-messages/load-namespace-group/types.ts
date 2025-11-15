@@ -1,7 +1,7 @@
+import type { NamespaceGroupValue } from "../prepare-namespace-groups";
+import type { LoggerOptions } from "@/modules/config/types/logger.types";
+import type { Locale, LocaleMessages, NestedMessage } from "intor-translator";
 import type pLimit from "p-limit";
-import { Locale, LocaleMessages, NestedMessage } from "intor-translator";
-import { NamespaceGroupValue } from "../prepare-namespace-groups";
-import { LoggerOptions } from "@/modules/config/types/logger.types";
 
 export interface LoadNamespaceGroupOptions {
   locale: Locale;

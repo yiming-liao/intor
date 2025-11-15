@@ -1,6 +1,6 @@
+import type { LoggerOptions } from "@/modules/config/types/logger.types";
+import type { Locale, LocaleMessages } from "intor-translator";
 import type pLimit from "p-limit";
-import { Locale, LocaleMessages } from "intor-translator";
-import { LoggerOptions } from "@/modules/config/types/logger.types";
 
 export interface LoadSingleLocaleOptions {
   basePath: string;

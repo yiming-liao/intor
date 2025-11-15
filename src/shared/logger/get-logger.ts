@@ -1,5 +1,6 @@
 import type { LoggerOptions } from "@/modules/config/types/logger.types";
-import { logry, Logger, FormatterConfig } from "logry";
+import type { Logger, FormatterConfig } from "logry";
+import { logry } from "logry";
 import { getGlobalLoggerPool } from "@/shared/logger/global-logger-pool";
 
 const DEFAULT_FORMATTER_CONFIG: FormatterConfig = {
@@ -36,7 +37,7 @@ export function getLogger({
 
     // Soft LRU: keep pool size under control
     if (pool.size > 1000) {
-      const keys = Array.from(pool.keys());
+      const keys = [...pool.keys()];
       for (const key of keys.slice(0, 200)) pool.delete(key);
     }
   }

@@ -1,4 +1,4 @@
-import { Logger } from "logry";
+import type { Logger } from "logry";
 
 /**
  * Global logger pool (cross-module + hot-reload safe)

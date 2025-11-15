@@ -1,9 +1,9 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { I18nContext } from "@/modules/intor/types";
+import type { GenLocale } from "@/shared/types/generated.types";
 import { cookies, headers } from "next/headers";
 import { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";
-import { I18nContext } from "@/modules/intor/types";
 import { getLogger } from "@/shared/logger/get-logger";
-import { GenLocale } from "@/shared/types/generated.types";
 import { normalizeLocale, resolvePreferredLocale } from "@/shared/utils";
 
 /**

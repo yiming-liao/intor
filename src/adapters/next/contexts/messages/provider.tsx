@@ -1,11 +1,11 @@
 "use client";
 
 import type { MessagesProviderProps } from "./types";
+import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { MessagesContext } from "./context";
-import { LocaleMessages } from "intor-translator";
 import { useConfig } from "@/adapters/next/contexts/config";
 import { useRefetchMessages } from "@/adapters/next/contexts/messages/utils/use-refetch-messages";
+import { MessagesContext } from "./context";
 
 // Provider
 export function MessagesProvider({

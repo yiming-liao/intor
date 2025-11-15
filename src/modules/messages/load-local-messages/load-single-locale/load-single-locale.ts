@@ -1,6 +1,6 @@
+import type { LoadSingleLocaleOptions } from "./types";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { LoadSingleLocaleOptions } from "./types";
 import { loadNamespaceGroup } from "@/modules/messages/load-local-messages/load-namespace-group";
 import { prepareNamespaceGroups } from "@/modules/messages/load-local-messages/prepare-namespace-groups";
 import { getLogger } from "@/shared/logger/get-logger";

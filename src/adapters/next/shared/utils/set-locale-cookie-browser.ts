@@ -1,5 +1,5 @@
+import type { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
 import { buildCookieString } from "@/adapters/next/shared/utils/build-cookie-string";
-import { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
 
 interface SetLocaleCookieBrowserOptions {
   cookie: CookieResolvedOptions;
@@ -17,7 +17,7 @@ export const setLocaleCookieBrowser = ({
   locale,
 }: SetLocaleCookieBrowserOptions): void => {
   // Skip if running on the server (SSR)
-  if (typeof window === "undefined") return;
+  if (globalThis.window === undefined) return;
 
   // Skip if cookie setting is disabled or auto-set is turned off
   if (cookie.disabled || !cookie.autoSetCookie) return;

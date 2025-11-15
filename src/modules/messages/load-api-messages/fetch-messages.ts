@@ -1,5 +1,5 @@
-import { LocaleMessages } from "intor-translator";
-import { FetcherOptions } from "@/modules/messages/load-api-messages/types";
+import type { FetcherOptions } from "@/modules/messages/load-api-messages/types";
+import type { LocaleMessages } from "intor-translator";
 import { getLogger } from "@/shared/logger/get-logger";
 
 /**

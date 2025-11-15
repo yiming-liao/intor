@@ -1,10 +1,10 @@
+import type { IfGen } from "@/shared/types/generated.types";
 import {
   type Locale,
   type Replacement,
   type ScopedLeafKeys,
   type LocalizedLeafKeys,
 } from "intor-translator";
-import { IfGen } from "@/shared/types/generated.types";
 
 /** Base properties shared by all translator instances. */
 export interface TranslatorBaseProps<M = unknown> {

@@ -1,4 +1,4 @@
-import { LocaleMessages } from "intor-translator";
+import type { LocaleMessages } from "intor-translator";
 import { mergeMessages } from "@/shared/utils/merge-messages";
 
 describe("mergeMessages", () => {

@@ -1,7 +1,7 @@
-import { Locale } from "intor-translator";
+import type { LoaderOptions } from "@/modules/config/types/loader.types";
+import type { Locale } from "intor-translator";
 import * as React from "react";
 import { useMessages } from "@/adapters/next/contexts/messages";
-import { LoaderOptions } from "@/modules/config/types/loader.types";
 
 /**
  * When lazyLoad is enabled, fetch locale messages once after mount

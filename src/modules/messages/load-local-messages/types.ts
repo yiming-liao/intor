@@ -1,5 +1,5 @@
-import { CacheResolvedOptions } from "@/modules/config/types/cache.types";
-import { LoggerOptions } from "@/modules/config/types/logger.types";
+import type { CacheResolvedOptions } from "@/modules/config/types/cache.types";
+import type { LoggerOptions } from "@/modules/config/types/logger.types";
 
 export interface LoadLocalMessagesOptions {
   basePath?: string | null;

@@ -8,9 +8,8 @@ export const mergeMessages = (
   staticMessages: LocaleMessages = {},
   loadedMessages: LocaleMessages | null = {},
 ): LocaleMessages => {
-  const result: LocaleMessages = Object.keys(staticMessages).length
-    ? { ...staticMessages }
-    : {};
+  const result: LocaleMessages =
+    Object.keys(staticMessages).length > 0 ? { ...staticMessages } : {};
 
   for (const locale in loadedMessages) {
     const loaded = loadedMessages[locale];

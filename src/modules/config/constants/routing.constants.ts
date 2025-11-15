@@ -1,4 +1,4 @@
-import { RoutingResolvedOptions } from "@/modules/config/types/routing.types";
+import type { RoutingResolvedOptions } from "@/modules/config/types/routing.types";
 
 // Default routing options
 export const DEFAULT_ROUTING_OPTIONS: RoutingResolvedOptions = {

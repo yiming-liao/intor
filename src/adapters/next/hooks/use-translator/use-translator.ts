@@ -1,16 +1,16 @@
-import { LocalizedNodeKeys } from "intor-translator";
-import { useLocale } from "@/adapters/next/contexts/locale";
-import { useTranslator as useTranslatorContext } from "@/adapters/next/contexts/translator";
-import {
+import type {
   IfGen,
   GenConfigKeys,
   GenMessages,
 } from "@/shared/types/generated.types";
-import {
+import type {
   TranslatorInstance,
   TranslatorBaseProps,
   TranslatorClientProps,
 } from "@/shared/types/translator-instance.types";
+import type { LocalizedNodeKeys } from "intor-translator";
+import { useLocale } from "@/adapters/next/contexts/locale";
+import { useTranslator as useTranslatorContext } from "@/adapters/next/contexts/translator";
 
 /**
  * React hook to access a ready-to-use translator instance in the client.

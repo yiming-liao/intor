@@ -1,5 +1,5 @@
+import type { LoggerOptions } from "@/modules/config/types/logger.types";
 import type pLimit from "p-limit";
-import { LoggerOptions } from "@/modules/config/types/logger.types";
 
 export type NamespaceGroupValue = { isAtRoot: boolean; filePaths: string[] };
 

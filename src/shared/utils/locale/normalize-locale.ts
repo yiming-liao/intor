@@ -1,3 +1,12 @@
+// Util
+const toCanonical = (input: string): string | undefined => {
+  try {
+    return Intl.getCanonicalLocales(input)[0]?.toLowerCase();
+  } catch {
+    return;
+  }
+};
+
 /**
  * Normalizes and finds the best matching locale from the supported locales list.
  */
@@ -6,14 +15,6 @@ export const normalizeLocale = <Locale extends string>(
   supportedLocales: readonly Locale[] = [],
 ): Locale | undefined => {
   if (!locale || supportedLocales.length === 0) return;
-
-  const toCanonical = (input: string): string | undefined => {
-    try {
-      return Intl.getCanonicalLocales(input)[0]?.toLowerCase();
-    } catch {
-      return;
-    }
-  };
 
   const canonicalLocale = toCanonical(locale);
   if (!canonicalLocale) return;

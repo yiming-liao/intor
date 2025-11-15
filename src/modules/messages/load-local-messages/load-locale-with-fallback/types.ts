@@ -1,6 +1,6 @@
-import { NestedMessage } from "intor-translator";
-import pLimit from "p-limit";
-import { LoggerOptions } from "@/modules/config/types/logger.types";
+import type { LoggerOptions } from "@/modules/config/types/logger.types";
+import type { NestedMessage } from "intor-translator";
+import type pLimit from "p-limit";
 
 export interface LoadLocaleWithFallbackOptions {
   basePath: string;

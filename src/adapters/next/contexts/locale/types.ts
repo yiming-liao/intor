@@ -1,5 +1,5 @@
-import { Locale } from "intor-translator";
-import * as React from "react";
+import type { Locale } from "intor-translator";
+import type * as React from "react";
 
 // Context value
 export type LocaleContextValue = {

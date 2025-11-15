@@ -37,15 +37,13 @@ export const localePrefixPathname = ({
 
   // context: "except-default"
   if (prefix === "except-default") {
-    if (locale === config.defaultLocale) {
-      return normalizePathname(
-        standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
-      );
-    } else {
-      return normalizePathname(
-        standardizedPathname.replaceAll(PREFIX_PLACEHOLDER, locale!),
-      );
-    }
+    return locale === config.defaultLocale
+      ? normalizePathname(
+          standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
+        )
+      : normalizePathname(
+          standardizedPathname.replaceAll(PREFIX_PLACEHOLDER, locale!),
+        );
   }
 
   // context: "none"

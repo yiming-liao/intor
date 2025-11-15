@@ -1,4 +1,4 @@
-import { LoaderOptions } from "@/modules/config/types/loader.types";
+import type { LoaderOptions } from "@/modules/config/types/loader.types";
 
 /**
  * Determines whether dynamic messages should be loaded.

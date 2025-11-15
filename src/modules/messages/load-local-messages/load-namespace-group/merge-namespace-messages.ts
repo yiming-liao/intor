@@ -1,7 +1,7 @@
+import type { LoggerOptions } from "@/modules/config/types/logger.types";
+import type { StringKeyedMessages } from "@/modules/messages/load-local-messages/load-namespace-group/types";
 import path from "node:path";
 import { parseMessageFile } from "./parse-message-file";
-import { LoggerOptions } from "@/modules/config/types/logger.types";
-import { StringKeyedMessages } from "@/modules/messages/load-local-messages/load-namespace-group/types";
 
 /**
  * Merges the content of multiple namespace message files into a base and sub message record.

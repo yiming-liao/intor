@@ -1,6 +1,6 @@
-import { LocaleMessages } from "intor-translator";
+import type { FetchFallbackMessagesOptions } from "@/modules/messages/load-api-messages/types";
+import type { LocaleMessages } from "intor-translator";
 import { fetchMessages } from "@/modules/messages/load-api-messages/fetch-messages";
-import { FetchFallbackMessagesOptions } from "@/modules/messages/load-api-messages/types";
 
 /**
  * Try to fetch messages from fallback locales in order.

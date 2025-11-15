@@ -1,5 +1,8 @@
+import type {
+  NamespaceGroupValue,
+  PrepareNamespaceGroupsOptions,
+} from "./types";
 import path from "node:path";
-import { NamespaceGroupValue, PrepareNamespaceGroupsOptions } from "./types";
 
 type AddToNamespaceGroupOptions = {
   options: PrepareNamespaceGroupsOptions;
@@ -41,7 +44,7 @@ export const addToNamespaceGroup = ({
   // Add the file path to the group if it doesn't exist
   if (!filePathsSet.has(filePath)) {
     filePathsSet.add(filePath);
-    group.filePaths = Array.from(filePathsSet); // Convert Set to Array
+    group.filePaths = [...filePathsSet]; // Convert Set to Array
     namespaceGroups.set(nsKey, group);
   }
 };

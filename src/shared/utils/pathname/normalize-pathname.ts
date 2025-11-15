@@ -16,9 +16,9 @@ export const normalizePathname = (
   let end = length - 1;
 
   // Trim leading whitespace
-  while (start <= end && rawPathname.charCodeAt(start) <= 32) start++;
+  while (start <= end && (rawPathname.codePointAt(start) ?? 0) <= 32) start++;
   // Trim trailing whitespace
-  while (end >= start && rawPathname.charCodeAt(end) <= 32) end--;
+  while (end >= start && (rawPathname.codePointAt(end) ?? 0) <= 32) end--;
 
   if (start > end) return "/"; // Only whitespace
 
@@ -33,11 +33,7 @@ export const normalizePathname = (
         hasSlash = true;
       }
     } else {
-      if (hasSlash || result === "") {
-        result += "/" + char;
-      } else {
-        result += char;
-      }
+      result += hasSlash || result === "" ? "/" + char : char;
       hasSlash = false;
     }
   }

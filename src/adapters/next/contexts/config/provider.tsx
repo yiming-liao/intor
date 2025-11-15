@@ -1,8 +1,8 @@
 "use client";
 
 import type { ConfigProviderProps } from "./types";
-import { ConfigContext } from "./context";
 import * as React from "react";
+import { ConfigContext } from "./context";
 
 export function ConfigProvider({
   value: { config, pathname },

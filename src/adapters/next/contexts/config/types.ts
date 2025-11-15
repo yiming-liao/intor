@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import * as React from "react";
+import type * as React from "react";
 
 // Context value
 export type ConfigContextValue = {

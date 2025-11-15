@@ -1,14 +1,14 @@
 "use client";
 
 import type { LocaleProviderProps } from "./types";
+import type { Locale } from "intor-translator";
 import * as React from "react";
-import { changeLocale } from "./utils/change-locale";
 import { useConfig } from "@/adapters/next/contexts/config";
-import { useMessages } from "@/adapters/next/contexts/messages";
-import { Locale } from "intor-translator";
 import { useInitLazyLoad } from "@/adapters/next/contexts/locale/utils/use-init-lazy-load";
 import { useInitLocaleCookie } from "@/adapters/next/contexts/locale/utils/use-init-locale-cookie";
+import { useMessages } from "@/adapters/next/contexts/messages";
 import { LocaleContext } from "./context";
+import { changeLocale } from "./utils/change-locale";
 
 // Provider
 export function LocaleProvider({

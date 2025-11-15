@@ -1,5 +1,5 @@
-import { Translator } from "intor-translator";
-import * as React from "react";
+import type { Translator } from "intor-translator";
+import type * as React from "react";
 
 // Context value
 export type TranslatorContextValue<M = unknown> = {

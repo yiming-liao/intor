@@ -1,5 +1,5 @@
 import type { IntorRawConfig } from "../types/intor-config.types";
-import { Locale } from "intor-translator";
+import type { Locale } from "intor-translator";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 
 export const validateDefaultLocale = (

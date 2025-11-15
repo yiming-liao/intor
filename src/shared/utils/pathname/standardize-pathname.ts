@@ -33,7 +33,7 @@ export const standardizePathname = ({
   ];
 
   // Avoid double slashes between segments
-  const standardizedPathname = parts.join("/").replace(/\/{2,}/g, "/");
+  const standardizedPathname = parts.join("/").replaceAll(/\/{2,}/g, "/");
 
   // Final normalization to ensure leading slash, no trailing
   return normalizePathname(standardizedPathname);

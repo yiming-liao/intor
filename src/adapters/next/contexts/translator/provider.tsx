@@ -3,12 +3,12 @@
 import type { TranslatorProviderProps } from "./types";
 import { Translator } from "intor-translator";
 import * as React from "react";
-import { TranslatorContext } from "./context";
 import { useConfig } from "@/adapters/next/contexts/config";
-import { useMessages } from "@/adapters/next/contexts/messages";
 import { useLocale } from "@/adapters/next/contexts/locale";
+import { useMessages } from "@/adapters/next/contexts/messages";
 import { useTranslateHandlers } from "@/adapters/next/contexts/translate-handlers";
 import { useInitLoadingState } from "@/adapters/next/contexts/translator/utils/use-init-loading-state";
+import { TranslatorContext } from "./context";
 
 const EMPTY_OBJECT = Object.freeze({}) as Readonly<unknown>;
 

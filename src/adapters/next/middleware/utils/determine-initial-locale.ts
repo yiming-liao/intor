@@ -14,8 +14,9 @@ export const determineInitialLocale = async (config: IntorResolvedConfig) => {
 
   // If locale should be determined from browser on first visit
   if (routing.firstVisit.localeSource === "browser") {
+    const headersStore = await headers();
     const acceptLanguageHeader =
-      (await headers()).get("accept-language") || undefined;
+      headersStore.get("accept-language") || undefined;
 
     // Find the best matching locale from the supported locales
     const preferredLocale = resolvePreferredLocale(

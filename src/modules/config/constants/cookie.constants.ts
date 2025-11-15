@@ -1,4 +1,4 @@
-import { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
+import type { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
 
 // Default cookie options
 export const DEFAULT_COOKIE_OPTIONS: CookieResolvedOptions = {

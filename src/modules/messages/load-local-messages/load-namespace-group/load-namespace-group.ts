@@ -1,7 +1,7 @@
+import type { LoadNamespaceGroupOptions } from "./types";
 import path from "node:path";
-import { mergeNamespaceMessages } from "./merge-namespace-messages";
-import { LoadNamespaceGroupOptions } from "./types";
 import { getLogger } from "@/shared/logger/get-logger";
+import { mergeNamespaceMessages } from "./merge-namespace-messages";
 
 /**
  * Loads and merges messages for a specific locale and namespace.

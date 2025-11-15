@@ -4,8 +4,8 @@ import type {
 } from "./types";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { addToNamespaceGroup } from "./add-to-namespace-group";
 import { getLogger } from "@/shared/logger/get-logger";
+import { addToNamespaceGroup } from "./add-to-namespace-group";
 
 type TraverseDirectoryOptions = {
   options: PrepareNamespaceGroupsOptions;

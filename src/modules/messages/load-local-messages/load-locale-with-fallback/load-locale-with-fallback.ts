@@ -1,4 +1,4 @@
-import { LoadLocaleWithFallbackOptions } from "./types";
+import type { LoadLocaleWithFallbackOptions } from "./types";
 import { loadSingleLocale } from "@/modules/messages/load-local-messages/load-single-locale";
 import { getLogger } from "@/shared/logger/get-logger";
 

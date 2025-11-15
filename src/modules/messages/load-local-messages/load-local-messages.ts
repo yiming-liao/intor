@@ -1,8 +1,8 @@
+import type { LoadLocalMessagesOptions } from "./types";
+import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
-import { LocaleMessages } from "intor-translator";
 import pLimit from "p-limit";
-import { LoadLocalMessagesOptions } from "./types";
 import { DEFAULT_CACHE_OPTIONS } from "@/modules/config/constants/cache.constants";
 import { loadLocaleWithFallback } from "@/modules/messages/load-local-messages/load-locale-with-fallback";
 import { getLogger } from "@/shared/logger/get-logger";
@@ -60,8 +60,8 @@ export const loadLocalMessages = async ({
     loggerOptions.id,
     resolvedBasePath,
     locale,
-    [...(fallbackLocales ?? [])].sort().join(","),
-    [...(namespaces ?? [])].sort().join(","),
+    (fallbackLocales ?? []).toSorted().join(","),
+    (namespaces ?? []).toSorted().join(","),
   ]);
   if (cache.enabled && key) {
     const cached = await pool?.get(key);

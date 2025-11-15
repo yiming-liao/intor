@@ -2,4 +2,4 @@ declare global {
   type IntorGeneratedTypes = void;
 }
 
-export {};
+export type __dummy = void;

@@ -1,19 +1,16 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import {
-  LocalizedNodeKeys,
-  TranslateHandlers,
-  Translator,
-} from "intor-translator";
-import { loadMessages } from "@/modules/messages";
-import {
+import type {
   GenConfigKeys,
   GenLocale,
   GenMessages,
 } from "@/shared/types/generated.types";
-import {
+import type {
   TranslatorInstance,
   TranslatorBaseProps,
 } from "@/shared/types/translator-instance.types";
+import type { LocalizedNodeKeys, TranslateHandlers } from "intor-translator";
+import { Translator } from "intor-translator";
+import { loadMessages } from "@/modules/messages";
 
 /**
  * Create a translator instance for a specific locale and pathname

@@ -1,5 +1,5 @@
-import { LocaleMessages } from "intor-translator";
-import { LoadApiMessagesOptions } from "./types";
+import type { LoadApiMessagesOptions } from "./types";
+import type { LocaleMessages } from "intor-translator";
 import { DEFAULT_CACHE_OPTIONS } from "@/modules/config/constants/cache.constants";
 import { fetchFallbackMessages } from "@/modules/messages/load-api-messages/fetch-fallback-messages";
 import { fetchMessages } from "@/modules/messages/load-api-messages/fetch-messages";
@@ -41,8 +41,8 @@ export const loadApiMessages = async <Messages extends LocaleMessages>({
     loggerOptions.id,
     basePath,
     locale,
-    [...(fallbackLocales ?? [])].sort().join(","),
-    [...(namespaces ?? [])].sort().join(","),
+    (fallbackLocales ?? []).toSorted().join(","),
+    (namespaces ?? []).toSorted().join(","),
   ]);
   if (cache.enabled && key) {
     const cached = await pool?.get(key);

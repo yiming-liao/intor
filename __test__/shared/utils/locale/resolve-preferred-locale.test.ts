@@ -1,4 +1,4 @@
-import { Locale } from "intor-translator";
+import type { Locale } from "intor-translator";
 import { resolvePreferredLocale } from "@/shared/utils/locale/resolve-preferred-locale";
 
 describe("resolvePreferredLocale", () => {

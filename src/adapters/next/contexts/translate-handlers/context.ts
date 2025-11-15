@@ -1,4 +1,4 @@
-import { TranslateHandlers } from "intor-translator";
+import type { TranslateHandlers } from "intor-translator";
 import * as React from "react";
 
 // Context

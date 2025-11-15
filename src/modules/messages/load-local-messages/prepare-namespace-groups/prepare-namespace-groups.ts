@@ -1,8 +1,8 @@
-import { traverseDirectory } from "./traverse-directory";
-import {
+import type {
   NamespaceGroupValue,
   PrepareNamespaceGroupsOptions,
 } from "@/modules/messages/load-local-messages/prepare-namespace-groups/types";
+import { traverseDirectory } from "./traverse-directory";
 
 export const prepareNamespaceGroups = async (
   options: PrepareNamespaceGroupsOptions,

@@ -1,5 +1,5 @@
-import { LocaleMessages } from "intor-translator";
-import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
+import type { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
+import type { LocaleMessages } from "intor-translator";
 
 /**
  * Conditional type for generated types.

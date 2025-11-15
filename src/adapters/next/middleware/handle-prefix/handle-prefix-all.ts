@@ -1,5 +1,5 @@
-import { NextRequest } from "next/server";
-import { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
+import type { IntorMiddlewareParams } from "@/adapters/next/middleware/intor-middleware";
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
 import { extractPathname } from "@/shared/utils";

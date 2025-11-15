@@ -1,8 +1,8 @@
-import { DEFAULT_COOKIE_OPTIONS } from "@/modules/config/constants/cookie.constants";
-import {
+import type {
   CookieRawOptions,
   CookieResolvedOptions,
 } from "@/modules/config/types/cookie.types";
+import { DEFAULT_COOKIE_OPTIONS } from "@/modules/config/constants/cookie.constants";
 
 /**
  * Resolves the final cookie options by merging the provided options with the default ones.

@@ -1,12 +1,12 @@
 "use client";
 
+import type { GenLocale } from "@/shared/types/generated.types";
+import type { Url } from "next/dist/shared/lib/router/router";
 import type { LinkProps as NextLinkProps } from "next/link";
-import * as React from "react";
-import NextLink from "next/link";
 import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
-import { Url } from "next/dist/shared/lib/router/router";
+import NextLink from "next/link";
+import * as React from "react";
 import { useLocaleSwitch } from "@/adapters/next/navigation/utils/use-locale-switch";
-import { GenLocale } from "@/shared/types/generated.types";
 
 interface LinkProps
   extends Omit<NextLinkProps, "href">,

@@ -1,4 +1,4 @@
-import { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
+import type { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
 
 /**
  * Builds a cookie string from given options and locale.
@@ -11,16 +11,13 @@ export const buildCookieString = (
   cookie: CookieResolvedOptions,
   locale: string,
 ): string => {
-  const parts: string[] = [];
-
   // Cookie name and encoded value
-  parts.push(`${cookie.name}=${encodeURIComponent(locale)}`);
+  const parts: string[] = [`${cookie.name}=${encodeURIComponent(locale)}`];
 
   // Add expiration and max-age if provided
   if (cookie.maxAge) {
     const expires = new Date(Date.now() + cookie.maxAge * 1000).toUTCString();
-    parts.push(`expires=${expires}`);
-    parts.push(`max-age=${cookie.maxAge}`);
+    parts.push(`expires=${expires}`, `max-age=${cookie.maxAge}`);
   }
 
   // Set path (default to "/")

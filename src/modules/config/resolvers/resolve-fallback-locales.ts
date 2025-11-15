@@ -1,5 +1,5 @@
-import { FallbackLocalesMap, Locale } from "intor-translator";
-import { IntorRawConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorRawConfig } from "@/modules/config/types/intor-config.types";
+import type { FallbackLocalesMap, Locale } from "intor-translator";
 
 export const resolveFallbackLocales = (
   config: IntorRawConfig,
