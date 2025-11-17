@@ -1,6 +1,6 @@
 import type { FetcherOptions } from "./types";
 import type { LocaleMessages } from "intor-translator";
-import { isNamespaceMessages } from "@/modules/messages/utils/is-namespace-messages";
+import { isNamespaceMessages } from "@/modules/messages/shared/utils/is-namespace-messages";
 import { getLogger } from "@/shared/logger/get-logger";
 
 /**

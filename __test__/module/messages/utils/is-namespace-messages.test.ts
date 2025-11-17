@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import {
   isNamespaceMessages,
   isPlainObject,
-} from "@/modules/messages/utils/is-namespace-messages";
+} from "@/modules/messages/shared/utils/is-namespace-messages";
 
 describe("isPlainObject", () => {
   it("should return true for plain objects", () => {

@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { loadApiMessages } from "@/modules/messages";
+import { loadRemoteMessages } from "@/modules/messages";
 import { mergeMessages, resolveNamespaces } from "@/shared/utils";
 
 type UseRefetchMessagesParams = {
@@ -35,7 +35,7 @@ export const useRefetchMessages = ({
       if (config.loader?.type === "remote") {
         setIsLoadingMessages(true);
 
-        const loadedMessages = await loadApiMessages({
+        const loadedMessages = await loadRemoteMessages({
           rootDir: config.loader.rootDir,
           remoteUrl: config.loader.remoteUrl,
           remoteHeaders: config.loader.remoteHeaders,

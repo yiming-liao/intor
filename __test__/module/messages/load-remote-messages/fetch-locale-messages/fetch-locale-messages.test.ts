@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { fetchLocaleMessages } from "@/modules/messages/load-remote-messages/fetch-locale-messages";
-import { isNamespaceMessages } from "@/modules/messages/utils/is-namespace-messages";
+import { isNamespaceMessages } from "@/modules/messages/shared/utils/is-namespace-messages";
 import * as loggerModule from "@/shared/logger/get-logger";
 
-vi.mock("@/modules/messages/utils/is-namespace-messages");
+vi.mock("@/modules/messages/shared/utils/is-namespace-messages");
 
 describe("fetchLocaleMessages", () => {
   let fetchMock: typeof globalThis.fetch;

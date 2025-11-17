@@ -1,6 +1,6 @@
-import type { NamespaceMessages } from "@/modules/messages/types";
+import type { NamespaceMessages } from "@/modules/messages/shared/types";
 import fs from "node:fs/promises";
-import { isNamespaceMessages } from "@/modules/messages/utils/is-namespace-messages";
+import { isNamespaceMessages } from "@/modules/messages/shared/utils/is-namespace-messages";
 
 /**
  *  Read a JSON file and validate that it matches **NamespaceMessages** structure.

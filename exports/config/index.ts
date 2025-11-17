@@ -8,7 +8,7 @@
 export {
   defineIntorConfig,
 
-  //   Constants
+  // Constants
   DEFAULT_CACHE_OPTIONS,
   DEFAULT_COOKIE_OPTIONS,
   DEFAULT_ROUTING_OPTIONS,

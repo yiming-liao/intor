@@ -1,5 +1,5 @@
 import type { ParseFileEntriesOptions, ParsedFileEntries } from "./types";
-import type { NamespaceMessages } from "@/modules/messages/types";
+import type { NamespaceMessages } from "@/modules/messages/shared/types";
 import merge from "lodash.merge";
 import { getLogger } from "@/shared/logger/get-logger";
 import { jsonReader } from "./utils/json-reader";

@@ -1,4 +1,4 @@
-import type { NamespaceMessages } from "@/modules/messages/types";
+import type { NamespaceMessages } from "@/modules/messages/shared/types";
 
 /** Check if a value is a plain object (not null, not array) */
 export function isPlainObject(

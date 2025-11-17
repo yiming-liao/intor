@@ -1,4 +1,4 @@
-import type { NamespaceMessages } from "@/modules/messages/types";
+import type { NamespaceMessages } from "@/modules/messages/shared/types";
 
 /**
  * Wraps a value inside nested objects according to a given path.

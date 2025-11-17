@@ -1,15 +1,10 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { MessageFileReader } from "@/modules/messages/shared/types";
 import type {
   GenConfigKeys,
   GenMessages,
 } from "@/shared/types/generated.types";
-import type { Locale, NestedMessage } from "intor-translator";
-
-export type NamespaceMessages = Record<string, NestedMessage>;
-
-export type MessageFileReader = (
-  filePath: string,
-) => Promise<NamespaceMessages>;
+import type { Locale } from "intor-translator";
 
 export type LoadMessagesOptions = {
   config: IntorResolvedConfig;

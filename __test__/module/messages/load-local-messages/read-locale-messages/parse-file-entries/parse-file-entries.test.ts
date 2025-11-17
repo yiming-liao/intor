@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FileEntry } from "@/modules/messages/load-local-messages/read-locale-messages";
-import type { NamespaceMessages } from "@/modules/messages/types";
+import type { NamespaceMessages } from "@/modules/messages/shared/types";
 import type { LimitFunction } from "p-limit";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { parseFileEntries } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries";

@@ -1,4 +1,4 @@
-import type { NamespaceMessages } from "@/modules/messages/types";
+import type { NamespaceMessages } from "@/modules/messages/shared/types";
 import { describe, it, expect } from "vitest";
 import { nestObjectFromPath } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
 

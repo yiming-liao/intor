@@ -6,12 +6,14 @@ export {
   loadMessages,
   loadLocalMessages,
   type LoadLocalMessagesOptions,
-  loadApiMessages,
-  type LoadApiMessagesOptions,
+  loadRemoteMessages,
+  type LoadRemoteMessagesOptions,
+  type NamespaceMessages,
+  type MessageFileReader,
 } from "@/modules/messages";
 
-// Tools
-export { getTranslator } from "@/modules/tools";
+// Translator
+export { getTranslator } from "@/modules/translator";
 
 // Constants
 export { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";

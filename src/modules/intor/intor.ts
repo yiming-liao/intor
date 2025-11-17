@@ -4,7 +4,7 @@ import type {
   GetI18nContext,
   IntorResult,
 } from "@/modules/intor/types";
-import type { MessageFileReader } from "@/modules/messages/types";
+import type { MessageFileReader } from "@/modules/messages";
 import type { GenLocale } from "@/shared/types/generated.types";
 import type { LocaleMessages } from "intor-translator";
 import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";

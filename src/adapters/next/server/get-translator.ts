@@ -7,7 +7,7 @@ import type {
 import type { TranslatorInstance } from "@/shared/types/translator-instance.types";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { getI18nContext } from "@/adapters/next/server/get-i18n-context";
-import { getTranslator as rawGetTranslator } from "@/modules/tools";
+import { getTranslator as rawGetTranslator } from "@/modules/translator";
 
 /**
  * Create a translator instance ready for the current Next.js SSR environment.
