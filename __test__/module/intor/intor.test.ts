@@ -61,7 +61,7 @@ describe("intor", () => {
       "Start Intor initialization.",
     );
     expect(mockChildLogger.debug).toHaveBeenCalledWith(
-      "Context resolved via [static object].",
+      "I18n context resolved via static fallback.",
       {
         locale: "fr",
         pathname: "/home",
@@ -94,7 +94,7 @@ describe("intor", () => {
     expect(result.pathname).toBe("/dashboard");
     expect(result.messages).toEqual({ greet: "hi" });
     expect(mockChildLogger.debug).toHaveBeenCalledWith(
-      "Context resolved via [function].",
+      "I18n context resolved via Mock.",
       {
         locale: "de",
         pathname: "/dashboard",
