@@ -1,4 +1,4 @@
-import type { NamespaceMessages } from "@/modules/messages/shared/types";
+import type { Messages } from "@/modules/messages/shared/types";
 
 /**
  * Wraps a value inside nested objects according to a given path.
@@ -12,11 +12,8 @@ import type { NamespaceMessages } from "@/modules/messages/shared/types";
  * nestObjectFromPath([], value); // →  { a: "A" }
  * ```
  */
-export function nestObjectFromPath(
-  path: string[],
-  value: NamespaceMessages,
-): NamespaceMessages {
-  let obj: NamespaceMessages = value;
+export function nestObjectFromPath(path: string[], value: Messages): Messages {
+  let obj: Messages = value;
   for (let i = path.length - 1; i >= 0; i--) {
     obj = { [path[i]]: obj };
   }

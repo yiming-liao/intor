@@ -28,7 +28,7 @@ export const loadLocalMessages = async ({
     cacheOptions = DEFAULT_CACHE_OPTIONS,
     loggerOptions = { id: "default" },
     exts,
-    messageFileReader,
+    messagesReader,
   } = {},
 }: LoadLocalMessagesOptions): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
@@ -71,7 +71,7 @@ export const loadLocalMessages = async ({
         rootDir,
         locale: candidateLocale,
         namespaces,
-        extraOptions: { loggerOptions, exts, messageFileReader },
+        extraOptions: { loggerOptions, exts, messagesReader },
       });
       if (result && Object.values(result[candidateLocale] || {}).length > 0) {
         messages = result;

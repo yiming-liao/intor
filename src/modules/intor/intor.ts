@@ -4,7 +4,7 @@ import type {
   GetI18nContext,
   IntorResult,
 } from "@/modules/intor/types";
-import type { MessageFileReader } from "@/modules/messages";
+import type { MessagesReader } from "@/modules/messages";
 import type { GenLocale } from "@/shared/types/generated.types";
 import type { LocaleMessages } from "intor-translator";
 import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
@@ -24,7 +24,7 @@ export const intor = async (
   i18nContext: GetI18nContext | Partial<I18nContext>,
   loadMessagesOptions: {
     exts?: string[];
-    messageFileReader?: MessageFileReader;
+    messagesReader?: MessagesReader;
   } = {},
 ): Promise<IntorResult> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
@@ -54,7 +54,7 @@ export const intor = async (
       pathname,
       extraOptions: {
         exts: loadMessagesOptions.exts,
-        messageFileReader: loadMessagesOptions.messageFileReader,
+        messagesReader: loadMessagesOptions.messagesReader,
       },
     });
   }

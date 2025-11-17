@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FileEntry } from "@/modules/messages/load-local-messages/read-locale-messages";
-import type { NamespaceMessages } from "@/modules/messages/shared/types";
+import type { Messages } from "@/modules/messages/shared/types";
 import type { LimitFunction } from "p-limit";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { parseFileEntries } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries";
@@ -32,7 +32,7 @@ describe("parseFileEntries", () => {
         if (fp.endsWith("auth/verify.json")) return { d: "D" };
         if (fp.endsWith("ui.json")) return { b: "B" };
         if (fp.endsWith("index.json")) return { a: "A" };
-        return {} as NamespaceMessages;
+        return {} as Messages;
       },
     );
 
@@ -104,7 +104,7 @@ describe("parseFileEntries", () => {
         },
       ],
       limit,
-      extraOptions: { messageFileReader: customReader },
+      extraOptions: { messagesReader: customReader },
     });
 
     expect(customReader).toHaveBeenCalled();

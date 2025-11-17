@@ -1,9 +1,9 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import { describe, it, expect } from "vitest";
 import {
-  isNamespaceMessages,
+  isValidMessages,
   isPlainObject,
-} from "@/modules/messages/shared/utils/is-namespace-messages";
+} from "@/modules/messages/shared/utils/is-valid-messages";
 
 describe("isPlainObject", () => {
   it("should return true for plain objects", () => {
@@ -37,8 +37,8 @@ describe("isNamespaceMessages", () => {
   it("should return true for valid NamespaceMessages", () => {
     const valid1 = { en: { hello: "Hello" } };
     const valid2 = { en: { nested: { world: "World" } } };
-    expect(isNamespaceMessages(valid1)).toBe(true);
-    expect(isNamespaceMessages(valid2)).toBe(true);
+    expect(isValidMessages(valid1)).toBe(true);
+    expect(isValidMessages(valid2)).toBe(true);
   });
 
   it("should return false if any value is not string or object", () => {
@@ -48,24 +48,24 @@ describe("isNamespaceMessages", () => {
     const invalid4 = ["not", "object"];
     const invalid5 = "string";
 
-    expect(isNamespaceMessages(invalid1)).toBe(false);
-    expect(isNamespaceMessages(invalid2)).toBe(false);
-    expect(isNamespaceMessages(invalid3)).toBe(false);
-    expect(isNamespaceMessages(invalid4)).toBe(false);
-    expect(isNamespaceMessages(invalid5)).toBe(false);
+    expect(isValidMessages(invalid1)).toBe(false);
+    expect(isValidMessages(invalid2)).toBe(false);
+    expect(isValidMessages(invalid3)).toBe(false);
+    expect(isValidMessages(invalid4)).toBe(false);
+    expect(isValidMessages(invalid5)).toBe(false);
   });
 
   it("should handle deeply nested valid objects", () => {
     const deep = { en: { a: { b: { c: { d: "e" } } } } };
-    expect(isNamespaceMessages(deep)).toBe(true);
+    expect(isValidMessages(deep)).toBe(true);
   });
 
   it("should return false for empty array", () => {
-    expect(isNamespaceMessages([])).toBe(false);
+    expect(isValidMessages([])).toBe(false);
   });
 
   it("should return false for null or undefined", () => {
-    expect(isNamespaceMessages(null)).toBe(false);
-    expect(isNamespaceMessages(undefined)).toBe(false);
+    expect(isValidMessages(null)).toBe(false);
+    expect(isValidMessages(undefined)).toBe(false);
   });
 });

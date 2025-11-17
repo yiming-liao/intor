@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { fetchLocaleMessages } from "@/modules/messages/load-remote-messages/fetch-locale-messages";
-import { isNamespaceMessages } from "@/modules/messages/shared/utils/is-namespace-messages";
+import * as isValidMessagesModule from "@/modules/messages/shared/utils/is-valid-messages";
 import * as loggerModule from "@/shared/logger/get-logger";
 
 vi.mock("@/modules/messages/shared/utils/is-namespace-messages");
@@ -19,7 +19,7 @@ describe("fetchLocaleMessages", () => {
     loggerMock = vi.fn().mockReturnValue({
       child: vi.fn().mockReturnValue(loggerChildMock),
     });
-
+    vi.spyOn(isValidMessagesModule, "isValidMessages").mockReturnValue(true);
     vi.spyOn(loggerModule, "getLogger").mockImplementation(loggerMock);
     vi.clearAllMocks();
   });
@@ -35,7 +35,7 @@ describe("fetchLocaleMessages", () => {
       json: async () => data,
     } as any);
 
-    vi.mocked(isNamespaceMessages).mockReturnValue(true);
+    vi.mocked(isValidMessagesModule.isValidMessages).mockReturnValue(true);
 
     const result = await fetchLocaleMessages({
       remoteUrl: "https://api.example.com/messages",
@@ -91,7 +91,7 @@ describe("fetchLocaleMessages", () => {
       json: async () => data,
     } as any);
 
-    (isNamespaceMessages as any).mockReturnValue(false);
+    (isValidMessagesModule.isValidMessages as any).mockReturnValue(false);
 
     const result = await fetchLocaleMessages({
       remoteUrl: "https://api.example.com/messages",

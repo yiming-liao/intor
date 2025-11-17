@@ -8,8 +8,8 @@ export {
   type LoadLocalMessagesOptions,
   loadRemoteMessages,
   type LoadRemoteMessagesOptions,
-  type NamespaceMessages,
-  type MessageFileReader,
+  type Messages,
+  type MessagesReader,
 } from "@/modules/messages";
 
 // Translator

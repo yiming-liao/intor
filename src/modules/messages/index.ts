@@ -6,4 +6,4 @@ export type { LoadLocalMessagesOptions } from "./load-local-messages";
 export { loadRemoteMessages } from "./load-remote-messages";
 export type { LoadRemoteMessagesOptions } from "./load-remote-messages";
 
-export type { NamespaceMessages, MessageFileReader } from "./shared/types";
+export type { Messages, MessagesReader } from "./shared/types";

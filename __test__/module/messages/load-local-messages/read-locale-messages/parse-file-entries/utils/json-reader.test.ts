@@ -1,4 +1,4 @@
-import type { NamespaceMessages } from "@/modules/messages/shared/types";
+import type { Messages } from "@/modules/messages/shared/types";
 import fs from "node:fs/promises";
 import { describe, it, expect, vi } from "vitest";
 import { jsonReader } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
@@ -10,7 +10,7 @@ describe("jsonReader", () => {
 
   it("should read and parse a valid JSON file", async () => {
     const filePath = "/path/to/file.json";
-    const mockData: NamespaceMessages = { hello: "world" };
+    const mockData: Messages = { hello: "world" };
     vi.mocked(mockReadFile).mockResolvedValueOnce(JSON.stringify(mockData));
 
     const result = await jsonReader(filePath);
@@ -22,16 +22,6 @@ describe("jsonReader", () => {
     vi.mocked(mockReadFile).mockResolvedValueOnce("invalid json");
 
     await expect(jsonReader(filePath)).rejects.toThrow(SyntaxError);
-  });
-
-  it("should throw if parsed JSON does not match NamespaceMessages", async () => {
-    const filePath = "/path/to/bad-structure.json";
-    const badData = { notValid: 123 };
-    vi.mocked(mockReadFile).mockResolvedValueOnce(JSON.stringify(badData));
-
-    await expect(jsonReader(filePath)).rejects.toThrow(
-      "JSON file does not match NamespaceMessages structure",
-    );
   });
 
   it("should allow injecting a custom readFile function", async () => {

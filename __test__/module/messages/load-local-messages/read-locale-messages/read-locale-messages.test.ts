@@ -46,7 +46,7 @@ describe("readLocaleMessages", () => {
     });
   });
 
-  it("passes custom messageFileReader and exts to underlying functions", async () => {
+  it("passes custom messagesReader and exts to underlying functions", async () => {
     const mockReader = vi.fn().mockResolvedValue(mockNamespaceMessages);
     const mockLimit = vi.fn((fn) => fn());
 
@@ -63,7 +63,7 @@ describe("readLocaleMessages", () => {
       locale: "en",
       extraOptions: {
         exts: [".json", ".yaml"],
-        messageFileReader: mockReader,
+        messagesReader: mockReader,
       },
     };
 

@@ -1,9 +1,6 @@
 import type { LoggerOptions } from "@/modules/config/types/logger.types";
 import type { FileEntry } from "@/modules/messages/load-local-messages/read-locale-messages/types";
-import type {
-  MessageFileReader,
-  NamespaceMessages,
-} from "@/modules/messages/shared/types";
+import type { MessagesReader, Messages } from "@/modules/messages/shared/types";
 import type { LimitFunction } from "p-limit";
 
 export interface ParseFileEntriesOptions {
@@ -11,11 +8,11 @@ export interface ParseFileEntriesOptions {
   limit: LimitFunction;
   extraOptions?: {
     loggerOptions?: LoggerOptions & { id?: string };
-    messageFileReader?: MessageFileReader;
+    messagesReader?: MessagesReader;
   };
 }
 
 export interface ParsedFileEntries {
   namespace: string;
-  namespaceMessages: NamespaceMessages;
+  messages: Messages;
 }

@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import type { MessageFileReader } from "@/modules/messages/shared/types";
+import type { MessagesReader } from "@/modules/messages/shared/types";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -12,7 +12,7 @@ export type LoadMessagesOptions = {
   pathname?: string;
   extraOptions?: {
     exts?: string[];
-    messageFileReader?: MessageFileReader;
+    messagesReader?: MessagesReader;
   };
 };
 

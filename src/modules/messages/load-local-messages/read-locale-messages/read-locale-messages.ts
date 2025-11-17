@@ -16,7 +16,7 @@ export const readLocaleMessages = async ({
   rootDir = "messages",
   locale,
   namespaces,
-  extraOptions: { exts, messageFileReader, loggerOptions } = {},
+  extraOptions: { exts, messagesReader, loggerOptions } = {},
 }: ReadLocaleMessagesOptions): Promise<LocaleMessages> => {
   // 1. Collect file entries
   const fileEntries = await collectFileEntries({
@@ -30,7 +30,7 @@ export const readLocaleMessages = async ({
   const namespaceMessages = await parseFileEntries({
     fileEntries,
     limit,
-    extraOptions: { messageFileReader, loggerOptions },
+    extraOptions: { messagesReader, loggerOptions },
   });
 
   // 3. Wrap the parsed namespace messages under the locale key

@@ -1,4 +1,4 @@
-import type { NamespaceMessages } from "@/modules/messages/shared/types";
+import type { Messages } from "@/modules/messages/shared/types";
 
 /** Check if a value is a plain object (not null, not array) */
 export function isPlainObject(
@@ -8,19 +8,17 @@ export function isPlainObject(
 }
 
 /**
- * Check if a value is a valid **NamespaceMessages** object.
+ * Check if a value is a valid **Messages** object.
  *
  * - Uses an iterative approach to avoid stack overflow with deeply nested objects.
  *
  * @example
  * ```ts
- * isNamespaceMessages({ en: { hello: "Hello" } }) // true
- * isNamespaceMessages({ en: { count: 5 } }) // false
+ * isValidMessages({ en: { hello: "Hello" } }) // true
+ * isValidMessages({ en: { count: 5 } }) // false
  * ```
  */
-export function isNamespaceMessages(
-  value: unknown,
-): value is NamespaceMessages {
+export function isValidMessages(value: unknown): value is Messages {
   if (!isPlainObject(value)) return false;
 
   const stack: Record<string, unknown>[] = [value];

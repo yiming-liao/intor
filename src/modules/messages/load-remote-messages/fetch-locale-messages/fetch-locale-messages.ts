@@ -1,6 +1,6 @@
 import type { FetcherOptions } from "./types";
 import type { LocaleMessages } from "intor-translator";
-import { isNamespaceMessages } from "@/modules/messages/shared/utils/is-namespace-messages";
+import { isValidMessages } from "@/modules/messages/shared/utils/is-valid-messages";
 import { getLogger } from "@/shared/logger/get-logger";
 
 /**
@@ -45,7 +45,7 @@ export const fetchLocaleMessages = async ({
     const data = (await response.json()) as LocaleMessages;
 
     // Validate messages structure
-    if (!isNamespaceMessages(data[locale])) {
+    if (!isValidMessages(data[locale])) {
       throw new Error("JSON file does not match NamespaceMessages structure");
     }
 
