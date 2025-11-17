@@ -3,7 +3,7 @@
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { loadLocalMessages } from "@/modules/messages/load-local-messages/load-local-messages";
-import * as readModule from "@/modules/messages/load-local-messages/read-locale-messages/read-locale-messages";
+import * as readModule from "@/modules/messages/load-local-messages/read-locale-messages";
 import * as loggerModule from "@/shared/logger/get-logger";
 import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
 

@@ -4,7 +4,7 @@ import path from "node:path";
 import { performance } from "node:perf_hooks";
 import pLimit from "p-limit";
 import { DEFAULT_CACHE_OPTIONS } from "@/modules/config/constants/cache.constants";
-import { readLocaleMessages } from "@/modules/messages/load-local-messages/read-locale-messages/read-locale-messages";
+import { readLocaleMessages } from "@/modules/messages/load-local-messages/read-locale-messages";
 import { getLogger } from "@/shared/logger/get-logger";
 import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
 import { normalizeCacheKey } from "@/shared/utils";

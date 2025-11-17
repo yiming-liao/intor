@@ -8,7 +8,7 @@
  * // When pathname is "/auth" => namespaces: ["ui", "meta", "auth", "admin"]
  * ```
  */
-export type RouteNamespaces =
+type RouteNamespaces =
   | { [key: string]: string[] }
   | { [key: string]: string[]; default: string[] };
 
@@ -32,7 +32,7 @@ type LocalLoader = BaseLoaderOptions & {
 };
 
 // Remote loader
-export type RemoteLoader = BaseLoaderOptions & {
+type RemoteLoader = BaseLoaderOptions & {
   type: "remote";
   remoteUrl: string;
   remoteHeaders?: RemoteHeaders;
