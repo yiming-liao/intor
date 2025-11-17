@@ -3,14 +3,16 @@ import type { LocaleMessages } from "intor-translator";
 import { loadLocalMessages } from "@/modules/messages/load-local-messages";
 
 /**
- * Create a loader for local messages.
- * Messages are loaded asynchronously from a fixed basePath.
- * The basePath is static to avoid issues with dynamic paths
- * in non-static contexts.
+ * Returns a version of `loadLocalMessages` with a fixed root directory.
+ *
+ * By fixing the rootDir, this avoids issues with dynamic paths
+ * in bundled or non-static environments.
  */
 export const createLoadLocalMessages = (
-  basePath?: string,
-): ((options: LoadLocalMessagesOptions) => Promise<LocaleMessages>) => {
+  rootDir?: string,
+): ((
+  options: LoadLocalMessagesOptions,
+) => Promise<LocaleMessages | undefined>) => {
   return (options: LoadLocalMessagesOptions) =>
-    loadLocalMessages({ basePath, ...options }); // Load messages with the fixed basePath
+    loadLocalMessages({ rootDir, ...options }); // Load messages with the fixed rootDir
 };

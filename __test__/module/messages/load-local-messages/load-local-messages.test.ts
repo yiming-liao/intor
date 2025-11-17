@@ -1,79 +1,125 @@
-/* eslint-disable unicorn/no-useless-undefined */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { loadLocalMessages } from "@/modules/messages/load-local-messages/load-local-messages";
-import * as loadFallbackModule from "@/modules/messages/load-local-messages/load-locale-with-fallback";
+import * as readModule from "@/modules/messages/load-local-messages/read-locale-messages/read-locale-messages";
 import * as loggerModule from "@/shared/logger/get-logger";
-import * as poolModule from "@/shared/messages/global-messages-pool";
+import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
+
+const loggerChildMock = { debug: vi.fn(), trace: vi.fn(), error: vi.fn() };
+const loggerMock = {
+  child: vi.fn().mockReturnValue(loggerChildMock),
+  core: { level: "debug" },
+};
+
+vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
+vi.mock(
+  "@/modules/messages/load-local-messages/read-locale-messages/read-locale-messages",
+);
+vi.mock("@/shared/messages/global-messages-pool");
 
 describe("loadLocalMessages", () => {
-  const mockLogger = {
-    trace: vi.fn(),
-    debug: vi.fn(),
-    child: vi.fn(() => mockLogger),
-  };
-
+  const mockReadLocaleMessages = readModule.readLocaleMessages;
   const mockPool = {
     get: vi.fn(),
     set: vi.fn(),
-  };
+  } as any;
+
+  vi.mocked(getGlobalMessagesPool).mockReturnValue(mockPool);
 
   beforeEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
-  it("returns empty object when locale is missing", async () => {
-    const result = await loadLocalMessages({ basePath: "msgs", locale: "" });
-    expect(result).toEqual({});
-  });
-
-  it("returns cached messages when cache hit", async () => {
-    vi.spyOn(loggerModule, "getLogger").mockReturnValue(mockLogger as any);
-    vi.spyOn(poolModule, "getGlobalMessagesPool").mockReturnValue(
-      mockPool as any,
-    );
-    mockPool.get.mockResolvedValue({ cached: "value" });
+  it("should return messages from readLocaleMessages", async () => {
+    const enMessages: LocaleMessages = { "en-US": { hello: "Hello" } };
+    vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
 
     const result = await loadLocalMessages({
-      basePath: "msgs",
       locale: "en-US",
-      cache: { enabled: true, ttl: 1000 },
+      extraOptions: {},
     });
 
-    expect(result).toEqual({ cached: "value" });
-    expect(mockLogger.debug).toHaveBeenCalledWith(
-      "Messages cache hit.",
-      expect.objectContaining({ key: expect.any(String) }),
-    );
+    expect(result).toEqual(enMessages);
+    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(1);
   });
 
-  it("loads messages via loadLocaleWithFallback and caches them", async () => {
-    vi.spyOn(loggerModule, "getLogger").mockReturnValue(mockLogger as any);
-    vi.spyOn(poolModule, "getGlobalMessagesPool").mockReturnValue(
-      mockPool as any,
-    );
-    mockPool.get.mockResolvedValue(undefined);
+  it("should break loop if a locale succeeds", async () => {
+    const enMessages: LocaleMessages = { "en-US": { hello: "Hello" } };
 
-    const loadFallbackSpy = vi
-      .spyOn(loadFallbackModule, "loadLocaleWithFallback")
-      .mockResolvedValue(["ns1"]);
+    vi.mocked(mockReadLocaleMessages)
+      .mockRejectedValueOnce(new Error("fail"))
+      .mockResolvedValueOnce(enMessages);
 
-    const messages = await loadLocalMessages({
-      basePath: "msgs",
-      locale: "en-US",
-      cache: { enabled: true, ttl: 1000 },
+    const result = await loadLocalMessages({
+      locale: "fr-FR",
+      fallbackLocales: ["en-US"],
+      extraOptions: {},
     });
 
-    expect(loadFallbackSpy).toHaveBeenCalled();
-    expect(messages).toBeDefined();
-    expect(mockPool.set).toHaveBeenCalledWith(
-      expect.any(String),
-      messages,
-      1000,
-    );
-    expect(mockLogger.trace).toHaveBeenCalledWith(
-      "Finished loading local messages.",
-      expect.objectContaining({ validNamespaces: ["ns1"] }),
-    );
+    expect(result).toEqual(enMessages);
+    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
+  });
+
+  it("should return cached messages if available", async () => {
+    const cached: LocaleMessages = { "en-US": { hello: "Cached" } };
+
+    mockPool.get.mockImplementation(async () => cached);
+
+    const result = await loadLocalMessages({
+      locale: "en-US",
+      extraOptions: { cacheOptions: { enabled: true, ttl: 60 * 60 * 1000 } },
+    });
+
+    expect(result).toEqual(cached);
+    expect(mockPool.get).toHaveBeenCalled();
+    expect(mockPool.set).not.toHaveBeenCalled();
+  });
+
+  it("should return undefined if all locales fail", async () => {
+    vi.mocked(mockReadLocaleMessages)
+      .mockRejectedValueOnce(new Error("fail1"))
+      .mockRejectedValueOnce(new Error("fail2"));
+
+    const result = await loadLocalMessages({
+      locale: "fr-FR",
+      fallbackLocales: ["en-US"],
+      extraOptions: {},
+    });
+
+    expect(result).toBeUndefined();
+    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
+  });
+
+  it("should ignore cache if cache is disabled", async () => {
+    const enMessages: LocaleMessages = { "en-US": { hello: "Hello" } };
+    vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
+
+    const result = await loadLocalMessages({
+      locale: "en-US",
+      extraOptions: { cacheOptions: { enabled: false, ttl: 60 * 60 * 1000 } },
+    });
+
+    expect(result).toEqual(enMessages);
+    expect(mockPool.get).not.toHaveBeenCalled();
+    expect(mockPool.set).not.toHaveBeenCalled();
+  });
+
+  it("should continue to next locale if readLocaleMessages returns empty object", async () => {
+    const enMessages: LocaleMessages = { "en-US": { hello: "Hello" } };
+
+    vi.mocked(mockReadLocaleMessages)
+      .mockResolvedValueOnce({ "fr-FR": {} })
+      .mockResolvedValueOnce(enMessages);
+
+    const result = await loadLocalMessages({
+      locale: "fr-FR",
+      fallbackLocales: ["en-US"],
+      extraOptions: {},
+    });
+
+    expect(result).toEqual(enMessages);
+    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
   });
 });

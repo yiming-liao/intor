@@ -38,7 +38,7 @@ describe("intor", () => {
       id: "test",
       defaultLocale: "en",
       messages: { static: "msg" },
-      loader: { type: "api" },
+      loader: { type: "remote" },
       logger: {},
     };
     const i18nContext = { locale: "fr", pathname: "/home" };
@@ -74,7 +74,7 @@ describe("intor", () => {
       id: "test",
       defaultLocale: "en",
       messages: {},
-      loader: { type: "api" },
+      loader: { type: "remote" },
       logger: {},
     };
     const i18nContextFn = vi
@@ -122,7 +122,7 @@ describe("intor", () => {
       id: "test",
       defaultLocale: "en",
       messages: { a: 1 },
-      loader: { type: "api" },
+      loader: { type: "remote" },
       logger: {},
     };
     vi.mocked(loadMessages).mockResolvedValue({});

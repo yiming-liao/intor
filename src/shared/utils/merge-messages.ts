@@ -1,31 +1,14 @@
 import type { LocaleMessages } from "intor-translator";
+import merge from "lodash.merge";
 
 /**
- * Merge static and loaded namespace messages by locale.
- * Loaded messages override static ones on conflict.
+ * Deeply merges loaded messages into static messages by locale.
+ * - Loaded messages override static ones on conflict.
  */
 export const mergeMessages = (
   staticMessages: LocaleMessages = {},
-  loadedMessages: LocaleMessages | null = {},
+  loadedMessages: LocaleMessages | undefined = {},
 ): LocaleMessages => {
-  const result: LocaleMessages =
-    Object.keys(staticMessages).length > 0 ? { ...staticMessages } : {};
-
-  for (const locale in loadedMessages) {
-    const loaded = loadedMessages[locale];
-
-    // If the locale doesn't exist in static messages
-    if (!result[locale]) {
-      result[locale] = loaded;
-      continue;
-    }
-
-    // Merge namespaces under the same locale
-    result[locale] = {
-      ...result[locale],
-      ...loaded,
-    };
-  }
-
-  return result;
+  if (!loadedMessages) return { ...staticMessages };
+  return merge({}, staticMessages, loadedMessages);
 };

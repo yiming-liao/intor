@@ -14,7 +14,7 @@ export const shouldFullReload = ({
 }): boolean => {
   const loader = config.loader;
   if (!loader || !loader.type) return false;
-  if (loader.type === "api" && !loader.fullReload) return false;
+  if (loader.type === "remote" && !loader.fullReload) return false;
 
   const { maybeLocale, isLocalePrefixed } = extractPathname({
     config,

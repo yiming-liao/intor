@@ -32,15 +32,20 @@ export const useRefetchMessages = ({
   // Refetch messages
   const refetchMessages = React.useCallback(
     async (newLocale: string) => {
-      if (config.loader?.type === "api") {
+      if (config.loader?.type === "remote") {
         setIsLoadingMessages(true);
 
-        const loadedMessages = await loadApiMessages<LocaleMessages>({
-          ...config.loader,
+        const loadedMessages = await loadApiMessages({
+          rootDir: config.loader.rootDir,
+          remoteUrl: config.loader.remoteUrl,
+          remoteHeaders: config.loader.remoteHeaders,
           locale: newLocale,
           fallbackLocales: config.fallbackLocales[newLocale] || [],
           namespaces,
-          logger: { id: config.id },
+          extraOptions: {
+            cacheOptions: config.cache,
+            loggerOptions: { id: config.id },
+          },
         });
 
         const messages = mergeMessages(staticMessages, loadedMessages);

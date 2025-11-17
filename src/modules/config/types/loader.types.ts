@@ -12,32 +12,32 @@ export type RouteNamespaces =
   | { [key: string]: string[] }
   | { [key: string]: string[]; default: string[] };
 
-export interface ApiHeaders {
+export interface RemoteHeaders {
   authorization?: string; // Bearer token
   "x-api-key"?: string; // API Key
   [key: string]: string | undefined; // Custom header
 }
 
 type BaseLoaderOptions = {
-  basePath?: string;
+  rootDir?: string;
   namespaces?: string[];
   routeNamespaces?: RouteNamespaces;
   concurrency?: number;
   lazyLoad?: boolean;
 };
 
-// Import loader
-type ImportLoader = BaseLoaderOptions & {
-  type: "import";
+// Local loader
+type LocalLoader = BaseLoaderOptions & {
+  type: "local";
 };
 
-// Api loader
-export type ApiLoader = BaseLoaderOptions & {
-  type: "api";
-  apiUrl: string;
-  apiHeaders?: ApiHeaders;
+// Remote loader
+export type RemoteLoader = BaseLoaderOptions & {
+  type: "remote";
+  remoteUrl: string;
+  remoteHeaders?: RemoteHeaders;
   fullReload?: boolean;
 };
 
-// Loader options (Import / Api)
-export type LoaderOptions = ImportLoader | ApiLoader;
+// Loader options (Local / Remote)
+export type LoaderOptions = LocalLoader | RemoteLoader;

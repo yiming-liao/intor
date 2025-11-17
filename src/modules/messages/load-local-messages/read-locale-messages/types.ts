@@ -1,17 +1,21 @@
-import type { CacheResolvedOptions } from "@/modules/config/types/cache.types";
 import type { LoggerOptions } from "@/modules/config/types/logger.types";
 import type { MessageFileReader } from "@/modules/messages/types";
-import type { MessagesPool } from "@/shared/messages/global-messages-pool";
+import type { LimitFunction } from "p-limit";
 
-export interface LoadLocalMessagesOptions {
-  pool?: MessagesPool;
+export interface FileEntry {
+  namespace: string;
+  fullPath: string;
+  relativePath: string;
+  segments: string[];
+  basename: string;
+}
+
+export interface ReadLocaleMessagesOptions {
+  limit: LimitFunction;
   rootDir?: string;
   locale: string;
-  fallbackLocales?: string[];
   namespaces?: string[];
   extraOptions?: {
-    concurrency?: number;
-    cacheOptions?: CacheResolvedOptions;
     loggerOptions?: LoggerOptions & { id?: string };
     exts?: string[];
     messageFileReader?: MessageFileReader;

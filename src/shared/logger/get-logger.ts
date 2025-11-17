@@ -13,22 +13,21 @@ const DEFAULT_FORMATTER_CONFIG: FormatterConfig = {
  * - Prevents unbounded memory usage via soft LRU
  */
 export function getLogger({
-  id,
+  id = "default",
   formatterConfig,
   preset,
   ...options
-}: { id: string; scope?: string } & LoggerOptions): Logger {
+}: { id?: string; scope?: string } & LoggerOptions): Logger {
   const pool = getGlobalLoggerPool();
 
   let logger = pool.get(id);
 
+  const useDefault = !formatterConfig && !preset;
+
   if (!logger) {
     logger = logry({
       id,
-      formatterConfig:
-        !formatterConfig && !preset
-          ? DEFAULT_FORMATTER_CONFIG
-          : formatterConfig,
+      formatterConfig: useDefault ? DEFAULT_FORMATTER_CONFIG : formatterConfig,
       preset,
       ...options,
     });

@@ -79,7 +79,7 @@ describe("resolveNamespaces", () => {
       pathname: "/dup/test",
     });
     const uniqueSet = new Set(result);
-    expect(result.length).toBe(uniqueSet.size);
+    expect(result?.length).toBe(uniqueSet.size);
   });
 
   it("covers prefix pattern branch for long prefix", () => {

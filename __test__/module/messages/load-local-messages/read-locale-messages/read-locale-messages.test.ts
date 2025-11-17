@@ -1,0 +1,96 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ReadLocaleMessagesOptions } from "@/modules/messages/load-local-messages/read-locale-messages/types";
+import type { LocaleMessages } from "intor-translator";
+import path from "node:path";
+import { describe, it, expect, vi } from "vitest";
+import * as collectModule from "@/modules/messages/load-local-messages/read-locale-messages/collect-file-entries";
+import * as parseModule from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries";
+import { readLocaleMessages } from "@/modules/messages/load-local-messages/read-locale-messages/read-locale-messages";
+
+describe("readLocaleMessages", () => {
+  const mockFileEntries = [
+    {
+      namespace: "common",
+      segments: ["common"],
+      basename: "common.json",
+      relativePath: "",
+      fullPath: "/mock/path/common.json",
+    },
+  ];
+
+  const mockNamespaceMessages = {
+    common: { hello: "Hello", world: "World" },
+  };
+
+  it("returns locale wrapped NamespaceMessages correctly", async () => {
+    // Mock collectFileEntries
+    vi.spyOn(collectModule, "collectFileEntries").mockResolvedValue(
+      mockFileEntries,
+    );
+
+    // Mock parseFileEntries
+    vi.spyOn(parseModule, "parseFileEntries").mockResolvedValue(
+      mockNamespaceMessages,
+    );
+
+    const options: ReadLocaleMessagesOptions = {
+      limit: vi.fn() as any,
+      rootDir: "messages",
+      locale: "en",
+    };
+
+    const result: LocaleMessages = await readLocaleMessages(options);
+
+    expect(result).toEqual({
+      en: mockNamespaceMessages,
+    });
+  });
+
+  it("passes custom messageFileReader and exts to underlying functions", async () => {
+    const mockReader = vi.fn().mockResolvedValue(mockNamespaceMessages);
+    const mockLimit = vi.fn((fn) => fn());
+
+    vi.spyOn(collectModule, "collectFileEntries").mockResolvedValue(
+      mockFileEntries,
+    );
+    vi.spyOn(parseModule, "parseFileEntries").mockResolvedValue(
+      mockNamespaceMessages,
+    );
+
+    const options: ReadLocaleMessagesOptions = {
+      limit: mockLimit as any,
+      rootDir: "messages",
+      locale: "en",
+      extraOptions: {
+        exts: [".json", ".yaml"],
+        messageFileReader: mockReader,
+      },
+    };
+
+    const result = await readLocaleMessages(options);
+
+    expect(mockReader).not.toHaveBeenCalled(); // parseFileEntries 處理了 reader
+    expect(result).toEqual({ en: mockNamespaceMessages });
+  });
+
+  it("resolves correct paths based on rootDir and locale", async () => {
+    const spyCollect = vi
+      .spyOn(collectModule, "collectFileEntries")
+      .mockResolvedValue(mockFileEntries);
+    vi.spyOn(parseModule, "parseFileEntries").mockResolvedValue(
+      mockNamespaceMessages,
+    );
+
+    await readLocaleMessages({
+      limit: vi.fn() as any,
+      rootDir: "messages",
+      locale: "fr",
+    });
+
+    expect(spyCollect).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rootDir: path.resolve(process.cwd(), "messages", "fr"),
+      }),
+    );
+  });
+});

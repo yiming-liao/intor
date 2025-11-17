@@ -7,29 +7,29 @@ describe("shouldLoadMessages", () => {
     expect(shouldLoadMessages(undefined)).toBe(false);
   });
 
-  it("returns true if type is 'import' (regardless of adapter or lazyLoad)", () => {
-    expect(shouldLoadMessages({ type: "import", lazyLoad: false })).toBe(true);
+  it("returns true if type is 'local' (regardless of adapter or lazyLoad)", () => {
+    expect(shouldLoadMessages({ type: "local", lazyLoad: false })).toBe(true);
   });
 
-  it("returns true if type is 'api' and adapter is not 'next'", () => {
+  it("returns true if type is 'remote' and adapter is not 'next'", () => {
     expect(
       shouldLoadMessages(
-        { type: "api", lazyLoad: false } as LoaderOptions,
+        { type: "remote", lazyLoad: false } as LoaderOptions,
         // @ts-expect-error any
         "custom-adapter",
       ),
     ).toBe(true);
   });
 
-  it("returns true if type is 'api' and adapter is 'next' but lazyLoad is false", () => {
+  it("returns true if type is 'remote' and adapter is 'next' but lazyLoad is false", () => {
     expect(
-      shouldLoadMessages({ type: "api", lazyLoad: false } as LoaderOptions),
+      shouldLoadMessages({ type: "remote", lazyLoad: false } as LoaderOptions),
     ).toBe(true);
   });
 
-  it("returns false if type is 'api' and adapter is 'next' and lazyLoad is true", () => {
+  it("returns false if type is 'remote' and adapter is 'next' and lazyLoad is true", () => {
     expect(
-      shouldLoadMessages({ type: "api", lazyLoad: true } as LoaderOptions),
+      shouldLoadMessages({ type: "remote", lazyLoad: true } as LoaderOptions),
     ).toBe(false);
   });
 });

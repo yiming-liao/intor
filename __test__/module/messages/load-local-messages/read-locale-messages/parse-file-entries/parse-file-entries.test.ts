@@ -1,0 +1,133 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { FileEntry } from "@/modules/messages/load-local-messages/read-locale-messages";
+import type { NamespaceMessages } from "@/modules/messages/types";
+import type { LimitFunction } from "p-limit";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { parseFileEntries } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries";
+import * as readJsonModule from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
+import * as nestModule from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
+import * as loggerModule from "@/shared/logger/get-logger";
+
+describe("parseFileEntries", () => {
+  const limit = ((fn: any) => fn()) as LimitFunction;
+
+  const traceSpy = vi.fn();
+  const errorSpy = vi.fn();
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+
+    // Mock logger
+    vi.spyOn(loggerModule, "getLogger").mockReturnValue({
+      core: { level: "trace" },
+      child: () => ({ trace: traceSpy, error: errorSpy }),
+    } as any);
+  });
+
+  it("should parse files using jsonReader and merge into namespaces correctly", async () => {
+    // Mock jsonReader
+    vi.spyOn(readJsonModule, "jsonReader").mockImplementation(
+      async (fp: string) => {
+        if (fp.endsWith("auth/index.json")) return { c: "C" };
+        if (fp.endsWith("auth/verify.json")) return { d: "D" };
+        if (fp.endsWith("ui.json")) return { b: "B" };
+        if (fp.endsWith("index.json")) return { a: "A" };
+        return {} as NamespaceMessages;
+      },
+    );
+
+    const fileEntries: FileEntry[] = [
+      {
+        namespace: "index",
+        fullPath: "/locale/en/index.json",
+        relativePath: "index.json",
+        segments: ["index"],
+        basename: "index",
+      },
+      {
+        namespace: "ui",
+        fullPath: "/locale/en/ui.json",
+        relativePath: "ui.json",
+        segments: ["ui"],
+        basename: "ui",
+      },
+      {
+        namespace: "auth",
+        fullPath: "/locale/en/auth/index.json",
+        relativePath: "auth/index.json",
+        segments: ["auth", "index"],
+        basename: "index",
+      },
+      {
+        namespace: "auth",
+        fullPath: "/locale/en/auth/verify.json",
+        relativePath: "auth/verify.json",
+        segments: ["auth", "verify"],
+        basename: "verify",
+      },
+    ];
+
+    const result = await parseFileEntries({
+      fileEntries,
+      limit,
+      extraOptions: {},
+    });
+
+    expect(result).toEqual({
+      a: "A",
+      ui: { b: "B" },
+      auth: {
+        c: "C",
+        verify: { d: "D" },
+      },
+    });
+
+    // Logger coverage
+    expect(traceSpy).toHaveBeenCalledTimes(4);
+  });
+
+  it("should use custom reader when provided", async () => {
+    const customReader = vi.fn(async () => ({ custom: { a: "a" } })) as any;
+
+    vi.spyOn(nestModule, "nestObjectFromPath").mockReturnValue({
+      wrapped: { a: "a" },
+    });
+
+    const result = await parseFileEntries({
+      fileEntries: [
+        {
+          namespace: "index",
+          fullPath: "/locale/en/index.yaml",
+          relativePath: "index.yaml",
+          segments: ["index"],
+          basename: "index",
+        },
+      ],
+      limit,
+      extraOptions: { messageFileReader: customReader },
+    });
+
+    expect(customReader).toHaveBeenCalled();
+    expect(result).toEqual({ wrapped: { a: "a" } });
+  });
+
+  it("should log an error when a reader throws", async () => {
+    vi.spyOn(readJsonModule, "jsonReader").mockRejectedValue(new Error("boom"));
+    vi.spyOn(nestModule, "nestObjectFromPath").mockReturnValue({});
+
+    await parseFileEntries({
+      fileEntries: [
+        {
+          namespace: "index",
+          fullPath: "/locale/en/index.json",
+          relativePath: "index.json",
+          segments: ["index"],
+          basename: "index",
+        },
+      ],
+      limit,
+    });
+
+    expect(errorSpy).toHaveBeenCalled();
+  });
+});

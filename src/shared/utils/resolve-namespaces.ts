@@ -13,9 +13,12 @@ interface ResolveNamespacesOptions {
 export const resolveNamespaces = ({
   config,
   pathname,
-}: ResolveNamespacesOptions): string[] => {
+}: ResolveNamespacesOptions): string[] | undefined => {
   const { loader } = config;
   const { routeNamespaces = {}, namespaces } = loader || {};
+
+  if (Object.keys(routeNamespaces).length === 0 && !namespaces)
+    return undefined;
 
   // "/{locale}/...", "__basePath__/{locale}/...""
   const standardizedPathname = standardizePathname({ config, pathname });

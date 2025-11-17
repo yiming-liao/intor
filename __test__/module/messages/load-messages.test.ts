@@ -1,122 +1,144 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { createLoadLocalMessages } from "@/modules/messages/create-load-local-messages";
-import { loadApiMessages } from "@/modules/messages/load-api-messages";
+import type { LoadMessagesOptions } from "@/modules/messages/types";
+import type { LocaleMessages } from "intor-translator";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as localModule from "@/modules/messages/load-local-messages";
 import { loadMessages } from "@/modules/messages/load-messages";
-import { getLogger } from "@/shared/logger/get-logger";
-import { resolveNamespaces } from "@/shared/utils";
+import * as remoteModule from "@/modules/messages/load-remote-messages";
+import * as loggerModule from "@/shared/logger/get-logger";
+import * as utilsModule from "@/shared/utils";
 
-vi.mock("@/modules/messages/create-load-local-messages");
-vi.mock("@/modules/messages/load-api-messages");
+vi.mock("@/modules/messages/load-local-messages");
+vi.mock("@/modules/messages/load-remote-messages");
 vi.mock("@/shared/logger/get-logger");
 vi.mock("@/shared/utils");
 
 describe("loadMessages", () => {
-  let mockLogger: any;
-  let mockChildLogger: any;
+  const mockLocalMessages: LocaleMessages = { "en-US": { hello: "Local" } };
+  const mockRemoteMessages: LocaleMessages = { "en-US": { hello: "Remote" } };
+
+  let loggerChildMock: any;
+  let loggerMock: any;
 
   beforeEach(() => {
-    mockChildLogger = {
-      debug: vi.fn(),
-      warn: vi.fn(),
-      info: vi.fn(),
-    };
-    mockLogger = {
-      child: vi.fn().mockReturnValue(mockChildLogger),
-    };
-    vi.mocked(getLogger).mockReturnValue(mockLogger);
-    vi.mocked(resolveNamespaces).mockReturnValue(["ns1", "ns2"]);
-  });
-
-  afterEach(() => {
     vi.clearAllMocks();
+
+    // Mock logger
+    loggerChildMock = {
+      core: { level: "debug" },
+      warn: vi.fn(),
+      debug: vi.fn(),
+      trace: vi.fn(),
+    };
+    loggerMock = vi.fn().mockReturnValue({
+      child: vi.fn().mockReturnValue(loggerChildMock),
+    });
+    vi.spyOn(loggerModule, "getLogger").mockImplementation(loggerMock);
+
+    // Mock resolveNamespaces
+    vi.spyOn(utilsModule, "resolveNamespaces").mockImplementation(
+      ({ config }) => config.loader?.namespaces ?? ["default"],
+    );
   });
 
-  it("should warn and return undefined if loader is missing", async () => {
-    const config = { id: "test", logger: {}, fallbackLocales: {} };
+  it("uses local loader when type is 'local'", async () => {
+    vi.mocked(localModule.loadLocalMessages).mockResolvedValue(
+      mockLocalMessages,
+    );
+
+    const config = {
+      id: "test",
+      loader: { type: "local", rootDir: "/root", concurrency: 5 },
+      cache: { enabled: false },
+      fallbackLocales: {},
+    };
+
     const result = await loadMessages({
       config,
-      locale: "en",
-      pathname: "/",
-    } as any);
+      locale: "en-US",
+    } as LoadMessagesOptions);
+
+    expect(result).toEqual(mockLocalMessages);
+    expect(localModule.loadLocalMessages).toHaveBeenCalled();
+    expect(remoteModule.loadRemoteMessages).not.toHaveBeenCalled();
+  });
+
+  it("uses remote loader when type is 'remote'", async () => {
+    vi.mocked(remoteModule.loadRemoteMessages).mockResolvedValue(
+      mockRemoteMessages,
+    );
+
+    const config = {
+      id: "test",
+      loader: { type: "remote", remoteUrl: "https://api.test/messages" },
+      cache: { enabled: false },
+      fallbackLocales: {},
+    };
+
+    const result = await loadMessages({
+      config,
+      locale: "en-US",
+    } as LoadMessagesOptions);
+
+    expect(result).toEqual(mockRemoteMessages);
+    expect(remoteModule.loadRemoteMessages).toHaveBeenCalled();
+    expect(localModule.loadLocalMessages).not.toHaveBeenCalled();
+  });
+
+  it("logs warning and returns undefined if no loader is configured", async () => {
+    const config = { id: "test", fallbackLocales: {}, cache: {} };
+    const result = await loadMessages({ config, locale: "en-US" } as any);
+
     expect(result).toBeUndefined();
-    expect(mockChildLogger.warn).toHaveBeenCalledWith(
+    expect(loggerChildMock.warn).toHaveBeenCalledWith(
       "No loader options have been configured in the current config.",
     );
   });
 
-  it("should load messages using import loader", async () => {
-    const messages = { hello: "world" } as any;
-    const mockLoadLocalMessages = vi.fn().mockResolvedValue(messages);
-    vi.mocked(createLoadLocalMessages).mockReturnValue(mockLoadLocalMessages);
+  it("applies fallback locales", async () => {
+    vi.mocked(localModule.loadLocalMessages).mockResolvedValue(
+      mockLocalMessages,
+    );
 
     const config = {
       id: "test",
-      loader: { type: "import", basePath: "/locales" },
-      logger: {},
-      fallbackLocales: { en: ["fr"] },
+      loader: { type: "local", rootDir: "/root" },
+      cache: { enabled: false },
+      fallbackLocales: { "fr-FR": ["en-US"] },
     };
+
     const result = await loadMessages({
       config,
-      locale: "en",
-      pathname: "/home",
+      locale: "fr-FR",
     } as any);
-    expect(createLoadLocalMessages).toHaveBeenCalledWith("/locales");
-    expect(mockLoadLocalMessages).toHaveBeenCalledWith(
+
+    expect(result).toEqual(mockLocalMessages);
+    expect(localModule.loadLocalMessages).toHaveBeenCalledWith(
       expect.objectContaining({
-        locale: "en",
-        fallbackLocales: ["fr"],
-        namespaces: ["ns1", "ns2"],
+        fallbackLocales: ["en-US"],
       }),
     );
-    expect(result).toBe(messages);
   });
 
-  it("should load messages using api loader", async () => {
-    const messages = { hi: "there" } as any;
-    vi.mocked(loadApiMessages).mockResolvedValue(messages);
+  it("logs warning if no messages are loaded", async () => {
+    vi.mocked(localModule.loadLocalMessages).mockResolvedValue({});
 
     const config = {
       id: "test",
-      loader: { type: "api", apiUrl: "https://api.test" },
-      logger: {},
-      fallbackLocales: { en: ["fr"] },
+      loader: { type: "local", rootDir: "/root" },
+      cache: { enabled: false },
+      fallbackLocales: {},
     };
+
     const result = await loadMessages({
       config,
-      locale: "en",
-      pathname: "/home",
-    } as any);
-
-    expect(loadApiMessages).toHaveBeenCalledWith(
-      expect.objectContaining({
-        locale: "en",
-        fallbackLocales: ["fr"],
-        namespaces: ["ns1", "ns2"],
-      }),
-    );
-    expect(result).toBe(messages);
-  });
-
-  it("should warn if loaded messages is empty", async () => {
-    vi.mocked(loadApiMessages).mockResolvedValue({});
-
-    const config = {
-      id: "test",
-      loader: { type: "api", apiUrl: "https://api.test" },
-      logger: {},
-      fallbackLocales: { en: [] },
-    };
-    const result = await loadMessages({
-      config,
-      locale: "en",
-      pathname: "/home",
-    } as any);
+      locale: "en-US",
+    } as LoadMessagesOptions);
 
     expect(result).toEqual({});
-    expect(mockChildLogger.warn).toHaveBeenCalledWith(
-      "No messages found.",
-      expect.objectContaining({ locale: "en", namespaces: ["ns1", "ns2"] }),
-    );
+    expect(loggerChildMock.warn).toHaveBeenCalledWith("No messages found.", {
+      locale: "en-US",
+      namespaces: ["default"],
+    });
   });
 });
