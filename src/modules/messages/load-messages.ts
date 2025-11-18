@@ -25,6 +25,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
   locale,
   pathname = "",
   extraOptions: { exts, messagesReader } = {},
+  allowCacheWrite = false,
 }: LoadMessagesOptions): LoadMessagesResult<C> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
   const logger = baseLogger.child({ scope: "load-messages" });
@@ -69,6 +70,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
         exts,
         messagesReader,
       },
+      allowCacheWrite,
     });
   }
   //====== loader type: remote ======

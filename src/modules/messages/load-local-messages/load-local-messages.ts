@@ -30,6 +30,7 @@ export const loadLocalMessages = async ({
     exts,
     messagesReader,
   } = {},
+  allowCacheWrite = false,
 }: LoadLocalMessagesOptions): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-local-messages" });
@@ -86,7 +87,7 @@ export const loadLocalMessages = async ({
   }
 
   //====== Cache storage ======
-  if (cacheOptions.enabled && key && messages) {
+  if (allowCacheWrite && cacheOptions.enabled && key && messages) {
     await pool?.set(key, messages, cacheOptions.ttl);
   }
 

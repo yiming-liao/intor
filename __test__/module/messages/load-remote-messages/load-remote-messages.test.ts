@@ -60,6 +60,7 @@ describe("loadRemoteMessages", () => {
       pool: mockPool,
       extraOptions: { cacheOptions: { enabled: true, ttl: 1000 } },
       fallbackLocales: [],
+      allowCacheWrite: true,
     });
 
     expect(result).toEqual(remote);

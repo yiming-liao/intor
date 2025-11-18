@@ -15,4 +15,5 @@ export interface LoadRemoteMessagesOptions {
     cacheOptions?: CacheResolvedOptions;
     loggerOptions?: LoggerOptions & { id?: string };
   };
+  allowCacheWrite?: boolean;
 }

@@ -43,13 +43,13 @@ describe("intor", () => {
     };
     const i18nContext = { locale: "fr", pathname: "/home" };
     const loadedMessages: LocaleMessages = { hello: "world" } as any;
-    vi.mocked(loadMessages).mockResolvedValue(loadedMessages);
+    vi.mocked(loadMessages).mockResolvedValue(loadedMessages as any);
     vi.mocked(mergeMessages).mockImplementation((a, b) => ({
       ...a,
       ...b,
     }));
 
-    const result = await intor(config as any, i18nContext);
+    const result = await intor(config as any, i18nContext as any);
 
     expect(result.initialLocale).toBe("fr");
     expect(result.pathname).toBe("/home");
@@ -81,7 +81,7 @@ describe("intor", () => {
       .fn()
       .mockResolvedValue({ locale: "de", pathname: "/dashboard" });
     const loadedMessages: LocaleMessages = { greet: "hi" } as any;
-    vi.mocked(loadMessages).mockResolvedValue(loadedMessages);
+    vi.mocked(loadMessages).mockResolvedValue(loadedMessages as any);
     vi.mocked(mergeMessages).mockImplementation((a, b) => ({
       ...a,
       ...b,
@@ -111,7 +111,7 @@ describe("intor", () => {
       loader: null,
       logger: {},
     };
-    const result = await intor(config as any, { locale: "en" });
+    const result = await intor(config as any, { locale: "en" as any });
 
     expect(loadMessages).not.toHaveBeenCalled();
     expect(result.messages).toEqual({ only: "static" });
@@ -125,13 +125,13 @@ describe("intor", () => {
       loader: { type: "remote" },
       logger: {},
     };
-    vi.mocked(loadMessages).mockResolvedValue({});
+    vi.mocked(loadMessages).mockResolvedValue({} as any);
     vi.mocked(mergeMessages).mockImplementation((a, b) => ({
       ...a,
       ...b,
     }));
 
-    const result = await intor(config as any, { locale: "en" });
+    const result = await intor(config as any, { locale: "en" as any });
 
     expect(result.messages).toEqual({ a: 1 });
   });

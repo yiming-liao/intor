@@ -56,6 +56,7 @@ export const intor = async (
         exts: loadMessagesOptions.exts,
         messagesReader: loadMessagesOptions.messagesReader,
       },
+      allowCacheWrite: true,
     });
   }
 

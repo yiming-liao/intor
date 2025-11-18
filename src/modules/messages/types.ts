@@ -14,6 +14,7 @@ export type LoadMessagesOptions = {
     exts?: string[];
     messagesReader?: MessagesReader;
   };
+  allowCacheWrite?: boolean;
 };
 
 export type LoadMessagesResult<C extends GenConfigKeys = "__default__"> =

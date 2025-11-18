@@ -16,4 +16,5 @@ export interface LoadLocalMessagesOptions {
     exts?: string[];
     messagesReader?: MessagesReader;
   };
+  allowCacheWrite?: boolean;
 }

@@ -25,6 +25,7 @@ export const loadRemoteMessages = async ({
     cacheOptions = DEFAULT_CACHE_OPTIONS,
     loggerOptions = { id: "default" },
   } = {},
+  allowCacheWrite,
 }: LoadRemoteMessagesOptions): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-remote-messages" });
@@ -80,7 +81,7 @@ export const loadRemoteMessages = async ({
   }
 
   //====== Cache ======
-  if (cacheOptions.enabled && key && messages) {
+  if (allowCacheWrite && cacheOptions.enabled && key && messages) {
     await pool?.set(key, messages, cacheOptions.ttl);
   }
 
