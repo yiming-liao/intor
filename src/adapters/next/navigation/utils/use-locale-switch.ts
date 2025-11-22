@@ -9,7 +9,7 @@ import { setLocaleCookieBrowser } from "@/adapters/next/shared/utils/set-locale-
 export const useLocaleSwitch = () => {
   const { config } = useConfig();
   const { locale: currentLocale, setLocale } = useLocale();
-  const pathname = usePathname();
+  const { localizedPathname } = usePathname();
 
   // Resolve href
   const resolveHref = ({
@@ -21,7 +21,7 @@ export const useLocaleSwitch = () => {
   }) => {
     const isLocaleValid = locale && config.supportedLocales?.includes(locale);
     const targetLocale = isLocaleValid ? locale : currentLocale;
-    const targetPathname = href ?? pathname;
+    const targetPathname = href ?? localizedPathname;
     const isExternal = targetPathname.startsWith("http");
     const resolvedHref = !isExternal
       ? localizePathname({

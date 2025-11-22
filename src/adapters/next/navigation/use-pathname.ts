@@ -4,11 +4,22 @@ import { useLocale } from "@/adapters/next/contexts/locale";
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
 
 /**
- * usePathname hook
+ * Custom hook to get the current pathname in different forms based on the active locale.
  *
- * Wraps Next.js usePathname and returns the current pathname prefixed with the active locale.
+ * This hook wraps Next.js `usePathname` and processes the pathname according to the app's
+ * locale configuration.
+ *
+ * @example
+ * const { localizedPathname, standardizedPathname, unprefixedPathname } = usePathname();
+ * console.log(localizedPathname); // e.g. "/en/about"
+ * console.log(standardizedPathname); // e.g. "/{locale}/about"
+ * console.log(unprefixedPathname); // e.g. "/about"
  */
-export const usePathname = (): string => {
+export const usePathname = (): {
+  localizedPathname: string;
+  standardizedPathname: string;
+  unprefixedPathname: string;
+} => {
   const { config } = useConfig();
   const { locale } = useLocale();
 
@@ -16,11 +27,16 @@ export const usePathname = (): string => {
   const rawPathname = useNextPathname();
 
   // Generate the locale-prefixed pathname
-  const { localePrefixedPathname } = localizePathname({
-    config,
-    pathname: rawPathname,
-    locale,
-  });
+  const { localePrefixedPathname, standardizedPathname, unprefixedPathname } =
+    localizePathname({
+      config,
+      pathname: rawPathname,
+      locale,
+    });
 
-  return localePrefixedPathname;
+  return {
+    localizedPathname: localePrefixedPathname,
+    standardizedPathname,
+    unprefixedPathname,
+  };
 };
