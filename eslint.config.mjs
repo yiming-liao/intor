@@ -1,13 +1,19 @@
 import js from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
-import prettierPlugin from "eslint-plugin-prettier";
 import { importConfig } from "./.config/eslint/import.mjs";
 import { typescriptConfig } from "./.config/eslint/typescript.mjs";
 import { unicornConfig } from "./.config/eslint/unicorn.mjs";
 import { unusedImportsConfig } from "./.config/eslint/unused-imports.mjs";
+import prettierPlugin from "eslint-plugin-prettier";
 
 const eslintConfig = defineConfig([
-  globalIgnores([".yarn/**", ".config/**", "eslint.config.mjs", "dist"]),
+  globalIgnores([
+    ".yarn/**",
+    ".config/**",
+    "eslint.config.mjs",
+    "dist",
+    "coverage",
+  ]),
 
   // JS
   js.configs.recommended,
@@ -26,6 +32,7 @@ const eslintConfig = defineConfig([
 
   // Prettier
   {
+    files: ["src/**/*.{ts}"],
     plugins: { prettier: prettierPlugin },
     rules: { "prettier/prettier": "warn" },
   },

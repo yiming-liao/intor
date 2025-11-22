@@ -46,3 +46,9 @@ next-env.d.ts
 # dev
 /app
 /messages
+
+
+# generated types
+intor-generated-types.d.ts
+# exmaples (currently ignored)
+examples
