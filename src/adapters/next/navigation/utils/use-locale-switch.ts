@@ -1,10 +1,10 @@
 import type { Locale } from "intor-translator";
-import { useConfig } from "@/adapters/next/contexts/config";
-import { useLocale } from "@/adapters/next/contexts/locale";
 import { usePathname } from "@/adapters/next/navigation/use-pathname";
 import { shouldFullReload } from "@/adapters/next/navigation/utils/should-full-reload";
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
-import { setLocaleCookieBrowser } from "@/adapters/next/shared/utils/set-locale-cookie-browser";
+import { useConfig } from "@/client/react/contexts/config";
+import { useLocale } from "@/client/react/contexts/locale";
+import { setLocaleCookieBrowser } from "@/shared/utils/client/set-locale-cookie-browser";
 
 export const useLocaleSwitch = () => {
   const { config } = useConfig();

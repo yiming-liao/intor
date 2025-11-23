@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config";
+import type { IntorResolvedConfig } from "@/config";
 import { extractPathname } from "@/shared/utils";
 
 export const shouldFullReload = ({

@@ -1,6 +1,6 @@
-import type { Messages } from "@/modules/messages/shared/types";
+import type { Messages } from "@/server/messages/shared/types";
 import { describe, it, expect } from "vitest";
-import { nestObjectFromPath } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
+import { nestObjectFromPath } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
 
 describe("nestObjectFromPath", () => {
   it("should return value directly if path is empty", () => {

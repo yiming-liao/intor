@@ -1,19 +1,21 @@
+/** intor — next / main (client) */
+
+// navigation
 export {
-  // Contexts
+  Link,
+  usePathname,
+  useRouter,
+  redirect,
+} from "@/adapters/next/navigation";
+
+// client / react
+export {
+  // contexts
   IntorProvider,
   type IntorProviderProps,
   TranslateHandlersProvider,
   type TranslateHandlersProviderProps,
 
-  // Hooks
+  // hooks
   useTranslator,
-
-  // Tools
-  Link,
-  usePathname,
-  useRouter,
-  redirect,
-
-  // Constants
-  PATHNAME_HEADER_NAME,
-} from "@/adapters/next";
+} from "@/client/react";

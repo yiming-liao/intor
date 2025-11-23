@@ -1,3 +1,5 @@
+/** intor — next / server */
+
 export {
   // Server
   getI18nContext,

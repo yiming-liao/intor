@@ -10,12 +10,12 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
-    "types": ["vitest/globals"],
+    "types": ["node"],
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "exclude": ["node_modules", "dist", "coverage"]
+  "exclude": ["node_modules", "dist", "coverage", "packages"]
 }

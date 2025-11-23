@@ -35,6 +35,16 @@
       "import": "./dist/config/index.js",
       "require": "./dist/config/index.cjs"
     },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs"
+    },
     "./next": {
       "types": "./dist/next/index.d.ts",
       "import": "./dist/next/index.js",
@@ -77,11 +87,10 @@
     "p-limit": "^6.2.0"
   },
   "devDependencies": {
-    "@intor/cli": "^0.1.2",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^24.10.1",
-    "@types/react": "^19.1.4",
-    "@types/react-dom": "^19.1.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@vitest/coverage-v8": "4.0.9",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.8",
@@ -91,13 +100,13 @@
     "eslint-plugin-unicorn": "^62.0.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "knip": "^5.69.1",
-    "next": "16",
+    "next": "^16.0.3",
     "prettier": "^3.6.2",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
-    "tsup": "^8.4.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1",
     "vitest": "^4.0.9"

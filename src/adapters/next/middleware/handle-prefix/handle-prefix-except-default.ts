@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config";
+import type { IntorResolvedConfig } from "@/config";
 import type { NextRequest } from "next/server";
 import { createResponse } from "@/adapters/next/middleware/utils/create-response";
 import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";

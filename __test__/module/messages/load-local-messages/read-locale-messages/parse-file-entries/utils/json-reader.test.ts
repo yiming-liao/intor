@@ -1,7 +1,7 @@
-import type { Messages } from "@/modules/messages/shared/types";
+import type { Messages } from "@/server/messages/shared/types";
 import fs from "node:fs/promises";
 import { describe, it, expect, vi } from "vitest";
-import { jsonReader } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
+import { jsonReader } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
 
 vi.mock("node:fs/promises");
 

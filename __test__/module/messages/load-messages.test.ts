@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { LoadMessagesOptions } from "@/modules/messages/types";
+import type { LoadMessagesOptions } from "@/server/messages/types";
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as localModule from "@/modules/messages/load-local-messages";
-import { loadMessages } from "@/modules/messages/load-messages";
-import * as remoteModule from "@/modules/messages/load-remote-messages";
-import * as loggerModule from "@/shared/logger/get-logger";
+import * as localModule from "@/server/messages/load-local-messages";
+import { loadMessages } from "@/server/messages/load-messages";
+import * as remoteModule from "@/server/messages/load-remote-messages";
+import * as loggerModule from "@/server/shared/logger/get-logger";
 import * as utilsModule from "@/shared/utils";
 
-vi.mock("@/modules/messages/load-local-messages");
-vi.mock("@/modules/messages/load-remote-messages");
-vi.mock("@/shared/logger/get-logger");
+vi.mock("@/server/messages/load-local-messages");
+vi.mock("@/server/messages/load-remote-messages");
+vi.mock("@/server/shared/logger/get-logger");
 vi.mock("@/shared/utils");
 
 describe("loadMessages", () => {

@@ -1,5 +1,6 @@
-import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
-import type { RoutingRawOptions } from "@/modules/config/types/routing.types";
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
+import type { RoutingRawOptions } from "@/config/types/routing.types";
+import { describe, expect, it } from "vitest";
 import { extractPathname } from "@/shared/utils/pathname/extract-pathname";
 
 const mockConfig = (
@@ -15,7 +16,7 @@ const mockConfig = (
   }) as unknown as IntorResolvedConfig;
 
 describe("extractPathname", () => {
-  test("removes basePath and extracts locale (prefix: all)", () => {
+  it("removes basePath and extracts locale (prefix: all)", () => {
     const config = mockConfig("all");
     const result = extractPathname({
       config,
@@ -31,7 +32,7 @@ describe("extractPathname", () => {
     });
   });
 
-  test("keeps unprefixed path when locale is default and prefix is 'except-default'", () => {
+  it("keeps unprefixed path when locale is default and prefix is 'except-default'", () => {
     const config = mockConfig("except-default");
     const result = extractPathname({
       config,
@@ -47,7 +48,7 @@ describe("extractPathname", () => {
     });
   });
 
-  test("removes locale prefix when non-default and prefix is 'except-default'", () => {
+  it("removes locale prefix when non-default and prefix is 'except-default'", () => {
     const config = mockConfig("except-default");
     const result = extractPathname({
       config,
@@ -63,7 +64,7 @@ describe("extractPathname", () => {
     });
   });
 
-  test("handles path without locale prefix when prefix is 'none'", () => {
+  it("handles path without locale prefix when prefix is 'none'", () => {
     const config = mockConfig("none");
     const result = extractPathname({
       config,
@@ -79,7 +80,7 @@ describe("extractPathname", () => {
     });
   });
 
-  test("handles basePath only (root)", () => {
+  it("handles basePath only (root)", () => {
     const config = mockConfig("all");
     const result = extractPathname({
       config,

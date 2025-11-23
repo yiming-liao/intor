@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { fetchLocaleMessages } from "@/modules/messages/load-remote-messages/fetch-locale-messages";
-import * as isValidMessagesModule from "@/modules/messages/shared/utils/is-valid-messages";
-import * as loggerModule from "@/shared/logger/get-logger";
+import { fetchLocaleMessages } from "@/server/messages/load-remote-messages/fetch-locale-messages";
+import * as isValidMessagesModule from "@/server/messages/shared/utils/is-valid-messages";
+import * as loggerModule from "@/server/shared/logger/get-logger";
 
-vi.mock("@/modules/messages/shared/utils/is-namespace-messages");
+vi.mock("@/server/messages/shared/utils/is-namespace-messages");
 
 describe("fetchLocaleMessages", () => {
   let fetchMock: typeof globalThis.fetch;

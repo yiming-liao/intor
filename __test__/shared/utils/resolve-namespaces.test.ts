@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { describe, it, expect } from "vitest";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
 import { resolveNamespaces } from "@/shared/utils";

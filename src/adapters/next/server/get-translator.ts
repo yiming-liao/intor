@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -7,7 +7,7 @@ import type {
 import type { TranslatorInstance } from "@/shared/types/translator-instance.types";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { getI18nContext } from "@/adapters/next/server/get-i18n-context";
-import { getTranslator as rawGetTranslator } from "@/modules/translator";
+import { getTranslator as rawGetTranslator } from "@/server/translator";
 
 /**
  * Create a translator instance ready for the current Next.js SSR environment.

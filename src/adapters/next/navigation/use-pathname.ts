@@ -1,7 +1,7 @@
 import { usePathname as useNextPathname } from "next/navigation";
-import { useConfig } from "@/adapters/next/contexts/config";
-import { useLocale } from "@/adapters/next/contexts/locale";
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
+import { useConfig } from "@/client/react/contexts/config";
+import { useLocale } from "@/client/react/contexts/locale";
 
 /**
  * Custom hook to get the current pathname in different forms based on the active locale.

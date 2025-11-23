@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config";
+import type { IntorResolvedConfig } from "@/config";
 import type { GenLocale } from "@/shared/types/generated.types";
 import type { RedirectType } from "next/navigation";
 import { redirect as nextRedirect } from "next/navigation";

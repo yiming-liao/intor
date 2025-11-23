@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { headers } from "next/headers";
 import { normalizeLocale, resolvePreferredLocale } from "@/shared/utils";
 

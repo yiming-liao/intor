@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { intor } from "@/modules/intor/intor";
-import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
-import { loadMessages } from "@/modules/messages";
-import { getLogger } from "@/shared/logger/get-logger";
+import { intor } from "@/server/intor/intor";
+import { shouldLoadMessages } from "@/server/intor/utils/should-load-messages";
+import { loadMessages } from "@/server/messages";
+import { getLogger } from "@/server/shared/logger/get-logger";
 import { mergeMessages } from "@/shared/utils";
 
-vi.mock("@/shared/logger/get-logger");
-vi.mock("@/modules/intor/utils/should-load-messages");
-vi.mock("@/modules/messages");
+vi.mock("@/server/shared/logger/get-logger");
+vi.mock("@/server/intor/utils/should-load-messages");
+vi.mock("@/server/messages");
 vi.mock("@/shared/utils");
 
 describe("intor", () => {

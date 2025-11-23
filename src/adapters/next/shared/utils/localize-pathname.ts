@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { localePrefixPathname } from "@/adapters/next/shared/utils/locale-prefix-pathname";
 import { extractPathname, standardizePathname } from "@/shared/utils";
 

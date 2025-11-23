@@ -28,22 +28,16 @@ const base: Options = {
 };
 
 export default defineConfig([
-  {
-    ...base,
-    entry: ["exports/index.ts"],
-    outDir: "dist",
-  },
-  {
-    ...base,
-    entry: ["exports/config/index.ts"],
-    outDir: "dist/config",
-  },
-  // Next
-  {
-    ...base,
-    entry: ["exports/next/index.ts"],
-    outDir: "dist/next",
-  },
+  // --- core
+  { ...base, entry: ["exports/index.ts"], outDir: "dist" },
+  { ...base, entry: ["exports/config/index.ts"], outDir: "dist/config" },
+  { ...base, entry: ["exports/server/index.ts"], outDir: "dist/server" },
+
+  // --- react
+  { ...base, entry: ["exports/react/index.ts"], outDir: "dist/react" },
+
+  // --- next
+  { ...base, entry: ["exports/next/index.ts"], outDir: "dist/next" },
   {
     ...base,
     entry: ["exports/next/middleware/index.ts"],

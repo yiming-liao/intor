@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-useless-undefined */
-import type { LoaderOptions } from "@/modules/config/types/loader.types";
-import { shouldLoadMessages } from "@/modules/intor/utils/should-load-messages";
+import type { LoaderOptions } from "@/config/types/loader.types";
+import { describe, it, expect } from "vitest";
+import { shouldLoadMessages } from "@/server/intor/utils/should-load-messages";
 
 describe("shouldLoadMessages", () => {
   it("returns false if loaderOptions is undefined", () => {

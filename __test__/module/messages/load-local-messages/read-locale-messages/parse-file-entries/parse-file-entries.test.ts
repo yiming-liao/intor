@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { FileEntry } from "@/modules/messages/load-local-messages/read-locale-messages";
-import type { Messages } from "@/modules/messages/shared/types";
+import type { FileEntry } from "@/server/messages/load-local-messages/read-locale-messages";
+import type { Messages } from "@/server/messages/shared/types";
 import type { LimitFunction } from "p-limit";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { parseFileEntries } from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries";
-import * as readJsonModule from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
-import * as nestModule from "@/modules/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
-import * as loggerModule from "@/shared/logger/get-logger";
+import { parseFileEntries } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries";
+import * as readJsonModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
+import * as nestModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
+import * as loggerModule from "@/server/shared/logger/get-logger";
 
 describe("parseFileEntries", () => {
   const limit = ((fn: any) => fn()) as LimitFunction;

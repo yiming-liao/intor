@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { setLocaleCookieEdge } from "@/adapters/next/middleware/utils/set-locale-cookie-edge";

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { resolveFallbackLocales } from "@/modules/config/resolvers/resolve-fallback-locales";
+import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
 
 describe("resolveFallbackLocales", () => {
   beforeEach(() => {

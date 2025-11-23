@@ -1,24 +1,9 @@
-// Intor
-export { intor, type I18nContext, type IntorResult } from "@/modules/intor";
+/** intor — main */
 
-// Messages
-export {
-  loadMessages,
-  loadLocalMessages,
-  type LoadLocalMessagesOptions,
-  loadRemoteMessages,
-  type LoadRemoteMessagesOptions,
-  type Messages,
-  type MessagesReader,
-} from "@/modules/messages";
-
-// Translator
-export { getTranslator } from "@/modules/translator";
-
-// Constants
+// constants
 export { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
 
-// Utils
+// utils
 export {
   mergeMessages,
   normalizeCacheKey,
@@ -30,29 +15,29 @@ export {
   standardizePathname,
 } from "@/shared/utils";
 
-// Cache
-export { clearLoggerPool } from "@/shared/logger/global-logger-pool";
-export { clearMessagesPool } from "@/shared/messages/global-messages-pool";
+// error
+export { IntorError, IntorErrorCode } from "@/shared/error";
 
-// Intor translator
+// --- [dependency] intor-translator
 export {
+  // translator
   Translator,
-  // Translate handlers
+  // translate-handlers
   type TranslateHandlers,
   type FormatHandler,
   type LoadingHandler,
   type MissingHandler,
   type TranslateHandlerContext,
-  // Locale
+  // locale
   type Locale,
   type FallbackLocalesMap,
-  // Messages
+  // messages
   type NestedMessage,
   type LocaleMessages,
   type LocalizedMessagesUnion,
-  // Replacement
+  // replacement
   type Replacement,
-  // Keys
+  // keys
   type NodeKeys,
   type LeafKeys,
   type LocalizedLeafKeys,

@@ -1,18 +1,18 @@
-import type { CookieResolvedOptions } from "@/modules/config/types/cookie.types";
-import type { RoutingResolvedOptions } from "@/modules/config/types/routing.types";
-import { describe, it, expect, beforeEach } from "vitest";
-import { defineIntorConfig } from "@/modules/config";
-import { resolveCookieOptions } from "@/modules/config/resolvers/resolve-cookie-options";
-import { resolveFallbackLocales } from "@/modules/config/resolvers/resolve-fallback-locales";
-import { resolveRoutingOptions } from "@/modules/config/resolvers/resolve-routing-options";
-import { validateDefaultLocale } from "@/modules/config/validators/validate-default-locale";
-import { validateSupportedLocales } from "@/modules/config/validators/validate-supported-locales";
+import type { CookieResolvedOptions } from "@/config/types/cookie.types";
+import type { RoutingResolvedOptions } from "@/config/types/routing.types";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { defineIntorConfig } from "@/config";
+import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";
+import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
+import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
+import { validateDefaultLocale } from "@/config/validators/validate-default-locale";
+import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
 
-vi.mock("@/modules/config/resolvers/resolve-cookie-options");
-vi.mock("@/modules/config/resolvers/resolve-fallback-locales");
-vi.mock("@/modules/config/resolvers/resolve-routing-options");
-vi.mock("@/modules/config/validators/validate-default-locale");
-vi.mock("@/modules/config/validators/validate-supported-locales");
+vi.mock("@/config/resolvers/resolve-cookie-options");
+vi.mock("@/config/resolvers/resolve-fallback-locales");
+vi.mock("@/config/resolvers/resolve-routing-options");
+vi.mock("@/config/validators/validate-default-locale");
+vi.mock("@/config/validators/validate-supported-locales");
 
 describe("defineIntorConfig", () => {
   beforeEach(() => {

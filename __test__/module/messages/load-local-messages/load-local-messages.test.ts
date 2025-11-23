@@ -2,10 +2,10 @@
 
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { loadLocalMessages } from "@/modules/messages/load-local-messages/load-local-messages";
-import * as readModule from "@/modules/messages/load-local-messages/read-locale-messages";
-import * as loggerModule from "@/shared/logger/get-logger";
-import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
+import { loadLocalMessages } from "@/server/messages/load-local-messages/load-local-messages";
+import * as readModule from "@/server/messages/load-local-messages/read-locale-messages";
+import { getGlobalMessagesPool } from "@/server/messages/shared/global-messages-pool";
+import * as loggerModule from "@/server/shared/logger/get-logger";
 
 const loggerChildMock = { debug: vi.fn(), trace: vi.fn(), error: vi.fn() };
 const loggerMock = {
@@ -15,9 +15,9 @@ const loggerMock = {
 
 vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
 vi.mock(
-  "@/modules/messages/load-local-messages/read-locale-messages/read-locale-messages",
+  "@/server/messages/load-local-messages/read-locale-messages/read-locale-messages",
 );
-vi.mock("@/shared/messages/global-messages-pool");
+vi.mock("@/server/messages/shared/global-messages-pool");
 
 describe("loadLocalMessages", () => {
   const mockReadLocaleMessages = readModule.readLocaleMessages;

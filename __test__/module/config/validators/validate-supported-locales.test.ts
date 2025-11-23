@@ -1,6 +1,6 @@
-import type { IntorRawConfig } from "@/modules/config";
+import type { IntorRawConfig } from "@/config";
 import { describe, it, expect } from "vitest";
-import { validateSupportedLocales } from "@/modules/config/validators/validate-supported-locales";
+import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 
 describe("validateSupportedLocales", () => {

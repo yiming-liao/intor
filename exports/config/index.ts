@@ -1,19 +1,15 @@
-/**
- * Global Config Module
- *
- * Exports all config-related utilities, constants, and types.
- * Separated for independent export, particularly for Edge environments.
- */
+/** intor — config */
 
 export {
+  // entry
   defineIntorConfig,
 
-  // Constants
+  // constants
   DEFAULT_CACHE_OPTIONS,
   DEFAULT_COOKIE_OPTIONS,
   DEFAULT_ROUTING_OPTIONS,
 
-  // Types
+  // types
   type IntorRawConfig,
   type IntorResolvedConfig,
-} from "@/modules/config";
+} from "@/config";

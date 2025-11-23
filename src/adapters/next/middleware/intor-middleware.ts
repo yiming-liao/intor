@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/modules/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { NextRequest } from "next/server";
 import { handlePrefixAll } from "@/adapters/next/middleware/handle-prefix/handle-prefix-all";
 import { handlePrefixExceptDefault } from "@/adapters/next/middleware/handle-prefix/handle-prefix-except-default";

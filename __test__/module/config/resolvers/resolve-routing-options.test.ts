@@ -1,6 +1,7 @@
-import type { RoutingRawOptions } from "@/modules/config/types/routing.types";
-import { DEFAULT_ROUTING_OPTIONS } from "@/modules/config/constants/routing.constants";
-import { resolveRoutingOptions } from "@/modules/config/resolvers/resolve-routing-options";
+import type { RoutingRawOptions } from "@/config/types/routing.types";
+import { describe, it, expect } from "vitest";
+import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
+import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
 
 describe("resolveRoutingOptions", () => {
   it("should return default routing options if no input is provided", () => {

@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 
 describe("IntorError", () => {

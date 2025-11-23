@@ -1,7 +1,9 @@
+/** intor — next / middleware */
+
 export {
-  // Middleware
+  // entry
   intorMiddleware,
 
-  // Constants
+  // constants
   PATHNAME_HEADER_NAME,
 } from "@/adapters/next/middleware";
