@@ -1,49 +1,63 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
+import type { MessagesReader } from "@/server";
 import type {
   GenConfigKeys,
   GenMessages,
   IfGen,
 } from "@/shared/types/generated.types";
 import type { TranslatorInstance } from "@/shared/types/translator-instance.types";
-import type { LocalizedNodeKeys } from "intor-translator";
+import type { LocalizedNodeKeys, TranslateHandlers } from "intor-translator";
 import { getI18nContext } from "@/adapters/next/server/get-i18n-context";
 import { getTranslator as rawGetTranslator } from "@/server/translator";
 
 /**
  * Create a translator instance ready for the current Next.js SSR environment.
  *
- * - Automatically resolves the current locale and pathname using the Next.js adapter.
- * - Loads all corresponding messages for the resolved locale and pathname.
- * - Returns a translator object containing `t`, `hasKey`, `messages`, and other helpers.
- * - Supports optional `preKey` to create a scoped translator for nested translation keys.
- * - Allows passing additional `TranslateConfig` options to the underlying translator.
+ * - **Automatically resolves the current locale and pathname using the Next.js adapter.**
+ * - Loads messages using the provided config, locale, and pathname.
+ * - Initializes a translator with `t`, `hasKey`, and optional scoped methods.
+ * - Supports optional `preKey` to create a scoped translator for nested keys.
  */
 
 // Signature: Without preKey
-export function getTranslator<CK extends GenConfigKeys = "__default__">(
-  config: IntorResolvedConfig,
-): Promise<TranslatorInstance<GenMessages<CK>>>;
+export function getTranslator<
+  CK extends GenConfigKeys = "__default__",
+>(options: {
+  config: IntorResolvedConfig;
+  handlers?: TranslateHandlers;
+  extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
+}): Promise<TranslatorInstance<GenMessages<CK>>>;
 
 // Signature: With preKey
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(
-  config: IntorResolvedConfig,
-  preKey: IfGen<PK, string>,
-): Promise<TranslatorInstance<GenMessages<CK>, PK>>;
+>(options: {
+  config: IntorResolvedConfig;
+  handlers?: TranslateHandlers;
+  extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
+  preKey: IfGen<PK, string>;
+}): Promise<TranslatorInstance<GenMessages<CK>, PK>>;
 
 // Implementation
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(config: IntorResolvedConfig, preKey?: PK) {
+>(options: {
+  config: IntorResolvedConfig;
+  handlers?: TranslateHandlers;
+  extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
+  preKey?: PK;
+}) {
+  const { config, preKey, handlers, extraOptions } = options;
   const { locale, pathname } = await getI18nContext<CK>(config);
 
   const translatorInstance = rawGetTranslator<CK, PK>({
     config,
     locale,
     pathname,
+    handlers,
+    extraOptions,
     preKey,
   });
 
