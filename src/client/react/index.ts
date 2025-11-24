@@ -10,3 +10,6 @@ export {
 
 // hooks
 export { useTranslator } from "./hooks/use-translator";
+
+// shared / utils
+export { getInitialLocale } from "@/client/shared/utils/get-initial-locale";

@@ -9,4 +9,7 @@ export {
 
   // hooks
   useTranslator,
+
+  // shared / utils
+  getInitialLocale,
 } from "@/client/react";

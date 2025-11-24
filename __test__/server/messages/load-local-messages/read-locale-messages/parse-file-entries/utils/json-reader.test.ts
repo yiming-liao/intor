@@ -3,6 +3,11 @@ import fs from "node:fs/promises";
 import { describe, it, expect, vi } from "vitest";
 import { jsonReader } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
 
+/// <reference types="vitest" />
+/**
+ * @vitest-environment node
+ */
+
 vi.mock("node:fs/promises");
 
 describe("jsonReader", () => {

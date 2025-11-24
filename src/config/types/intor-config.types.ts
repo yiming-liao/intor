@@ -16,21 +16,14 @@ import type {
   LocaleMessages,
 } from "intor-translator";
 
-type WithoutLoader = {
-  loader?: undefined;
-  supportedLocales?: readonly Locale[]; // Optional
-};
-
-type WithLoader = {
-  loader: LoaderOptions;
-  supportedLocales: readonly Locale[]; // Required
-};
-
 // =====================================
 // Init config
 // =====================================
 
-export type IntorRawConfig = (WithLoader | WithoutLoader) & {
+export type IntorRawConfig = (
+  | { loader: LoaderOptions; supportedLocales: readonly Locale[] }
+  | { loader?: undefined; supportedLocales?: readonly Locale[] }
+) & {
   readonly id?: string; // Identifier for the intor instance
   readonly messages?: LocaleMessages; // Static messages
   readonly defaultLocale: Locale;
@@ -46,7 +39,10 @@ export type IntorRawConfig = (WithLoader | WithoutLoader) & {
 // Resolved config
 // =====================================
 
-export type IntorResolvedConfig = (WithLoader | WithoutLoader) & {
+export type IntorResolvedConfig = (
+  | { loader: LoaderOptions; supportedLocales: readonly Locale[] }
+  | { loader?: undefined; supportedLocales: readonly Locale[] }
+) & {
   readonly id: string;
   readonly messages?: LocaleMessages;
   readonly defaultLocale: Locale;
