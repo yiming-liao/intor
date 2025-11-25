@@ -7,7 +7,7 @@ import { useConfig } from "@/client/react/contexts/config";
 import { useRefetchMessages } from "@/client/react/contexts/messages/utils/use-refetch-messages";
 import { MessagesContext } from "./context";
 
-// Provider
+// provider
 export function MessagesProvider({
   value: { messages = {} },
   children,

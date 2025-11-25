@@ -10,7 +10,7 @@ import { useMessages } from "@/client/react/contexts/messages";
 import { LocaleContext } from "./context";
 import { changeLocale } from "./utils/change-locale";
 
-// Provider
+// provider
 export function LocaleProvider({
   value: { initialLocale },
   children,

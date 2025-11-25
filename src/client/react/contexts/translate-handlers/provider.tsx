@@ -4,7 +4,7 @@ import type { TranslateHandlersProviderProps } from "./types";
 import * as React from "react";
 import { TranslateHandlersContext } from "./context";
 
-// Provider
+// provider
 export const TranslateHandlersProvider = ({
   children,
   handlers,

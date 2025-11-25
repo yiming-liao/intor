@@ -3,7 +3,7 @@ import type * as React from "react";
 
 // context value
 export type MessagesContextValue = {
-  messages: Readonly<LocaleMessages> | null;
+  messages: Readonly<LocaleMessages>;
   isLoading: boolean;
   setLoadedMessages: React.Dispatch<
     React.SetStateAction<LocaleMessages | null>
