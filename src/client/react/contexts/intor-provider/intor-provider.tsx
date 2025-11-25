@@ -8,13 +8,19 @@ import { MessagesProvider } from "../messages";
 import { TranslatorProvider } from "../translator";
 
 export const IntorProvider = ({
-  value: { config, pathname = "", initialLocale, messages = config.messages },
+  value: {
+    config,
+    pathname = "",
+    initialLocale,
+    messages = config.messages,
+    onLocaleChange,
+  },
   children,
 }: IntorProviderProps) => {
   return (
     <ConfigProvider value={{ config, pathname }}>
       <MessagesProvider value={{ messages }}>
-        <LocaleProvider value={{ initialLocale }}>
+        <LocaleProvider value={{ initialLocale, onLocaleChange }}>
           <TranslatorProvider>{children}</TranslatorProvider>
         </LocaleProvider>
       </MessagesProvider>

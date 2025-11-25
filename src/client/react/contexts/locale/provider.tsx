@@ -12,7 +12,7 @@ import { changeLocale } from "./utils/change-locale";
 
 // provider
 export function LocaleProvider({
-  value: { initialLocale },
+  value: { initialLocale, onLocaleChange },
   children,
 }: LocaleProviderProps): React.JSX.Element {
   const { config } = useConfig();
@@ -28,7 +28,7 @@ export function LocaleProvider({
 
   // Change locale and set cookie (If using dynamic api: refetch messages)
   const setLocale = React.useCallback(
-    (newLocale: Locale) => {
+    async (newLocale: Locale) => {
       changeLocale({
         currentLocale,
         newLocale,
@@ -37,8 +37,9 @@ export function LocaleProvider({
         setLocale: setCurrentLocale,
         refetchMessages,
       });
+      onLocaleChange?.(newLocale);
     },
-    [currentLocale, loaderOptions, cookie, refetchMessages],
+    [currentLocale, loaderOptions, cookie, refetchMessages, onLocaleChange],
   );
 
   // context value

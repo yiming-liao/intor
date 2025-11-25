@@ -8,6 +8,7 @@ export interface IntorProviderProps {
     initialLocale: Locale;
     pathname?: string;
     messages?: Readonly<LocaleMessages>;
+    onLocaleChange?: (newLocale: string) => Promise<void> | void;
   };
   children: React.ReactNode;
 }

@@ -9,6 +9,9 @@ export type LocaleContextValue = {
 
 // provider props
 export type LocaleProviderProps = {
-  value: { initialLocale: string };
+  value: {
+    initialLocale: string;
+    onLocaleChange?: (newLocale: string) => Promise<void> | void;
+  };
   children: React.ReactNode;
 };
