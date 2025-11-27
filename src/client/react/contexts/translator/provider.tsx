@@ -17,7 +17,7 @@ export function TranslatorProvider({
   const { config } = useConfig();
   const { messages, isLoading: internalIsLoading } = useMessages();
   const { locale } = useLocale();
-  const { handlers } = useTranslateHandlers();
+  const translateHandlers = useTranslateHandlers();
   const { fallbackLocales, translator: translatorOptions } = config;
 
   const isLoading = Boolean(externalIsLoading ?? internalIsLoading);
@@ -30,14 +30,14 @@ export function TranslatorProvider({
       fallbackLocales,
       loadingMessage: translatorOptions?.loadingMessage,
       placeholder: translatorOptions?.placeholder,
-      handlers,
+      handlers: translateHandlers,
     });
   }, [
     messages,
     locale,
     isLoading,
     fallbackLocales,
-    handlers,
+    translateHandlers,
     translatorOptions?.loadingMessage,
     translatorOptions?.placeholder,
   ]);

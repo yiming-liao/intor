@@ -10,7 +10,7 @@ export const TranslateHandlersProvider = ({
   children,
 }: TranslateHandlersProviderProps) => {
   return (
-    <TranslateHandlersContext.Provider value={{ handlers }}>
+    <TranslateHandlersContext.Provider value={handlers}>
       {children}
     </TranslateHandlersContext.Provider>
   );
