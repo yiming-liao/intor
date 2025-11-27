@@ -22,23 +22,23 @@ export const useRefetchMessages = ({
   setLoadedMessages,
   setIsLoadingMessages,
 }: UseRefetchMessagesParams) => {
-  const { messages: staticMessages } = config;
+  const { messages: staticMessages, loader } = config;
 
   const namespaces = React.useMemo(() => {
-    if (!config.loader) return [];
+    if (!loader) return [];
     return resolveNamespaces({ config, pathname });
   }, [config, pathname]);
 
   // Refetch messages
   const refetchMessages = React.useCallback(
     async (newLocale: string) => {
-      if (config.loader?.type === "remote") {
+      if (loader?.type === "remote") {
         setIsLoadingMessages(true);
 
         const loadedMessages = await loadRemoteMessages({
-          rootDir: config.loader.rootDir,
-          remoteUrl: config.loader.remoteUrl,
-          remoteHeaders: config.loader.remoteHeaders,
+          rootDir: loader.rootDir,
+          remoteUrl: loader.remoteUrl,
+          remoteHeaders: loader.remoteHeaders,
           locale: newLocale,
           fallbackLocales: config.fallbackLocales[newLocale] || [],
           namespaces,
@@ -54,8 +54,9 @@ export const useRefetchMessages = ({
       }
     },
     [
-      config.loader,
+      loader,
       config.fallbackLocales,
+      config.cache,
       config.id,
       setIsLoadingMessages,
       namespaces,

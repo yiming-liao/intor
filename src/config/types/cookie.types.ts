@@ -1,7 +1,7 @@
 // Cookie raw options
 export type CookieRawOptions = {
-  /** Completely disable cookie usage (no read, no write, no lookup by name) - default: false */
-  disabled?: boolean;
+  /** Enable cookie usage (read/write) - default: true */
+  enabled?: boolean;
   /** Allow the system to automatically set cookies - default: true */
   autoSetCookie?: boolean;
   /** default: "intor.i18n.locale" */

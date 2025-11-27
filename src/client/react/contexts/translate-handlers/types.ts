@@ -2,10 +2,10 @@ import type { TranslateHandlers } from "intor-translator";
 import type * as React from "react";
 
 // context value
-export type TranslateHandlersContextValue = TranslateHandlers;
+export type TranslateHandlersContextValue = { handlers: TranslateHandlers };
 
 // provider props
 export type TranslateHandlersProviderProps = {
-  children: React.ReactNode;
   handlers: TranslateHandlers;
+  children: React.ReactNode;
 };

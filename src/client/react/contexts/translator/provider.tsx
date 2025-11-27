@@ -7,47 +7,43 @@ import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
 import { useMessages } from "@/client/react/contexts/messages";
 import { useTranslateHandlers } from "@/client/react/contexts/translate-handlers";
-import { useInitLoadingState } from "@/client/react/contexts/translator/utils/use-init-loading-state";
 import { TranslatorContext } from "./context";
 
-const EMPTY_OBJECT = Object.freeze({}) as Readonly<unknown>;
-
 // Translator Provider
-export function TranslatorProvider({ children }: TranslatorProviderProps) {
+export function TranslatorProvider({
+  value: { isLoading: externalIsLoading },
+  children,
+}: TranslatorProviderProps) {
   const { config } = useConfig();
-  const { messages, isLoading } = useMessages();
+  const { messages, isLoading: internalIsLoading } = useMessages();
   const { locale } = useLocale();
-  const translatorHandlers = useTranslateHandlers();
+  const { handlers } = useTranslateHandlers();
   const { fallbackLocales, translator: translatorOptions } = config;
 
-  // Initialize before CSR loading state if using lazy load
-  const isBeforeCSRLoading = useInitLoadingState(config);
+  const isLoading = Boolean(externalIsLoading ?? internalIsLoading);
 
-  // context value
-  const value = React.useMemo(() => {
-    const translator = new Translator<unknown>({
-      messages: messages || EMPTY_OBJECT,
+  const translator = React.useMemo(() => {
+    return new Translator({
+      messages,
       locale,
+      isLoading,
       fallbackLocales,
       loadingMessage: translatorOptions?.loadingMessage,
       placeholder: translatorOptions?.placeholder,
-      handlers: translatorHandlers,
+      handlers,
     });
-    translator.setLoading(isBeforeCSRLoading || isLoading);
-    return { translator };
   }, [
-    fallbackLocales,
-    isBeforeCSRLoading,
-    isLoading,
-    locale,
     messages,
-    translatorHandlers,
+    locale,
+    isLoading,
+    fallbackLocales,
+    handlers,
     translatorOptions?.loadingMessage,
     translatorOptions?.placeholder,
   ]);
 
   return (
-    <TranslatorContext.Provider value={value}>
+    <TranslatorContext.Provider value={{ translator }}>
       {children}
     </TranslatorContext.Provider>
   );

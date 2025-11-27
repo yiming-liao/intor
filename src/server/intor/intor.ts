@@ -7,7 +7,6 @@ import type {
 import type { MessagesReader } from "@/server/messages";
 import type { GenLocale } from "@/shared/types/generated.types";
 import type { LocaleMessages } from "intor-translator";
-import { shouldLoadMessages } from "@/server/intor/utils/should-load-messages";
 import { loadMessages } from "@/server/messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
 import { mergeMessages } from "@/shared/utils";
@@ -47,7 +46,7 @@ export const intor = async (
 
   // 2. Load messages if loader enabled
   let loadedMessages: LocaleMessages | undefined;
-  if (shouldLoadMessages(loader)) {
+  if (loader) {
     loadedMessages = await loadMessages({
       config,
       locale,
@@ -67,9 +66,7 @@ export const intor = async (
     static: { enabled: !!messages },
     loaded: {
       enabled: !!loadedMessages,
-      ...(loader
-        ? { loaderType: loader.type, lazyLoad: !!loader.lazyLoad }
-        : null),
+      ...(loader ? { loaderType: loader.type } : null),
     },
     merged: mergedMessages,
   });

@@ -2801,6 +2801,11 @@ intor-translator@^1.1.2:
   resolved "https://registry.yarnpkg.com/intor-translator/-/intor-translator-1.1.2.tgz#852ca3be48e63d08988b0dd4b468bc0191f55cb6"
   integrity sha512-60Via+qh+yCo6Wz5Z+YQr0kadT4zUci2Su9w6mqm1XqOhUSmtrHaua6lAouLSTI9gTwQ2uo41jhy3Xpwg67rGw==
 
+intor-translator@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/intor-translator/-/intor-translator-1.1.5.tgz#adcf36903b95afd77d33c6f6f3098d7434235d0c"
+  integrity sha512-vVhE42awp+F4B46zUEBtyCD2RN2BGDrI29SGyHA3nT1jg37o7FHaVIqZK1vb/SLRlwR/IWBGL47VkU0O5zD3Pg==
+
 intor@^2.2.4:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/intor/-/intor-2.2.5.tgz#5fb6093b7badb43cfcf11c3e8527c69384ab6861"

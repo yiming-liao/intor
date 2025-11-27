@@ -6,7 +6,7 @@ import { setLocaleCookieBrowser } from "@/shared/utils/client/set-locale-cookie-
 type Params = {
   currentLocale: Locale;
   newLocale: Locale;
-  loaderOptions?: LoaderOptions;
+  loader?: LoaderOptions;
   cookie: CookieResolvedOptions;
   setLocale: (locale: Locale) => void;
   refetchMessages?: (locale: Locale) => Promise<void>;
@@ -24,22 +24,22 @@ type Params = {
 export const changeLocale = ({
   currentLocale,
   newLocale,
-  loaderOptions,
+  loader,
   cookie,
   setLocale,
   refetchMessages,
 }: Params) => {
   if (typeof document === "undefined") return;
 
-  const loaderType = loaderOptions?.type;
+  const { type } = loader || {};
 
   // Exit early if the new locale is the same as the current one
   if (newLocale === currentLocale) return;
 
   // Warn: Using dynamic local cannot switch locale with CSR only
-  if (loaderType === "local") {
+  if (type === "local") {
     console.warn(
-      `[Intor] You are using dynamic local to switch languages. Please make sure to use the wrapped <Link> component to trigger a page reload, ensuring that the translation data is dynamically updated.`,
+      `[Intor] You are using "loader type: local" to switch languages. Please make sure to use the wrapped <Link> component to trigger a page reload, ensuring that the translation data is dynamically updated.`,
     );
   }
 
@@ -53,7 +53,7 @@ export const changeLocale = ({
   document.documentElement.lang = newLocale;
 
   // Refetch messages via remote API, if applicable
-  if (loaderType === "remote" && refetchMessages) {
+  if (type === "remote" && refetchMessages) {
     void refetchMessages(newLocale);
   }
 };

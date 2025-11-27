@@ -16,11 +16,10 @@ export const setLocaleCookieBrowser = ({
   cookie,
   locale,
 }: SetLocaleCookieBrowserOptions): void => {
-  // Skip if running on the server (SSR)
-  if (globalThis.window === undefined) return;
+  if (typeof document === "undefined") return;
 
   // Skip if cookie setting is disabled or auto-set is turned off
-  if (cookie.disabled || !cookie.autoSetCookie) return;
+  if (!cookie.enabled || !cookie.autoSetCookie) return;
 
   // Build the cookie string using provided options
   const cookieString = buildCookieString(cookie, locale);

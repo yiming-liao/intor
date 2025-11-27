@@ -20,8 +20,7 @@ export function setLocaleCookieEdge({
   locale,
   override = false, // Default to not override existed cookie
 }: SetLocaleCookieParams) {
-  // Cookie disabled from defined config
-  if (cookie.disabled || !cookie.autoSetCookie) return;
+  if (!cookie.enabled || !cookie.autoSetCookie) return;
 
   const isCookieExists = request.cookies.has(cookie.name);
 

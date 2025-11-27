@@ -80,7 +80,7 @@
     "knip": "knip --config .config/knip.config.ts"
   },
   "dependencies": {
-    "intor-translator": "^1.1.2",
+    "intor-translator": "^1.1.5",
     "keyv": "^5.5.3",
     "lodash.merge": "^4.6.2",
     "logry": "^2.0.1",

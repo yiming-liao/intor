@@ -7,4 +7,7 @@ export type TranslatorContextValue<M = unknown> = {
 };
 
 // provider props
-export type TranslatorProviderProps = { children: React.ReactNode };
+export type TranslatorProviderProps = {
+  value: { isLoading?: boolean };
+  children: React.ReactNode;
+};

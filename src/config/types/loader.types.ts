@@ -23,7 +23,6 @@ type BaseLoaderOptions = {
   namespaces?: string[];
   routeNamespaces?: RouteNamespaces;
   concurrency?: number;
-  lazyLoad?: boolean;
 };
 
 // Local loader

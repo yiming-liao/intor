@@ -28,7 +28,7 @@ export const useInitLocaleCookie = ({
     if (!firstVisit.redirect) return;
 
     // Cookie is disabled or autoSetCookie is disabled
-    if (cookie.disabled || !cookie.autoSetCookie) return;
+    if (!cookie.enabled || !cookie.autoSetCookie) return;
 
     setLocaleCookieBrowser({ cookie, locale });
   }, []); // Mount only once

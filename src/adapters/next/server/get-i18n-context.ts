@@ -23,8 +23,8 @@ export const getI18nContext = async <CK extends GenConfigKeys = "__default__">(
   const { defaultLocale, supportedLocales = [], cookie, routing } = config;
   let locale: string | undefined;
 
-  // Locale from cookie (if cookie is not disabled)
-  if (!cookie.disabled) {
+  // Locale from cookie (if cookie is enabled)
+  if (cookie.enabled) {
     const localeFromCookie = cookiesStore.get(cookie.name)?.value;
     locale = normalizeLocale(localeFromCookie, supportedLocales);
     if (locale) {

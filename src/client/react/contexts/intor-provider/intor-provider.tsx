@@ -14,6 +14,7 @@ export const IntorProvider = ({
     initialLocale,
     messages = config.messages,
     onLocaleChange,
+    isLoading,
   },
   children,
 }: IntorProviderProps) => {
@@ -21,7 +22,9 @@ export const IntorProvider = ({
     <ConfigProvider value={{ config, pathname }}>
       <MessagesProvider value={{ messages }}>
         <LocaleProvider value={{ initialLocale, onLocaleChange }}>
-          <TranslatorProvider>{children}</TranslatorProvider>
+          <TranslatorProvider value={{ isLoading }}>
+            {children}
+          </TranslatorProvider>
         </LocaleProvider>
       </MessagesProvider>
     </ConfigProvider>

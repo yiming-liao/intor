@@ -2,13 +2,11 @@
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { intor } from "@/server/intor/intor";
-import { shouldLoadMessages } from "@/server/intor/utils/should-load-messages";
 import { loadMessages } from "@/server/messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
 import { mergeMessages } from "@/shared/utils";
 
 vi.mock("@/server/shared/logger/get-logger");
-vi.mock("@/server/intor/utils/should-load-messages");
 vi.mock("@/server/messages");
 vi.mock("@/shared/utils");
 
@@ -26,7 +24,6 @@ describe("intor", () => {
       child: vi.fn().mockReturnValue(mockChildLogger),
     };
     vi.mocked(getLogger).mockReturnValue(mockLogger);
-    vi.mocked(shouldLoadMessages).mockReturnValue(true);
   });
 
   afterEach(() => {
@@ -100,21 +97,6 @@ describe("intor", () => {
         pathname: "/dashboard",
       },
     );
-  });
-
-  it("should skip loadMessages if loader disabled", async () => {
-    vi.mocked(shouldLoadMessages).mockReturnValue(false);
-    const config = {
-      id: "test",
-      defaultLocale: "en",
-      messages: { only: "static" },
-      loader: null,
-      logger: {},
-    };
-    const result = await intor(config as any, { locale: "en" as any });
-
-    expect(loadMessages).not.toHaveBeenCalled();
-    expect(result.messages).toEqual({ only: "static" });
   });
 
   it("should handle empty loaded messages", async () => {

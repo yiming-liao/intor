@@ -6,13 +6,11 @@ import { TranslateHandlersContext } from "./context";
 
 // provider
 export const TranslateHandlersProvider = ({
-  children,
   handlers,
+  children,
 }: TranslateHandlersProviderProps) => {
-  const value = handlers;
-
   return (
-    <TranslateHandlersContext.Provider value={value}>
+    <TranslateHandlersContext.Provider value={{ handlers }}>
       {children}
     </TranslateHandlersContext.Provider>
   );
