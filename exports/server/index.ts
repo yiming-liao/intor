@@ -21,4 +21,4 @@ export {
 
   // shared
   clearLoggerPool,
-} from "@/server";
+} from "../../src/server";

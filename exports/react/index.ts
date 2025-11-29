@@ -12,4 +12,4 @@ export {
 
   // shared / utils
   getInitialLocale,
-} from "@/client/react";
+} from "../../src/client/react";

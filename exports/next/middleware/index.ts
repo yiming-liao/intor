@@ -6,4 +6,4 @@ export {
 
   // constants
   PATHNAME_HEADER_NAME,
-} from "@/adapters/next/middleware";
+} from "../../../src/adapters/next/middleware";

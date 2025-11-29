@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     "eslint.config.mjs",
     "dist",
     "coverage",
+    "examples",
   ]),
 
   // JS

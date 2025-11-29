@@ -1,7 +1,7 @@
 /** intor — main */
 
 // constants
-export { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
+export { PREFIX_PLACEHOLDER } from "../src/shared/constants/prefix-placeholder";
 
 // utils
 export {
@@ -13,10 +13,10 @@ export {
   extractPathname,
   normalizePathname,
   standardizePathname,
-} from "@/shared/utils";
+} from "../src/shared/utils";
 
 // error
-export { IntorError, IntorErrorCode } from "@/shared/error";
+export { IntorError, IntorErrorCode } from "../src/shared/error";
 
 // --- [dependency] intor-translator
 export {

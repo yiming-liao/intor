@@ -6,7 +6,7 @@ export {
   usePathname,
   useRouter,
   redirect,
-} from "@/adapters/next/navigation";
+} from "../../src/adapters/next/navigation";
 
 // client / react
 export {
@@ -18,4 +18,4 @@ export {
 
   // hooks
   useTranslator,
-} from "@/client/react";
+} from "../../src/client/react";

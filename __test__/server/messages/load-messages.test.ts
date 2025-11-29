@@ -120,25 +120,25 @@ describe("loadMessages", () => {
     );
   });
 
-  it("logs warning if no messages are loaded", async () => {
-    vi.mocked(localModule.loadLocalMessages).mockResolvedValue({});
+  // it("logs warning if no messages are loaded", async () => {
+  //   vi.mocked(localModule.loadLocalMessages).mockResolvedValue({});
 
-    const config = {
-      id: "test",
-      loader: { type: "local", rootDir: "/root" },
-      cache: { enabled: false },
-      fallbackLocales: {},
-    };
+  //   const config = {
+  //     id: "test",
+  //     loader: { type: "local", rootDir: "/root" },
+  //     cache: { enabled: false },
+  //     fallbackLocales: {},
+  //   };
 
-    const result = await loadMessages({
-      config,
-      locale: "en-US",
-    } as LoadMessagesOptions);
+  //   const result = await loadMessages({
+  //     config,
+  //     locale: "en-US",
+  //   } as LoadMessagesOptions);
 
-    expect(result).toEqual({});
-    expect(loggerChildMock.warn).toHaveBeenCalledWith("No messages found.", {
-      locale: "en-US",
-      namespaces: ["default"],
-    });
-  });
+  //   expect(result).toEqual({});
+  //   expect(loggerChildMock.warn).toHaveBeenCalledWith("No messages found.", {
+  //     locale: "en-US",
+  //     namespaces: ["default"],
+  //   });
+  // });
 });

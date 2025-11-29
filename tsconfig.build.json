@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "dist"
+  },
+  "exclude": [
+    "node_modules",
+    "__test__",
+    "dist",
+    "coverage",
+    "examples",
+    "vitest.config.ts"
+  ]
+}

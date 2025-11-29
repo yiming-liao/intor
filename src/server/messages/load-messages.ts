@@ -10,7 +10,7 @@ import type { LocaleMessages } from "intor-translator";
 import { loadLocalMessages } from "@/server/messages/load-local-messages";
 import { loadRemoteMessages } from "@/server/messages/load-remote-messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
-import { resolveNamespaces } from "@/shared/utils";
+import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
 
 /**
  * Load messages for a given locale and pathname.

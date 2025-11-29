@@ -26,44 +26,34 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "types": "./dist/exports/index.d.ts",
+      "import": "./dist/exports/index.js"
     },
     "./config": {
-      "types": "./dist/config/index.d.ts",
-      "import": "./dist/config/index.js",
-      "require": "./dist/config/index.cjs"
+      "types": "./dist/exports/config/index.d.ts",
+      "import": "./dist/exports/config/index.js"
     },
     "./server": {
-      "types": "./dist/server/index.d.ts",
-      "import": "./dist/server/index.js",
-      "require": "./dist/server/index.cjs"
+      "types": "./dist/exports/server/index.d.ts",
+      "import": "./dist/exports/server/index.js"
     },
     "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js",
-      "require": "./dist/react/index.cjs"
+      "types": "./dist/exports/react/index.d.ts",
+      "import": "./dist/exports/react/index.js"
     },
     "./next": {
-      "types": "./dist/next/index.d.ts",
-      "import": "./dist/next/index.js",
-      "require": "./dist/next/index.cjs"
+      "types": "./dist/exports/next/index.d.ts",
+      "import": "./dist/exports/next/index.js"
     },
     "./next/middleware": {
-      "types": "./dist/next/middleware/index.d.ts",
-      "import": "./dist/next/middleware/index.js",
-      "require": "./dist/next/middleware/index.cjs"
+      "types": "./dist/exports/next/middleware/index.d.ts",
+      "import": "./dist/exports/next/middleware/index.js"
     },
     "./next/server": {
-      "types": "./dist/next/server/index.d.ts",
-      "import": "./dist/next/server/index.js",
-      "require": "./dist/next/server/index.cjs"
+      "types": "./dist/exports/next/server/index.d.ts",
+      "import": "./dist/exports/next/server/index.js"
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "README.md",
@@ -71,13 +61,18 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "tsup",
-    "prepublishOnly": "yarn build",
     "type": "tsc --noEmit",
     "lint": "eslint",
     "lint:debug": "eslint --debug",
     "test": "vitest",
-    "knip": "knip --config .config/knip.config.ts"
+    "knip": "knip --config .config/knip.config.ts",
+    "clean": "rm -rf dist",
+    "build:core": "rollup -c .config/rollup/core.js",
+    "build:react": "rollup -c .config/rollup/react.js",
+    "build:next": "rollup -c .config/rollup/next.js",
+    "build:dts": "rollup -c .config/rollup/dts.js",
+    "build": "yarn clean && yarn build:core && yarn build:react && yarn build:next &&  yarn tsc -p tsconfig.build.json && yarn tsc-alias tsconfig.build.json --outDir dist",
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "intor-translator": "^1.1.5",
@@ -88,11 +83,12 @@
   },
   "devDependencies": {
     "@intor/cli": "^0.1.2",
+    "@rollup/plugin-typescript": "^12.3.0",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^24.10.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitest/coverage-v8": "4.0.9",
+    "@vitest/coverage-v8": "4.0.13",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
@@ -108,7 +104,9 @@
     "react-dom": "^19.0.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
-    "tsup": "^8.5.1",
+    "rollup": "^4.53.3",
+    "rollup-plugin-preserve-directives": "^0.4.0",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1",
     "vitest": "^4.0.9"
