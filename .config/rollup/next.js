@@ -3,6 +3,7 @@ import typescript from "@rollup/plugin-typescript";
 import preserveDirectives from "rollup-plugin-preserve-directives";
 import package_ from "../../package.json" with { type: "json" };
 import { removeExternalImports } from "./plugins/remove-external-imports.js";
+import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
 const EXTERNALS = [
   "node:path",
@@ -41,6 +42,7 @@ export default [
       typescript({ tsconfig: "./tsconfig.json" }),
       preserveDirectives(),
       removeExternalImports(),
+      fileSizeSummary(),
     ],
   },
 ];

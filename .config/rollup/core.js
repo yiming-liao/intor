@@ -1,6 +1,7 @@
 // @ts-check
 import typescript from "@rollup/plugin-typescript";
 import package_ from "../../package.json" with { type: "json" };
+import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
 const EXTERNALS = ["node:path", "node:perf_hooks", "node:fs/promises"];
 
@@ -22,6 +23,6 @@ export default [
     onwarn(warning, warn) {
       warn(warning);
     },
-    plugins: [typescript({ tsconfig: "./tsconfig.json" })],
+    plugins: [typescript({ tsconfig: "./tsconfig.json" }), fileSizeSummary()],
   },
 ];
