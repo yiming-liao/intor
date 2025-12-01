@@ -1,5 +1,5 @@
-// Middleware
-export { intorMiddleware } from "./intor-middleware";
+// proxy
+export { intorProxy } from "./intor-proxy";
 
-// Constants
+// constants
 export { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";

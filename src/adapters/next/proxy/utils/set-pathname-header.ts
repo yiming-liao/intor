@@ -12,7 +12,7 @@ interface SetPathnameHeaderOptions<
 
 /**
  * Set the pathname in the response header.
- * - For Next.js edge middleware.
+ * - For Next.js proxy.
  */
 export const setPathnameHeader = <
   Req extends NextRequest = NextRequest,

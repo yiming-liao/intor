@@ -25,7 +25,7 @@ export default [
     input: {
       // --- next
       "exports/next/index": "exports/next/index.ts",
-      "exports/next/middleware/index": "exports/next/middleware/index.ts",
+      "exports/next/proxy/index": "exports/next/proxy/index.ts",
       "exports/next/server/index": "exports/next/server/index.ts",
     },
     output: {

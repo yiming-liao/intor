@@ -1,13 +1,13 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { NextRequest } from "next/server";
-import { handlePrefixAll } from "@/adapters/next/middleware/handle-prefix/handle-prefix-all";
-import { handlePrefixExceptDefault } from "@/adapters/next/middleware/handle-prefix/handle-prefix-except-default";
-import { handlePrefixNone } from "@/adapters/next/middleware/handle-prefix/handle-prefix-none";
+import { handlePrefixAll } from "@/adapters/next/proxy/handle-prefix/handle-prefix-all";
+import { handlePrefixExceptDefault } from "@/adapters/next/proxy/handle-prefix/handle-prefix-except-default";
+import { handlePrefixNone } from "@/adapters/next/proxy/handle-prefix/handle-prefix-none";
 
 /**
  * Handle locale routing based on prefix config
  */
-export async function intorMiddleware<Req extends NextRequest = NextRequest>(
+export async function intorProxy<Req extends NextRequest = NextRequest>(
   config: IntorResolvedConfig,
   request: Req,
 ) {

@@ -45,9 +45,13 @@
       "types": "./dist/exports/next/index.d.ts",
       "import": "./dist/exports/next/index.js"
     },
+    "./next/proxy": {
+      "types": "./dist/exports/next/proxy/index.d.ts",
+      "import": "./dist/exports/next/proxy/index.js"
+    },
     "./next/middleware": {
-      "types": "./dist/exports/next/middleware/index.d.ts",
-      "import": "./dist/exports/next/middleware/index.js"
+      "types": "./dist/exports/next/proxy/index.d.ts",
+      "import": "./dist/exports/next/proxy/index.js"
     },
     "./next/server": {
       "types": "./dist/exports/next/server/index.d.ts",

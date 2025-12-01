@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { NextRequest } from "next/server";
-import { createResponse } from "@/adapters/next/middleware/utils/create-response";
-import { determineInitialLocale } from "@/adapters/next/middleware/utils/determine-initial-locale";
+import { createResponse } from "@/adapters/next/proxy/utils/create-response";
+import { determineInitialLocale } from "@/adapters/next/proxy/utils/determine-initial-locale";
 import { extractPathname } from "@/shared/utils";
 
 /**

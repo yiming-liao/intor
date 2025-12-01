@@ -11,7 +11,7 @@ interface SetLocaleCookieParams {
 
 /**
  * Set a locale cookie on the response.
- * - For Next.js edge middleware.
+ * - For Next.js proxy.
  */
 export function setLocaleCookieEdge({
   request,

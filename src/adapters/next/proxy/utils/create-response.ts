@@ -1,8 +1,8 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { setLocaleCookieEdge } from "@/adapters/next/middleware/utils/set-locale-cookie-edge";
-import { setPathnameHeader } from "@/adapters/next/middleware/utils/set-pathname-header";
+import { setLocaleCookieEdge } from "@/adapters/next/proxy/utils/set-locale-cookie-edge";
+import { setPathnameHeader } from "@/adapters/next/proxy/utils/set-pathname-header";
 import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
 
 interface CreateResponseOptions<Req extends NextRequest = NextRequest> {
