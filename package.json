@@ -63,6 +63,8 @@
     "README.md",
     "LICENSE"
   ],
+  "main": "./dist/exports/index.js",
+  "module": "./dist/exports/index.js",
   "type": "module",
   "scripts": {
     "type": "tsc --noEmit",
