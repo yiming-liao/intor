@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "A modular and extensible i18n core designed for TypeScript and JavaScript projects. Intor enables custom translation logic with support for both frontend and backend environments, featuring runtime configuration, caching, adapters, and message loaders.",
   "author": "Yiming Liao",
   "license": "MIT",
@@ -78,10 +78,11 @@
     "build:next": "rollup -c .config/rollup/next.js",
     "build:dts": "rollup -c .config/rollup/dts.js",
     "build": "yarn clean && yarn build:core && yarn build:react && yarn build:next &&  yarn tsc -p tsconfig.build.json && yarn tsc-alias tsconfig.build.json --outDir dist",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "examples:html": "vite --config examples/html/vite.config.ts"
   },
   "dependencies": {
-    "intor-translator": "^1.1.5",
+    "intor-translator": "^1.2.0",
     "keyv": "^5.5.3",
     "lodash.merge": "^4.6.2",
     "logry": "^2.0.1",
@@ -115,6 +116,7 @@
     "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1",
+    "vite": "^7.2.6",
     "vitest": "^4.0.9"
   },
   "sideEffects": false,
