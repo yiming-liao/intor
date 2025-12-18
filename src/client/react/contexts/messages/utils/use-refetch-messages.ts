@@ -2,7 +2,8 @@ import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { loadRemoteMessages } from "@/server/messages";
-import { mergeMessages, resolveNamespaces } from "@/shared/utils";
+import { resolveNamespaces } from "@/shared/utils";
+import { deepMerge } from "@/shared/utils";
 
 type UseRefetchMessagesParams = {
   config: IntorResolvedConfig;
@@ -48,8 +49,7 @@ export const useRefetchMessages = ({
           },
         });
 
-        const messages = mergeMessages(staticMessages, loadedMessages);
-        setLoadedMessages(messages);
+        setLoadedMessages(deepMerge(staticMessages, loadedMessages) || {});
         setIsLoadingMessages(false);
       }
     },

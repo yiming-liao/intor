@@ -26,36 +26,36 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/exports/index.d.ts",
-      "import": "./dist/exports/index.js"
+      "types": "./dist/export/index.d.ts",
+      "import": "./dist/export/index.js"
     },
     "./config": {
-      "types": "./dist/exports/config/index.d.ts",
-      "import": "./dist/exports/config/index.js"
+      "types": "./dist/export/config/index.d.ts",
+      "import": "./dist/export/config/index.js"
     },
     "./server": {
-      "types": "./dist/exports/server/index.d.ts",
-      "import": "./dist/exports/server/index.js"
+      "types": "./dist/export/server/index.d.ts",
+      "import": "./dist/export/server/index.js"
     },
     "./react": {
-      "types": "./dist/exports/react/index.d.ts",
-      "import": "./dist/exports/react/index.js"
+      "types": "./dist/export/react/index.d.ts",
+      "import": "./dist/export/react/index.js"
     },
     "./next": {
-      "types": "./dist/exports/next/index.d.ts",
-      "import": "./dist/exports/next/index.js"
+      "types": "./dist/export/next/index.d.ts",
+      "import": "./dist/export/next/index.js"
     },
     "./next/proxy": {
-      "types": "./dist/exports/next/proxy/index.d.ts",
-      "import": "./dist/exports/next/proxy/index.js"
+      "types": "./dist/export/next/proxy/index.d.ts",
+      "import": "./dist/export/next/proxy/index.js"
     },
     "./next/middleware": {
-      "types": "./dist/exports/next/proxy/index.d.ts",
-      "import": "./dist/exports/next/proxy/index.js"
+      "types": "./dist/export/next/proxy/index.d.ts",
+      "import": "./dist/export/next/proxy/index.js"
     },
     "./next/server": {
-      "types": "./dist/exports/next/server/index.d.ts",
-      "import": "./dist/exports/next/server/index.js"
+      "types": "./dist/export/next/server/index.d.ts",
+      "import": "./dist/export/next/server/index.js"
     }
   },
   "files": [
@@ -63,8 +63,8 @@
     "README.md",
     "LICENSE"
   ],
-  "main": "./dist/exports/index.js",
-  "module": "./dist/exports/index.js",
+  "main": "./dist/export/index.js",
+  "module": "./dist/export/index.js",
   "type": "module",
   "scripts": {
     "type": "tsc --noEmit",
@@ -76,48 +76,45 @@
     "build:core": "rollup -c .config/rollup/core.js",
     "build:react": "rollup -c .config/rollup/react.js",
     "build:next": "rollup -c .config/rollup/next.js",
-    "build:dts": "rollup -c .config/rollup/dts.js",
     "build": "yarn clean && yarn build:core && yarn build:react && yarn build:next &&  yarn tsc -p tsconfig.build.json && yarn tsc-alias tsconfig.build.json --outDir dist",
     "prepublishOnly": "yarn build",
     "examples:html": "vite --config examples/html/vite.config.ts"
   },
   "dependencies": {
-    "intor-translator": "^1.2.0",
-    "keyv": "^5.5.3",
-    "lodash.merge": "^4.6.2",
-    "logry": "^2.0.1",
-    "p-limit": "^6.2.0"
+    "intor-translator": "1.2.1",
+    "keyv": "5.5.5",
+    "logry": "2.1.5",
+    "p-limit": "7.2.0"
   },
   "devDependencies": {
-    "@intor/cli": "^0.1.2",
-    "@rollup/plugin-typescript": "^12.3.0",
-    "@types/lodash.merge": "^4.6.9",
-    "@types/node": "^24.10.1",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitest/coverage-v8": "4.0.13",
-    "eslint": "^9.27.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-unicorn": "^62.0.0",
-    "eslint-plugin-unused-imports": "^4.1.4",
-    "jsdom": "^27.2.0",
-    "knip": "^5.69.1",
-    "next": "^16.0.3",
-    "prettier": "^3.6.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "remark": "^15.0.1",
-    "remark-gfm": "^4.0.1",
-    "rollup": "^4.53.3",
-    "rollup-plugin-preserve-directives": "^0.4.0",
-    "tsc-alias": "^1.8.16",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1",
-    "vite": "^7.2.6",
-    "vitest": "^4.0.9"
+    "@intor/cli": "0.1.2",
+    "@rollup/plugin-typescript": "12.3.0",
+    "@types/node": "24.10.1",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "@vitest/coverage-v8": "4.0.16",
+    "eslint": "9.27.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-import-resolver-typescript": "4.4.4",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-unicorn": "62.0.0",
+    "eslint-plugin-unused-imports": "4.1.4",
+    "jsdom": "27.2.0",
+    "knip": "5.69.1",
+    "next": "16.0.3",
+    "prettier": "3.6.2",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remark": "15.0.1",
+    "remark-gfm": "4.0.1",
+    "rollup": "4.53.3",
+    "rollup-plugin-preserve-directives": "0.4.0",
+    "tsc-alias": "1.8.16",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.32.1",
+    "vite": "7.2.6",
+    "vitest": "4.0.16"
   },
   "sideEffects": false,
   "engines": {

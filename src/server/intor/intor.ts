@@ -9,15 +9,15 @@ import type { GenLocale } from "@/shared/types/generated.types";
 import type { LocaleMessages } from "intor-translator";
 import { loadMessages } from "@/server/messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
-import { mergeMessages } from "@/shared/utils";
+import { deepMerge } from "@/shared/utils";
 
 /**
  * Entry point for initializing Intor.
  *
- * 1. Resolve context via adapter or fallback values.
- * 2. Load messages if loader is enabled.
- * 3. Merge static messages with loaded messages.
+ * - Resolve i18n context from a resolver function or a static context object
+ * - Load messages if loader is enabled.
  */
+
 export const intor = async (
   config: IntorResolvedConfig,
   i18nContext: GetI18nContext | Partial<I18nContext>,
@@ -30,10 +30,8 @@ export const intor = async (
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
 
-  const { messages, loader } = config;
+  // Resolve i18n context
   const isI18nContextFunction = typeof i18nContext === "function";
-
-  // 1. Resolve context via adapter or fallback values
   const context = isI18nContextFunction
     ? await i18nContext(config)
     : {
@@ -41,12 +39,12 @@ export const intor = async (
         pathname: i18nContext?.pathname || "",
       };
   const { locale, pathname } = context;
-  const source = isI18nContextFunction ? i18nContext.name : "static fallback";
-  logger.debug(`I18n context resolved via ${source}.`, context as object);
+  const source = isI18nContextFunction ? i18nContext.name : "static context";
+  logger.debug(`I18n context resolved via "${source}".`, context as object);
 
-  // 2. Load messages if loader enabled
+  // Load messages
   let loadedMessages: LocaleMessages | undefined;
-  if (loader) {
+  if (config.loader) {
     loadedMessages = await loadMessages({
       config,
       locale,
@@ -59,22 +57,11 @@ export const intor = async (
     });
   }
 
-  // 3. Merge static and loaded messages
-  const mergedMessages = mergeMessages(messages, loadedMessages);
-
-  logger.info("Messages successfully initialized.", {
-    static: { enabled: !!messages },
-    loaded: {
-      enabled: !!loadedMessages,
-      ...(loader ? { loaderType: loader.type } : null),
-    },
-    merged: mergedMessages,
-  });
-
+  logger.info("Intor initialized.");
   return {
     config,
     initialLocale: locale,
     pathname,
-    messages: mergedMessages,
+    messages: deepMerge(config.messages, loadedMessages) || {},
   };
 };

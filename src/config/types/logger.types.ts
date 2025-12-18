@@ -1,14 +1,18 @@
 import {
-  type FormatterConfig,
-  type Level,
-  type LoggerPreset,
-  type NormalizerConfig,
-} from "logry/edge";
+  type LogryLevel,
+  type LogryPreset,
+  type NormalizeConfig,
+  type FormatConfig,
+  type RenderConfig,
+  type PrintConfig,
+} from "logry";
 
 // Logger options
 export type LoggerOptions = {
-  level?: Level;
-  normalizerConfig?: NormalizerConfig;
-  formatterConfig?: FormatterConfig;
-  preset?: LoggerPreset;
+  level?: LogryLevel;
+  normalizeConfig?: NormalizeConfig;
+  formatConfig?: FormatConfig;
+  renderConfig?: RenderConfig;
+  printConfig?: PrintConfig;
+  preset?: LogryPreset;
 };

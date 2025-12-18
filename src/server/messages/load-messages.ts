@@ -16,7 +16,7 @@ import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
  * Load messages for a given locale and pathname.
  *
  * - Resolve namespaces based on config and pathname.
- * - Support both **local local** and **remote API** loaders.
+ * - Support both **local filesystem** and **remote API** loaders.
  * - Apply fallback locales if needed.
  * - Cache messages if enabled (handled by underlying loader, not this function directly).
  */
@@ -38,13 +38,10 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
   }
 
   const { type, concurrency, rootDir } = config.loader;
-  const fallbackLocales = config.fallbackLocales[locale] || []; // fallback locales fro the pass-in target locale
-  const namespaces = resolveNamespaces({ config, pathname }); // Resolve namespaces with pathname
+  const fallbackLocales = config.fallbackLocales[locale] || [];
+  const namespaces = resolveNamespaces({ config, pathname });
 
-  // Logs
-  if (logger.core.level === "debug") {
-    logger.debug("Starting to load messages.", { locale });
-  }
+  logger.info(`Loading messages for locale "${locale}".`);
   logger.trace("Starting to load messages with runtime context.", {
     loaderType: type,
     locale,
@@ -56,7 +53,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
 
   let loadedMessages: LocaleMessages | undefined;
 
-  //====== loader type: local ======
+  // --- loader type: local
   if (type === "local") {
     loadedMessages = await loadLocalMessages({
       rootDir,
@@ -73,7 +70,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
       allowCacheWrite,
     });
   }
-  //====== loader type: remote ======
+  // --- loader type: remote
   else if (type === "remote") {
     // Fetch messages from remote
     loadedMessages = await loadRemoteMessages({
@@ -92,7 +89,7 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
 
   // No messages found
   if (!loadedMessages || Object.keys(loadedMessages).length === 0) {
-    logger.warn("No messages found.", { locale, namespaces });
+    logger.warn("No messages found.", { locale, fallbackLocales, namespaces });
   }
 
   return loadedMessages as GenMessages<C>;

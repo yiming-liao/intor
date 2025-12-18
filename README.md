@@ -21,3 +21,13 @@ Fast to start, easy to extend, and free from the usual i18n heaviness.
 #### 🍳 Cooking the Intor v2 docs, crafting them to perfection...
 
 </div>
+
+#### load-messages
+
+```plain
+
+[load-messages]
+ |-> load-local-messages -> read-locale-messages -> collect-file-entries & parse-file-entries
+ |-> load-remote-messages -> fetchLocaleMessages
+
+```

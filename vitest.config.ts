@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     include: ["**/*.test.{ts,tsx}"],
     environment: "jsdom",
+    coverage: { reporter: ["lcov", "text"] },
   },
   resolve: {
     alias: {

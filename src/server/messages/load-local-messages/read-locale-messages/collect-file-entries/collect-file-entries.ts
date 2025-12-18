@@ -13,22 +13,13 @@ import { getLogger } from "@/server/shared/logger/get-logger";
  *
  * @example
  * ```ts
- * [
- *   {
- *     namespace: "index", // "index" = messages under locale root (no namespace)
- *     fullPath: "/Users/john/my-app/messages/en-US/index.json",
- *     relativePath: "index.json",
- *     segments: ["index"],
- *     basename: "index",
- *   },
- *   {
- *     namespace: "auth",
+ * [{
+ *     namespace: "auth", // If messages under locale root (no namespace) -> "index"
  *     fullPath: "/Users/john/my-app/messages/en-US/auth/login.json",
  *     relativePath: "auth/login.json",
  *     segments: ["auth", "login"],
  *     basename: "login",
- *   },
- * ];
+ * }, ... ];
  * ```
  */
 export async function collectFileEntries({
@@ -48,8 +39,10 @@ export async function collectFileEntries({
     let entries: Dirent[] = [];
     try {
       entries = await readdir(currentDir, { withFileTypes: true });
-    } catch (error) {
-      logger.error(`Error reading directory: ${currentDir}`, { error });
+    } catch {
+      logger.debug("Locale directory not found, skipping locale.", {
+        localeDir: currentDir,
+      });
       return;
     }
 
@@ -94,19 +87,10 @@ export async function collectFileEntries({
 
   await walk(rootDir);
 
-  // Logs
-  if (logger.core.level === "debug") {
-    logger.debug("Local message files collected.", {
-      count: results.length,
-    });
+  if (results.length > 0) {
+    logger.trace(
+      `Collected ${results.length} local message files for locale "${path.basename(rootDir)}".`,
+    );
   }
-  logger.trace("Local message files collected.", {
-    count: results.length,
-    fileEntries: results.map(({ namespace, relativePath }) => ({
-      namespace: namespace === "index" ? null : namespace,
-      relativePath,
-    })),
-  });
-
   return results;
 }

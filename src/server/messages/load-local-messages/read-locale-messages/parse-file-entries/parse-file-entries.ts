@@ -1,9 +1,9 @@
 import type { ParseFileEntriesOptions, ParsedFileEntries } from "./types";
 import type { Messages } from "@/server/messages/shared/types";
 import path from "node:path";
-import merge from "lodash.merge";
 import { isValidMessages } from "@/server/messages/shared/utils/is-valid-messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
+import { deepMerge } from "@/shared/utils";
 import { jsonReader } from "./utils/json-reader";
 import { nestObjectFromPath } from "./utils/nest-object-from-path";
 
@@ -48,40 +48,41 @@ export async function parseFileEntries({
 
   // Read and parse all file entries
   const parsedFileEntries: ParsedFileEntries[] = [];
-  const tasks = fileEntries.map(({ namespace, segments, basename, fullPath }) =>
-    limit(async () => {
-      try {
-        const segsWithoutNs = segments.slice(1);
-        const ext = path.extname(fullPath);
+  const tasks = fileEntries.map(
+    ({ namespace, segments, basename, fullPath, relativePath }) =>
+      limit(async () => {
+        try {
+          const segsWithoutNs = segments.slice(1);
+          const ext = path.extname(fullPath);
 
-        // Use a custom reader if provided (e.g., for YAML)
-        const json =
-          ext !== ".json" && messagesReader
-            ? await messagesReader(fullPath)
-            : await jsonReader(fullPath);
+          // Use a custom reader if provided (e.g., for YAML)
+          const json =
+            ext !== ".json" && messagesReader
+              ? await messagesReader(fullPath)
+              : await jsonReader(fullPath);
 
-        // Validate messages structure
-        if (!isValidMessages(json)) {
-          throw new Error(
-            "JSON file does not match NamespaceMessages structure",
-          );
+          // Validate messages structure
+          if (!isValidMessages(json)) {
+            throw new Error(
+              "JSON file does not match NamespaceMessages structure",
+            );
+          }
+
+          const isIndex = basename === "index";
+          const keyPath = isIndex ? segsWithoutNs.slice(0, -1) : segsWithoutNs;
+
+          // Nest the parsed content based on the path segments
+          const nested = nestObjectFromPath(keyPath, json);
+
+          parsedFileEntries.push({ namespace, messages: nested });
+          logger.trace(`Parsed message file: ${relativePath}`);
+        } catch (error) {
+          logger.error("Failed to read or parse file.", {
+            path: fullPath,
+            error,
+          });
         }
-
-        const isIndex = basename === "index";
-        const keyPath = isIndex ? segsWithoutNs.slice(0, -1) : segsWithoutNs;
-
-        // Nest the parsed content based on the path segments
-        const nested = nestObjectFromPath(keyPath, json);
-
-        parsedFileEntries.push({ namespace, messages: nested });
-        logger.trace("Parsed file.", { path: fullPath });
-      } catch (error) {
-        logger.error("Failed to read or parse file.", {
-          path: fullPath,
-          error,
-        });
-      }
-    }),
+      }),
   );
   await Promise.all(tasks);
 
@@ -90,12 +91,11 @@ export async function parseFileEntries({
   for (const { namespace, messages } of parsedFileEntries) {
     // Handle root-level namespace (i.e., [rootDir]/index.json)
     if (namespace === "index") {
-      merge(result, messages);
+      const merged = deepMerge(result, messages);
+      if (merged) Object.assign(result, merged);
     } else {
-      result[namespace] = merge(
-        (result[namespace] as Messages) ?? {},
-        messages,
-      );
+      result[namespace] =
+        deepMerge((result[namespace] as Messages) ?? {}, messages) || {};
     }
   }
 

@@ -7,7 +7,7 @@ export function removeExternalImports() {
   ];
 
   const NODE_PREFIX = "node:";
-  const MODULES = ["logry", "p-limit", "lodash.merge", "keyv"];
+  const MODULES = ["logry", "p-limit", "keyv"];
 
   return {
     name: "remove-external-imports",

@@ -12,4 +12,4 @@ export {
   // types
   type IntorRawConfig,
   type IntorResolvedConfig,
-} from "../../src/config";
+} from "@/config";

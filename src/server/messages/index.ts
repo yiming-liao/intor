@@ -11,4 +11,3 @@ export type { LoadRemoteMessagesOptions } from "./load-remote-messages";
 
 // shared
 export type { Messages, MessagesReader } from "./shared/types";
-export { clearMessagesPool } from "./shared/global-messages-pool";

@@ -1,10 +1,9 @@
-import type { Translator } from "intor-translator";
+import type { LocaleMessages, Translator } from "intor-translator";
 import type * as React from "react";
 
 // context value
-export type TranslatorContextValue<M = unknown> = {
-  translator: Translator<M>;
-};
+export type TranslatorContextValue<M extends LocaleMessages = LocaleMessages> =
+  { translator: Translator<M> };
 
 // provider props
 export type TranslatorProviderProps = {

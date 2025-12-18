@@ -4,4 +4,4 @@ export {
   // Server
   getI18nContext,
   getTranslator,
-} from "../../../src/adapters/next/server";
+} from "@/adapters/next/server";

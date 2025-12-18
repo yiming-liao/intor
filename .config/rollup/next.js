@@ -24,9 +24,9 @@ export default [
   {
     input: {
       // --- next
-      "exports/next/index": "exports/next/index.ts",
-      "exports/next/proxy/index": "exports/next/proxy/index.ts",
-      "exports/next/server/index": "exports/next/server/index.ts",
+      "export/next/index": "export/next/index.ts",
+      "export/next/proxy/index": "export/next/proxy/index.ts",
+      "export/next/server/index": "export/next/server/index.ts",
     },
     output: {
       dir: "dist",

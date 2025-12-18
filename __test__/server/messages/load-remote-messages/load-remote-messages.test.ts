@@ -3,8 +3,8 @@ import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as fetchModule from "@/server/messages/load-remote-messages/fetch-locale-messages";
 import { loadRemoteMessages } from "@/server/messages/load-remote-messages/load-remote-messages";
-import { getGlobalMessagesPool } from "@/server/messages/shared/global-messages-pool";
 import * as loggerModule from "@/server/shared/logger/get-logger";
+import { getGlobalMessagesPool } from "@/server/shared/messages/global-messages-pool";
 import * as cacheUtils from "@/shared/utils";
 
 const loggerChildMock = { debug: vi.fn(), trace: vi.fn(), warn: vi.fn() };
@@ -15,7 +15,7 @@ const loggerMock = {
 
 vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
 vi.mock("@/server/messages/load-remote-messages/fetch-locale-messages");
-vi.mock("@/server/messages/shared/global-messages-pool");
+vi.mock("@/server/shared/messages/global-messages-pool");
 
 describe("loadRemoteMessages", () => {
   const mockFetch = fetchModule.fetchLocaleMessages;

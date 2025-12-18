@@ -1,120 +1,121 @@
+/* eslint-disable unicorn/no-useless-undefined */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { LocaleMessages } from "intor-translator";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { intor } from "@/server/intor/intor";
 import { loadMessages } from "@/server/messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
-import { mergeMessages } from "@/shared/utils";
+import { deepMerge } from "@/shared/utils";
 
 vi.mock("@/server/shared/logger/get-logger");
 vi.mock("@/server/messages");
-vi.mock("@/shared/utils");
+vi.mock("@/shared/utils", () => ({
+  deepMerge: vi.fn(),
+}));
 
 describe("intor", () => {
-  let mockLogger: any;
-  let mockChildLogger: any;
+  let loggerMock: any;
+  let childLoggerMock: any;
 
   beforeEach(() => {
-    mockChildLogger = {
-      debug: vi.fn(),
+    childLoggerMock = {
       info: vi.fn(),
+      debug: vi.fn(),
       warn: vi.fn(),
     };
-    mockLogger = {
-      child: vi.fn().mockReturnValue(mockChildLogger),
+    loggerMock = {
+      child: vi.fn().mockReturnValue(childLoggerMock),
     };
-    vi.mocked(getLogger).mockReturnValue(mockLogger);
-  });
-
-  afterEach(() => {
+    vi.mocked(getLogger).mockReturnValue(loggerMock);
     vi.clearAllMocks();
   });
 
-  it("should resolve context from object and load messages", async () => {
+  it("resolves context from static object and loads messages", async () => {
     const config = {
       id: "test",
-      defaultLocale: "en",
+      defaultLocale: "en-US",
       messages: { static: "msg" },
-      loader: { type: "remote" },
+      loader: { type: "local" },
       logger: {},
-    };
-    const i18nContext = { locale: "fr", pathname: "/home" };
-    const loadedMessages: LocaleMessages = { hello: "world" } as any;
-    vi.mocked(loadMessages).mockResolvedValue(loadedMessages as any);
-    vi.mocked(mergeMessages).mockImplementation((a, b) => ({
-      ...a,
-      ...b,
-    }));
-
-    const result = await intor(config as any, i18nContext as any);
-
-    expect(result.initialLocale).toBe("fr");
+    } as any;
+    const i18nContext = { locale: "fr-FR", pathname: "/home" } as any;
+    const loadedMessages = { hello: "world" } as any;
+    vi.mocked(loadMessages).mockResolvedValue(loadedMessages);
+    vi.mocked(deepMerge).mockReturnValue({
+      static: "msg",
+      hello: "world",
+    });
+    const result = await intor(config, i18nContext);
+    expect(result.initialLocale).toBe("fr-FR");
     expect(result.pathname).toBe("/home");
-    expect(result.messages).toEqual({ static: "msg", hello: "world" });
+    expect(result.messages).toEqual({
+      static: "msg",
+      hello: "world",
+    });
     expect(loadMessages).toHaveBeenCalledWith(
-      expect.objectContaining({ config, locale: "fr", pathname: "/home" }),
+      expect.objectContaining({
+        config,
+        locale: "fr-FR",
+        pathname: "/home",
+        allowCacheWrite: true,
+      }),
     );
-    expect(mockChildLogger.info).toHaveBeenCalledWith(
+    expect(childLoggerMock.info).toHaveBeenCalledWith(
       "Start Intor initialization.",
     );
-    expect(mockChildLogger.debug).toHaveBeenCalledWith(
-      "I18n context resolved via static fallback.",
-      {
-        locale: "fr",
-        pathname: "/home",
-      },
+    expect(childLoggerMock.debug).toHaveBeenCalledWith(
+      'I18n context resolved via "static context".',
+      { locale: "fr-FR", pathname: "/home" },
     );
+    expect(childLoggerMock.info).toHaveBeenCalledWith("Intor initialized.");
   });
 
-  it("should resolve context from function and load messages", async () => {
+  it("resolves context from resolver function", async () => {
     const config = {
       id: "test",
-      defaultLocale: "en",
+      defaultLocale: "en-US",
       messages: {},
-      loader: { type: "remote" },
+      loader: { type: "local" },
       logger: {},
-    };
-    const i18nContextFn = vi
+    } as any;
+    const resolver = vi
       .fn()
-      .mockResolvedValue({ locale: "de", pathname: "/dashboard" });
-    const loadedMessages: LocaleMessages = { greet: "hi" } as any;
-    vi.mocked(loadMessages).mockResolvedValue(loadedMessages as any);
-    vi.mocked(mergeMessages).mockImplementation((a, b) => ({
-      ...a,
-      ...b,
-    }));
-
-    const result = await intor(config as any, i18nContextFn);
-
-    expect(i18nContextFn).toHaveBeenCalledWith(config);
-    expect(result.initialLocale).toBe("de");
+      .mockResolvedValue({ locale: "de-DE", pathname: "/dashboard" });
+    vi.mocked(loadMessages).mockResolvedValue({ greet: "hi" } as any);
+    vi.mocked(deepMerge).mockReturnValue({ greet: "hi" });
+    const result = await intor(config, resolver);
+    expect(resolver).toHaveBeenCalledWith(config);
+    expect(result.initialLocale).toBe("de-DE");
     expect(result.pathname).toBe("/dashboard");
-    expect(result.messages).toEqual({ greet: "hi" });
-    expect(mockChildLogger.debug).toHaveBeenCalledWith(
-      "I18n context resolved via Mock.",
-      {
-        locale: "de",
-        pathname: "/dashboard",
-      },
+    expect(childLoggerMock.debug).toHaveBeenCalledWith(
+      `I18n context resolved via "${resolver.name}".`,
+      { locale: "de-DE", pathname: "/dashboard" },
     );
   });
 
-  it("should handle empty loaded messages", async () => {
+  it("skips loadMessages when loader is not configured", async () => {
     const config = {
       id: "test",
-      defaultLocale: "en",
+      defaultLocale: "en-US",
       messages: { a: 1 },
-      loader: { type: "remote" },
       logger: {},
-    };
-    vi.mocked(loadMessages).mockResolvedValue({} as any);
-    vi.mocked(mergeMessages).mockImplementation((a, b) => ({
-      ...a,
-      ...b,
-    }));
-
-    const result = await intor(config as any, { locale: "en" as any });
-
+    } as any;
+    vi.mocked(deepMerge).mockReturnValue({ a: 1 });
+    const result = await intor(config, { locale: "en-US" });
+    expect(loadMessages).not.toHaveBeenCalled();
     expect(result.messages).toEqual({ a: 1 });
+  });
+
+  it("returns empty messages object when deepMerge returns undefined", async () => {
+    const config = {
+      id: "test",
+      defaultLocale: "en-US",
+      messages: {},
+      loader: { type: "local" },
+      logger: {},
+    } as any;
+    vi.mocked(loadMessages).mockResolvedValue(undefined);
+    vi.mocked(deepMerge).mockReturnValue(undefined);
+    const result = await intor(config, { locale: "en-US" });
+    expect(result.messages).toEqual({});
   });
 });

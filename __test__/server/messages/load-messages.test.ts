@@ -27,6 +27,7 @@ describe("loadMessages", () => {
     loggerChildMock = {
       core: { level: "debug" },
       warn: vi.fn(),
+      info: vi.fn(),
       debug: vi.fn(),
       trace: vi.fn(),
     };
@@ -138,6 +139,7 @@ describe("loadMessages", () => {
     expect(result).toEqual({});
     expect(loggerChildMock.warn).toHaveBeenCalledWith("No messages found.", {
       locale: "en-US",
+      fallbackLocales: [],
     });
   });
 });

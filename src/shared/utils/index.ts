@@ -1,4 +1,4 @@
-export { mergeMessages } from "./merge-messages";
+export { deepMerge } from "./deep-merge";
 export { normalizeCacheKey } from "./normalize-cache-key";
 export { resolveNamespaces } from "./resolve-namespaces";
 

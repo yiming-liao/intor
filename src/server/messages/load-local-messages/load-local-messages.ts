@@ -5,8 +5,8 @@ import { performance } from "node:perf_hooks";
 import pLimit from "p-limit";
 import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
 import { readLocaleMessages } from "@/server/messages/load-local-messages/read-locale-messages";
-import { getGlobalMessagesPool } from "@/server/messages/shared/global-messages-pool";
 import { getLogger } from "@/server/shared/logger/get-logger";
+import { getGlobalMessagesPool } from "@/server/shared/messages/global-messages-pool";
 import { normalizeCacheKey } from "@/shared/utils";
 
 /**
@@ -35,15 +35,13 @@ export const loadLocalMessages = async ({
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-local-messages" });
 
-  // Start performance measurement
   const start = performance.now();
   logger.debug("Loading local messages from directory.", {
     rootDir,
     resolvedRootDir: path.resolve(process.cwd(), rootDir),
   });
 
-  //====== Cache lookup ======
-  const key = normalizeCacheKey([
+  const cacheKey = normalizeCacheKey([
     loggerOptions.id,
     "loaderType:local",
     rootDir,
@@ -51,21 +49,24 @@ export const loadLocalMessages = async ({
     (fallbackLocales || []).toSorted().join(","),
     (namespaces || []).toSorted().join(","),
   ]);
-  if (cacheOptions.enabled && key) {
-    const cached = await pool?.get(key);
+
+  //--- Cache read
+  if (cacheOptions.enabled && cacheKey) {
+    const cached = await pool?.get(cacheKey);
     if (cached) {
-      logger.debug("Messages cache hit.", { key });
+      logger.debug("Messages cache hit.", { key: cacheKey });
       return cached;
     }
   }
 
-  //============================================================
-  // Read messages
-  //============================================================
   const limit = pLimit(concurrency);
   const candidateLocales = [locale, ...(fallbackLocales || [])];
   let messages: LocaleMessages | undefined;
-  for (const candidateLocale of candidateLocales) {
+
+  // Try each candidate locale in order and stop at the first successful result
+  for (let i = 0; i < candidateLocales.length; i++) {
+    const candidateLocale = candidateLocales[i];
+    const isLast = i === candidateLocales.length - 1;
     try {
       const result = await readLocaleMessages({
         limit,
@@ -78,26 +79,32 @@ export const loadLocalMessages = async ({
         messages = result;
         break;
       }
-    } catch (error) {
-      logger.error("Failed to read locale messages", {
-        locale: candidateLocale,
-        error,
-      });
+    } catch {
+      if (isLast) {
+        logger.warn("Failed to load messages for all candidate locales.", {
+          locale,
+          fallbackLocales,
+        });
+      } else {
+        logger.warn(
+          `Failed to load locale messages for "${candidateLocale}", trying next fallback.`,
+        );
+      }
     }
   }
 
-  //====== Cache storage ======
-  if (allowCacheWrite && cacheOptions.enabled && key && messages) {
-    await pool?.set(key, messages, cacheOptions.ttl);
+  //--- Cache write
+  if (allowCacheWrite && cacheOptions.enabled && cacheKey && messages) {
+    await pool?.set(cacheKey, messages, cacheOptions.ttl);
   }
 
   // Log out validnamespaces & performance measurement
-  const end = performance.now();
-  const duration = Math.round(end - start);
-  logger.trace("Finished loading local messages.", {
-    loadedLocale: messages ? Object.keys(messages)[0] : undefined,
-    duration: `${duration} ms`,
-  });
+  if (messages) {
+    logger.trace("Finished loading local messages.", {
+      loadedLocale: Object.keys(messages)[0],
+      duration: `${Math.round(performance.now() - start)} ms`,
+    });
+  }
 
   return messages;
 };

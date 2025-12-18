@@ -10,9 +10,9 @@ export default [
   {
     input: {
       // --- core
-      "exports/index": "exports/index.ts",
-      "exports/config/index": "exports/config/index.ts",
-      "exports/server/index": "exports/server/index.ts",
+      "export/index": "export/index.ts",
+      "export/config/index": "export/config/index.ts",
+      "export/server/index": "export/server/index.ts",
     },
     output: {
       dir: "dist",

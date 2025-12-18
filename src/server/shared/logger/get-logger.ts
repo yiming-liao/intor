@@ -1,10 +1,14 @@
 import type { LoggerOptions } from "@/config/types/logger.types";
-import type { Logger, FormatterConfig } from "logry";
+import type { FormatConfig, Logger, RenderConfig } from "logry";
 import { logry } from "logry";
 import { getGlobalLoggerPool } from "./global-logger-pool";
 
-const DEFAULT_FORMATTER_CONFIG: FormatterConfig = {
-  node: { meta: { compact: true }, lineBreaksAfter: 1 },
+const DEFAULT_FORMAT_CONFIG: FormatConfig = {
+  timestamp: { withDate: false },
+};
+const DEFAULT_RENDER_CONFIG: RenderConfig = {
+  timestamp: {},
+  meta: { lineBreaksAfter: 1 },
 };
 
 /**
@@ -14,7 +18,8 @@ const DEFAULT_FORMATTER_CONFIG: FormatterConfig = {
  */
 export function getLogger({
   id = "default",
-  formatterConfig,
+  formatConfig,
+  renderConfig,
   preset,
   ...options
 }: { id?: string; scope?: string } & LoggerOptions): Logger {
@@ -22,12 +27,13 @@ export function getLogger({
 
   let logger = pool.get(id);
 
-  const useDefault = !formatterConfig && !preset;
-
   if (!logger) {
     logger = logry({
       id,
-      formatterConfig: useDefault ? DEFAULT_FORMATTER_CONFIG : formatterConfig,
+      formatConfig:
+        !formatConfig && !preset ? DEFAULT_FORMAT_CONFIG : formatConfig,
+      renderConfig:
+        !renderConfig && !preset ? DEFAULT_RENDER_CONFIG : renderConfig,
       preset,
       ...options,
     });

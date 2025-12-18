@@ -13,16 +13,16 @@ export async function intorProxy<Req extends NextRequest = NextRequest>(
 ) {
   const { prefix } = config.routing;
 
-  // ===== Prefix: none =====
+  // --- Prefix: none
   if (prefix === "none") {
     return handlePrefixNone<Req>(config, request);
   }
 
-  // ===== Prefix: except-default =====
+  // --- Prefix: except-default
   if (prefix === "except-default") {
     return await handlePrefixExceptDefault<Req>(config, request);
   }
 
-  // ===== Prefix: all =====
+  // --- Prefix: all
   return await handlePrefixAll<Req>(config, request);
 }

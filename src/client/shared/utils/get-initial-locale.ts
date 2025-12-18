@@ -11,8 +11,8 @@ import type { IntorResolvedConfig } from "@/config";
  */
 export function getInitialLocale(
   config: IntorResolvedConfig,
-  cookieName = config.cookie.name,
-) {
+  cookieName: string = config.cookie.name,
+): string {
   const { defaultLocale, supportedLocales } = config;
 
   const match = document.cookie.match(

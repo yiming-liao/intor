@@ -18,7 +18,7 @@ export default [
   {
     input: {
       // --- react
-      "exports/react/index": "exports/react/index.ts",
+      "export/react/index": "export/react/index.ts",
     },
     output: {
       dir: "dist",

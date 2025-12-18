@@ -4,6 +4,7 @@ import {
   type Replacement,
   type ScopedLeafKeys,
   type LocalizedLeafKeys,
+  type LocaleMessages,
 } from "intor-translator";
 
 /** Base properties shared by all translator instances. */
@@ -27,7 +28,7 @@ export interface TranslatorClientProps<M = unknown> {
  * - Resolves to `ScopedLeafKeys` if a pre-key `PK` is provided,
  * otherwise resolves to `LocalizedLeafKeys`.
  */
-type Key<M, PK> = IfGen<
+type Key<M extends LocaleMessages, PK> = IfGen<
   PK extends string ? ScopedLeafKeys<M, PK> : LocalizedLeafKeys<M>,
   string
 >;
@@ -36,7 +37,10 @@ type Key<M, PK> = IfGen<
  * Translator instance type.
  * Combines base props, client props, and core translation methods.
  */
-export type TranslatorInstance<M, PK extends string | undefined = undefined> = {
+export type TranslatorInstance<
+  M extends LocaleMessages,
+  PK extends string | undefined = undefined,
+> = {
   /** Check if a given key exists in the messages. */
   hasKey: (key?: Key<M, PK>, targetLocale?: Locale<M>) => boolean;
 

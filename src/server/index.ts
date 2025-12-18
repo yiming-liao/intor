@@ -10,7 +10,6 @@ export {
   type LoadRemoteMessagesOptions,
   type Messages,
   type MessagesReader,
-  clearMessagesPool,
 } from "./messages";
 
 // translator
@@ -18,3 +17,4 @@ export { getTranslator } from "./translator";
 
 // shared / logger
 export { clearLoggerPool } from "./shared/logger/global-logger-pool";
+export { clearMessagesPool } from "./shared/messages/global-messages-pool";

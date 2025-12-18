@@ -7,4 +7,4 @@ export {
 
   // constants
   PATHNAME_HEADER_NAME,
-} from "../../../src/adapters/next/proxy";
+} from "@/adapters/next/proxy";

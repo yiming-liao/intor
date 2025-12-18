@@ -8,7 +8,11 @@ import type {
   TranslatorInstance,
   TranslatorBaseProps,
 } from "@/shared/types/translator-instance.types";
-import type { LocalizedNodeKeys, TranslateHandlers } from "intor-translator";
+import type {
+  LocaleMessages,
+  LocalizedNodeKeys,
+  TranslateHandlers,
+} from "intor-translator";
 import { Translator } from "intor-translator";
 import { loadMessages, type MessagesReader } from "@/server/messages";
 
@@ -62,7 +66,7 @@ export async function getTranslator(options: {
   });
 
   // Create a Translator instance
-  const translator = new Translator<unknown>({
+  const translator = new Translator<LocaleMessages>({
     locale,
     messages,
     fallbackLocales: config.fallbackLocales,
