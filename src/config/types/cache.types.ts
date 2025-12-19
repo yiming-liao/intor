@@ -1,8 +1,8 @@
 // Cache raw options
 export type CacheRawOptions = {
-  /** default: process.env.NODE_ENV === "production" */
+  /** Enable cache behavior. Defaults to production */
   enabled?: boolean;
-  /** default: 60\*60\*1000 (1 hour) */
+  /** Cache time-to-live in milliseconds. Defaults to 1 hour */
   ttl?: number;
 };
 

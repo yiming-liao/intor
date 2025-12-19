@@ -3,7 +3,7 @@ import type { FallbackLocalesMap, Locale } from "intor-translator";
 
 export const resolveFallbackLocales = (
   config: IntorRawConfig,
-  supportedLocales?: readonly Locale[],
+  supportedLocales: readonly Locale[],
 ): FallbackLocalesMap => {
   const { defaultLocale, fallbackLocales } = config;
 

@@ -1,22 +1,22 @@
 // Cookie raw options
 export type CookieRawOptions = {
-  /** Enable cookie usage (read/write) - default: true */
+  /** Enable cookie read/write behavior. Defaults to true */
   enabled?: boolean;
-  /** Allow the system to automatically set cookies - default: true */
+  /** Automatically set locale cookies when resolving locale. Defaults to true */
   autoSetCookie?: boolean;
-  /** default: "intor.i18n.locale" */
+  /** Cookie name used to store the locale. Defaults to "intor.locale" */
   name?: string;
-  /** default: null */
+  /** Cookie domain scope. Defaults to null */
   domain?: string | null;
-  /** default: "/" */
+  /** Cookie path scope. Defaults to "/" */
   path?: string;
-  /** default: 60 * 60 * 24 * 365 (365 days) */
+  /** Cookie max age in seconds. Defaults to 365 days */
   maxAge?: number;
-  /** default: false */
+  /** Restrict cookie access to HTTP(S) only. Defaults to false */
   httpOnly?: boolean;
-  /** default: process.env.NODE_ENV !== "development" */
+  /** Send cookie only over secure connections. Defaults to production */
   secure?: boolean;
-  /** default: lax */
+  /** Cookie SameSite policy. Defaults to "lax" */
   sameSite?: "lax" | "strict" | "none";
 };
 

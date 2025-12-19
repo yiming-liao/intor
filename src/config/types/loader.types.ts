@@ -1,40 +1,56 @@
 /**
+ * Route-based namespace mapping.
+ *
  * ```ts
  * {
- *  default: ["ui", "meta"],
- *  "/auth": ["auth", "admin"],
+ *   default: ["ui", "meta"],
+ *   "/auth": ["auth", "admin"],
  * }
- * // When pathname is "/" => namespaces: ["ui", "meta"]
- * // When pathname is "/auth" => namespaces: ["ui", "meta", "auth", "admin"]
+ * // pathname === "/"      → ["ui", "meta"]
+ * // pathname === "/auth"  → ["ui", "meta", "auth", "admin"]
  * ```
  */
 type RouteNamespaces =
   | { [key: string]: string[] }
   | { [key: string]: string[]; default: string[] };
 
+/** HTTP headers used for remote message loading. */
 export interface RemoteHeaders {
-  authorization?: string; // Bearer token
-  "x-api-key"?: string; // API Key
-  [key: string]: string | undefined; // Custom header
+  /** Authorization header (e.g. Bearer token). */
+  authorization?: string;
+  /** API key header. */
+  "x-api-key"?: string;
+  /** Custom headers. */
+  [key: string]: string | undefined;
 }
 
+/** Base options shared by all message loaders. */
 type BaseLoaderOptions = {
+  /** Root location for resolving message loading sources. */
   rootDir?: string;
+  /** Global namespaces to load for all routes. */
   namespaces?: string[];
+  /** Additional namespaces resolved based on the current route. */
   routeNamespaces?: RouteNamespaces;
+  /** Maximum number of concurrent loading tasks. */
   concurrency?: number;
 };
 
-// Local loader
+/** Local message loader options. */
 type LocalLoader = BaseLoaderOptions & {
+  /** Use local filesystem-based message loading. */
   type: "local";
 };
 
-// Remote loader
+/** Remote message loader options. */
 type RemoteLoader = BaseLoaderOptions & {
+  /** Use remote API-based message loading. */
   type: "remote";
+  /** Base URL for fetching remote messages. */
   remoteUrl: string;
+  /** Optional headers sent with remote requests. */
   remoteHeaders?: RemoteHeaders;
+  /** Use full page reload for client-side navigation. */
   fullReload?: boolean;
 };
 

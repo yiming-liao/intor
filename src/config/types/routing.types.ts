@@ -1,17 +1,21 @@
-export const routingPrefix = ["none", "all", "except-default"] as const;
-export const routingFirstVisitLocaleSource = ["default", "browser"] as const;
+export const ROUTING_PREFIX = ["none", "all", "except-default"] as const;
+export const ROUTING_FIRST_VISIT_LOCALE_SOURCE = [
+  "default",
+  "browser",
+] as const;
 
 // Routing raw options
 export type RoutingRawOptions = {
-  /** default: "none" */
-  prefix?: (typeof routingPrefix)[number];
+  /** Controls how locale prefixes appear in URLs. Defaults to "none" */
+  prefix?: (typeof ROUTING_PREFIX)[number];
+  /** Behavior applied on the user's first visit. */
   firstVisit?: {
-    /** default: "browser" */
-    localeSource?: (typeof routingFirstVisitLocaleSource)[number];
-    /** default: true */
+    /** Determines which locale to use on first visit. Defaults to "browser" */
+    localeSource?: (typeof ROUTING_FIRST_VISIT_LOCALE_SOURCE)[number];
+    /** Whether to redirect on first visit when locale is resolved. Defaults to true */
     redirect?: boolean;
   };
-  /** default: "" */
+  /** Base URL path for routing. Defaults to "" */
   basePath?: string;
 };
 

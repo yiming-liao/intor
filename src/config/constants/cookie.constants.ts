@@ -4,7 +4,7 @@ import type { CookieResolvedOptions } from "@/config/types/cookie.types";
 export const DEFAULT_COOKIE_OPTIONS: CookieResolvedOptions = {
   enabled: true,
   autoSetCookie: true,
-  name: "intor.i18n.locale",
+  name: "intor.locale",
   domain: null,
   path: "/",
   maxAge: 60 * 60 * 24 * 365, // 365 days

@@ -83,26 +83,4 @@ describe("resolveFallbackLocales", () => {
       en: ["default"],
     });
   });
-
-  it("handles no supportedLocales provided", () => {
-    const config = {
-      defaultLocale: "en",
-      fallbackLocales: {
-        en: ["zh", "fr"],
-      },
-    };
-
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    const result = resolveFallbackLocales(config);
-
-    // Only "default" or defaultLocale would be valid, none here
-    expect(result).toEqual({});
-
-    expect(warnSpy).toHaveBeenCalledWith(
-      'Invalid fallback locales for "en"',
-      { invalids: ["zh", "fr"] },
-      { scope: "resolveFallbackLocales" },
-    );
-  });
 });

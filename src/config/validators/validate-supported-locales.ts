@@ -1,11 +1,6 @@
 import type { IntorRawConfig } from "@/config/types/intor-config.types";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 
-/**
- * Validate and resolve supported locales.
- * Throws error if loader is used without supportedLocales.
- * Falls back to message keys if supportedLocales is undefined.
- */
 export const validateSupportedLocales = (
   config: IntorRawConfig,
 ): readonly string[] => {
