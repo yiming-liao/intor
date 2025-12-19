@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
-import { standardizePathname } from "@/shared/utils/pathname/standardize-pathname";
+import { standardizePathname } from "@/shared/utils/routing/standardize-pathname";
 
 interface ResolveNamespacesOptions {
   config: IntorResolvedConfig;

@@ -24,7 +24,6 @@ describe("normalizeLocale", () => {
 
   it("matches base language to first supported variant", () => {
     const result = normalizeLocale("en", ["en-GB", "en-US"] as const);
-    // 依照 map 建立順序：en-GB 會先被加入
     expect(result).toBe("en-GB");
   });
 
@@ -39,8 +38,12 @@ describe("normalizeLocale", () => {
   });
 
   it("catches invalid locale input gracefully", () => {
-    // Intl.getCanonicalLocales throws on invalid strings
     const result = normalizeLocale("not_a_locale", ["en"] as const);
     expect(result).toBeUndefined();
+  });
+
+  it("skips invalid supported locale entries", () => {
+    const result = normalizeLocale("en", ["en", "not_a_locale"] as const);
+    expect(result).toBe("en");
   });
 });

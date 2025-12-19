@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
-import { normalizePathname } from "@/shared/utils/pathname/normalize-pathname";
+import { normalizePathname } from "@/shared/utils/normalize-pathname";
 
 interface StandardizePathnameOptions {
   config: IntorResolvedConfig;
@@ -8,14 +8,14 @@ interface StandardizePathnameOptions {
 }
 
 /**
- * Standardize a pathname by prepending the base path and prefix placeholder,
- * then normalize the result to remove redundant slashes.
+ * Standardizes a canonical pathname by applying the base path
+ * and injecting the locale placeholder.
  *
+ * @example
  * ```ts
+ * // routing.basePath: "/app",
  * standardizePathname({ config, pathname: "/cms" });
- * // basePath: "/asd/qwe"
- * // prefixPlaceHolder: "{locale}"
- * => "/asd/qwe/{locale}/cms"
+ * // => "/app/{locale}/cms"
  * ```
  */
 export const standardizePathname = ({

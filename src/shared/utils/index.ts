@@ -1,12 +1,15 @@
 export { deepMerge } from "./deep-merge";
+export { normalizePathname } from "./normalize-pathname";
 export { normalizeCacheKey } from "./normalize-cache-key";
 export { resolveNamespaces } from "./resolve-namespaces";
 
-// Locale
-export { normalizeLocale } from "./locale/normalize-locale";
-export { resolvePreferredLocale } from "./locale/resolve-preferred-locale";
+// locale
+export { normalizeLocale, resolveLocaleFromAcceptLanguage } from "./locale";
 
-// Pathname
-export { extractPathname } from "./pathname/extract-pathname";
-export { normalizePathname } from "./pathname/normalize-pathname";
-export { standardizePathname } from "./pathname/standardize-pathname";
+// routing
+export {
+  extractPathname,
+  standardizePathname,
+  localePrefixPathname,
+  localizePathname,
+} from "./routing";

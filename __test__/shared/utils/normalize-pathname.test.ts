@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizePathname } from "@/shared/utils/pathname/normalize-pathname";
+import { normalizePathname } from "@/shared/utils/normalize-pathname";
 
 describe("normalizePathname", () => {
   it("should normalize a pathname with multiple slashes", () => {

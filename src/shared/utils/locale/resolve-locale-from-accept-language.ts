@@ -3,7 +3,7 @@ import type { Locale } from "intor-translator";
 /**
  * Resolves the preferred locale based on the Accept-Language header and supported locales.
  */
-export const resolvePreferredLocale = (
+export const resolveLocaleFromAcceptLanguage = (
   acceptLanguageHeader: string | undefined,
   supportedLocales?: readonly Locale[],
 ): string | undefined => {
