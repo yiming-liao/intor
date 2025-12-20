@@ -1,4 +1,4 @@
-import type { ParseFileEntriesOptions, ParsedFileEntries } from "./types";
+import type { ParseFileEntriesParams, ParsedFileEntries } from "./types";
 import type { Messages } from "@/server/messages/shared/types";
 import path from "node:path";
 import { isValidMessages } from "@/server/messages/shared/utils/is-valid-messages";
@@ -42,7 +42,7 @@ export async function parseFileEntries({
   fileEntries,
   limit,
   extraOptions: { messagesReader, loggerOptions } = {},
-}: ParseFileEntriesOptions): Promise<Messages> {
+}: ParseFileEntriesParams): Promise<Messages> {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "parse-file-entries" });
 

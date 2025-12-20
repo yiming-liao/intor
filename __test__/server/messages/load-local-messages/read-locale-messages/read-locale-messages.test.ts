@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ReadLocaleMessagesOptions } from "@/server/messages/load-local-messages/read-locale-messages/types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import { describe, it, expect, vi } from "vitest";
@@ -33,7 +32,7 @@ describe("readLocaleMessages", () => {
       mockNamespaceMessages,
     );
 
-    const options: ReadLocaleMessagesOptions = {
+    const options = {
       limit: vi.fn() as any,
       rootDir: "messages",
       locale: "en",
@@ -57,7 +56,7 @@ describe("readLocaleMessages", () => {
       mockNamespaceMessages,
     );
 
-    const options: ReadLocaleMessagesOptions = {
+    const options = {
       limit: mockLimit as any,
       rootDir: "messages",
       locale: "en",

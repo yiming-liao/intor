@@ -1,4 +1,4 @@
-import type { LoadRemoteMessagesOptions } from "./types";
+import type { LoadRemoteMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
 import { fetchLocaleMessages } from "@/server/messages/load-remote-messages/fetch-locale-messages";
@@ -17,8 +17,8 @@ export const loadRemoteMessages = async ({
   pool = getGlobalMessagesPool(),
   rootDir,
   locale,
-  fallbackLocales = [],
-  namespaces = [],
+  fallbackLocales,
+  namespaces,
   remoteUrl,
   remoteHeaders,
   extraOptions: {
@@ -26,13 +26,14 @@ export const loadRemoteMessages = async ({
     loggerOptions = { id: "default" },
   } = {},
   allowCacheWrite = false,
-}: LoadRemoteMessagesOptions): Promise<LocaleMessages | undefined> => {
+}: LoadRemoteMessagesParams): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-remote-messages" });
 
   const start = performance.now();
   logger.debug("Loading remote messages from api.", { remoteUrl });
 
+  // Cache key is scoped by loader type, locale, fallbacks and namespaces
   const cacheKey = normalizeCacheKey([
     loggerOptions.id,
     "loaderType:remote",
@@ -51,9 +52,6 @@ export const loadRemoteMessages = async ({
     }
   }
 
-  // Build search params
-  const searchParams = buildSearchParams({ rootDir, namespaces });
-
   const candidateLocales = [locale, ...(fallbackLocales || [])];
   let messages: LocaleMessages | undefined;
 
@@ -62,15 +60,16 @@ export const loadRemoteMessages = async ({
     const candidateLocale = candidateLocales[i];
     const isLast = i === candidateLocales.length - 1;
     try {
-      const result = await fetchLocaleMessages({
+      const fetched = await fetchLocaleMessages({
         remoteUrl,
         remoteHeaders,
-        searchParams,
         locale: candidateLocale,
+        searchParams: buildSearchParams({ rootDir, namespaces }),
         extraOptions: { loggerOptions },
       });
-      if (result && Object.values(result[candidateLocale] || {}).length > 0) {
-        messages = result;
+      // Stop at the first locale that yields non-empty messages
+      if (fetched && Object.values(fetched[candidateLocale] || {}).length > 0) {
+        messages = fetched;
         break;
       }
     } catch (error) {
@@ -92,11 +91,11 @@ export const loadRemoteMessages = async ({
   }
 
   //--- Cache write
-  if (allowCacheWrite && cacheOptions.enabled && cacheKey && messages) {
+  if (cacheOptions.enabled && allowCacheWrite && cacheKey && messages) {
     await pool?.set(cacheKey, messages, cacheOptions.ttl);
   }
 
-  // Log out validnamespaces & performance measurement
+  // Final success log with resolved locale and timing
   if (messages) {
     logger.trace("Finished loading remote messages.", {
       loadedLocale: messages ? Object.keys(messages)[0] : undefined,

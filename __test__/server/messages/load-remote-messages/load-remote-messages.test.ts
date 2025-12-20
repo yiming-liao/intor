@@ -7,7 +7,12 @@ import * as loggerModule from "@/server/shared/logger/get-logger";
 import { getGlobalMessagesPool } from "@/server/shared/messages/global-messages-pool";
 import * as cacheUtils from "@/shared/utils";
 
-const loggerChildMock = { debug: vi.fn(), trace: vi.fn(), warn: vi.fn() };
+const loggerChildMock = {
+  debug: vi.fn(),
+  trace: vi.fn(),
+  warn: vi.fn(),
+};
+
 const loggerMock = {
   child: vi.fn().mockReturnValue(loggerChildMock),
   core: { level: "debug" },
@@ -19,112 +24,143 @@ vi.mock("@/server/shared/messages/global-messages-pool");
 
 describe("loadRemoteMessages", () => {
   const mockFetch = fetchModule.fetchLocaleMessages;
-  const mockPool = { get: vi.fn(), set: vi.fn() } as any;
-
+  const mockPool = {
+    get: vi.fn(),
+    set: vi.fn(),
+  } as any;
   vi.mocked(getGlobalMessagesPool).mockReturnValue(mockPool);
   vi.spyOn(cacheUtils, "normalizeCacheKey").mockImplementation((parts) =>
     Array.isArray(parts) ? parts.join("|") : String(parts),
   );
 
+  const baseParams = {
+    rootDir: "/app",
+    locale: "en-US",
+    fallbackLocales: ["zh-TW"],
+    namespaces: ["common"],
+    remoteUrl: "https://api.example.com/messages",
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should return cached messages if available", async () => {
-    const cached: LocaleMessages = { en: { ui: { hi: "cached" } } };
-    mockPool.get.mockResolvedValueOnce(cached);
-
+  it("returns cached messages when cache hit", async () => {
+    const cached: LocaleMessages = {
+      "en-US": { hello: "world" },
+    };
+    mockPool.get.mockResolvedValue(cached);
     const result = await loadRemoteMessages({
-      locale: "en",
-      remoteUrl: "https://api.example.com",
-      namespaces: ["ui"],
-      pool: mockPool,
-      extraOptions: { cacheOptions: { enabled: true, ttl: 1000 } },
-      fallbackLocales: [],
-    });
-
-    expect(result).toEqual(cached);
-    expect(mockFetch).not.toHaveBeenCalled();
-    expect(mockPool.get).toHaveBeenCalled();
-  });
-
-  it("should fetch remote messages when cache miss", async () => {
-    const remote: LocaleMessages = { en: { ui: { hi: "en-remote" } } };
-    mockPool.get.mockResolvedValueOnce();
-    vi.mocked(mockFetch).mockResolvedValueOnce(remote);
-
-    const result = await loadRemoteMessages({
-      locale: "en",
-      remoteUrl: "https://api.example.com",
-      namespaces: ["ui"],
-      pool: mockPool,
-      extraOptions: { cacheOptions: { enabled: true, ttl: 1000 } },
-      fallbackLocales: [],
+      ...baseParams,
       allowCacheWrite: true,
+      extraOptions: {
+        cacheOptions: { enabled: true } as any,
+      },
     });
-
-    expect(result).toEqual(remote);
-    expect(mockFetch).toHaveBeenCalledTimes(1);
-    expect(mockPool.set).toHaveBeenCalledWith(expect.any(String), remote, 1000);
+    expect(mockPool.get).toHaveBeenCalledTimes(1);
+    expect(result).toBe(cached);
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it("should fallback to next locale if primary locale empty", async () => {
-    const fallback: LocaleMessages = { zh: { ui: { hi: "fallback" } } };
-    mockPool.get.mockResolvedValueOnce();
-
-    vi.mocked(mockFetch)
-      .mockResolvedValueOnce({ en: {} }) // primary empty
-      .mockResolvedValueOnce(fallback); // fallback
-
+  it("fetches remote messages when cache miss", async () => {
+    mockPool.get.mockResolvedValue();
+    const fetched: LocaleMessages = {
+      "en-US": { hello: "remote" },
+    };
+    vi.mocked(mockFetch).mockResolvedValue(fetched);
     const result = await loadRemoteMessages({
-      locale: "en",
-      fallbackLocales: ["zh"],
-      remoteUrl: "https://api.example.com",
-      namespaces: ["ui"],
-      pool: mockPool,
-      extraOptions: { cacheOptions: { enabled: true, ttl: 1000 } },
+      ...baseParams,
+      allowCacheWrite: false,
     });
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        locale: "en-US",
+      }),
+    );
 
-    expect(result).toEqual(fallback);
+    expect(result).toEqual(fetched);
+  });
+
+  it("falls back to fallback locale when primary locale has no messages", async () => {
+    mockPool.get.mockResolvedValue();
+    vi.mocked(mockFetch)
+      .mockResolvedValueOnce({ "en-US": {} }) // empty
+      .mockResolvedValueOnce({
+        "zh-TW": { hello: "fallback" },
+      });
+    const result = await loadRemoteMessages({
+      ...baseParams,
+      allowCacheWrite: false,
+    });
     expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(result).toEqual({
+      "zh-TW": { hello: "fallback" },
+    });
   });
 
-  it("should return undefined if all locales fail or empty", async () => {
-    mockPool.get.mockResolvedValueOnce();
-    vi.mocked(mockFetch)
-      .mockResolvedValueOnce({ en: {} })
-      .mockResolvedValueOnce({ zh: {} });
-
+  it("returns undefined when all locales fail", async () => {
+    mockPool.get.mockResolvedValue();
+    vi.mocked(mockFetch).mockRejectedValue(new Error("network error"));
     const result = await loadRemoteMessages({
-      locale: "en",
-      fallbackLocales: ["zh"],
-      remoteUrl: "https://api.example.com",
-      namespaces: ["ui"],
-      pool: mockPool,
-      extraOptions: { cacheOptions: { enabled: true, ttl: 1000 } },
+      ...baseParams,
+      allowCacheWrite: false,
     });
-
     expect(result).toBeUndefined();
-    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(loggerChildMock.warn).toHaveBeenCalled();
+    expect(loggerChildMock.trace).toHaveBeenCalled();
   });
 
-  it("should normalize cache key correctly", async () => {
-    mockPool.get.mockResolvedValueOnce();
-    vi.mocked(mockFetch).mockResolvedValueOnce({ en: { ui: { hi: "msg" } } });
-
-    await loadRemoteMessages({
-      locale: "en",
-      fallbackLocales: ["zh"],
-      remoteUrl: "https://api.example.com",
-      namespaces: ["ui"],
-      pool: mockPool,
-      extraOptions: { cacheOptions: { enabled: true, ttl: 1000 } },
+  it("writes to cache when cache is enabled and allowCacheWrite is true", async () => {
+    mockPool.get.mockResolvedValue();
+    const fetched: LocaleMessages = {
+      "en-US": { hello: "cache-me" },
+    };
+    vi.mocked(mockFetch).mockResolvedValue(fetched);
+    const result = await loadRemoteMessages({
+      ...baseParams,
+      allowCacheWrite: true,
+      extraOptions: {
+        cacheOptions: { enabled: true, ttl: 60 },
+      },
     });
+    expect(mockPool.set).toHaveBeenCalledWith(expect.any(String), fetched, 60);
+    expect(result).toEqual(fetched);
+  });
 
-    expect(cacheUtils.normalizeCacheKey).toHaveBeenCalled();
-    const keyParts = vi.mocked(cacheUtils.normalizeCacheKey).mock.calls[0][0];
-    expect(keyParts).toContain("en");
-    expect(keyParts).toContain("loaderType:remote");
-    expect(keyParts).toContain("ui");
+  it("does not read or write cache when cache is disabled", async () => {
+    mockPool.get.mockResolvedValue();
+    const fetched: LocaleMessages = {
+      "en-US": { hello: "no-cache" },
+    };
+    vi.mocked(mockFetch).mockResolvedValue(fetched);
+    const result = await loadRemoteMessages({
+      ...baseParams,
+      allowCacheWrite: true,
+      extraOptions: {
+        cacheOptions: { enabled: false } as any,
+      },
+    });
+    expect(mockPool.get).not.toHaveBeenCalled();
+    expect(mockPool.set).not.toHaveBeenCalled();
+    expect(result).toEqual(fetched);
+  });
+
+  it("continues fetching when cache enabled but cache miss", async () => {
+    mockPool.get.mockResolvedValue();
+    vi.mocked(mockFetch).mockResolvedValue({
+      "en-US": { hello: "after-miss" },
+    });
+    const result = await loadRemoteMessages({
+      ...baseParams,
+      allowCacheWrite: false,
+      extraOptions: {
+        cacheOptions: { enabled: true } as any,
+      },
+    });
+    expect(mockPool.get).toHaveBeenCalled();
+    expect(mockFetch).toHaveBeenCalled();
+    expect(result).toEqual({
+      "en-US": { hello: "after-miss" },
+    });
   });
 });

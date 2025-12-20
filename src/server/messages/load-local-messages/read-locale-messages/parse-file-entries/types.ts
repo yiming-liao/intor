@@ -3,7 +3,7 @@ import type { FileEntry } from "@/server/messages/load-local-messages/read-local
 import type { MessagesReader, Messages } from "@/server/messages/shared/types";
 import type { LimitFunction } from "p-limit";
 
-export interface ParseFileEntriesOptions {
+export interface ParseFileEntriesParams {
   fileEntries: FileEntry[];
   limit: LimitFunction;
   extraOptions?: {

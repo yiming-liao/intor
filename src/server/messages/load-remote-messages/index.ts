@@ -1,2 +1,2 @@
 export { loadRemoteMessages } from "./load-remote-messages";
-export type { LoadRemoteMessagesOptions } from "./types";
+export type { LoadRemoteMessagesParams as LoadRemoteMessagesOptions } from "./types";

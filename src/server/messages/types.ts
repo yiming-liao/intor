@@ -9,7 +9,6 @@ import type { Locale } from "intor-translator";
 export type LoadMessagesOptions = {
   config: IntorResolvedConfig;
   locale: Locale;
-  pathname?: string;
   extraOptions?: {
     exts?: string[];
     messagesReader?: MessagesReader;

@@ -1,4 +1,4 @@
-import type { ReadLocaleMessagesOptions } from "./types";
+import type { ReadLocaleMessagesParams } from "@/server/messages/load-local-messages/read-locale-messages/types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import { collectFileEntries } from "./collect-file-entries";
@@ -17,7 +17,7 @@ export const readLocaleMessages = async ({
   locale,
   namespaces,
   extraOptions: { exts, messagesReader, loggerOptions } = {},
-}: ReadLocaleMessagesOptions): Promise<LocaleMessages> => {
+}: ReadLocaleMessagesParams): Promise<LocaleMessages> => {
   // 1. Collect file entries
   const fileEntries = await collectFileEntries({
     rootDir: path.resolve(process.cwd(), rootDir, locale),
@@ -27,14 +27,14 @@ export const readLocaleMessages = async ({
   });
 
   // 2. Parse file entries
-  const namespaceMessages = await parseFileEntries({
+  const messages = await parseFileEntries({
     fileEntries,
     limit,
     extraOptions: { messagesReader, loggerOptions },
   });
 
-  // 3. Wrap the parsed namespace messages under the locale key
-  const localeMessages = { [locale]: namespaceMessages };
+  // 3. Wrap the parsed messages under the locale key
+  const localeMessages: LocaleMessages = { [locale]: messages };
 
   return localeMessages;
 };

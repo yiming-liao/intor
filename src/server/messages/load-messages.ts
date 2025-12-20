@@ -10,12 +10,10 @@ import type { LocaleMessages } from "intor-translator";
 import { loadLocalMessages } from "@/server/messages/load-local-messages";
 import { loadRemoteMessages } from "@/server/messages/load-remote-messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
-import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
 
 /**
- * Load messages for a given locale and pathname.
+ * Load messages for a given locale.
  *
- * - Resolve namespaces based on config and pathname.
  * - Support both **local filesystem** and **remote API** loaders.
  * - Apply fallback locales if needed.
  * - Cache messages if enabled (handled by underlying loader, not this function directly).
@@ -23,7 +21,6 @@ import { resolveNamespaces } from "@/shared/utils/resolve-namespaces";
 export const loadMessages = async <C extends GenConfigKeys = "__default__">({
   config,
   locale,
-  pathname = "",
   extraOptions: { exts, messagesReader } = {},
   allowCacheWrite = false,
 }: LoadMessagesOptions): LoadMessagesResult<C> => {
@@ -37,9 +34,8 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
     return;
   }
 
-  const { type, concurrency, rootDir } = config.loader;
+  const { type, concurrency, rootDir, namespaces } = config.loader;
   const fallbackLocales = config.fallbackLocales[locale] || [];
-  const namespaces = resolveNamespaces({ config, pathname });
 
   logger.info(`Loading messages for locale "${locale}".`);
   logger.trace("Starting to load messages with runtime context.", {
@@ -56,10 +52,10 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
   // --- loader type: local
   if (type === "local") {
     loadedMessages = await loadLocalMessages({
-      rootDir,
       locale,
       fallbackLocales,
       namespaces,
+      rootDir,
       extraOptions: {
         concurrency,
         cacheOptions: config.cache,
@@ -74,12 +70,12 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
   else if (type === "remote") {
     // Fetch messages from remote
     loadedMessages = await loadRemoteMessages({
-      rootDir,
-      remoteUrl: config.loader.remoteUrl,
-      remoteHeaders: config.loader.remoteHeaders,
       locale,
       fallbackLocales,
       namespaces,
+      rootDir,
+      remoteUrl: config.loader.remoteUrl,
+      remoteHeaders: config.loader.remoteHeaders,
       extraOptions: {
         cacheOptions: config.cache,
         loggerOptions: { id: config.id, ...config.logger },

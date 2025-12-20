@@ -10,7 +10,7 @@ export interface FileEntry {
   basename: string;
 }
 
-export interface ReadLocaleMessagesOptions {
+export interface ReadLocaleMessagesParams {
   limit: LimitFunction;
   rootDir?: string;
   locale: string;

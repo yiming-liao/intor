@@ -1,4 +1,4 @@
-import type { LoadLocalMessagesOptions } from "./types";
+import type { LoadLocalMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
@@ -31,7 +31,7 @@ export const loadLocalMessages = async ({
     messagesReader,
   } = {},
   allowCacheWrite = false,
-}: LoadLocalMessagesOptions): Promise<LocaleMessages | undefined> => {
+}: LoadLocalMessagesParams): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-local-messages" });
 
@@ -41,6 +41,7 @@ export const loadLocalMessages = async ({
     resolvedRootDir: path.resolve(process.cwd(), rootDir),
   });
 
+  // Cache key is scoped by loader type, locale, fallbacks and namespaces
   const cacheKey = normalizeCacheKey([
     loggerOptions.id,
     "loaderType:local",
@@ -68,15 +69,16 @@ export const loadLocalMessages = async ({
     const candidateLocale = candidateLocales[i];
     const isLast = i === candidateLocales.length - 1;
     try {
-      const result = await readLocaleMessages({
+      const readed = await readLocaleMessages({
         limit,
         rootDir,
         locale: candidateLocale,
         namespaces,
         extraOptions: { loggerOptions, exts, messagesReader },
       });
-      if (result && Object.values(result[candidateLocale] || {}).length > 0) {
-        messages = result;
+      // Stop at the first locale that yields non-empty messages
+      if (Object.values(readed[candidateLocale] || {}).length > 0) {
+        messages = readed;
         break;
       }
     } catch {
@@ -98,7 +100,7 @@ export const loadLocalMessages = async ({
     await pool?.set(cacheKey, messages, cacheOptions.ttl);
   }
 
-  // Log out validnamespaces & performance measurement
+  // Final success log with resolved locale and timing
   if (messages) {
     logger.trace("Finished loading local messages.", {
       loadedLocale: Object.keys(messages)[0],

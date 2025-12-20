@@ -3,7 +3,7 @@ import type { LoggerOptions } from "@/config/types/logger.types";
 import type { MessagesReader } from "@/server/messages/shared/types";
 import type { MessagesPool } from "@/server/shared/messages/global-messages-pool";
 
-export interface LoadLocalMessagesOptions {
+export interface LoadLocalMessagesParams {
   pool?: MessagesPool;
   rootDir?: string;
   locale: string;

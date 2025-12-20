@@ -1,4 +1,4 @@
-import type { CollectFileEntriesOptions } from "./types";
+import type { CollectFileEntriesParams } from "./types";
 import type { FileEntry } from "@/server/messages/load-local-messages/read-locale-messages";
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
@@ -28,11 +28,11 @@ export async function collectFileEntries({
   rootDir,
   namespaces,
   extraOptions: { exts = [".json"], loggerOptions } = {},
-}: CollectFileEntriesOptions): Promise<FileEntry[]> {
+}: CollectFileEntriesParams): Promise<FileEntry[]> {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "collect-file-entries" });
 
-  const results: FileEntry[] = [];
+  const fileEntries: FileEntry[] = [];
 
   const walk = async (currentDir: string) => {
     // Read current directory entries
@@ -73,7 +73,7 @@ export async function collectFileEntries({
           if (!namespaces.includes(namespace)) return;
         }
 
-        results.push({
+        fileEntries.push({
           namespace,
           fullPath,
           relativePath,
@@ -87,10 +87,10 @@ export async function collectFileEntries({
 
   await walk(rootDir);
 
-  if (results.length > 0) {
+  if (fileEntries.length > 0) {
     logger.trace(
-      `Collected ${results.length} local message files for locale "${path.basename(rootDir)}".`,
+      `Collected ${fileEntries.length} local message files for locale "${path.basename(rootDir)}".`,
     );
   }
-  return results;
+  return fileEntries;
 }
