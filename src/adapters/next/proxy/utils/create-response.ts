@@ -2,8 +2,7 @@ import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { setLocaleCookieEdge } from "@/adapters/next/proxy/utils/set-locale-cookie-edge";
-import { setPathnameHeader } from "@/adapters/next/proxy/utils/set-pathname-header";
-import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
+import { localizePathname } from "@/shared/utils/routing/localize-pathname";
 
 interface CreateResponseOptions<Req extends NextRequest = NextRequest> {
   request: Req;
@@ -16,10 +15,7 @@ interface CreateResponseOptions<Req extends NextRequest = NextRequest> {
 /**
  * Create a Next.js response with locale handling.
  */
-export const createResponse = <
-  Req extends NextRequest = NextRequest,
-  Res extends NextResponse = NextResponse,
->({
+export const createResponse = <Req extends NextRequest = NextRequest>({
   request,
   config,
   locale,
@@ -31,12 +27,12 @@ export const createResponse = <
   const url = request.nextUrl.clone(); // Clone URL to avoid mutating original
 
   // Generate locale-prefixed pathname
-  const { localePrefixedPathname } = localizePathname({
+  const { localizedPathname } = localizePathname({
     config,
     pathname: url.pathname,
     locale,
   });
-  url.pathname = localePrefixedPathname;
+  url.pathname = localizedPathname;
 
   // Create response based on the responseType
   const response =
@@ -55,10 +51,5 @@ export const createResponse = <
     });
   }
 
-  // Set pathname header
-  const finalResponse = setPathnameHeader<Req, Res>({
-    request,
-    response: response as Res,
-  });
-  return finalResponse;
+  return response;
 };

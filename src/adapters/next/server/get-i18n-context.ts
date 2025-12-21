@@ -2,9 +2,11 @@ import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { I18nContext } from "@/server/intor/types";
 import type { GenConfigKeys, GenLocale } from "@/shared/types/generated.types";
 import { cookies, headers } from "next/headers";
-import { PATHNAME_HEADER_NAME } from "@/adapters/next/shared/constants/pathname-header-name";
 import { getLogger } from "@/server/shared/logger/get-logger";
-import { normalizeLocale, resolvePreferredLocale } from "@/shared/utils";
+import {
+  normalizeLocale,
+  resolveLocaleFromAcceptLanguage,
+} from "@/shared/utils";
 
 /**
  * Retrieves the i18n context for the current request.
@@ -36,19 +38,15 @@ export const getI18nContext = async <CK extends GenConfigKeys = "__default__">(
   // Locale source set to "browser", retrieve from Accept-Language header
   if (!locale && routing.firstVisit.localeSource === "browser") {
     const aLHeader = headersStore.get("accept-language") || undefined;
-    const preferredLocale = resolvePreferredLocale(aLHeader, supportedLocales);
+    const preferredLocale = resolveLocaleFromAcceptLanguage(
+      aLHeader,
+      supportedLocales,
+    );
     locale = normalizeLocale(preferredLocale, supportedLocales);
     logger.trace("Locale retrieved from header.", { locale });
   }
 
-  // Retrieve pathname from headers (next/headers)
-  const pathname = headersStore.get(PATHNAME_HEADER_NAME);
-  if (pathname) {
-    logger.trace("Pathname retrieved from header.", { pathname });
-  }
-
   return {
     locale: (locale || defaultLocale) as GenLocale<CK>,
-    pathname: pathname || "",
   };
 };

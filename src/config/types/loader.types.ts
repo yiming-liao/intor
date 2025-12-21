@@ -1,19 +1,3 @@
-/**
- * Route-based namespace mapping.
- *
- * ```ts
- * {
- *   default: ["ui", "meta"],
- *   "/auth": ["auth", "admin"],
- * }
- * // pathname === "/"      → ["ui", "meta"]
- * // pathname === "/auth"  → ["ui", "meta", "auth", "admin"]
- * ```
- */
-type RouteNamespaces =
-  | { [key: string]: string[] }
-  | { [key: string]: string[]; default: string[] };
-
 /** HTTP headers used for remote message loading. */
 export interface RemoteHeaders {
   /** Authorization header (e.g. Bearer token). */
@@ -28,10 +12,8 @@ export interface RemoteHeaders {
 type BaseLoaderOptions = {
   /** Root location for resolving message loading sources. */
   rootDir?: string;
-  /** Global namespaces to load for all routes. */
+  /** Namespaces to load for all routes. */
   namespaces?: string[];
-  /** Additional namespaces resolved based on the current route. */
-  routeNamespaces?: RouteNamespaces;
   /** Maximum number of concurrent loading tasks. */
   concurrency?: number;
 };
@@ -43,7 +25,7 @@ type LocalLoader = BaseLoaderOptions & {
 };
 
 /** Remote message loader options. */
-type RemoteLoader = BaseLoaderOptions & {
+export type RemoteLoader = BaseLoaderOptions & {
   /** Use remote API-based message loading. */
   type: "remote";
   /** Base URL for fetching remote messages. */

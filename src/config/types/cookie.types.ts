@@ -2,8 +2,8 @@
 export type CookieRawOptions = {
   /** Enable cookie read/write behavior. Defaults to true */
   enabled?: boolean;
-  /** Automatically set locale cookies when resolving locale. Defaults to true */
-  autoSetCookie?: boolean;
+  /** Whether to persist the resolved locale in a cookie. Defaults to true */
+  persist?: boolean;
   /** Cookie name used to store the locale. Defaults to "intor.locale" */
   name?: string;
   /** Cookie domain scope. Defaults to null */

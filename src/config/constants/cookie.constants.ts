@@ -3,7 +3,7 @@ import type { CookieResolvedOptions } from "@/config/types/cookie.types";
 // Default cookie options
 export const DEFAULT_COOKIE_OPTIONS: CookieResolvedOptions = {
   enabled: true,
-  autoSetCookie: true,
+  persist: true,
   name: "intor.locale",
   domain: null,
   path: "/",
