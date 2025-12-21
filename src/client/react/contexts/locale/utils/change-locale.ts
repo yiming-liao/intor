@@ -1,59 +1,42 @@
-import type { CookieResolvedOptions } from "@/config/types/cookie.types";
 import type { LoaderOptions } from "@/config/types/loader.types";
 import type { Locale } from "intor-translator";
-import { setLocaleCookieBrowser } from "@/shared/utils/client/set-locale-cookie-browser";
 
-type Params = {
-  currentLocale: Locale;
+interface ChangeLocaleParams {
+  locale: Locale;
   newLocale: Locale;
   loader?: LoaderOptions;
-  cookie: CookieResolvedOptions;
-  setLocale: (locale: Locale) => void;
-  refetchMessages?: (locale: Locale) => Promise<void>;
-};
+  setLocaleState: (locale: Locale) => void;
+}
 
 /**
- * Change the locale on the client side.
+ * Requests a locale change on the client.
  *
- * The following steps will be performed:
- * 1. Update the locale state
- * 2. Set the locale cookie (if not disabled and autoSetCookie is enabled)
- * 3. Update the <html lang> attribute
- * 4. Refetch messages if using a remote API loader
+ * - This function updates the locale state only.
+ * - Side effects such as cookie persistence, `<html lang>` updates,
+ * or message refetching are handled by higher-level providers.
+ *
+ * Notes:
+ * - When using a `local` loader, client-side locale switching
+ *   requires a full page reload to load new message bundles.
  */
 export const changeLocale = ({
-  currentLocale,
+  locale,
   newLocale,
   loader,
-  cookie,
-  setLocale,
-  refetchMessages,
-}: Params) => {
-  if (typeof document === "undefined") return;
+  setLocaleState,
+}: ChangeLocaleParams) => {
+  // No-op if the locale does not change
+  if (newLocale === locale) return;
 
-  const { type } = loader || {};
-
-  // Exit early if the new locale is the same as the current one
-  if (newLocale === currentLocale) return;
-
-  // Warn: Using dynamic local cannot switch locale with CSR only
-  if (type === "local") {
+  // Informational warning for local loaders
+  if (loader?.type === "local") {
     console.warn(
-      `[Intor] You are using "loader type: local" to switch languages. Please make sure to use the wrapped <Link> component to trigger a page reload, ensuring that the translation data is dynamically updated.`,
+      `[Intor] Locale change requested while using a "local" loader. ` +
+        `Client-side navigation alone will not load new messages. ` +
+        `Use the provided <Link> wrapper or trigger a full page reload.`,
     );
   }
 
-  // Update the locale state
-  setLocale(newLocale);
-
-  // Set the locale cookie on client side
-  setLocaleCookieBrowser({ cookie, locale: newLocale });
-
-  // Update the <html lang> attribute
-  document.documentElement.lang = newLocale;
-
-  // Refetch messages via remote API, if applicable
-  if (type === "remote" && refetchMessages) {
-    void refetchMessages(newLocale);
-  }
+  // Update locale state
+  setLocaleState(newLocale);
 };

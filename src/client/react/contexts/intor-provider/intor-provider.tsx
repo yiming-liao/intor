@@ -10,7 +10,6 @@ import { TranslatorProvider } from "../translator";
 export const IntorProvider = ({
   value: {
     config,
-    pathname = "",
     initialLocale,
     messages = config.messages,
     onLocaleChange,
@@ -19,14 +18,14 @@ export const IntorProvider = ({
   children,
 }: IntorProviderProps) => {
   return (
-    <ConfigProvider value={{ config, pathname }}>
-      <MessagesProvider value={{ messages }}>
-        <LocaleProvider value={{ initialLocale, onLocaleChange }}>
+    <ConfigProvider value={{ config }}>
+      <LocaleProvider value={{ initialLocale, onLocaleChange }}>
+        <MessagesProvider value={{ messages }}>
           <TranslatorProvider value={{ isLoading }}>
             {children}
           </TranslatorProvider>
-        </LocaleProvider>
-      </MessagesProvider>
+        </MessagesProvider>
+      </LocaleProvider>
     </ConfigProvider>
   );
 };

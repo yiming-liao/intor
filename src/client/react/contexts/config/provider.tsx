@@ -5,10 +5,15 @@ import * as React from "react";
 import { ConfigContext } from "./context";
 
 export function ConfigProvider({
-  value: { config, pathname },
+  value: { config },
   children,
 }: ConfigProviderProps) {
-  const value = React.useMemo(() => ({ config, pathname }), [config, pathname]);
+  const value = React.useMemo(
+    () => ({
+      config,
+    }),
+    [config],
+  );
 
   return (
     <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>

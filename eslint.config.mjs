@@ -1,9 +1,10 @@
 import js from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
-import { importConfig } from "./.config/eslint/import.mjs";
 import { typescriptConfig } from "./.config/eslint/typescript.mjs";
+import { importConfig } from "./.config/eslint/import.mjs";
 import { unicornConfig } from "./.config/eslint/unicorn.mjs";
 import { unusedImportsConfig } from "./.config/eslint/unused-imports.mjs";
+import { reactConfig } from "./.config/eslint/react.mjs";
 import prettierPlugin from "eslint-plugin-prettier";
 
 const eslintConfig = defineConfig([
@@ -22,6 +23,7 @@ const eslintConfig = defineConfig([
   ...unicornConfig,
   ...importConfig,
   ...unusedImportsConfig,
+  ...reactConfig,
 
   {
     settings: {

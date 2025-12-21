@@ -1,7 +1,6 @@
 import * as React from "react";
 import { LocaleContext } from "./context";
 
-// hook
 export function useLocale() {
   const context = React.useContext(LocaleContext);
   if (!context)

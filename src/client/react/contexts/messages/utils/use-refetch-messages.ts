@@ -2,66 +2,56 @@ import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { loadRemoteMessages } from "@/server/messages";
-import { resolveNamespaces } from "@/shared/utils";
 import { deepMerge } from "@/shared/utils";
 
-type UseRefetchMessagesParams = {
+interface UseRefetchMessagesParams {
   config: IntorResolvedConfig;
-  pathname: string;
-  setLoadedMessages: React.Dispatch<
+  setRuntimeMessages: React.Dispatch<
     React.SetStateAction<LocaleMessages | null>
   >;
   setIsLoadingMessages: React.Dispatch<React.SetStateAction<boolean>>;
-};
+}
 
 /**
- * Refetch messages (Dynamic API)
+ * Refetch messages
  */
 export const useRefetchMessages = ({
   config,
-  pathname,
-  setLoadedMessages,
+  setRuntimeMessages,
   setIsLoadingMessages,
 }: UseRefetchMessagesParams) => {
-  const { messages: staticMessages, loader } = config;
-
-  const namespaces = React.useMemo(() => {
-    if (!loader) return [];
-    return resolveNamespaces({ config, pathname });
-  }, [config, pathname]);
+  const { loader } = config;
 
   // Refetch messages
   const refetchMessages = React.useCallback(
     async (newLocale: string) => {
-      if (loader?.type === "remote") {
-        setIsLoadingMessages(true);
+      if (loader?.type !== "remote") return;
+      setIsLoadingMessages(true);
 
-        const loadedMessages = await loadRemoteMessages({
-          rootDir: loader.rootDir,
-          remoteUrl: loader.remoteUrl,
-          remoteHeaders: loader.remoteHeaders,
-          locale: newLocale,
-          fallbackLocales: config.fallbackLocales[newLocale] || [],
-          namespaces,
-          extraOptions: {
-            cacheOptions: config.cache,
-            loggerOptions: { id: config.id },
-          },
-        });
+      const loadedMessages = await loadRemoteMessages({
+        locale: newLocale,
+        fallbackLocales: config.fallbackLocales[newLocale] || [],
+        namespaces: loader.namespaces,
+        rootDir: loader.rootDir,
+        remoteUrl: loader.remoteUrl,
+        remoteHeaders: loader.remoteHeaders,
+        extraOptions: {
+          cacheOptions: config.cache,
+          loggerOptions: { id: config.id },
+        },
+      });
 
-        setLoadedMessages(deepMerge(staticMessages, loadedMessages) || {});
-        setIsLoadingMessages(false);
-      }
+      setRuntimeMessages(deepMerge(config.messages, loadedMessages) || {});
+      setIsLoadingMessages(false);
     },
     [
       loader,
+      config.id,
+      config.messages,
       config.fallbackLocales,
       config.cache,
-      config.id,
+      setRuntimeMessages,
       setIsLoadingMessages,
-      namespaces,
-      staticMessages,
-      setLoadedMessages,
     ],
   );
 

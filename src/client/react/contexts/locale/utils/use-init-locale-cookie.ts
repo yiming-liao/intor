@@ -1,35 +1,37 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import * as React from "react";
-import { setLocaleCookieBrowser } from "@/shared/utils/client/set-locale-cookie-browser";
+import {
+  getLocaleCookieBrowser,
+  setLocaleCookieBrowser,
+} from "@/client/shared/utils";
 
 /**
- * Init locale cookie
+ * Persists the resolved locale to a client cookie on first visit.
+ *
+ * - Browser-only.
+ * - Respects routing and cookie configuration.
+ * - Skips if a locale cookie already exists.
  */
-export const useInitLocaleCookie = ({
-  config,
-  locale,
-}: {
-  config: IntorResolvedConfig;
-  locale: string;
-}) => {
+export const useInitLocaleCookie = (
+  config: IntorResolvedConfig,
+  locale: string,
+) => {
+  const { cookie, routing } = config;
+
   React.useEffect(() => {
     if (typeof document === "undefined") return;
 
-    const { cookie, routing } = config;
-    const { firstVisit } = routing;
+    // 1. Respect cookie configuration flags
+    if (!cookie.enabled || !cookie.persist) return;
 
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const isCookieExists = cookies.some((c) => c.startsWith(`${cookie.name}=`));
+    // 2. Apply first-visit routing rule
+    if (!routing.firstVisit.redirect) return;
 
-    // Cookie already exists
-    if (isCookieExists) return;
+    // 3. Skip if locale cookie already exists
+    const localeCookie = getLocaleCookieBrowser(cookie);
+    if (localeCookie) return;
 
-    // If first visit is not using redirect, do not set cookie
-    if (!firstVisit.redirect) return;
-
-    // Cookie is disabled or autoSetCookie is disabled
-    if (!cookie.enabled || !cookie.autoSetCookie) return;
-
-    setLocaleCookieBrowser({ cookie, locale });
-  }, []); // Mount only once
+    // Persist current locale to cookie
+    setLocaleCookieBrowser(cookie, locale);
+  }, [cookie, routing.firstVisit.redirect, locale]);
 };

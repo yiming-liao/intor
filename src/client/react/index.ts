@@ -4,12 +4,12 @@ export {
   type IntorProviderProps,
 } from "./contexts/intor-provider";
 export {
-  TranslateHandlersProvider,
-  type TranslateHandlersProviderProps,
-} from "./contexts/translate-handlers";
+  TranslatorRuntimeProvider,
+  type TranslatorRuntimeProviderProps,
+} from "./contexts/translator-runtime";
 
-// hooks
-export { useTranslator } from "./hooks/use-translator";
+// translator
+export { useTranslator } from "./translator/use-translator";
 
 // shared / utils
-export { getInitialLocale } from "@/client/shared/utils/get-initial-locale";
+export { getInitialLocale } from "@/client/shared/utils";

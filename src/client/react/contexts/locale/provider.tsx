@@ -4,48 +4,46 @@ import type { LocaleProviderProps } from "./types";
 import * as React from "react";
 import { useConfig } from "@/client/react/contexts/config";
 import { useInitLocaleCookie } from "@/client/react/contexts/locale/utils/use-init-locale-cookie";
-import { useMessages } from "@/client/react/contexts/messages";
+import {
+  setLocaleCookieBrowser,
+  setDocumentLocale,
+} from "@/client/shared/utils";
 import { LocaleContext } from "./context";
 import { changeLocale } from "./utils/change-locale";
 
-// provider
 export function LocaleProvider({
   value: { initialLocale, onLocaleChange },
   children,
 }: LocaleProviderProps): React.JSX.Element {
   const { config } = useConfig();
-  const { refetchMessages } = useMessages();
+  const [locale, setLocaleState] = React.useState<string>(initialLocale);
   const { loader, cookie } = config;
 
-  // Current locale
-  const [currentLocale, setCurrentLocale] =
-    React.useState<string>(initialLocale);
+  // Persist the resolved initial locale on first visit.
+  useInitLocaleCookie(config, initialLocale);
 
-  useInitLocaleCookie({ config, locale: initialLocale }); // Hook: Initialize cookie (If cookie not exist yet)
-
-  // Change locale and set cookie (If using dynamic api: refetch messages)
+  // Request a locale change.
   const setLocale = React.useCallback(
     async (newLocale: string) => {
-      changeLocale({
-        currentLocale,
-        newLocale,
-        loader,
-        cookie,
-        setLocale: setCurrentLocale,
-        refetchMessages,
-      });
+      changeLocale({ locale, newLocale, loader, setLocaleState });
       onLocaleChange?.(newLocale);
     },
-    [currentLocale, loader, cookie, refetchMessages, onLocaleChange],
+    [locale, loader, onLocaleChange],
   );
+
+  // Sync locale-related browser side effects.
+  React.useEffect(() => {
+    setLocaleCookieBrowser(cookie, locale);
+    setDocumentLocale(locale);
+  }, [cookie, locale]);
 
   // context value
   const value = React.useMemo(
     () => ({
-      locale: currentLocale,
+      locale,
       setLocale,
     }),
-    [currentLocale, setLocale],
+    [locale, setLocale],
   );
 
   return (

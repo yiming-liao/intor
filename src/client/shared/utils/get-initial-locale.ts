@@ -1,31 +1,30 @@
 import type { IntorResolvedConfig } from "@/config";
+import { getLocaleCookieBrowser } from "@/client/shared/utils/cookie/get-locale-cookie-browser";
+import { getBrowserLocale } from "@/client/shared/utils/get-browser-locale";
 
 /**
  * Get the initial locale from cookie, browser, or default.
  *
- * - This function is intended for client-side use only.
- *
- * @param {IntorResolvedConfig} config - The intor configuration.
- * @param {string} [cookieName=config.cookie.name] - Optional cookie name to check.
- * @returns {string} The matched locale or the default locale.
+ * - Client-side use only.
  */
-export function getInitialLocale(
-  config: IntorResolvedConfig,
-  cookieName: string = config.cookie.name,
-): string {
-  const { defaultLocale, supportedLocales } = config;
+export function getInitialLocale(config: IntorResolvedConfig): string {
+  const { defaultLocale, supportedLocales, cookie } = config;
 
-  const match = document.cookie.match(
-    new RegExp(
-      `(?:^|; )${cookieName.replaceAll(/([.$?*|{}()[\]\\/+^])/g, String.raw`\$1`)}=([^;]*)`,
-    ),
-  );
-  const cookieLocale = match ? decodeURIComponent(match[1]) : null;
-  const browserLocale = navigator.languages?.[0] || navigator.language;
+  // Read locale from cookie (if exists)
+  const cookieLocale = getLocaleCookieBrowser(cookie);
 
-  const locale = cookieLocale || browserLocale || defaultLocale;
+  // Read browser-preferred locale
+  const browserLocale = getBrowserLocale();
 
-  const normalized = locale.toLowerCase();
-  const matched = supportedLocales.find((l) => l.toLowerCase() === normalized);
+  // Determine the preferred locale candidate
+  const localeCandidate = cookieLocale || browserLocale;
+
+  // Normalize and match against supported locales
+  let matched;
+  if (localeCandidate) {
+    const normalized = localeCandidate.toLowerCase();
+    matched = supportedLocales.find((l) => l.toLowerCase() === normalized);
+  }
+
   return matched ?? defaultLocale;
 }

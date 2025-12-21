@@ -6,40 +6,39 @@ import * as React from "react";
 import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
 import { useMessages } from "@/client/react/contexts/messages";
-import { useTranslateHandlers } from "@/client/react/contexts/translate-handlers";
+import { useTranslatorRuntime } from "@/client/react/contexts/translator-runtime";
 import { TranslatorContext } from "./context";
 
-// Translator Provider
 export function TranslatorProvider({
-  value: { isLoading: externalIsLoading },
+  value: { isLoading: externalIsLoading } = {},
   children,
 }: TranslatorProviderProps) {
   const { config } = useConfig();
   const { messages, isLoading: internalIsLoading } = useMessages();
   const { locale } = useLocale();
-  const translateHandlers = useTranslateHandlers();
-  const { fallbackLocales, translator: translatorOptions } = config;
-
+  const runtime = useTranslatorRuntime();
   const isLoading = Boolean(externalIsLoading ?? internalIsLoading);
 
   const translator = React.useMemo(() => {
-    return new Translator({
+    return new Translator<unknown>({
       messages,
       locale,
       isLoading,
-      fallbackLocales,
-      loadingMessage: translatorOptions?.loadingMessage,
-      placeholder: translatorOptions?.placeholder,
-      handlers: translateHandlers,
+      fallbackLocales: config.fallbackLocales,
+      loadingMessage: config.translator?.loadingMessage,
+      placeholder: config.translator?.placeholder,
+      handlers: runtime?.handlers,
+      plugins: runtime?.plugins,
     });
   }, [
     messages,
     locale,
     isLoading,
-    fallbackLocales,
-    translateHandlers,
-    translatorOptions?.loadingMessage,
-    translatorOptions?.placeholder,
+    config.fallbackLocales,
+    config.translator?.loadingMessage,
+    config.translator?.placeholder,
+    runtime?.handlers,
+    runtime?.plugins,
   ]);
 
   return (

@@ -1,12 +1,6 @@
 import type { Locale } from "intor-translator";
 import type * as React from "react";
 
-// context value
-export type LocaleContextValue = {
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
-};
-
 // provider props
 export type LocaleProviderProps = {
   value: {
@@ -14,4 +8,10 @@ export type LocaleProviderProps = {
     onLocaleChange?: (newLocale: string) => Promise<void> | void;
   };
   children: React.ReactNode;
+};
+
+// context value
+export type LocaleContextValue = {
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
 };

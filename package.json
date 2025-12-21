@@ -3,7 +3,6 @@
   "version": "2.3.3",
   "description": "A modular and extensible i18n core designed for TypeScript and JavaScript projects. Intor enables custom translation logic with support for both frontend and backend environments, featuring runtime configuration, caching, adapters, and message loaders.",
   "author": "Yiming Liao",
-  "license": "MIT",
   "homepage": "https://github.com/yiming-liao/intor#readme",
   "repository": {
     "type": "git",
@@ -11,6 +10,10 @@
   },
   "bugs": {
     "url": "https://github.com/yiming-liao/intor/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/yiming-liao"
   },
   "keywords": [
     "i18n",
@@ -24,6 +27,8 @@
     "i18n core",
     "custom messages"
   ],
+  "license": "MIT",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/export/index.d.ts",
@@ -58,14 +63,17 @@
       "import": "./dist/export/next/server/index.js"
     }
   },
+  "main": "./dist/export/index.js",
+  "module": "./dist/export/index.js",
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
-  "main": "./dist/export/index.js",
-  "module": "./dist/export/index.js",
-  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "type": "tsc --noEmit",
     "lint": "eslint",
@@ -81,7 +89,7 @@
     "examples:html": "vite --config examples/html/vite.config.ts"
   },
   "dependencies": {
-    "intor-translator": "1.2.1",
+    "intor-translator": "^1.2.3",
     "keyv": "5.5.5",
     "logry": "2.1.5",
     "p-limit": "7.2.0"
@@ -89,18 +97,25 @@
   "devDependencies": {
     "@intor/cli": "0.1.2",
     "@rollup/plugin-typescript": "12.3.0",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "16.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "24.10.1",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
+    "@vitejs/plugin-react": "5.1.2",
     "@vitest/coverage-v8": "4.0.16",
-    "eslint": "9.27.0",
+    "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-unicorn": "62.0.0",
     "eslint-plugin-unused-imports": "4.1.4",
-    "jsdom": "27.2.0",
+    "jsdom": "27.3.0",
     "knip": "5.69.1",
     "next": "16.0.3",
     "prettier": "3.6.2",
@@ -113,11 +128,8 @@
     "tsc-alias": "1.8.16",
     "typescript": "5.8.3",
     "typescript-eslint": "8.32.1",
-    "vite": "7.2.6",
+    "vite": "7.3.0",
+    "vite-tsconfig-paths": "6.0.3",
     "vitest": "4.0.16"
-  },
-  "sideEffects": false,
-  "engines": {
-    "node": ">=16.0.0"
   }
 }
