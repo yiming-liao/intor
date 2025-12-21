@@ -23,6 +23,9 @@ export default [
     onwarn(warning, warn) {
       warn(warning);
     },
-    plugins: [typescript({ tsconfig: "./tsconfig.json" }), fileSizeSummary()],
+    plugins: [
+      typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
+      fileSizeSummary(),
+    ],
   },
 ];

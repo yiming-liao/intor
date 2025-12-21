@@ -31,7 +31,7 @@ export default [
       warn(warning);
     },
     plugins: [
-      typescript({ tsconfig: "./tsconfig.json" }),
+      typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       preserveDirectives(),
       removeExternalImports(),
       fileSizeSummary(),
