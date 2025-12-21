@@ -6,7 +6,12 @@ import type {
   IfGen,
 } from "@/shared/types/generated.types";
 import type { TranslatorInstance } from "@/shared/types/translator-instance.types";
-import type { LocalizedNodeKeys, TranslateHandlers } from "intor-translator";
+import type {
+  LocalizedNodeKeys,
+  TranslateHandlers,
+  TranslateHook,
+  TranslatorPlugin,
+} from "intor-translator";
 import { getI18nContext } from "@/adapters/next/server/get-i18n-context";
 import { getTranslator as rawGetTranslator } from "@/server/translator";
 
@@ -25,6 +30,7 @@ export function getTranslator<
 >(options: {
   config: IntorResolvedConfig;
   handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
 }): Promise<TranslatorInstance<GenMessages<CK>>>;
 
@@ -35,6 +41,7 @@ export function getTranslator<
 >(options: {
   config: IntorResolvedConfig;
   handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
   preKey: IfGen<PK, string>;
 }): Promise<TranslatorInstance<GenMessages<CK>, PK>>;
@@ -46,17 +53,18 @@ export async function getTranslator<
 >(options: {
   config: IntorResolvedConfig;
   handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
   preKey?: PK;
 }) {
-  const { config, preKey, handlers, extraOptions } = options;
-  const { locale, pathname } = await getI18nContext<CK>(config);
+  const { config, preKey, handlers, plugins, extraOptions } = options;
+  const { locale } = await getI18nContext<CK>(config);
 
   const translatorInstance = rawGetTranslator<CK, PK>({
     config,
     locale,
-    pathname,
     handlers,
+    plugins,
     extraOptions,
     preKey,
   });

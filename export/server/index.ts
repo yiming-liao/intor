@@ -1,4 +1,4 @@
-/** intor — server */
+// intor / server
 
 export {
   // intor
@@ -12,9 +12,9 @@ export {
   type LoadLocalMessagesOptions,
   loadRemoteMessages,
   type LoadRemoteMessagesOptions,
+  isValidMessages,
   type Messages,
   type MessagesReader,
-  // clearMessagesPool,
 
   // translator
   getTranslator,

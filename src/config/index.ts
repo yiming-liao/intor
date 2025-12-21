@@ -1,4 +1,3 @@
-// entry
 export { defineIntorConfig } from "./define-intor-config";
 
 // constants

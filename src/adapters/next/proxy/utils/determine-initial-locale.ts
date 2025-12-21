@@ -1,6 +1,9 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { headers } from "next/headers";
-import { normalizeLocale, resolvePreferredLocale } from "@/shared/utils";
+import {
+  normalizeLocale,
+  resolveLocaleFromAcceptLanguage,
+} from "@/shared/utils";
 
 /**
  * Determine the initial locale for the user.
@@ -19,7 +22,7 @@ export const determineInitialLocale = async (config: IntorResolvedConfig) => {
       headersStore.get("accept-language") || undefined;
 
     // Find the best matching locale from the supported locales
-    const preferredLocale = resolvePreferredLocale(
+    const preferredLocale = resolveLocaleFromAcceptLanguage(
       acceptLanguageHeader,
       supportedLocales,
     );

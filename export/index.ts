@@ -1,20 +1,24 @@
-/** intor */
+// intor
 
 // constants
-export { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
+export { PATHNAME_HEADER_NAME, PREFIX_PLACEHOLDER } from "@/shared/constants";
 
-// utils
+// shared / utils
 export {
-  normalizeCacheKey,
-  resolveNamespaces,
-  normalizeLocale,
-  resolvePreferredLocale,
-  extractPathname,
+  deepMerge,
   normalizePathname,
+  normalizeCacheKey,
+  // locale
+  normalizeLocale,
+  resolveLocaleFromAcceptLanguage,
+  // routing
+  extractPathname,
   standardizePathname,
+  localePrefixPathname,
+  localizePathname,
 } from "@/shared/utils";
 
-// error
+// shared / error
 export { IntorError, IntorErrorCode } from "@/shared/error";
 
 // --- [dependency] intor-translator
@@ -25,7 +29,7 @@ export {
   type TranslatorMethods,
   // plugin
   type TranslatorPlugin,
-  // translate config / handlers
+  // translate config & handlers
   type TranslateConfig,
   type TranslateHandlers,
   type FormatHandler,

@@ -9,9 +9,7 @@ import {
 } from "@/shared/utils";
 
 /**
- * Retrieves the i18n context for the current request.
- *
- * Next.js adapter implementation: uses `next/headers` and `next/cookies`.
+ * Resolve the locale for the current Next.js request.
  */
 export const getI18nContext = async <CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
@@ -25,17 +23,16 @@ export const getI18nContext = async <CK extends GenConfigKeys = "__default__">(
   const { defaultLocale, supportedLocales = [], cookie, routing } = config;
   let locale: string | undefined;
 
-  // Locale from cookie (if cookie is enabled)
+  // Try cookie first when cookie support is enabled
   if (cookie.enabled) {
     const localeFromCookie = cookiesStore.get(cookie.name)?.value;
     locale = normalizeLocale(localeFromCookie, supportedLocales);
     if (locale) {
-      logger.trace("Locale retrieved from cookie.", { locale });
+      logger.trace(`Locale resolved from cookie: ${locale}`);
     }
   }
 
-  //====== ▼ Locale from cookie not found ======
-  // Locale source set to "browser", retrieve from Accept-Language header
+  // Fallback to browser preference on first visit
   if (!locale && routing.firstVisit.localeSource === "browser") {
     const aLHeader = headersStore.get("accept-language") || undefined;
     const preferredLocale = resolveLocaleFromAcceptLanguage(
@@ -43,9 +40,10 @@ export const getI18nContext = async <CK extends GenConfigKeys = "__default__">(
       supportedLocales,
     );
     locale = normalizeLocale(preferredLocale, supportedLocales);
-    logger.trace("Locale retrieved from header.", { locale });
+    logger.trace(`Locale resolved from Accept-Language header: ${locale}`);
   }
 
+  // Always ensure a valid locale
   return {
     locale: (locale || defaultLocale) as GenLocale<CK>,
   };

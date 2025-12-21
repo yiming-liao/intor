@@ -1,7 +1,3 @@
-/** intor — next / server */
+// intor / next / server
 
-export {
-  // Server
-  getI18nContext,
-  getTranslator,
-} from "@/adapters/next/server";
+export { getI18nContext, getTranslator } from "@/adapters/next/server";

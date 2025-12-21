@@ -1,7 +1,6 @@
-/** intor — config */
+// intor / config
 
 export {
-  // entry
   defineIntorConfig,
 
   // constants

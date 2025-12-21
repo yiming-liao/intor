@@ -1,13 +1,13 @@
-/** intor — react */
+// intor / react
 
 export {
   // contexts
   IntorProvider,
   type IntorProviderProps,
-  TranslateHandlersProvider,
-  type TranslateHandlersProviderProps,
+  TranslatorRuntimeProvider,
+  type TranslatorRuntimeProviderProps,
 
-  // hooks
+  // translator
   useTranslator,
 
   // shared / utils
