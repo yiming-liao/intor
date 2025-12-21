@@ -1,4 +1,4 @@
-import type { IfGen } from "@/shared/types/generated.types";
+import type { IfGen } from "@/shared/types/generated";
 import {
   type Locale,
   type Replacement,
@@ -13,7 +13,7 @@ import {
  * - Resolves to `ScopedLeafKeys` if a pre-key `PK` is provided,
  * otherwise resolves to `LocalizedLeafKeys`.
  */
-type Key<M extends LocaleMessages, PK> = IfGen<
+export type Key<M extends LocaleMessages, PK> = IfGen<
   PK extends string ? ScopedLeafKeys<M, PK> : LocalizedLeafKeys<M>,
   string
 >;

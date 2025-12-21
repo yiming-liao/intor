@@ -5,7 +5,7 @@ import type {
   IntorResult,
 } from "@/server/intor/types";
 import type { MessagesReader } from "@/server/messages";
-import type { GenLocale } from "@/shared/types/generated.types";
+import type { GenConfigKeys, GenLocale } from "@/shared/types";
 import type { LocaleMessages } from "intor-translator";
 import { loadMessages } from "@/server/messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
@@ -17,14 +17,14 @@ import { deepMerge } from "@/shared/utils";
  * - Resolve i18n context from a resolver function or a static context object
  * - Load messages if loader is enabled.
  */
-export const intor = async (
+export const intor = async <CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  i18nContext: GetI18nContext | Partial<I18nContext>,
+  i18nContext: GetI18nContext | Partial<I18nContext<CK>>,
   loadMessagesOptions: {
     exts?: string[];
     messagesReader?: MessagesReader;
   } = {},
-): Promise<IntorResult> => {
+): Promise<IntorResult<CK>> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
@@ -33,7 +33,7 @@ export const intor = async (
   const isI18nContextFunction = typeof i18nContext === "function";
   const context = isI18nContextFunction
     ? await i18nContext(config)
-    : { locale: (i18nContext?.locale || config.defaultLocale) as GenLocale };
+    : { locale: i18nContext?.locale || config.defaultLocale };
   const { locale } = context;
 
   const source = isI18nContextFunction ? i18nContext.name : "static context";
@@ -56,7 +56,7 @@ export const intor = async (
   logger.info("Intor initialized.");
   return {
     config,
-    initialLocale: locale,
+    initialLocale: locale as GenLocale<CK>,
     messages: deepMerge(config.messages, loadedMessages) || {},
   };
 };

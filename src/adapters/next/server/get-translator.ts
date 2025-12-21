@@ -4,8 +4,8 @@ import type {
   GenConfigKeys,
   GenMessages,
   IfGen,
-} from "@/shared/types/generated.types";
-import type { TranslatorInstance } from "@/shared/types/translator-instance.types";
+} from "@/shared/types/generated";
+import type { TranslatorInstance } from "@/shared/types/translator-instance";
 import type {
   LocalizedNodeKeys,
   TranslateHandlers,
@@ -18,8 +18,8 @@ import { getTranslator as rawGetTranslator } from "@/server/translator";
 /**
  * Create a translator instance ready for the current Next.js SSR environment.
  *
- * - **Automatically resolves the current locale and pathname using the Next.js adapter.**
- * - Loads messages using the provided config, locale, and pathname.
+ * - **Automatically resolves the current locale using the Next.js adapter.**
+ * - Loads messages using the provided config, locale.
  * - Initializes a translator with `t`, `hasKey`, and optional scoped methods.
  * - Supports optional `preKey` to create a scoped translator for nested keys.
  */
@@ -58,7 +58,7 @@ export async function getTranslator<
   preKey?: PK;
 }) {
   const { config, preKey, handlers, plugins, extraOptions } = options;
-  const { locale } = await getI18nContext<CK>(config);
+  const { locale } = await getI18nContext(config);
 
   const translatorInstance = rawGetTranslator<CK, PK>({
     config,

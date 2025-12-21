@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import type { I18nContext } from "@/server/intor/types";
-import type { GenConfigKeys, GenLocale } from "@/shared/types/generated.types";
+import type { GenConfigKeys, GenLocale } from "@/shared/types/generated";
 import { cookies, headers } from "next/headers";
 import { getLogger } from "@/server/shared/logger/get-logger";
 import {
@@ -13,7 +13,7 @@ import {
  */
 export const getI18nContext = async <CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-): Promise<I18nContext> => {
+): Promise<I18nContext<CK>> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
   const logger = baseLogger.child({ scope: "next-adapter" });
 

@@ -2,10 +2,7 @@ import type {
   LoadMessagesOptions,
   LoadMessagesResult,
 } from "@/server/messages/types";
-import type {
-  GenConfigKeys,
-  GenMessages,
-} from "@/shared/types/generated.types";
+import type { GenConfigKeys, GenMessages } from "@/shared/types/generated";
 import type { LocaleMessages } from "intor-translator";
 import { loadLocalMessages } from "@/server/messages/load-local-messages";
 import { loadRemoteMessages } from "@/server/messages/load-remote-messages";

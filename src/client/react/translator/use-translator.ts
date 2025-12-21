@@ -2,8 +2,8 @@ import type {
   IfGen,
   GenConfigKeys,
   GenMessages,
-} from "@/shared/types/generated.types";
-import type { TranslatorInstanceClient } from "@/shared/types/translator-instance.types";
+} from "@/shared/types/generated";
+import type { TranslatorInstanceClient } from "@/shared/types/translator-instance";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { useLocale } from "@/client/react/contexts/locale";
 import { useTranslator as useTranslatorContext } from "@/client/react/contexts/translator";

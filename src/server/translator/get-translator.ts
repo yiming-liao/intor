@@ -3,8 +3,8 @@ import type {
   GenConfigKeys,
   GenLocale,
   GenMessages,
-} from "@/shared/types/generated.types";
-import type { TranslatorInstance } from "@/shared/types/translator-instance.types";
+} from "@/shared/types/generated";
+import type { TranslatorInstance } from "@/shared/types/translator-instance";
 import type {
   LocaleMessages,
   LocalizedNodeKeys,
@@ -28,7 +28,7 @@ export function getTranslator<
   CK extends GenConfigKeys = "__default__",
 >(options: {
   config: IntorResolvedConfig;
-  locale: GenLocale;
+  locale: GenLocale<CK>;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
@@ -40,7 +40,7 @@ export function getTranslator<
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(options: {
   config: IntorResolvedConfig;
-  locale: GenLocale;
+  locale: GenLocale<CK>;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
@@ -81,5 +81,9 @@ export async function getTranslator(options: {
     ...props,
     hasKey: preKey ? scoped.hasKey : translator.hasKey,
     t: preKey ? scoped.t : translator.t,
-  };
+    // NOTE:
+    // Return type is fully validated by overload signatures.
+    // Assertion here is intentional due to TS inference limitations.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any;
 }
