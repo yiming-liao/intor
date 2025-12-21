@@ -16,9 +16,9 @@ import { Translator } from "intor-translator";
 import { loadMessages, type MessagesReader } from "@/server/messages";
 
 /**
- * Create a translator instance for a specific locale and pathname
+ * Create a translator instance for a specific locale.
  *
- * - Loads messages using the provided config, locale, and pathname.
+ * - Loads messages using the provided config, locale.
  * - Initializes a translator with `t`, `hasKey`, and optional scoped methods.
  * - Supports optional `preKey` to create a scoped translator for nested keys.
  */
@@ -29,7 +29,6 @@ export function getTranslator<
 >(options: {
   config: IntorResolvedConfig;
   locale: GenLocale;
-  pathname?: string;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
