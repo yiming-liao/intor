@@ -6,7 +6,6 @@ import * as localModule from "@/server/messages/load-local-messages";
 import { loadMessages } from "@/server/messages/load-messages";
 import * as remoteModule from "@/server/messages/load-remote-messages";
 import * as loggerModule from "@/server/shared/logger/get-logger";
-import * as utilsModule from "@/shared/utils";
 
 vi.mock("@/server/messages/load-local-messages");
 vi.mock("@/server/messages/load-remote-messages");
@@ -35,11 +34,6 @@ describe("loadMessages", () => {
       child: vi.fn().mockReturnValue(loggerChildMock),
     });
     vi.spyOn(loggerModule, "getLogger").mockImplementation(loggerMock);
-
-    // Mock resolveNamespaces
-    vi.spyOn(utilsModule, "resolveNamespaces").mockImplementation(
-      ({ config }) => config.loader?.namespaces ?? ["default"],
-    );
   });
 
   it("uses local loader when type is 'local'", async () => {

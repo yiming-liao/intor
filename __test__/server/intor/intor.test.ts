@@ -37,7 +37,7 @@ describe("intor", () => {
       loader: { type: "local" },
       logger: {},
     } as any;
-    const i18nContext = { locale: "fr-FR", pathname: "/home" } as any;
+    const i18nContext = { locale: "fr-FR" } as any;
     const loadedMessages = { hello: "world" } as any;
     vi.mocked(loadMessages).mockResolvedValue(loadedMessages);
     vi.mocked(deepMerge).mockReturnValue({
@@ -46,7 +46,6 @@ describe("intor", () => {
     });
     const result = await intor(config, i18nContext);
     expect(result.initialLocale).toBe("fr-FR");
-    expect(result.pathname).toBe("/home");
     expect(result.messages).toEqual({
       static: "msg",
       hello: "world",
@@ -55,7 +54,6 @@ describe("intor", () => {
       expect.objectContaining({
         config,
         locale: "fr-FR",
-        pathname: "/home",
         allowCacheWrite: true,
       }),
     );
@@ -64,7 +62,7 @@ describe("intor", () => {
     );
     expect(childLoggerMock.debug).toHaveBeenCalledWith(
       'I18n context resolved via "static context".',
-      { locale: "fr-FR", pathname: "/home" },
+      { locale: "fr-FR" },
     );
     expect(childLoggerMock.info).toHaveBeenCalledWith("Intor initialized.");
   });
@@ -77,18 +75,15 @@ describe("intor", () => {
       loader: { type: "local" },
       logger: {},
     } as any;
-    const resolver = vi
-      .fn()
-      .mockResolvedValue({ locale: "de-DE", pathname: "/dashboard" });
+    const resolver = vi.fn().mockResolvedValue({ locale: "de-DE" });
     vi.mocked(loadMessages).mockResolvedValue({ greet: "hi" } as any);
     vi.mocked(deepMerge).mockReturnValue({ greet: "hi" });
     const result = await intor(config, resolver);
     expect(resolver).toHaveBeenCalledWith(config);
     expect(result.initialLocale).toBe("de-DE");
-    expect(result.pathname).toBe("/dashboard");
     expect(childLoggerMock.debug).toHaveBeenCalledWith(
       `I18n context resolved via "${resolver.name}".`,
-      { locale: "de-DE", pathname: "/dashboard" },
+      { locale: "de-DE" },
     );
   });
 

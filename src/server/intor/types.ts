@@ -5,7 +5,6 @@ import type { Locale, LocaleMessages } from "intor-translator";
 // i18n context
 export interface I18nContext {
   locale: GenLocale;
-  pathname: string;
 }
 
 // Get i18n context function
@@ -17,6 +16,5 @@ export type GetI18nContext = (
 export interface IntorResult {
   config: IntorResolvedConfig;
   initialLocale: Locale;
-  pathname: string;
   messages: LocaleMessages;
 }

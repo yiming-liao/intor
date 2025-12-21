@@ -4,14 +4,13 @@ import type {
   GenLocale,
   GenMessages,
 } from "@/shared/types/generated.types";
-import type {
-  TranslatorInstance,
-  TranslatorBaseProps,
-} from "@/shared/types/translator-instance.types";
+import type { TranslatorInstance } from "@/shared/types/translator-instance.types";
 import type {
   LocaleMessages,
   LocalizedNodeKeys,
   TranslateHandlers,
+  TranslateHook,
+  TranslatorPlugin,
 } from "intor-translator";
 import { Translator } from "intor-translator";
 import { loadMessages, type MessagesReader } from "@/server/messages";
@@ -32,6 +31,7 @@ export function getTranslator<
   locale: GenLocale;
   pathname?: string;
   handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
 }): Promise<TranslatorInstance<GenMessages<CK>>>;
 
@@ -42,8 +42,8 @@ export function getTranslator<
 >(options: {
   config: IntorResolvedConfig;
   locale: GenLocale;
-  pathname?: string;
   handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
   preKey?: PK;
 }): Promise<TranslatorInstance<GenMessages<CK>, PK>>;
@@ -52,16 +52,15 @@ export function getTranslator<
 export async function getTranslator(options: {
   config: IntorResolvedConfig;
   locale: string;
-  pathname?: string;
   handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
   preKey?: string;
 }) {
-  const { config, locale, pathname = "", preKey } = options;
+  const { config, locale, preKey } = options;
   const messages = await loadMessages({
     config,
     locale,
-    pathname,
     extraOptions: options.extraOptions,
   });
 
@@ -73,9 +72,10 @@ export async function getTranslator(options: {
     loadingMessage: config.translator?.loadingMessage,
     placeholder: config.translator?.placeholder,
     handlers: options.handlers,
+    plugins: options.plugins,
   });
 
-  const props: TranslatorBaseProps = { messages, locale };
+  const props = { messages, locale };
 
   const scoped = translator.scoped(preKey);
   return {

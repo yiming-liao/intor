@@ -17,7 +17,6 @@ import { deepMerge } from "@/shared/utils";
  * - Resolve i18n context from a resolver function or a static context object
  * - Load messages if loader is enabled.
  */
-
 export const intor = async (
   config: IntorResolvedConfig,
   i18nContext: GetI18nContext | Partial<I18nContext>,
@@ -34,11 +33,9 @@ export const intor = async (
   const isI18nContextFunction = typeof i18nContext === "function";
   const context = isI18nContextFunction
     ? await i18nContext(config)
-    : {
-        locale: (i18nContext?.locale || config.defaultLocale) as GenLocale,
-        pathname: i18nContext?.pathname || "",
-      };
-  const { locale, pathname } = context;
+    : { locale: (i18nContext?.locale || config.defaultLocale) as GenLocale };
+  const { locale } = context;
+
   const source = isI18nContextFunction ? i18nContext.name : "static context";
   logger.debug(`I18n context resolved via "${source}".`, context as object);
 
@@ -48,7 +45,6 @@ export const intor = async (
     loadedMessages = await loadMessages({
       config,
       locale,
-      pathname,
       extraOptions: {
         exts: loadMessagesOptions.exts,
         messagesReader: loadMessagesOptions.messagesReader,
@@ -61,7 +57,6 @@ export const intor = async (
   return {
     config,
     initialLocale: locale,
-    pathname,
     messages: deepMerge(config.messages, loadedMessages) || {},
   };
 };
