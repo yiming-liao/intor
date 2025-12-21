@@ -1,10 +1,10 @@
 import type { Locale } from "intor-translator";
 import { usePathname } from "@/adapters/next/navigation/use-pathname";
 import { shouldFullReload } from "@/adapters/next/navigation/utils/should-full-reload";
-import { localizePathname } from "@/adapters/next/shared/utils/localize-pathname";
 import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
-import { setLocaleCookieBrowser } from "@/shared/utils/client/set-locale-cookie-browser";
+import { setLocaleCookieBrowser } from "@/client/shared/utils";
+import { localizePathname } from "@/shared/utils/routing/localize-pathname";
 
 export const useLocaleSwitch = () => {
   const { config } = useConfig();
@@ -28,7 +28,7 @@ export const useLocaleSwitch = () => {
           config,
           pathname: targetPathname,
           locale: targetLocale,
-        }).localePrefixedPathname
+        }).localizedPathname
       : targetPathname;
     return { resolvedHref, isExternal, targetLocale, targetPathname };
   };
@@ -46,7 +46,7 @@ export const useLocaleSwitch = () => {
 
     if (isExternal) return;
     if (shouldFullReload({ config, targetPathname, locale, currentLocale })) {
-      setLocaleCookieBrowser({ cookie: config.cookie, locale: targetLocale });
+      setLocaleCookieBrowser(config.cookie, targetLocale);
       globalThis.location.href = resolvedHref; // Full reload navigation
       return;
     } else {

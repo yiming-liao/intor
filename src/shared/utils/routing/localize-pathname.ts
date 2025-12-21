@@ -1,6 +1,7 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import { extractPathname, standardizePathname } from "@/shared/utils";
+import { extractPathname } from "@/shared/utils/routing/extract-pathname";
 import { localePrefixPathname } from "@/shared/utils/routing/locale-prefix-pathname";
+import { standardizePathname } from "@/shared/utils/routing/standardize-pathname";
 
 interface LocalizePathnameOptions {
   config: IntorResolvedConfig;
