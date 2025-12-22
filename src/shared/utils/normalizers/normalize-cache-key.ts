@@ -1,6 +1,6 @@
 const CACHE_KEY_DELIMITER = "|";
 
-// Helper FC
+// Helper
 const sanitize = (k: string) =>
   k
     .replaceAll(/[\u200B-\u200D\uFEFF]/g, "")

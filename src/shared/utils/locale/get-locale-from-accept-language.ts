@@ -1,9 +1,9 @@
 import type { Locale } from "intor-translator";
 
 /**
- * Resolves the preferred locale based on the Accept-Language header and supported locales.
+ * Get the preferred locale based on the Accept-Language header and supported locales.
  */
-export const resolveLocaleFromAcceptLanguage = (
+export const getLocaleFromAcceptLanguage = (
   acceptLanguageHeader: string | undefined,
   supportedLocales?: readonly Locale[],
 ): string | undefined => {

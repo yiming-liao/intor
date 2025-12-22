@@ -1,14 +1,14 @@
 export { deepMerge } from "./deep-merge";
-export { normalizePathname } from "./normalize-pathname";
-export { normalizeCacheKey } from "./normalize-cache-key";
+
+// normalizers
+export {
+  normalizeCacheKey,
+  normalizeLocale,
+  normalizePathname,
+} from "./normalizers";
 
 // locale
-export { normalizeLocale, resolveLocaleFromAcceptLanguage } from "./locale";
+export { getLocaleFromAcceptLanguage, getLocaleFromPathname } from "./locale";
 
-// routing
-export {
-  extractPathname,
-  standardizePathname,
-  localePrefixPathname,
-  localizePathname,
-} from "./routing";
+// pathname
+export { localizePathname } from "./pathname";

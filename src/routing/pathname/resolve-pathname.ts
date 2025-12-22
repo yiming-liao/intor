@@ -4,7 +4,7 @@ import type {
   PathnameDirective,
   ResolvedPathname,
 } from "@/routing/pathname/types";
-import { all, exceptDefault, none } from "@/routing/pathname/strategies/";
+import { all, exceptDefault, none } from "@/routing/pathname/strategies";
 import { localizePathname } from "@/shared/utils";
 
 const assertNever = (x: never): never => {
@@ -33,6 +33,7 @@ export const resolvePathname = (
   context: PathnameContext,
 ): ResolvedPathname => {
   const { prefix } = config.routing;
+  const { locale } = context;
 
   let directive: PathnameDirective;
   switch (prefix) {
@@ -53,11 +54,7 @@ export const resolvePathname = (
     }
   }
 
-  const { localizedPathname } = localizePathname({
-    config,
-    pathname,
-    locale: context.locale,
-  });
+  const { localizedPathname } = localizePathname(config, pathname, locale);
 
   return {
     pathname: localizedPathname,

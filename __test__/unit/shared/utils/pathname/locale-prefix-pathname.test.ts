@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { describe, it, expect } from "vitest";
-import { localePrefixPathname } from "@/shared/utils/routing/locale-prefix-pathname";
+import { localePrefixPathname } from "@/shared/utils/pathname/locale-prefix-pathname";
 
 const createConfig = (
   overrides?: Partial<IntorResolvedConfig>,
@@ -22,11 +22,7 @@ describe("localePrefixPathname", () => {
     const config = createConfig({
       routing: { prefix: "all" } as any,
     });
-    const result = localePrefixPathname({
-      config,
-      pathname: "/app/{locale}/about",
-      locale: "en-US",
-    });
+    const result = localePrefixPathname(config, "/app/{locale}/about", "en-US");
     expect(result).toBe("/app/en-US/about");
   });
 
@@ -34,11 +30,7 @@ describe("localePrefixPathname", () => {
     const config = createConfig({
       routing: { prefix: "none" } as any,
     });
-    const result = localePrefixPathname({
-      config,
-      pathname: "/app/{locale}/about",
-      locale: "en-US",
-    });
+    const result = localePrefixPathname(config, "/app/{locale}/about", "en-US");
     expect(result).toBe("/app/about");
   });
 
@@ -46,11 +38,7 @@ describe("localePrefixPathname", () => {
     const config = createConfig({
       routing: { prefix: "except-default" } as any,
     });
-    const result = localePrefixPathname({
-      config,
-      pathname: "/app/{locale}/about",
-      locale: "en-US",
-    });
+    const result = localePrefixPathname(config, "/app/{locale}/about", "en-US");
     expect(result).toBe("/app/about");
   });
 
@@ -58,11 +46,7 @@ describe("localePrefixPathname", () => {
     const config = createConfig({
       routing: { prefix: "except-default" } as any,
     });
-    const result = localePrefixPathname({
-      config,
-      pathname: "/app/{locale}/about",
-      locale: "zh-TW",
-    });
+    const result = localePrefixPathname(config, "/app/{locale}/about", "zh-TW");
     expect(result).toBe("/app/zh-TW/about");
   });
 
@@ -71,10 +55,7 @@ describe("localePrefixPathname", () => {
       routing: { prefix: "all" } as any,
     });
     expect(() =>
-      localePrefixPathname({
-        config,
-        pathname: "/app/{locale}/about",
-      }),
+      localePrefixPathname(config, "/app/{locale}/about"),
     ).toThrowError(/No locale/);
   });
 
@@ -82,10 +63,7 @@ describe("localePrefixPathname", () => {
     const config = createConfig({
       routing: { prefix: "none" } as any,
     });
-    const result = localePrefixPathname({
-      config,
-      pathname: "/app/{locale}/about",
-    });
+    const result = localePrefixPathname(config, "/app/{locale}/about");
     expect(result).toBe("/app/about");
   });
 });

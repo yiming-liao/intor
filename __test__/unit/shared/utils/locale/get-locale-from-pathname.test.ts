@@ -1,0 +1,69 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
+import { describe, it, expect } from "vitest";
+import { getLocaleFromPathname } from "@/shared/utils/locale/get-locale-from-pathname";
+
+const createConfig = (
+  overrides?: Partial<IntorResolvedConfig>,
+): IntorResolvedConfig =>
+  ({
+    supportedLocales: ["en-US", "zh-TW"],
+    routing: {
+      basePath: "",
+      prefix: "all",
+    },
+    ...overrides,
+  }) as IntorResolvedConfig;
+
+describe("getLocaleFromPathname", () => {
+  it("detects locale from the first pathname segment", () => {
+    const config = createConfig();
+    const result = getLocaleFromPathname(config, "/en-US/about");
+    expect(result).toBe("en-US");
+  });
+
+  it("returns undefined when no locale segment is present", () => {
+    const config = createConfig();
+    const result = getLocaleFromPathname(config, "/about");
+    expect(result).toBeUndefined();
+  });
+
+  it("does not treat unsupported locale-like segment as locale", () => {
+    const config = createConfig();
+    const result = getLocaleFromPathname(config, "/fr/about");
+    expect(result).toBeUndefined();
+  });
+
+  it("strips basePath before detecting locale", () => {
+    const config = createConfig({
+      routing: {
+        basePath: "/app",
+        prefix: "all",
+      } as any,
+    });
+    const result = getLocaleFromPathname(config, "/app/zh-TW/about");
+    expect(result).toBe("zh-TW");
+  });
+
+  it("returns undefined when pathname equals basePath", () => {
+    const config = createConfig({
+      routing: {
+        basePath: "/app",
+        prefix: "all",
+      } as any,
+    });
+    const result = getLocaleFromPathname(config, "/app");
+    expect(result).toBeUndefined();
+  });
+
+  it("returns locale when pathname is only locale after basePath", () => {
+    const config = createConfig({
+      routing: {
+        basePath: "/app",
+        prefix: "all",
+      } as any,
+    });
+    const result = getLocaleFromPathname(config, "/app/en-US");
+    expect(result).toBe("en-US");
+  });
+});

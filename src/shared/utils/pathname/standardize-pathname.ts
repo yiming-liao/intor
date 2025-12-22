@@ -1,11 +1,6 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
-import { normalizePathname } from "@/shared/utils/normalize-pathname";
-
-interface StandardizePathnameOptions {
-  config: IntorResolvedConfig;
-  pathname: string;
-}
+import { normalizePathname } from "@/shared/utils/normalizers/normalize-pathname";
 
 /**
  * Standardizes a canonical pathname by applying the base path
@@ -18,10 +13,10 @@ interface StandardizePathnameOptions {
  * // => "/app/{locale}/cms"
  * ```
  */
-export const standardizePathname = ({
-  config,
-  pathname,
-}: StandardizePathnameOptions): string => {
+export const standardizePathname = (
+  config: IntorResolvedConfig,
+  unprefixedPathname: string,
+): string => {
   const { routing } = config;
   const { basePath } = routing;
 
@@ -29,7 +24,7 @@ export const standardizePathname = ({
   const parts = [
     normalizePathname(basePath),
     PREFIX_PLACEHOLDER,
-    normalizePathname(pathname),
+    normalizePathname(unprefixedPathname),
   ];
 
   // Avoid double slashes between segments

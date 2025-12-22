@@ -1,2 +1,2 @@
-export { normalizeLocale } from "./normalize-locale";
-export { resolveLocaleFromAcceptLanguage } from "./resolve-locale-from-accept-language";
+export { getLocaleFromAcceptLanguage } from "./get-locale-from-accept-language";
+export { getLocaleFromPathname } from "./get-locale-from-pathname";

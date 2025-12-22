@@ -1,13 +1,7 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import { extractPathname } from "@/shared/utils/routing/extract-pathname";
-import { localePrefixPathname } from "@/shared/utils/routing/locale-prefix-pathname";
-import { standardizePathname } from "@/shared/utils/routing/standardize-pathname";
-
-interface LocalizePathnameOptions {
-  config: IntorResolvedConfig;
-  pathname: string;
-  locale?: string;
-}
+import { getUnprefixedPathname } from "@/shared/utils/pathname/get-unprefixed-pathname";
+import { localePrefixPathname } from "@/shared/utils/pathname/locale-prefix-pathname";
+import { standardizePathname } from "@/shared/utils/pathname/standardize-pathname";
 
 /**
  * Localizes a pathname by composing canonicalization,
@@ -26,33 +20,27 @@ interface LocalizePathnameOptions {
  * // }
  * ```
  */
-export const localizePathname = ({
-  config,
-  pathname: rawPathname,
-  locale,
-}: LocalizePathnameOptions): {
+export const localizePathname = (
+  config: IntorResolvedConfig,
+  rawPathname: string,
+  locale?: string,
+): {
   unprefixedPathname: string;
   standardizedPathname: string;
   localizedPathname: string;
 } => {
   // 1. Canonicalize: extract basePath and strip locale
-  const { unprefixedPathname } = extractPathname({
-    config,
-    pathname: rawPathname,
-  });
+  const unprefixedPathname = getUnprefixedPathname(config, rawPathname);
 
   // 2. Standardize: build a pathname with locale placeholder
-  const standardizedPathname = standardizePathname({
-    config,
-    pathname: unprefixedPathname,
-  });
+  const standardizedPathname = standardizePathname(config, unprefixedPathname);
 
   // 3. Apply strategy: resolve locale prefix based on routing rules
-  const localizedPathname = localePrefixPathname({
+  const localizedPathname = localePrefixPathname(
     config,
-    pathname: standardizedPathname,
+    standardizedPathname,
     locale,
-  });
+  );
 
   return {
     unprefixedPathname,

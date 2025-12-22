@@ -1,12 +1,6 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { PREFIX_PLACEHOLDER } from "@/shared/constants/prefix-placeholder";
-import { normalizePathname } from "@/shared/utils/normalize-pathname";
-
-interface LocalePrefixPathnameOptions {
-  pathname: string;
-  config: IntorResolvedConfig;
-  locale?: string;
-}
+import { normalizePathname } from "@/shared/utils/normalizers/normalize-pathname";
 
 /**
  * Applies routing prefix strategy by resolving the locale placeholder.
@@ -22,11 +16,11 @@ interface LocalePrefixPathnameOptions {
  * // => /app/about
  * ```
  */
-export const localePrefixPathname = ({
-  config,
-  pathname: standardizedPathname,
-  locale,
-}: LocalePrefixPathnameOptions): string => {
+export const localePrefixPathname = (
+  config: IntorResolvedConfig,
+  standardizedPathname: string,
+  locale?: string,
+): string => {
   const { routing } = config;
   const { prefix } = routing;
 
