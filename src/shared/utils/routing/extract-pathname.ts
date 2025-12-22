@@ -7,11 +7,8 @@ interface ExtractPathnameOptions {
 }
 
 interface ExtractPathnameResult {
-  basePath: string;
-  prefixedPathname: string;
   unprefixedPathname: string;
-  maybeLocale: string | undefined;
-  isLocalePrefixed: boolean;
+  locale: string | undefined;
 }
 
 /**
@@ -25,11 +22,8 @@ interface ExtractPathnameResult {
  * // config.routing.prefix: "all"
  * extractPathname({ config, pathname: "/app/en-US/about" });
  * // => {
- * //   basePath: "/app",
- * //   prefixedPathname: "/en-US/about",
  * //   unprefixedPathname: "/about",
- * //   maybeLocale: "en-US",
- * //   isLocalePrefixed: true
+ * //   locale: "en-US",
  * // }
  *```
  */
@@ -53,22 +47,18 @@ export const extractPathname = ({
 
   // Detect locale
   const firstSegment = prefixedPathname.split("/").find(Boolean);
-  const maybeLocale = firstSegment;
-  const isLocalePrefixed = Boolean(
-    maybeLocale && config.supportedLocales.includes(maybeLocale),
-  );
+  const locale =
+    firstSegment && config.supportedLocales.includes(firstSegment)
+      ? firstSegment
+      : undefined;
 
   // Canonical strip: always remove locale
-  const unprefixedPathname =
-    isLocalePrefixed && maybeLocale
-      ? prefixedPathname.slice(maybeLocale.length + 1) || "/"
-      : prefixedPathname;
+  const unprefixedPathname = locale
+    ? prefixedPathname.slice(locale.length + 1) || "/"
+    : prefixedPathname;
 
   return {
-    basePath,
-    prefixedPathname,
     unprefixedPathname,
-    maybeLocale,
-    isLocalePrefixed,
+    locale,
   };
 };
