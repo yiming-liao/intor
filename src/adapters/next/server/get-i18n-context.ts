@@ -3,10 +3,7 @@ import type { I18nContext } from "@/server/intor/types";
 import type { GenConfigKeys, GenLocale } from "@/shared/types/generated";
 import { cookies, headers } from "next/headers";
 import { getLogger } from "@/server/shared/logger/get-logger";
-import {
-  normalizeLocale,
-  resolveLocaleFromAcceptLanguage,
-} from "@/shared/utils";
+import { normalizeLocale, getLocaleFromAcceptLanguage } from "@/shared/utils";
 
 /**
  * Resolve the locale for the current Next.js request.
@@ -34,12 +31,12 @@ export const getI18nContext = async <CK extends GenConfigKeys = "__default__">(
 
   // Fallback to browser preference on first visit
   if (!locale && routing.firstVisit.localeSource === "browser") {
-    const aLHeader = headersStore.get("accept-language") || undefined;
-    const preferredLocale = resolveLocaleFromAcceptLanguage(
-      aLHeader,
+    const acceptLanguageHeader = headersStore.get("accept-language");
+    const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
+      acceptLanguageHeader || undefined,
       supportedLocales,
     );
-    locale = normalizeLocale(preferredLocale, supportedLocales);
+    locale = normalizeLocale(localeFromAcceptLanguage, supportedLocales);
     logger.trace(`Locale resolved from Accept-Language header: ${locale}`);
   }
 

@@ -16,6 +16,8 @@ export type RoutingRawOptions = {
     localeSource?: "default" | "browser";
     /** Whether to redirect on first visit when locale is resolved. Defaults to true */
     redirect?: boolean;
+    /** Whether to persist the resolved locale on the first visit. Defaults to true.*/
+    persist?: boolean;
   };
   /** Base URL path for routing. Defaults to "/" */
   basePath?: string;

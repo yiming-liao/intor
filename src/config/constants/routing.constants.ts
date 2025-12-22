@@ -7,6 +7,7 @@ export const DEFAULT_ROUTING_OPTIONS: RoutingResolvedOptions = {
   firstVisit: {
     localeSource: "browser",
     redirect: true,
+    persist: true,
   },
   basePath: "/",
 };

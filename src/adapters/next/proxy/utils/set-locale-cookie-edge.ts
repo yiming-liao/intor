@@ -1,12 +1,10 @@
 import type { CookieResolvedOptions } from "@/config/types/cookie.types";
-import type { NextRequest, NextResponse } from "next/server";
+import type { NextResponse } from "next/server";
 
 interface SetLocaleCookieParams {
-  request: NextRequest;
   response: NextResponse;
   cookie: CookieResolvedOptions;
   locale: string;
-  override?: boolean;
 }
 
 /**
@@ -14,18 +12,11 @@ interface SetLocaleCookieParams {
  * - For Next.js proxy.
  */
 export function setLocaleCookieEdge({
-  request,
   response,
   cookie,
   locale,
-  override = false, // Default to not override existed cookie
 }: SetLocaleCookieParams) {
   if (!cookie.enabled || !cookie.persist) return;
-
-  const isCookieExists = request.cookies.has(cookie.name);
-
-  // Cookie already exists and cannot override
-  if (isCookieExists && !override) return;
 
   // Set cookie to response
   response.cookies.set(cookie.name, locale, {
