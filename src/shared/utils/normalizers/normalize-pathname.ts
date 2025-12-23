@@ -3,7 +3,7 @@
  *
  * - Trims leading and trailing whitespace (code points ≤ 32).
  * - Collapses consecutive slashes into a single slash.
- * - Ensures a leading slash and removes trailing slashes.
+ * - Ensures a single leading slash and removes redundant trailing slashes.
  * - Optionally removes the leading slash.
  * - Avoids intermediate array allocations for performance.
  */

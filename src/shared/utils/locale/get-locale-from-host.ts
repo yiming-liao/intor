@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizeLocale } from "@/shared/utils";
+import { normalizeLocale } from "@/shared/utils/normalizers/normalize-locale";
 
 /**
  * Extract locale from hostname.

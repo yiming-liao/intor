@@ -8,7 +8,12 @@ export {
 } from "./normalizers";
 
 // locale
-export { getLocaleFromAcceptLanguage, getLocaleFromPathname } from "./locale";
+export {
+  getLocaleFromAcceptLanguage,
+  getLocaleFromPathname,
+  getLocaleFromHost,
+  getLocaleFromQuery,
+} from "./locale";
 
 // pathname
 export { localizePathname } from "./pathname";

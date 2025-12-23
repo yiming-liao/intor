@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import { normalizeLocale } from "@/shared/utils";
+import { normalizeLocale } from "@/shared/utils/normalizers/normalize-locale";
 
 /**
  * Extracts locale from URL query parameters.
