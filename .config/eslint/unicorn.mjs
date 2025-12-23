@@ -14,6 +14,7 @@ export const unicornConfig = [
       "unicorn/no-array-for-each": "off",
       "unicorn/no-console-spaces": "off",
       "unicorn/no-nested-ternary": "off",
+      "unicorn/no-useless-undefined": "off",
     },
   },
 ];

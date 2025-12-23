@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-useless-undefined */
 import { describe, it, expect } from "vitest";
 import {
   isValidMessages,

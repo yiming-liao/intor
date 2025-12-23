@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-useless-undefined */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FileEntry } from "@/server/messages/load-local-messages/read-locale-messages";
 import type { Messages } from "@/server/messages/shared/types";
