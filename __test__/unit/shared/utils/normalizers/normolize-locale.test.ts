@@ -46,4 +46,14 @@ describe("normalizeLocale", () => {
     const result = normalizeLocale("en", ["en", "not_a_locale"] as const);
     expect(result).toBe("en");
   });
+
+  it("falls back by base language even when script differs", () => {
+    const result = normalizeLocale("zh-Hans", ["zh-Hant-TW"] as const);
+    expect(result).toBe("zh-Hant-TW");
+  });
+
+  it("respects supportedLocales order for base language fallback", () => {
+    const result = normalizeLocale("en", ["en-US", "en-GB"] as const);
+    expect(result).toBe("en-US");
+  });
 });

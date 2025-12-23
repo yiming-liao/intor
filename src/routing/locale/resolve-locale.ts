@@ -25,13 +25,13 @@ export function resolveLocale(
     if (!locale) continue;
     return {
       locale,
-      source,
+      localeSource: source,
     };
   }
 
   // Fallback: detected is always available
   return {
     locale: context.detected.locale,
-    source: "detected",
+    localeSource: "detected",
   };
 }

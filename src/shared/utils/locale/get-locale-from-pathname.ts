@@ -10,6 +10,25 @@ import { normalizePathname } from "@/shared/utils/normalizers/normalize-pathname
  *   it matches a supported locale.
  *
  * If no locale segment is found, `undefined` is returned.
+ *
+ * Note:
+ * - The pathname is treated as a canonical source.
+ * - Only exact matches against `supportedLocales` are accepted.
+ * - ___Locale normalization is intentionally not applied here.___
+ *
+ * @example
+ * ```ts
+ * getLocaleFromPathname(config, "/en/about")
+ * // => "en"
+ * getLocaleFromPathname(config, "/zh-TW")
+ * // => "zh-TW"
+ * getLocaleFromPathname(config, "/about")
+ * // => undefined
+ *
+ * // config.routing.basePath: "/app"
+ * getLocaleFromPathname(config, "/app/en/dashboard")
+ * // => "en"
+ * ```
  */
 export function getLocaleFromPathname(
   config: IntorResolvedConfig,

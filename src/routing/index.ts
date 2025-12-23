@@ -1,2 +1,1 @@
-export { resolveLocale } from "./locale";
-export { resolvePathname } from "./pathname";
+export { resolveRouting } from "./resolve-routing";

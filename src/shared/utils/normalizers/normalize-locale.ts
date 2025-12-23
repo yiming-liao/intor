@@ -1,14 +1,31 @@
-// Util
 const toCanonical = (input: string): string | undefined => {
   try {
-    return Intl.getCanonicalLocales(input)[0]?.toLowerCase();
+    return Intl.getCanonicalLocales(input)[0];
   } catch {
     return;
   }
 };
 
 /**
- * Normalizes and finds the best matching locale from the supported locales list.
+ * Normalizes a locale string and resolves the best match
+ * from a list of supported locales.
+ *
+ * Resolution strategy:
+ *
+ * 1. Exact canonical match (BCP 47)
+ * 2. Base language fallback
+ *    - Falls back by base language when no exact match is found
+ *      (e.g. `"en"` → `"en-US"`).
+ *    - Script and region subtags are ignored during this step
+ *      (e.g. `"zh-Hans"` → `"zh-Hant-TW"`)
+ *    - Preference is determined by the order of `supportedLocales`.
+ *
+ * Returns `undefined` if no suitable match is found.
+ *
+ * Notes:
+ * - Invalid locale inputs are ignored gracefully.
+ * - Always returns an original entry from `supportedLocales`.
+ * - Requires `Intl` locale support in the runtime.
  */
 export const normalizeLocale = <Locale extends string>(
   locale: string = "",

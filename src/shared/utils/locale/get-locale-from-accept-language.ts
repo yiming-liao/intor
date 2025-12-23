@@ -1,12 +1,29 @@
-import type { Locale } from "intor-translator";
+import type { IntorResolvedConfig } from "@/config";
+import { normalizeLocale } from "@/shared/utils/normalizers";
 
 /**
- * Get the preferred locale based on the Accept-Language header and supported locales.
+ * Resolve locale from the `Accept-Language` header.
+ *
+ * - Parses language priorities (`q` values) from the header.
+ * - Selects the highest-priority language supported by the application.
+ * - Normalizes the matched locale against `supportedLocales`.
+ *
+ * If no supported locale can be resolved, `undefined` is returned.
+ *
+ * @example
+ * ```ts
+ * getLocaleFromAcceptLanguage("en-US,en;q=0.8,zh-TW;q=0.9", ["en-US", "zh-TW"])
+ * // => "en-US"
+ * getLocaleFromAcceptLanguage("fr,ja;q=0.9", ["en", "zh-TW"])
+ * // => undefined
+ * ```
  */
 export const getLocaleFromAcceptLanguage = (
+  config: IntorResolvedConfig,
   acceptLanguageHeader: string | undefined,
-  supportedLocales?: readonly Locale[],
 ): string | undefined => {
+  const { supportedLocales } = config;
+
   if (
     !acceptLanguageHeader ||
     !supportedLocales ||
@@ -17,18 +34,26 @@ export const getLocaleFromAcceptLanguage = (
 
   const supportedLocalesSet = new Set(supportedLocales);
 
-  const preferred = acceptLanguageHeader
-    .split(",")
-    .map((part) => {
-      const [lang, qValue] = part.split(";");
-      const q = qValue ? Number.parseFloat(qValue.split("=")[1]) : 1;
-      if (Number.isNaN(q)) {
-        return { lang: lang.trim(), q: 0 }; // Treat invalid q values as having 0 priority
-      }
-      return { lang: lang.trim(), q };
-    })
-    .toSorted((a, b) => b.q - a.q)
-    .find(({ lang }) => supportedLocalesSet.has(lang))?.lang;
+  // 1. Parse Accept-Language header into language + priority pairs
+  const parsedLanguages = acceptLanguageHeader.split(",").map((part) => {
+    const [rawLang, rawQ] = part.split(";");
+    const lang = rawLang.trim();
 
-  return preferred;
+    const q = rawQ ? Number.parseFloat(rawQ.split("=")[1]) : 1;
+
+    return {
+      lang,
+      q: Number.isNaN(q) ? 0 : q, // Invalid q values have lowest priority
+    };
+  });
+
+  // 2. Sort by priority (highest first)
+  const sortedByPriority = parsedLanguages.toSorted((a, b) => b.q - a.q);
+
+  // 3. Pick the first language explicitly supported
+  const preferred = sortedByPriority.find(({ lang }) =>
+    supportedLocalesSet.has(lang),
+  )?.lang;
+
+  return normalizeLocale(preferred, supportedLocales);
 };

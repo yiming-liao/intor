@@ -24,5 +24,5 @@ export interface ResolvedLocale {
   /** Resolved locale identifier */
   locale: string;
   /** Source from which the locale was resolved */
-  source: RoutingLocaleSource;
+  localeSource: RoutingLocaleSource;
 }

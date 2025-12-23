@@ -7,6 +7,8 @@ export type RoutingRawOptions = {
   locale?: {
     /** Priority order for resolving locale */
     sources: Array<RoutingLocaleSource>;
+    /** Query parameter key used for locale resolution. Defaults to "locale". */
+    queryKey?: string;
   };
   /** Controls how locale prefixes appear in URLs. Defaults to "none" */
   prefix?: RoutingPrefix;
@@ -25,7 +27,7 @@ export type RoutingRawOptions = {
 
 // Routing resolved options
 export type RoutingResolvedOptions = {
-  locale: NonNullable<RoutingRawOptions["locale"]>;
+  locale: Required<NonNullable<RoutingRawOptions["locale"]>>;
   prefix: RoutingPrefix;
   firstVisit: Required<NonNullable<RoutingRawOptions["firstVisit"]>>;
   basePath: string;

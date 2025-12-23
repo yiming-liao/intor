@@ -21,7 +21,7 @@ describe("resolveLocale", () => {
     const result = resolveLocale(baseConfig, context);
     expect(result).toEqual({
       locale: "fr-FR",
-      source: "path",
+      localeSource: "path",
     });
   });
 
@@ -34,7 +34,7 @@ describe("resolveLocale", () => {
     const result = resolveLocale(baseConfig, context);
     expect(result).toEqual({
       locale: "en-US",
-      source: "cookie",
+      localeSource: "cookie",
     });
   });
 
@@ -47,7 +47,7 @@ describe("resolveLocale", () => {
     const result = resolveLocale(baseConfig, context);
     expect(result).toEqual({
       locale: "zh-TW",
-      source: "detected",
+      localeSource: "detected",
     });
   });
 
@@ -67,7 +67,7 @@ describe("resolveLocale", () => {
     const result = resolveLocale(config, context);
     expect(result).toEqual({
       locale: "en-US",
-      source: "cookie",
+      localeSource: "cookie",
     });
   });
 
@@ -87,7 +87,7 @@ describe("resolveLocale", () => {
     const result = resolveLocale(config, context);
     expect(result).toEqual({
       locale: "zh-TW",
-      source: "detected",
+      localeSource: "detected",
     });
   });
 });
