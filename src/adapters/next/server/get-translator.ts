@@ -12,7 +12,7 @@ import type {
   TranslateHook,
   TranslatorPlugin,
 } from "intor-translator";
-import { getI18nContext } from "@/adapters/next/server/get-i18n-context";
+import { getLocale } from "@/adapters/next/server/get-locale";
 import { getTranslator as rawGetTranslator } from "@/server/translator";
 
 /**
@@ -58,7 +58,7 @@ export async function getTranslator<
   preKey?: PK;
 }) {
   const { config, preKey, handlers, plugins, extraOptions } = options;
-  const { locale } = await getI18nContext(config);
+  const locale = await getLocale(config);
 
   const translatorInstance = rawGetTranslator<CK, PK>({
     config,

@@ -1,2 +1,2 @@
-export { getI18nContext } from "./get-i18n-context";
+export { getLocale } from "./get-locale";
 export { getTranslator } from "./get-translator";
