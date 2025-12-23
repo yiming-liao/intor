@@ -37,6 +37,7 @@ export function MessagesProvider({
     refetchMessages(locale);
   }, [refetchMessages, locale]);
 
+  // context value
   const value = React.useMemo(
     () => ({
       messages: runtimeMessages || messages,

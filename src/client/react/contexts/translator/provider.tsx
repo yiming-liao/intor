@@ -19,8 +19,9 @@ export function TranslatorProvider({
   const runtime = useTranslatorRuntime();
   const isLoading = Boolean(externalIsLoading ?? internalIsLoading);
 
-  const translator = React.useMemo(() => {
-    return new Translator<unknown>({
+  // context value
+  const value = React.useMemo(() => {
+    const translator = new Translator<unknown>({
       messages,
       locale,
       isLoading,
@@ -30,6 +31,7 @@ export function TranslatorProvider({
       handlers: runtime?.handlers,
       plugins: runtime?.plugins,
     });
+    return { translator };
   }, [
     messages,
     locale,
@@ -42,7 +44,7 @@ export function TranslatorProvider({
   ]);
 
   return (
-    <TranslatorContext.Provider value={{ translator }}>
+    <TranslatorContext.Provider value={value}>
       {children}
     </TranslatorContext.Provider>
   );

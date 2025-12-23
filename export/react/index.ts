@@ -10,6 +10,6 @@ export {
   // translator
   useTranslator,
 
-  // shared
-  getInitialLocale,
+  // helpers
+  getClientLocale,
 } from "@/client/react";

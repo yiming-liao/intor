@@ -8,6 +8,7 @@ export function ConfigProvider({
   value: { config },
   children,
 }: ConfigProviderProps) {
+  // context value
   const value = React.useMemo(
     () => ({
       config,

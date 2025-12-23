@@ -1,10 +1,9 @@
-import type { LoaderOptions } from "@/config/types/loader.types";
 import type { Locale } from "intor-translator";
 
 interface ChangeLocaleParams {
   locale: Locale;
   newLocale: Locale;
-  loader?: LoaderOptions;
+  fullReloadRequired: boolean;
   setLocaleState: (locale: Locale) => void;
 }
 
@@ -22,14 +21,14 @@ interface ChangeLocaleParams {
 export const changeLocale = ({
   locale,
   newLocale,
-  loader,
+  fullReloadRequired,
   setLocaleState,
 }: ChangeLocaleParams) => {
-  // No-op if the locale does not change
+  // No-op when locale does not change
   if (newLocale === locale) return;
 
-  // Informational warning for local loaders
-  if (loader?.type === "local") {
+  // Informational warning when a full reload is required
+  if (fullReloadRequired) {
     console.warn(
       `[Intor] Locale change requested while using a "local" loader. ` +
         `Client-side navigation alone will not load new messages. ` +

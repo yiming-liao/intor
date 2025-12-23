@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CookieResolvedOptions } from "@/config/types/cookie.types";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { buildCookieString } from "@/client/shared/utils/cookie/build-cookie-string";
+import { buildCookieString } from "@/client/shared/utils/build-cookie-string";
 
 const baseCookie: CookieResolvedOptions = {
   enabled: true,

@@ -11,5 +11,5 @@ export {
 // translator
 export { useTranslator } from "./translator/use-translator";
 
-// shared / utils
-export { getInitialLocale } from "@/client/shared/utils";
+// helpers
+export { getClientLocale } from "@/client/helpers";

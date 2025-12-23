@@ -1,7 +1,6 @@
 "use client";
 
 import type { IntorProviderProps } from "./types";
-import * as React from "react";
 import { ConfigProvider } from "../config";
 import { LocaleProvider } from "../locale";
 import { MessagesProvider } from "../messages";

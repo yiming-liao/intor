@@ -28,7 +28,7 @@ const toCanonical = (input: string): string | undefined => {
  * - Requires `Intl` locale support in the runtime.
  */
 export const normalizeLocale = <Locale extends string>(
-  locale: string = "",
+  locale: string | undefined,
   supportedLocales: readonly Locale[] = [],
 ): Locale | undefined => {
   if (!locale || supportedLocales.length === 0) return;
