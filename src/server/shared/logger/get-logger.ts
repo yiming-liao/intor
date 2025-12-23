@@ -8,6 +8,7 @@ const DEFAULT_FORMAT_CONFIG: FormatConfig = {
 };
 const DEFAULT_RENDER_CONFIG: RenderConfig = {
   timestamp: {},
+  id: { visible: true, prefix: "<", suffix: ">" },
   meta: { lineBreaksAfter: 1 },
 };
 

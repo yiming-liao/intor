@@ -40,7 +40,7 @@ describe("defineIntorConfig", () => {
     });
 
     expect(result).toMatchObject({
-      id: expect.stringMatching(/^ID[a-z0-9]{4}$/),
+      id: "default",
       messages: {},
       defaultLocale: "en",
       supportedLocales: ["en", "zh"],

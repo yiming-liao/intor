@@ -4,7 +4,7 @@ export interface RemoteHeaders {
   authorization?: string;
   /** API key header. */
   "x-api-key"?: string;
-  /** Custom headers. */
+  /** Additional custom headers. */
   [key: string]: string | undefined;
 }
 
@@ -32,8 +32,6 @@ export type RemoteLoader = BaseLoaderOptions & {
   remoteUrl: string;
   /** Optional headers sent with remote requests. */
   remoteHeaders?: RemoteHeaders;
-  /** Use full page reload for client-side navigation. */
-  fullReload?: boolean;
 };
 
 // Loader options (Local / Remote)

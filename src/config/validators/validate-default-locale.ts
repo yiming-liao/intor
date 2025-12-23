@@ -2,10 +2,19 @@ import type { IntorRawConfig } from "@/config/types/intor-config.types";
 import type { Locale } from "intor-translator";
 import { IntorError, IntorErrorCode } from "@/shared/error";
 
+/**
+ * Validates the configured default locale.
+ *
+ * - Ensures that `defaultLocale` is explicitly defined.
+ * - Ensures that `defaultLocale` is included in `supportedLocales`.
+ *
+ * This validation is part of the configuration initialization phase
+ * and is expected to fail fast when misconfigured.
+ */
 export const validateDefaultLocale = (
   config: IntorRawConfig,
   supportedLocales: readonly Locale[],
-) => {
+): string => {
   const { id, defaultLocale } = config;
 
   // Throw error if defaultLocale is undefined

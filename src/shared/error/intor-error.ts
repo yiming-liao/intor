@@ -1,11 +1,11 @@
-type IntorErrorOptions = {
+interface IntorErrorOptions {
   message: string;
-  code?: string;
+  code?: IntorErrorCode;
   id?: string;
-};
+}
 
 export class IntorError extends Error {
-  readonly code?: string;
+  readonly code?: IntorErrorCode;
   readonly id?: string;
 
   constructor({ message, code, id }: IntorErrorOptions) {

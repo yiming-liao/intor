@@ -13,4 +13,5 @@ export const DEFAULT_ROUTING_OPTIONS: RoutingResolvedOptions = {
     persist: true,
   },
   basePath: "/",
+  forceFullReload: false,
 };

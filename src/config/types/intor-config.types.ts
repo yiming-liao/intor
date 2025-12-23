@@ -16,7 +16,7 @@ import type {
   LocaleMessages,
 } from "intor-translator";
 
-/** Raw configuration provided when initializing Intor. */
+/** Raw configuration object used to define Intor behavior. */
 export type IntorRawConfig = (
   | { loader: LoaderOptions; supportedLocales: readonly Locale[] }
   | { loader?: undefined; supportedLocales?: readonly Locale[] }

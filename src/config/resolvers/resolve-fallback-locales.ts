@@ -1,6 +1,23 @@
 import type { IntorRawConfig } from "@/config/types/intor-config.types";
 import type { FallbackLocalesMap, Locale } from "intor-translator";
 
+/**
+ * Resolves and normalizes fallback locale mappings.
+ *
+ * This utility validates the user-defined `fallbackLocales` configuration
+ * against the provided `supportedLocales` list and the configured `defaultLocale`.
+ *
+ * Resolution rules:
+ * - Only locales listed in `supportedLocales` are considered valid fallbacks.
+ * - The literal value `"default"` is always allowed and represents the configured default locale.
+ * - Fallback entries matching `defaultLocale` are treated as valid.
+ * - Invalid fallback locales are ignored and reported via warnings.
+ *
+ * Notes:
+ * - This function is purely defensive and does not throw on invalid input.
+ * - Only validated fallback mappings are included in the returned result.
+ * - Logging is used for diagnostics only and does not affect the output.
+ */
 export const resolveFallbackLocales = (
   config: IntorRawConfig,
   supportedLocales: readonly Locale[],
