@@ -9,4 +9,5 @@ export interface FetcherOptions {
   extraOptions?: {
     loggerOptions?: LoggerOptions & { id?: string };
   };
+  signal?: AbortSignal;
 }

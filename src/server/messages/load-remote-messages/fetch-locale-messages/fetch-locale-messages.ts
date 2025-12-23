@@ -15,6 +15,7 @@ export const fetchLocaleMessages = async ({
   searchParams,
   locale,
   extraOptions: { loggerOptions } = {},
+  signal,
 }: FetcherOptions): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "fetch-locale-messages" });
@@ -35,6 +36,7 @@ export const fetchLocaleMessages = async ({
       method: "GET",
       headers,
       cache: "no-store",
+      signal,
     });
 
     if (!response.ok) {
@@ -51,6 +53,10 @@ export const fetchLocaleMessages = async ({
 
     return data;
   } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      logger.debug("Fetching locale messages aborted.", { locale, remoteUrl });
+      return;
+    }
     logger.warn("Fetching locale messages failed.", {
       locale,
       remoteUrl,

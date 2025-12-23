@@ -7,7 +7,6 @@ import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
 const EXTERNALS = [
   "node:path",
-  "node:perf_hooks",
   "node:fs/promises",
   "react",
   "react/jsx-runtime",

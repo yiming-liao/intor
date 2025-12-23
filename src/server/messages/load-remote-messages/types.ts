@@ -16,4 +16,5 @@ export interface LoadRemoteMessagesParams {
     loggerOptions?: LoggerOptions & { id?: string };
   };
   allowCacheWrite?: boolean;
+  signal?: AbortSignal;
 }

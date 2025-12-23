@@ -3,7 +3,7 @@ import typescript from "@rollup/plugin-typescript";
 import package_ from "../../package.json" with { type: "json" };
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
-const EXTERNALS = ["node:path", "node:perf_hooks", "node:fs/promises"];
+const EXTERNALS = ["node:path", "node:fs/promises"];
 
 /** @type {import('rollup').RollupOptions[]} */
 export default [

@@ -1,7 +1,6 @@
 import type { LoadLocalMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
-import { performance } from "node:perf_hooks";
 import pLimit from "p-limit";
 import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
 import { readLocaleMessages } from "@/server/messages/load-local-messages/read-locale-messages";
@@ -10,12 +9,16 @@ import { getGlobalMessagesPool } from "@/server/shared/messages/global-messages-
 import { normalizeCacheKey } from "@/shared/utils";
 
 /**
- * Load local messages from the file system.
+ * Load locale messages from the local file system.
  *
- * - Load messages for a target locale with optional fallback locales.
- * - Support filtering by specific namespaces.
- * - Cache messages if enabled.
- * - Limit concurrent file reads for performance.
+ * This function acts as the orchestration layer for local message loading.
+ * It is responsible for:
+ *
+ * - Resolving fallback locales in order
+ * - Coordinating cache read / write behavior
+ * - Limiting concurrent file reads for performance
+ *
+ * File system traversal, parsing, and message validation are delegated to lower-level utilities.
  */
 export const loadLocalMessages = async ({
   pool = getGlobalMessagesPool(),
@@ -36,12 +39,12 @@ export const loadLocalMessages = async ({
   const logger = baseLogger.child({ scope: "load-local-messages" });
 
   const start = performance.now();
-  logger.debug("Loading local messages from directory.", {
+  logger.debug("Loading local messages.", {
     rootDir,
     resolvedRootDir: path.resolve(process.cwd(), rootDir),
   });
 
-  // Cache key is scoped by loader type, locale, fallbacks and namespaces
+  // --- Cache key
   const cacheKey = normalizeCacheKey([
     loggerOptions.id,
     "loaderType:local",
@@ -51,7 +54,7 @@ export const loadLocalMessages = async ({
     (namespaces || []).toSorted().join(","),
   ]);
 
-  //--- Cache read
+  // --- Cache read --------------------------------------------------
   if (cacheOptions.enabled && cacheKey) {
     const cached = await pool?.get(cacheKey);
     if (cached) {
@@ -95,7 +98,7 @@ export const loadLocalMessages = async ({
     }
   }
 
-  //--- Cache write
+  // --- Cache write --------------------------------------------------
   if (allowCacheWrite && cacheOptions.enabled && cacheKey && messages) {
     await pool?.set(cacheKey, messages, cacheOptions.ttl);
   }

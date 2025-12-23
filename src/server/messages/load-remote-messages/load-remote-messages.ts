@@ -10,8 +10,14 @@ import { normalizeCacheKey } from "@/shared/utils";
 /**
  * Load locale messages from a remote API.
  *
- * - Fetch messages for a target locale with optional fallback locales.
- * - Cache messages if enabled.
+ * This function acts as the orchestration layer for remote message loading.
+ * It is responsible for:
+ *
+ * - Resolving fallback locales in order
+ * - Coordinating cache read / write behavior
+ * - Respecting abort signals across the entire async flow
+ *
+ * Network fetching and data validation are delegated to lower-level utilities.
  */
 export const loadRemoteMessages = async ({
   pool = getGlobalMessagesPool(),
@@ -26,14 +32,21 @@ export const loadRemoteMessages = async ({
     loggerOptions = { id: "default" },
   } = {},
   allowCacheWrite = false,
+  signal,
 }: LoadRemoteMessagesParams): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger({ ...loggerOptions });
   const logger = baseLogger.child({ scope: "load-remote-messages" });
 
-  const start = performance.now();
-  logger.debug("Loading remote messages from api.", { remoteUrl });
+  // Abort early if the request has already been cancelled
+  if (signal?.aborted) {
+    logger.debug("Remote message loading aborted before fetch.");
+    return;
+  }
 
-  // Cache key is scoped by loader type, locale, fallbacks and namespaces
+  const start = performance.now();
+  logger.debug("Loading remote messages.", { remoteUrl });
+
+  // --- Cache key
   const cacheKey = normalizeCacheKey([
     loggerOptions.id,
     "loaderType:remote",
@@ -43,9 +56,13 @@ export const loadRemoteMessages = async ({
     (namespaces ?? []).toSorted().join(","),
   ]);
 
-  //--- Cache read
+  // --- Cache read --------------------------------------------------
   if (cacheOptions.enabled && cacheKey) {
     const cached = await pool?.get(cacheKey);
+    if (signal?.aborted) {
+      logger.debug("Remote message loading aborted after cache read.");
+      return;
+    }
     if (cached) {
       logger.debug("Messages cache hit.", { key: cacheKey });
       return cached;
@@ -66,6 +83,7 @@ export const loadRemoteMessages = async ({
         locale: candidateLocale,
         searchParams: buildSearchParams({ rootDir, namespaces }),
         extraOptions: { loggerOptions },
+        signal,
       });
       // Stop at the first locale that yields non-empty messages
       if (fetched && Object.values(fetched[candidateLocale] || {}).length > 0) {
@@ -73,6 +91,10 @@ export const loadRemoteMessages = async ({
         break;
       }
     } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        logger.debug("Remote message loading aborted.");
+        return;
+      }
       if (isLast) {
         logger.warn("Failed to load messages for all candidate locales.", {
           locale,
@@ -90,8 +112,12 @@ export const loadRemoteMessages = async ({
     }
   }
 
-  //--- Cache write
+  // --- Cache write --------------------------------------------------
   if (cacheOptions.enabled && allowCacheWrite && cacheKey && messages) {
+    if (signal?.aborted) {
+      logger.debug("Remote message loading aborted before cache write.");
+      return;
+    }
     await pool?.set(cacheKey, messages, cacheOptions.ttl);
   }
 
