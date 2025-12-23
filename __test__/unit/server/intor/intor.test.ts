@@ -24,11 +24,11 @@ describe("intor", () => {
     loggerMock = {
       child: vi.fn().mockReturnValue(childLoggerMock),
     };
-    vi.mocked(getLogger).mockReturnValue(loggerMock);
+    vi.mocked(getLogger).mockReturnValue(loggerMock as any);
     vi.clearAllMocks();
   });
 
-  it("resolves context from static object and loads messages", async () => {
+  it("resolves initial locale from static getLocale value and loads messages", async () => {
     const config = {
       id: "test",
       defaultLocale: "en-US",
@@ -36,14 +36,14 @@ describe("intor", () => {
       loader: { type: "local" },
       logger: {},
     } as any;
-    const i18nContext = { locale: "fr-FR" } as any;
+    const getLocale = "fr-FR";
     const loadedMessages = { hello: "world" } as any;
     vi.mocked(loadMessages).mockResolvedValue(loadedMessages);
     vi.mocked(deepMerge).mockReturnValue({
       static: "msg",
       hello: "world",
     });
-    const result = await intor(config, i18nContext);
+    const result = await intor(config, getLocale as any);
     expect(result.initialLocale).toBe("fr-FR");
     expect(result.messages).toEqual({
       static: "msg",
@@ -60,13 +60,12 @@ describe("intor", () => {
       "Start Intor initialization.",
     );
     expect(childLoggerMock.debug).toHaveBeenCalledWith(
-      'I18n context resolved via "static context".',
-      { locale: "fr-FR" },
+      'Initial locale resolved as fr-FR via "getLocale".',
     );
     expect(childLoggerMock.info).toHaveBeenCalledWith("Intor initialized.");
   });
 
-  it("resolves context from resolver function", async () => {
+  it("resolves initial locale from async getLocale function", async () => {
     const config = {
       id: "test",
       defaultLocale: "en-US",
@@ -74,15 +73,14 @@ describe("intor", () => {
       loader: { type: "local" },
       logger: {},
     } as any;
-    const resolver = vi.fn().mockResolvedValue({ locale: "de-DE" });
+    const getLocale = vi.fn().mockResolvedValue("de-DE");
     vi.mocked(loadMessages).mockResolvedValue({ greet: "hi" } as any);
     vi.mocked(deepMerge).mockReturnValue({ greet: "hi" });
-    const result = await intor(config, resolver);
-    expect(resolver).toHaveBeenCalledWith(config);
+    const result = await intor(config, getLocale);
+    expect(getLocale).toHaveBeenCalledWith(config);
     expect(result.initialLocale).toBe("de-DE");
     expect(childLoggerMock.debug).toHaveBeenCalledWith(
-      `I18n context resolved via "${resolver.name}".`,
-      { locale: "de-DE" },
+      `Initial locale resolved as de-DE via "${getLocale.name}".`,
     );
   });
 
@@ -94,7 +92,7 @@ describe("intor", () => {
       logger: {},
     } as any;
     vi.mocked(deepMerge).mockReturnValue({ a: 1 });
-    const result = await intor(config, { locale: "en-US" });
+    const result = await intor(config, "en-US" as any);
     expect(loadMessages).not.toHaveBeenCalled();
     expect(result.messages).toEqual({ a: 1 });
   });
@@ -109,7 +107,19 @@ describe("intor", () => {
     } as any;
     vi.mocked(loadMessages).mockResolvedValue(undefined);
     vi.mocked(deepMerge).mockReturnValue(undefined);
-    const result = await intor(config, { locale: "en-US" });
+    const result = await intor(config, "en-US" as any);
     expect(result.messages).toEqual({});
+  });
+
+  it("falls back to defaultLocale when getLocale is not provided", async () => {
+    const config = {
+      id: "test",
+      defaultLocale: "en-US",
+      messages: {},
+      logger: {},
+    } as any;
+    vi.mocked(deepMerge).mockReturnValue({});
+    const result = await intor(config, undefined as any);
+    expect(result.initialLocale).toBe("en-US");
   });
 });

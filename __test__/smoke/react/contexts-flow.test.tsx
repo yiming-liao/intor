@@ -5,11 +5,9 @@ import { describe, it, expect, vi } from "vitest";
 import { IntorProvider } from "@/client/react";
 import { useLocale } from "@/client/react/contexts/locale";
 import { useTranslator } from "@/client/react/contexts/translator";
-import {
-  DEFAULT_CACHE_OPTIONS,
-  DEFAULT_COOKIE_OPTIONS,
-  DEFAULT_ROUTING_OPTIONS,
-} from "@/config";
+import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
+import { DEFAULT_COOKIE_OPTIONS } from "@/config/constants/cookie.constants";
+import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
 
 // mock fetch
 globalThis.fetch = vi.fn().mockResolvedValue({

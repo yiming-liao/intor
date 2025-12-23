@@ -9,7 +9,7 @@ declare global {
   interface IntorGeneratedTypes {}
 }
 
-const defaults = [{} as IntorResolvedConfig, { locale: "en-US" }] as const;
+const defaults = [{} as IntorResolvedConfig, "en-US"] as const;
 
 //-------------------------------------------------
 // Intor

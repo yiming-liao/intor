@@ -11,7 +11,7 @@ declare global {
   interface IntorGeneratedTypes extends GeneratedTypesFixture {}
 }
 
-const defaults = [{} as IntorResolvedConfig, { locale: "en-US" }] as const;
+const defaults = [{} as IntorResolvedConfig, "en-US"] as const;
 
 //-------------------------------------------------
 // Intor

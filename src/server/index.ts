@@ -1,18 +1,11 @@
 // intor
-export { intor, type I18nContext, type IntorResult } from "./intor";
+export { intor, type IntorResult } from "./intor";
 
 // messages
 export {
   loadMessages,
-  // load-local-messages
-  loadLocalMessages,
-  type LoadLocalMessagesOptions,
-  // load-remote-messages
-  loadRemoteMessages,
-  type LoadRemoteMessagesOptions,
-  // shared / utils
+  // shared
   isValidMessages,
-  // shared / types
   type Messages,
   type MessagesReader,
 } from "./messages";
@@ -23,3 +16,6 @@ export { getTranslator } from "./translator";
 // shared
 export { clearLoggerPool } from "./shared/logger/global-logger-pool";
 export { clearMessagesPool } from "./shared/messages/global-messages-pool";
+
+// helpers
+export { loadLocalMessagesFromUrl } from "./helpers";

@@ -13,5 +13,5 @@ export type LoadMessagesOptions = {
   allowCacheWrite?: boolean;
 };
 
-export type LoadMessagesResult<C extends GenConfigKeys = "__default__"> =
-  Promise<GenMessages<C> | undefined>;
+export type LoadMessagesResult<CK extends GenConfigKeys = "__default__"> =
+  Promise<GenMessages<CK> | undefined>;

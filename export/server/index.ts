@@ -3,15 +3,10 @@
 export {
   // intor
   intor,
-  type I18nContext,
   type IntorResult,
 
   // messages
   loadMessages,
-  loadLocalMessages,
-  type LoadLocalMessagesOptions,
-  loadRemoteMessages,
-  type LoadRemoteMessagesOptions,
   isValidMessages,
   type Messages,
   type MessagesReader,
@@ -22,4 +17,7 @@ export {
   // shared
   clearLoggerPool,
   clearMessagesPool,
+
+  // helpers
+  loadLocalMessagesFromUrl,
 } from "@/server";

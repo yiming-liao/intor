@@ -9,21 +9,26 @@ import { loadRemoteMessages } from "@/server/messages/load-remote-messages";
 import { getLogger } from "@/server/shared/logger/get-logger";
 
 /**
- * Load messages for a given locale.
+ * Load locale messages based on the resolved Intor configuration.
  *
- * - Support both **local filesystem** and **remote API** loaders.
- * - Apply fallback locales if needed.
- * - Cache messages if enabled (handled by underlying loader, not this function directly).
+ * This function acts as a thin orchestration layer that:
+ *
+ * - Selects the appropriate message loader (local or remote)
+ * - Applies fallback locale resolution
+ * - Delegates caching and concurrency behavior to the underlying loader
+ *
+ * It does not perform message normalization or transformation itself.
  */
-export const loadMessages = async <C extends GenConfigKeys = "__default__">({
+export const loadMessages = async <CK extends GenConfigKeys = "__default__">({
   config,
   locale,
   extraOptions: { exts, messagesReader } = {},
   allowCacheWrite = false,
-}: LoadMessagesOptions): LoadMessagesResult<C> => {
+}: LoadMessagesOptions): LoadMessagesResult<CK> => {
   const baseLogger = getLogger({ id: config.id, ...config.logger });
   const logger = baseLogger.child({ scope: "load-messages" });
 
+  // Guard: no loader configured
   if (!config.loader) {
     logger.warn(
       "No loader options have been configured in the current config.",
@@ -85,5 +90,5 @@ export const loadMessages = async <C extends GenConfigKeys = "__default__">({
     logger.warn("No messages found.", { locale, fallbackLocales, namespaces });
   }
 
-  return loadedMessages as GenMessages<C>;
+  return loadedMessages as GenMessages<CK>;
 };

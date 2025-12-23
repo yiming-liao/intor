@@ -3,10 +3,10 @@ import type { LocaleMessages } from "intor-translator";
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useRefetchMessages } from "@/client/react/contexts/messages/utils/use-refetch-messages";
-import * as serverMessages from "@/server/messages";
+import * as serverMessages from "@/server/messages/load-remote-messages";
 
 // --- mock loadRemoteMessages ---
-vi.mock("@/server/messages", () => ({
+vi.mock("@/server/messages/load-remote-messages", () => ({
   loadRemoteMessages: vi.fn(),
 }));
 

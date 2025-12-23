@@ -3,11 +3,9 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { IntorProvider } from "@/client/react";
 import { useLocale } from "@/client/react/contexts/locale";
-import {
-  DEFAULT_CACHE_OPTIONS,
-  DEFAULT_COOKIE_OPTIONS,
-  DEFAULT_ROUTING_OPTIONS,
-} from "@/config";
+import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
+import { DEFAULT_COOKIE_OPTIONS } from "@/config/constants/cookie.constants";
+import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
 
 const mockConfig: IntorResolvedConfig = {
   id: "test-intor",

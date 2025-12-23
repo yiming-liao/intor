@@ -8,11 +8,9 @@ import {
   TranslatorProvider,
   useTranslator,
 } from "@/client/react/contexts/translator";
-import {
-  DEFAULT_CACHE_OPTIONS,
-  DEFAULT_COOKIE_OPTIONS,
-  DEFAULT_ROUTING_OPTIONS,
-} from "@/config";
+import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
+import { DEFAULT_COOKIE_OPTIONS } from "@/config/constants/cookie.constants";
+import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
 
 const mockMessages = {
   "en-US": { hello: "World" },
