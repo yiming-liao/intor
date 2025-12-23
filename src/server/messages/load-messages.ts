@@ -82,6 +82,7 @@ export const loadMessages = async <CK extends GenConfigKeys = "__default__">({
         cacheOptions: config.cache,
         loggerOptions: { id: config.id, ...config.logger },
       },
+      allowCacheWrite,
     });
   }
 

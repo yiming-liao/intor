@@ -36,9 +36,9 @@ export const intor = async <CK extends GenConfigKeys = "__default__">(
   const locale = isLocaleFunction
     ? await getLocale(config)
     : getLocale || config.defaultLocale;
-  const source =
-    isLocaleFunction && getLocale.name ? getLocale.name : "getLocale";
-  logger.debug(`Initial locale resolved as ${locale} via "${source}".`);
+
+  const source = typeof getLocale === "function" ? "resolver" : "static";
+  logger.debug(`Initial locale resolved as "${locale}" via "${source}".`);
 
   // Load messages (if enabled)
   let loadedMessages: LocaleMessages | undefined;

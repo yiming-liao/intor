@@ -60,7 +60,7 @@ describe("intor", () => {
       "Start Intor initialization.",
     );
     expect(childLoggerMock.debug).toHaveBeenCalledWith(
-      'Initial locale resolved as fr-FR via "getLocale".',
+      `Initial locale resolved as "fr-FR" via "static".`,
     );
     expect(childLoggerMock.info).toHaveBeenCalledWith("Intor initialized.");
   });
@@ -80,7 +80,7 @@ describe("intor", () => {
     expect(getLocale).toHaveBeenCalledWith(config);
     expect(result.initialLocale).toBe("de-DE");
     expect(childLoggerMock.debug).toHaveBeenCalledWith(
-      `Initial locale resolved as de-DE via "${getLocale.name}".`,
+      `Initial locale resolved as "de-DE" via "resolver".`,
     );
   });
 
