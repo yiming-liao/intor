@@ -13,7 +13,8 @@ import { getLocaleFromAcceptLanguage } from "@/shared/utils";
  * - Collect locale candidates from request-related sources
  * - Delegate routing decisions to the routing core
  * - Apply redirect behavior when required
- * - Persist locale on first visit when configured
+ * - Materialize routing decisions into persistent state (cookie)
+ *   with configurable first-visit behavior
  */
 export const intorProxy = async (
   config: IntorResolvedConfig,
@@ -48,9 +49,9 @@ export const intorProxy = async (
     ? NextResponse.redirect(url)
     : NextResponse.next();
 
-  // Persist locale on first visit if enabled
+  // Persist resolved locale to cookie
   const isFirstVisit = localeSource === "detected";
-  if (isFirstVisit && routing.firstVisit.persist) {
+  if (!isFirstVisit || routing.firstVisit.persist) {
     setLocaleCookieEdge({ response, locale, cookie });
   }
 

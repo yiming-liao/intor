@@ -81,7 +81,7 @@ describe("intorProxy", () => {
     );
   });
 
-  it("does not persist locale when source is not detected", async () => {
+  it("persists locale when source is not detected", async () => {
     (resolveRouting as any).mockReturnValue({
       locale: "en",
       localeSource: "cookie",
@@ -90,6 +90,8 @@ describe("intorProxy", () => {
     });
     const request = createRequest("https://example.com/");
     await intorProxy(config, request);
-    expect(setLocaleCookieEdge).not.toHaveBeenCalled();
+    expect(setLocaleCookieEdge).toHaveBeenCalledWith(
+      expect.objectContaining({ locale: "en" }),
+    );
   });
 });
