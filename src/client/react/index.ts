@@ -11,5 +11,8 @@ export {
 // translator
 export { useTranslator } from "./translator/use-translator";
 
-// helpers
+// navigation
+export { useNavigationTarget, useNavigationStrategy } from "./navigation";
+
+// helpers (client-shared utilities, re-exported)
 export { getClientLocale } from "@/client/helpers";
