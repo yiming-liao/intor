@@ -1,7 +1,7 @@
 import { usePathname as useNextPathname } from "next/navigation";
 import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
-import { localizePathname } from "@/shared/utils/routing/localize-pathname";
+import { localizePathname } from "@/shared/utils";
 
 /**
  * Custom hook to get the current pathname in different forms based on the active locale.
@@ -11,9 +11,9 @@ import { localizePathname } from "@/shared/utils/routing/localize-pathname";
  *
  * @example
  * const { localizedPathname, standardizedPathname, unprefixedPathname } = usePathname();
- * console.log(localizedPathname); // e.g. "/en/about"
- * console.log(standardizedPathname); // e.g. "/{locale}/about"
- * console.log(unprefixedPathname); // e.g. "/about"
+ * // localizedPathname => "/en-US/about"
+ * // standardizedPathname => "/{locale}/about"
+ * // unprefixedPathname => "/about"
  */
 export const usePathname = (): {
   unprefixedPathname: string;
@@ -28,11 +28,7 @@ export const usePathname = (): {
 
   // Generate the locale-prefixed pathname
   const { localizedPathname, standardizedPathname, unprefixedPathname } =
-    localizePathname({
-      config,
-      pathname: rawPathname,
-      locale,
-    });
+    localizePathname(config, rawPathname, locale);
 
   return {
     unprefixedPathname,

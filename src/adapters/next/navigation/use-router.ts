@@ -1,40 +1,73 @@
-import type { GenLocale } from "@/shared/types/generated.types";
-import type { Locale } from "intor-translator";
-import type { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import type { GenConfigKeys, GenLocale } from "@/shared/types/generated";
+import type {
+  NavigateOptions,
+  PrefetchOptions,
+} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter } from "next/navigation";
-import { useLocaleSwitch } from "@/adapters/next/navigation/utils/use-locale-switch";
+import { useNavigationTarget, useNavigationStrategy } from "@/client/react";
 
 /**
- * useRouter hook.
+ * Locale-aware router hook.
  *
- * Wraps Next.js useRouter and provides push/replace methods that automatically switch locale.
+ * Wraps Next.js `useRouter`
+ *
+ * - Resolve locale-aware navigation targets
+ * - Decide execution strategy (client-side vs full reload)
+ * - Preserve correct behavior across navigation types
  */
 export const useRouter = () => {
-  const { push, replace, ...rest } = useNextRouter();
+  const {
+    push: nextRouterPush,
+    replace: nextRouterReplace,
+    prefetch: nextRouterPrefetch,
+    ...rest
+  } = useNextRouter();
+  const { resolveNavigation } = useNavigationTarget();
+  const { decideNavigation } = useNavigationStrategy();
 
-  const { switchLocale } = useLocaleSwitch();
-
-  // Push with locale
-  const pushWithLocale = (
+  const push = <CK extends GenConfigKeys = "__default__">(
     href: string,
-    options?: NavigateOptions & { locale?: GenLocale },
+    options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const resolvedHref = switchLocale({ href, locale: options?.locale });
-    if (resolvedHref) push(resolvedHref, options);
+    const { locale } = options || {};
+    const target = resolveNavigation({ destination: href, locale });
+    const { kind } = decideNavigation(target);
+    if (kind === "reload") {
+      globalThis.location.href = target.destination;
+      return;
+    }
+    nextRouterPush(target.destination, options);
   };
 
-  // Replace with locale
-  const replaceWithLocale = (
+  const replace = <CK extends GenConfigKeys = "__default__">(
     href: string,
-    options?: NavigateOptions & { locale?: Locale },
+    options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const resolvedHref = switchLocale({ href, locale: options?.locale });
-    if (resolvedHref) replace(resolvedHref, options);
+    const { locale } = options || {};
+    const target = resolveNavigation({ destination: href, locale });
+    const { kind } = decideNavigation(target);
+    if (kind === "reload") {
+      globalThis.location.href = target.destination;
+      return;
+    }
+    nextRouterReplace(target.destination, options);
+  };
+
+  const prefetch = <CK extends GenConfigKeys = "__default__">(
+    href: string,
+    options?: PrefetchOptions & { locale?: GenLocale<CK> },
+  ) => {
+    const { locale } = options || {};
+    const target = resolveNavigation({ destination: href, locale });
+    const { kind } = decideNavigation(target);
+    if (kind !== "client") return; // Prefetch only makes sense for client-side navigation
+    nextRouterPrefetch(target.destination, options);
   };
 
   return {
-    push: pushWithLocale,
-    replace: replaceWithLocale,
+    push,
+    replace,
+    prefetch,
     ...rest,
   };
 };

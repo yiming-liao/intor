@@ -1,46 +1,68 @@
 "use client";
 
-import type { GenLocale } from "@/shared/types/generated.types";
+import type { GenConfigKeys, GenLocale } from "@/shared/types/generated";
 import type { Url } from "next/dist/shared/lib/router/router";
 import type { LinkProps as NextLinkProps } from "next/link";
 import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import NextLink from "next/link";
 import * as React from "react";
-import { useLocaleSwitch } from "@/adapters/next/navigation/utils/use-locale-switch";
+import { useNavigationTarget, useNavigationStrategy } from "@/client/react";
 
-interface LinkProps
+interface LinkProps<CK extends GenConfigKeys = "__default__">
   extends Omit<NextLinkProps, "href">,
     Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
   href?: Url;
-  locale?: GenLocale;
+  /**
+   * Locale to navigate with.
+   *
+   * If `href` is omitted, the current route is used as the navigation target.
+   */
+  locale?: GenLocale<CK>;
 }
 
 /**
- * Localized Link component
+ * Locale-aware Link component.
  *
- * - Wraps Next.js Link and handles locale switching.
- * - Full reload occurs only if the locale changes and requires it; otherwise updates context.
+ * Wraps Next.js `Link`
+ *
+ * - Resolves a locale-aware navigation destination
+ * - Preserves external navigation behavior
+ * - Switches locale via client state or full reload when required
+ *
+ * This component is responsible only for executing the resolved target.
  */
-export const Link = ({
+export const Link = <CK extends GenConfigKeys = "__default__">({
   href,
   locale,
   children,
   onClick,
   ...props
-}: LinkProps): React.JSX.Element => {
-  const formatted =
+}: LinkProps<CK>): React.JSX.Element => {
+  const { resolveNavigation } = useNavigationTarget();
+  const { decideNavigation } = useNavigationStrategy();
+
+  // Normalize Next.js href input into a string destination
+  const rawDestination =
     typeof href === "string" ? href : href ? formatUrl(href) : undefined;
 
-  const { resolveHref, switchLocale } = useLocaleSwitch();
-  const { resolvedHref } = resolveHref({ href: formatted, locale });
+  // Resolve navigation target
+  const target = resolveNavigation({ destination: rawDestination, locale });
 
   const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     onClick?.(e);
-    switchLocale({ href: formatted, locale });
+    if (e.defaultPrevented) return;
+
+    // Decide how this navigation should be executed
+    const { kind } = decideNavigation(target);
+    if (kind === "reload") {
+      e.preventDefault(); // prevent client-side navigation
+      globalThis.location.href = target.destination;
+      return;
+    }
   };
 
   return (
-    <NextLink href={resolvedHref} onClick={handleClick} {...props}>
+    <NextLink href={target.destination} onClick={handleClick} {...props}>
       {children}
     </NextLink>
   );

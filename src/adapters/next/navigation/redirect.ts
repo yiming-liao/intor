@@ -1,41 +1,44 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GenLocale } from "@/shared/types/generated.types";
+import type { GenConfigKeys, GenLocale } from "@/shared/types/generated";
 import type { RedirectType } from "next/navigation";
 import { redirect as nextRedirect } from "next/navigation";
-import { getI18nContext } from "@/adapters/next/server";
-import { localizePathname } from "@/shared/utils/routing/localize-pathname";
+import { getLocale } from "@/adapters/next/server";
+import { localizePathname } from "@/shared/utils";
+import { isExternalDestination } from "@/shared/utils/is-external-destination";
 
 /**
- * redirect utility.
+ * Locale-aware redirect helper (server-only).
  *
- * - Wraps Next.js redirect and applies locale-aware navigation.
- * - Automatically prefixes the pathname with the correct locale.
- * - External URLs are redirected directly without modification.
+ * Wraps Next.js `redirect`
+ *
+ * - Resolves the effective locale before redirecting
+ * - Applies locale prefix for internal destinations
+ * - Bypasses localization for external destinations
  */
-export const redirect = async ({
+export const redirect = async <CK extends GenConfigKeys = "__default__">({
   config,
   locale,
   url,
   type,
 }: {
   config: IntorResolvedConfig;
-  locale?: GenLocale;
+  locale?: GenLocale<CK>;
   url: string;
   type?: RedirectType | undefined;
 }) => {
-  if (url.startsWith("http")) {
+  // External destinations bypass app routing entirely
+  const isExternal = isExternalDestination(url);
+  if (isExternal) {
     nextRedirect(url);
+    return;
   }
 
-  const isLocaleValid = locale && config.supportedLocales?.includes(locale);
-  const { locale: detectedLocale } = await getI18nContext(config);
+  // Determine locale for this redirect
+  const targetLocale =
+    locale && config.supportedLocales.includes(locale)
+      ? locale
+      : await getLocale(config);
 
-  // Generate the locale-prefixed pathname
-  const { localizedPathname } = localizePathname({
-    config,
-    pathname: url,
-    locale: isLocaleValid ? locale : detectedLocale,
-  });
-
-  nextRedirect(localizedPathname, type);
+  const { localizedPathname } = localizePathname(config, url, targetLocale);
+  return nextRedirect(localizedPathname, type);
 };
