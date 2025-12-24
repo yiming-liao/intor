@@ -10,4 +10,4 @@ run("rollup -c .config/rollup/next.js");
 
 // dts
 run("tsc -p tsconfig.build.json");
-run("tsc-alias tsconfig.build.json --outDir dist");
+run("tsc-alias tsconfig.build.json --outDir dist/types");

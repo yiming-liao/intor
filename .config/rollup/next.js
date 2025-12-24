@@ -1,8 +1,8 @@
 // @ts-check
 import typescript from "@rollup/plugin-typescript";
-import preserveDirectives from "rollup-plugin-preserve-directives";
+import alias from "@rollup/plugin-alias";
 import package_ from "../../package.json" with { type: "json" };
-import { removeExternalImports } from "./plugins/remove-external-imports.js";
+import { preserveDirectives } from "./plugins/preserve-directives.js";
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
 const EXTERNALS = [
@@ -16,6 +16,7 @@ const EXTERNALS = [
   "next/link",
   "next/navigation",
   "next/dist/shared/lib/router/utils/format-url",
+  "intor/react", // intor module
 ];
 
 /** @type {import('rollup').RollupOptions[]} */
@@ -28,7 +29,7 @@ export default [
       "export/next/server/index": "export/next/server/index.ts",
     },
     output: {
-      dir: "dist",
+      dir: "dist/next",
       format: "esm",
       preserveModules: true,
     },
@@ -38,9 +39,29 @@ export default [
       warn(warning);
     },
     plugins: [
+      alias({
+        entries: [
+          /**
+           * IMPORTANT:
+           * Next adapter source (e.g. src/adapters/next/navigation/use-pathname.ts)
+           * must import internal react contexts for TypeScript to work,
+           * but at runtime it MUST consume the public `intor/react` context.
+           *
+           * This alias rewrites internal context imports to `intor/react`
+           * to ensure a single React Context instance at runtime.
+           */
+          {
+            find: "@/client/react/contexts/config",
+            replacement: "intor/react",
+          },
+          {
+            find: "@/client/react/contexts/locale",
+            replacement: "intor/react",
+          },
+        ],
+      }),
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       preserveDirectives(),
-      removeExternalImports(),
       fileSizeSummary(),
     ],
   },

@@ -2,11 +2,12 @@
 export {
   IntorProvider,
   type IntorProviderProps,
-} from "./contexts/intor-provider";
-export {
+  useConfig,
+  useLocale,
+  useMessages,
   TranslatorRuntimeProvider,
   type TranslatorRuntimeProviderProps,
-} from "./contexts/translator-runtime";
+} from "./contexts";
 
 // translator
 export { useTranslator } from "./translator/use-translator";

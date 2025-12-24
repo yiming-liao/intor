@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { GeneratedTypesFixture } from "../../__fixtures__/generated-types";
 import { expectType } from "tsd";
-import { useTranslator } from "../../../../dist/export/react";
+import { useTranslator } from "../../../../dist/types/export/react";
 
 declare global {
   interface IntorGeneratedTypes extends GeneratedTypesFixture {}

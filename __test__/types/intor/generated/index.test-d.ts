@@ -2,10 +2,10 @@
 /* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import type { IntorResolvedConfig } from "../../../../dist/src/config";
+import type { IntorResolvedConfig } from "../../../../dist/types/src/config";
 import type { GeneratedTypesFixture } from "../../__fixtures__/generated-types";
 import { expectType } from "tsd";
-import { intor, type IntorResult } from "../../../../dist/src/server";
+import { intor, type IntorResult } from "../../../../dist/types/src/server";
 
 declare global {
   interface IntorGeneratedTypes extends GeneratedTypesFixture {}

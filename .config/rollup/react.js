@@ -1,26 +1,19 @@
 // @ts-check
 import typescript from "@rollup/plugin-typescript";
-import preserveDirectives from "rollup-plugin-preserve-directives";
 import package_ from "../../package.json" with { type: "json" };
-import { removeExternalImports } from "./plugins/remove-external-imports.js";
+import { preserveDirectives } from "./plugins/preserve-directives.js";
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
-const EXTERNALS = [
-  "node:path",
-  "node:fs/promises",
-  "react",
-  "react/jsx-runtime",
-];
+const EXTERNALS = ["react", "react/jsx-runtime"];
 
 /** @type {import('rollup').RollupOptions[]} */
 export default [
   {
     input: {
-      // --- react
       "export/react/index": "export/react/index.ts",
     },
     output: {
-      dir: "dist",
+      dir: "dist/react",
       format: "esm",
       preserveModules: true,
     },
@@ -32,7 +25,6 @@ export default [
     plugins: [
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       preserveDirectives(),
-      removeExternalImports(),
       fileSizeSummary(),
     ],
   },

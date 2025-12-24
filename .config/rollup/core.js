@@ -9,13 +9,12 @@ const EXTERNALS = ["node:path", "node:fs/promises"];
 export default [
   {
     input: {
-      // --- core
       "export/index": "export/index.ts",
       "export/config/index": "export/config/index.ts",
       "export/server/index": "export/server/index.ts",
     },
     output: {
-      dir: "dist",
+      dir: "dist/core",
       format: "esm",
       preserveModules: true,
     },

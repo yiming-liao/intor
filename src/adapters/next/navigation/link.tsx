@@ -6,6 +6,7 @@ import type { LinkProps as NextLinkProps } from "next/link";
 import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import NextLink from "next/link";
 import * as React from "react";
+import { usePathname } from "@/adapters/next/navigation/use-pathname";
 import { useNavigationTarget, useNavigationStrategy } from "@/client/react";
 
 interface LinkProps<CK extends GenConfigKeys = "__default__">
@@ -38,7 +39,8 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   onClick,
   ...props
 }: LinkProps<CK>): React.JSX.Element => {
-  const { resolveNavigation } = useNavigationTarget();
+  const { localizedPathname } = usePathname();
+  const { resolveNavigation } = useNavigationTarget(localizedPathname);
   const { decideNavigation } = useNavigationStrategy();
 
   // Normalize Next.js href input into a string destination

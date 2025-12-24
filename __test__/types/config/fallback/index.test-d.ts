@@ -2,7 +2,7 @@
 import type {
   GenConfigKeys,
   GenConfig,
-} from "../../../../dist/export/internal";
+} from "../../../../dist/types/export/internal";
 import type { LocaleMessages } from "intor-translator";
 import { expectType } from "tsd";
 

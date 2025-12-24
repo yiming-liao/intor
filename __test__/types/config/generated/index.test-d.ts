@@ -2,7 +2,7 @@
 import type {
   GenConfigKeys,
   GenConfig,
-} from "../../../../dist/export/internal";
+} from "../../../../dist/types/export/internal";
 import type { GeneratedTypesFixture } from "../../__fixtures__/generated-types";
 import { expectType } from "tsd";
 

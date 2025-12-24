@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { expectType } from "tsd";
-import { useTranslator } from "../../../../dist/export/react";
+import { useTranslator } from "../../../../dist/types/export/react";
 
 declare global {
   interface IntorGeneratedTypes {}

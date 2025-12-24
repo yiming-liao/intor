@@ -1,4 +1,7 @@
-import type { Key, TranslatorInstance } from "../../../../dist/export/internal";
+import type {
+  Key,
+  TranslatorInstance,
+} from "../../../../dist/types/export/internal";
 import type { GeneratedTypesFixture } from "../../__fixtures__/generated-types";
 import { expectType } from "tsd";
 

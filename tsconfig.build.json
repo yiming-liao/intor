@@ -3,8 +3,9 @@
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
+    "stripInternal": true,
     "declaration": true,
-    "declarationDir": "dist"
+    "declarationDir": "dist/types"
   },
   "exclude": [
     "node_modules",

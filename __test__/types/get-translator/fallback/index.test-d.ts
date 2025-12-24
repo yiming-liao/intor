@@ -1,9 +1,9 @@
 /* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import type { IntorResolvedConfig } from "../../../../dist/src/config";
+import type { IntorResolvedConfig } from "../../../../dist/types/src/config";
 import { expectType } from "tsd";
-import { getTranslator } from "../../../../dist/export/server";
+import { getTranslator } from "../../../../dist/types/export/server";
 
 declare global {
   interface IntorGeneratedTypes {}

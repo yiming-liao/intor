@@ -4,6 +4,7 @@ import type {
   PrefetchOptions,
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter } from "next/navigation";
+import { usePathname } from "@/adapters/next/navigation/use-pathname";
 import { useNavigationTarget, useNavigationStrategy } from "@/client/react";
 
 /**
@@ -22,7 +23,8 @@ export const useRouter = () => {
     prefetch: nextRouterPrefetch,
     ...rest
   } = useNextRouter();
-  const { resolveNavigation } = useNavigationTarget();
+  const { localizedPathname } = usePathname();
+  const { resolveNavigation } = useNavigationTarget(localizedPathname);
   const { decideNavigation } = useNavigationStrategy();
 
   const push = <CK extends GenConfigKeys = "__default__">(

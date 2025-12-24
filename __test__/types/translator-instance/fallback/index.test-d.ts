@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import type { Key, TranslatorInstance } from "../../../../dist/export/internal";
+import type {
+  Key,
+  TranslatorInstance,
+} from "../../../../dist/types/export/internal";
 import type { LocaleMessages } from "intor-translator";
 import { expectType } from "tsd";
 
