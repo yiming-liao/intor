@@ -17,10 +17,6 @@ import { loadMessages, type MessagesReader } from "@/server/messages";
 
 /**
  * Create a translator instance for a specific locale.
- *
- * - Loads messages using the provided config, locale.
- * - Initializes a translator with `t`, `hasKey`, and optional scoped methods.
- * - Supports optional `preKey` to create a scoped translator for nested keys.
  */
 
 // Signature: Without preKey

@@ -4,11 +4,12 @@ export {
   // contexts
   IntorProvider,
   type IntorProviderProps,
-  useConfig,
-  useLocale,
-  useMessages,
   TranslatorRuntimeProvider,
   type TranslatorRuntimeProviderProps,
+  // Internal context hooks.  (useConfig, useLocale)
+  // Intentionally exported for cross-adapter usage
+  useConfig,
+  useLocale,
 
   // translator
   useTranslator,

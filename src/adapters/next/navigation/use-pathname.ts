@@ -1,4 +1,7 @@
 import { usePathname as useNextPathname } from "next/navigation";
+// NOTE: Internal context imports. (useConfig, useLocale)
+// Rewritten to `intor/react` by Rollup alias at build time.
+// Do not change these paths without updating the alias config.
 import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
 import { localizePathname } from "@/shared/utils";

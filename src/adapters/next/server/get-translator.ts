@@ -16,12 +16,9 @@ import { getLocale } from "@/adapters/next/server/get-locale";
 import { getTranslator as rawGetTranslator } from "@/server/translator";
 
 /**
- * Create a translator instance ready for the current Next.js SSR environment.
+ * Create a translator instance for the current Next.js SSR environment.
  *
- * - **Automatically resolves the current locale using the Next.js adapter.**
- * - Loads messages using the provided config, locale.
- * - Initializes a translator with `t`, `hasKey`, and optional scoped methods.
- * - Supports optional `preKey` to create a scoped translator for nested keys.
+ * - Automatically resolves the current locale using the Next.js adapter.
  */
 
 // Signature: Without preKey
