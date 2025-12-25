@@ -9,7 +9,7 @@ export type {
 
 // translator-instance
 export type {
-  Key,
+  MessageKey,
   TranslatorInstance,
-  TranslatorInstanceClient,
+  KeyMode,
 } from "./translator-instance";

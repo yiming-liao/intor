@@ -7,7 +7,6 @@ export type {
   GenMessages,
   GenLocale,
   // translator-instance
-  Key,
+  MessageKey,
   TranslatorInstance,
-  TranslatorInstanceClient,
 } from "@/shared/types";

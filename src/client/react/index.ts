@@ -10,7 +10,7 @@ export {
 } from "./contexts";
 
 // translator
-export { useTranslator } from "./translator/use-translator";
+export { useTranslator, T } from "./translator";
 
 // navigation
 export { useNavigationTarget, useNavigationStrategy } from "./navigation";

@@ -1,0 +1,28 @@
+import type { ReactTagRenderers } from "@/client/react/render";
+import type { Replacement, Translator } from "intor-translator";
+import { renderRichMessageReact } from "@/client/react/render";
+
+/**
+ * Create a React-specific rich translation function.
+ *
+ * This adapter bridges the core Translator with the React rich
+ * message rendering flow.
+ *
+ * - Resolves translated messages via `translator.t`
+ * - Renders semantic tags using React renderers
+ * - Supports optional scoped keys via `preKey`
+ *
+ * Intended for React client usage only.
+ */
+export const createTRich = (translator: Translator, preKey?: string) => {
+  const scoped = translator.scoped(preKey);
+
+  return (
+    key: string,
+    tagRenderers?: ReactTagRenderers,
+    replacements?: Replacement,
+  ) => {
+    const message = scoped.t(key, replacements);
+    return renderRichMessageReact(message, tagRenderers);
+  };
+};

@@ -22,12 +22,81 @@ Fast to start, easy to extend, and free from the usual i18n heaviness.
 
 </div>
 
-#### load-messages
+---
 
-```plain
+Intor separates language translation from semantic rendering.  
+ICU operates at the text-translation layer, while semantic tags  
+are parsed and rendered in a dedicated AST-based rendering phase.
 
-[load-messages]
- |-> load-local-messages -> read-locale-messages -> collect-file-entries & parse-file-entries
- |-> load-remote-messages -> fetchLocaleMessages
-
+```
+┌──────────────────────────────────────────────┐
+│                Application                   │
+│                                              │
+│  t() / tRich() / <T />                       │
+└───────────────────────────┬──────────────────┘
+                            │
+                            ▼
+┌──────────────────────────────────────────────┐
+│        Translator (Language / Semantic)      │
+│              intor-translator                │
+│                                              │
+│  Responsibilities:                           │
+│  - Resolve message key                       │
+│  - Locale resolution & fallback              │
+│  - Message loading                           │
+│  - Text-level interpolation                  │
+│    • {name}, {count}                         │
+│    • plural / select                         │
+│    • ICU MessageFormat (optional)            │
+│      (ignoreTag: true)                       │
+│                                              │
+│  Output:                                     │
+│  - Translated string                         │
+│  - May still contain <semantic tags>         │
+└───────────────────────────┬──────────────────┘
+                            │
+                            ▼
+┌──────────────────────────────────────────────┐
+│      Semantic Parsing & AST Construction     │
+│                                              │
+│  Responsibilities:                           │
+│  - Tokenize semantic tags                    │
+│    • <b>, <link>, <Component>                │
+│  - Build semantic AST                        │
+│    • TextNode                                │
+│    • TagNode                                 │
+│                                              │
+│  Note:                                       │
+│  - Independent from ICU / formatter          │
+│  - Pure semantic structure                   │
+└───────────────────────────┬──────────────────┘
+                            │
+                            ▼
+┌──────────────────────────────────────────────┐
+│        Semantic Rendering (Renderer)         │
+│                                              │
+│  Responsibilities:                           │
+│  - Traverse semantic AST                     │
+│  - Render TextNode                           │
+│  - Render TagNode                            │
+│                                              │
+│  Renderer decides output type:               │
+│  - string                                    │
+│  - ReactNode                                 │
+│  - Vue / Svelte nodes                        │
+│  - Markdown / CLI output                     │
+│                                              │
+│  Optional extensions:                        │
+│  - Custom tag renderers                      │
+│  - Rich components                           │
+└───────────────────────────┬──────────────────┘
+                            │
+                            ▼
+┌──────────────────────────────────────────────┐
+│                 Final Output                 │
+│                                              │
+│  - Rendered rich content                     │
+│  - Framework-specific result                 │
+│                                              │
+└──────────────────────────────────────────────┘
 ```

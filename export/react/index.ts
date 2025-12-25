@@ -13,6 +13,7 @@ export {
 
   // translator
   useTranslator,
+  T,
 
   // helpers
   getClientLocale,

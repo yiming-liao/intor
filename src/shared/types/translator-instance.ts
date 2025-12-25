@@ -7,43 +7,49 @@ import {
   type LocaleMessages,
 } from "intor-translator";
 
-/**
- * Conditional key type for TranslatorInstance.
- *
- * - Resolves to `ScopedLeafKeys` if a pre-key `PK` is provided,
- * otherwise resolves to `LocalizedLeafKeys`.
- */
-export type Key<M extends LocaleMessages, PK> = IfGen<
-  PK extends string ? ScopedLeafKeys<M, PK> : LocalizedLeafKeys<M>,
-  string
->;
+export type KeyMode = "auto" | "string";
 
 /**
- * Translator instance type.
+ * Message key type resolved from translator context.
+ *
+ * - Uses scoped keys when a `preKey` is provided
+ * - Falls back to all localized leaf keys otherwise
+ *
+ * This type is compile-time only and framework-agnostic.
+ */
+export type MessageKey<
+  M extends LocaleMessages,
+  PK extends string | undefined = undefined,
+  Mode extends KeyMode = "auto",
+> = Mode extends "string"
+  ? string
+  : IfGen<
+      PK extends string ? ScopedLeafKeys<M, PK> : LocalizedLeafKeys<M>,
+      string
+    >;
+
+/**
+ * Core translator instance interface.
+ *
+ * This type represents the minimal, framework-independent translator contract.
  */
 export type TranslatorInstance<
   M extends LocaleMessages,
   PK extends string | undefined = undefined,
+  Mode extends KeyMode = "auto",
 > = {
   /** `messages`: The message object containing all translations. */
   messages: M;
+
   /** Current locale in use. */
   locale: Locale<M>;
-  /** Check if a given key exists in the messages. */
-  hasKey: (key?: Key<M, PK>, targetLocale?: Locale<M>) => boolean;
-  /** Translate a given key into its string representation. */
-  t: <Result = string>(key?: Key<M, PK>, replacements?: Replacement) => Result;
-};
 
-/**
- * Translator instance type for client-side.
- */
-export type TranslatorInstanceClient<
-  M extends LocaleMessages,
-  PK extends string | undefined = undefined,
-> = TranslatorInstance<M, PK> & {
-  /** `isLoading`: Indicates whether translations are currently loading. */
-  isLoading: boolean;
-  /** `setLocale`: Function to update the current locale. */
-  setLocale: (locale: Locale<M>) => void;
+  /** Check if a given key exists in the messages. */
+  hasKey: (key?: MessageKey<M, PK, Mode>, targetLocale?: Locale<M>) => boolean;
+
+  /** Translate a given key into its string representation. */
+  t: <Result = string>(
+    key?: MessageKey<M, PK, Mode>,
+    replacements?: Replacement,
+  ) => Result;
 };

@@ -1,31 +1,28 @@
+import type { TranslatorInstanceReact } from "@/client/react/translator/translator-instance";
 import type {
   IfGen,
   GenConfigKeys,
   GenMessages,
 } from "@/shared/types/generated";
-import type { TranslatorInstanceClient } from "@/shared/types/translator-instance";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { useLocale } from "@/client/react/contexts/locale";
 import { useTranslator as useTranslatorContext } from "@/client/react/contexts/translator";
+import { createTRich } from "@/client/react/translator/create-t-rich";
 
 /**
  * React hook to access a ready-to-use translator instance in the client.
- *
- * - Provides `t`, `hasKey`, `messages`, `locale`, `isLoading` and `setLocale`.
- * - Supports optional `preKey` to create a scoped translator for nested keys.
- * - Can accept a generic type parameter `M` to strongly type your messages.
  */
 
 // Signature: Without preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
->(): TranslatorInstanceClient<GenMessages<CK>>;
+>(): TranslatorInstanceReact<GenMessages<CK>>;
 
 // Signature: With preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(preKey: IfGen<PK, string>): TranslatorInstanceClient<GenMessages<CK>, PK>;
+>(preKey: IfGen<PK, string>): TranslatorInstanceReact<GenMessages<CK>, PK>;
 
 // Implementation
 export function useTranslator(preKey?: string) {
@@ -44,5 +41,6 @@ export function useTranslator(preKey?: string) {
     ...props,
     hasKey: preKey ? scoped.hasKey : translator.hasKey,
     t: preKey ? scoped.t : translator.t,
+    tRich: createTRich(translator, preKey),
   };
 }

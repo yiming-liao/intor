@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type {
-  Key,
+  MessageKey,
   TranslatorInstance,
 } from "../../../../dist/types/export/internal";
 import type { LocaleMessages } from "intor-translator";
@@ -14,10 +14,10 @@ declare global {
 // Key
 //-------------------------------------------------
 // Without preKey
-expectType<string>(null as unknown as Key<LocaleMessages, undefined>);
+expectType<string>(null as unknown as MessageKey<LocaleMessages, undefined>);
 
 // With preKey
-expectType<string>(null as unknown as Key<LocaleMessages, "preKey">);
+expectType<string>(null as unknown as MessageKey<LocaleMessages, "preKey">);
 
 //-------------------------------------------------
 // TranslatorInstance / t()
