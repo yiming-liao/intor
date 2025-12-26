@@ -5,6 +5,7 @@ export { PREFIX_PLACEHOLDER } from "@/shared/constants";
 
 // shared / utils
 export {
+  deepMerge,
   // pathname
   localizePathname,
 } from "@/shared/utils";

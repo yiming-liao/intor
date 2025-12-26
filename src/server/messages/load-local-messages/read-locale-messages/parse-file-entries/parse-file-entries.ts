@@ -91,11 +91,9 @@ export async function parseFileEntries({
   for (const { namespace, messages } of parsedFileEntries) {
     // Handle root-level namespace (i.e., [rootDir]/index.json)
     if (namespace === "index") {
-      const merged = deepMerge(result, messages);
-      if (merged) Object.assign(result, merged);
+      Object.assign(result, deepMerge(result, messages));
     } else {
-      result[namespace] =
-        deepMerge((result[namespace] as Messages) ?? {}, messages) || {};
+      result[namespace] = deepMerge(result[namespace] as Messages, messages);
     }
   }
 

@@ -59,7 +59,7 @@ export const useRefetchMessages = ({
 
         // Update state only if this request was not aborted
         if (!controller.signal.aborted) {
-          setRuntimeMessages(deepMerge(config.messages, loadedMessages) || {});
+          setRuntimeMessages(deepMerge(config.messages, loadedMessages));
         }
       } finally {
         // Clear loading state only if this is still the active request

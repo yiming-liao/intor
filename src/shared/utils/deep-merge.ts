@@ -3,17 +3,16 @@ type PlainObject = Record<string, unknown>;
 
 /**
  * Deeply merges two objects.
+ *
  * - Nested objects → merged recursively
  * - Array / primitive → b overwrites a
+ *
+ * This function always returns a plain object.
  */
 export const deepMerge = <T extends PlainObject, U extends PlainObject>(
-  a?: T,
-  b?: U,
-): (T & U) | T | U | undefined => {
-  if (!a && !b) return undefined;
-  if (!a) return b as U;
-  if (!b) return a as T;
-
+  a: T = {} as T,
+  b: U = {} as U,
+): T & U => {
   const result: PlainObject = { ...a };
 
   for (const key in b) {
@@ -29,10 +28,8 @@ export const deepMerge = <T extends PlainObject, U extends PlainObject>(
         !Array.isArray(av) &&
         !Array.isArray(bv)
       ) {
-        // recursive merge
         result[key] = deepMerge(av as PlainObject, bv as PlainObject);
       } else {
-        // overwrite with primitive or array
         result[key] = bv;
       }
     }

@@ -139,29 +139,4 @@ describe("parseFileEntries", () => {
     const [[message]] = errorSpy.mock.calls;
     expect(message).toBe("Failed to read or parse file.");
   });
-
-  it("should not assign when deepMerge returns undefined", async () => {
-    vi.spyOn(readJsonModule, "jsonReader").mockResolvedValue({});
-    vi.spyOn(
-      await import("@/server/messages/shared/utils/is-valid-messages"),
-      "isValidMessages",
-    ).mockReturnValue(true);
-
-    vi.spyOn(await import("@/shared/utils"), "deepMerge").mockReturnValue(
-      undefined,
-    );
-    const result = await parseFileEntries({
-      fileEntries: [
-        {
-          namespace: "index",
-          fullPath: "/locale/en/index.json",
-          relativePath: "index.json",
-          segments: ["index"],
-          basename: "index",
-        },
-      ],
-      limit,
-    });
-    expect(result).toEqual({});
-  });
 });

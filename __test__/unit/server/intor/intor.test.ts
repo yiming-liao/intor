@@ -97,20 +97,6 @@ describe("intor", () => {
     expect(result.messages).toEqual({ a: 1 });
   });
 
-  it("returns empty messages object when deepMerge returns undefined", async () => {
-    const config = {
-      id: "test",
-      defaultLocale: "en-US",
-      messages: {},
-      loader: { type: "local" },
-      logger: {},
-    } as any;
-    vi.mocked(loadMessages).mockResolvedValue(undefined);
-    vi.mocked(deepMerge).mockReturnValue(undefined);
-    const result = await intor(config, "en-US" as any);
-    expect(result.messages).toEqual({});
-  });
-
   it("falls back to defaultLocale when getLocale is not provided", async () => {
     const config = {
       id: "test",
