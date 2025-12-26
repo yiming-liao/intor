@@ -7,7 +7,6 @@ import {
   setDocumentLocale,
 } from "@/client/shared/utils/locale";
 import { LocaleContext } from "./context";
-import { changeLocale } from "./utils/change-locale";
 
 export interface LocaleProviderProps {
   value: {
@@ -27,16 +26,11 @@ export function LocaleProvider({
   // Request a locale change.
   const setLocale = React.useCallback(
     async (newLocale: string) => {
-      changeLocale({
-        locale,
-        newLocale,
-        fullReloadRequired: config.loader?.type === "local",
-        setLocaleState,
-      });
-      // Notify external listener (fire-and-forget)
-      onLocaleChange?.(newLocale);
+      if (newLocale === locale) return;
+      setLocaleState(newLocale);
+      onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
     },
-    [locale, config.loader, onLocaleChange],
+    [locale, onLocaleChange],
   );
 
   // Sync locale-related browser side effects.
