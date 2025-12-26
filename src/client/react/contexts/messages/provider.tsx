@@ -9,7 +9,7 @@ import { useRefetchMessages } from "@/client/react/contexts/messages/utils/use-r
 import { MessagesContext } from "./context";
 
 export function MessagesProvider({
-  value: { messages = {} },
+  value: { initialMessages = {} },
   children,
 }: MessagesProviderProps): React.JSX.Element {
   const { config } = useConfig();
@@ -37,13 +37,12 @@ export function MessagesProvider({
     refetchMessages(locale);
   }, [refetchMessages, locale]);
 
-  // context value
   const value = React.useMemo(
     () => ({
-      messages: runtimeMessages || messages,
+      messages: runtimeMessages || initialMessages,
       isLoading: isLoadingMessages,
     }),
-    [runtimeMessages, messages, isLoadingMessages],
+    [runtimeMessages, initialMessages, isLoadingMessages],
   );
 
   return (

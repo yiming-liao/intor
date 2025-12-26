@@ -45,7 +45,7 @@ describe("intor", () => {
     });
     const result = await intor(config, getLocale as any);
     expect(result.initialLocale).toBe("fr-FR");
-    expect(result.messages).toEqual({
+    expect(result.initialMessages).toEqual({
       static: "msg",
       hello: "world",
     });
@@ -94,7 +94,7 @@ describe("intor", () => {
     vi.mocked(deepMerge).mockReturnValue({ a: 1 });
     const result = await intor(config, "en-US" as any);
     expect(loadMessages).not.toHaveBeenCalled();
-    expect(result.messages).toEqual({ a: 1 });
+    expect(result.initialMessages).toEqual({ a: 1 });
   });
 
   it("falls back to defaultLocale when getLocale is not provided", async () => {

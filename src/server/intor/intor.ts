@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GetLocale, IntorResult } from "@/server/intor/types";
+import type { IntorResult, LocaleResolver } from "@/server/intor/types";
 import type { MessagesReader } from "@/server/messages";
 import type { GenConfigKeys, GenLocale } from "@/shared/types";
 import type { LocaleMessages } from "intor-translator";
@@ -21,7 +21,7 @@ import { deepMerge } from "@/shared/utils";
  */
 export const intor = async <CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  getLocale: GetLocale,
+  getLocale: LocaleResolver<CK> | GenLocale<CK>,
   loadMessagesOptions: {
     exts?: string[];
     messagesReader?: MessagesReader;
@@ -58,6 +58,6 @@ export const intor = async <CK extends GenConfigKeys = "__default__">(
   return {
     config,
     initialLocale: locale as GenLocale<CK>,
-    messages: deepMerge(config.messages, loadedMessages) || {},
+    initialMessages: deepMerge(config.messages, loadedMessages),
   };
 };

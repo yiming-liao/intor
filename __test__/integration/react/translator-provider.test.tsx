@@ -46,7 +46,7 @@ describe("TranslatorProvider (integration)", () => {
     render(
       <ConfigProvider value={{ config: mockConfig }}>
         <LocaleProvider value={{ initialLocale: "en-US" }}>
-          <MessagesProvider value={{ messages: mockConfig.messages }}>
+          <MessagesProvider value={{ initialMessages: mockConfig.messages }}>
             <TranslatorProvider>
               <Consumer />
             </TranslatorProvider>
