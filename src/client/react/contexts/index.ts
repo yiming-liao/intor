@@ -8,5 +8,4 @@ export { TranslatorProvider, useTranslator } from "./translator";
 export {
   TranslatorRuntimeProvider,
   type TranslatorRuntimeProviderProps,
-  useTranslatorRuntime,
 } from "./translator-runtime";

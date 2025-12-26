@@ -1,12 +1,18 @@
 "use client";
 
-import type { MessagesProviderProps } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
 import { useRefetchMessages } from "@/client/react/contexts/messages/utils/use-refetch-messages";
 import { MessagesContext } from "./context";
+
+export interface MessagesProviderProps {
+  value: {
+    initialMessages?: Readonly<LocaleMessages>;
+  };
+  children: React.ReactNode;
+}
 
 export function MessagesProvider({
   value: { initialMessages = {} },

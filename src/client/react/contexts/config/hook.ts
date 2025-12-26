@@ -1,4 +1,4 @@
-import type { ConfigContextValue } from "./types";
+import type { ConfigContextValue } from "@/client/shared/types";
 import * as React from "react";
 import { ConfigContext } from "./context";
 

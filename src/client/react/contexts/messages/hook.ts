@@ -1,4 +1,4 @@
-import type { MessagesContextValue } from "./types";
+import type { MessagesContextValue } from "@/client/shared/types";
 import * as React from "react";
 import { MessagesContext } from "./context";
 

@@ -1,6 +1,5 @@
 "use client";
 
-import type { LocaleProviderProps } from "./types";
 import * as React from "react";
 import { useConfig } from "@/client/react/contexts/config";
 import {
@@ -9,6 +8,14 @@ import {
 } from "@/client/shared/utils/locale";
 import { LocaleContext } from "./context";
 import { changeLocale } from "./utils/change-locale";
+
+export interface LocaleProviderProps {
+  value: {
+    initialLocale: string;
+    onLocaleChange?: (newLocale: string) => Promise<void> | void;
+  };
+  children: React.ReactNode;
+}
 
 export function LocaleProvider({
   value: { initialLocale, onLocaleChange },
@@ -38,7 +45,6 @@ export function LocaleProvider({
     setDocumentLocale(locale);
   }, [config.cookie, locale]);
 
-  // context value
   const value = React.useMemo(
     () => ({
       locale,

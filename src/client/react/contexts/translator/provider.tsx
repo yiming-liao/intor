@@ -1,6 +1,5 @@
 "use client";
 
-import type { TranslatorProviderProps } from "./types";
 import { Translator } from "intor-translator";
 import * as React from "react";
 import { useConfig } from "@/client/react/contexts/config";
@@ -8,6 +7,13 @@ import { useLocale } from "@/client/react/contexts/locale";
 import { useMessages } from "@/client/react/contexts/messages";
 import { useTranslatorRuntime } from "@/client/react/contexts/translator-runtime";
 import { TranslatorContext } from "./context";
+
+export type TranslatorProviderProps = {
+  value?: {
+    isLoading?: boolean;
+  };
+  children: React.ReactNode;
+};
 
 export function TranslatorProvider({
   value: { isLoading: externalIsLoading } = {},
@@ -28,7 +34,6 @@ export function TranslatorProvider({
   }, [locale]);
   const isLoading = !!externalIsLoading || internalIsLoading || localeChanged;
 
-  // context value
   const value = React.useMemo(() => {
     const translator = new Translator<unknown>({
       messages,

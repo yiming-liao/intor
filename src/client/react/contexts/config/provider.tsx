@@ -1,14 +1,20 @@
 "use client";
 
-import type { ConfigProviderProps } from "./types";
+import type { IntorResolvedConfig } from "@/config";
 import * as React from "react";
 import { ConfigContext } from "./context";
+
+export interface ConfigProviderProps {
+  value: {
+    config: IntorResolvedConfig;
+  };
+  children: React.ReactNode;
+}
 
 export function ConfigProvider({
   value: { config },
   children,
 }: ConfigProviderProps) {
-  // context value
   const value = React.useMemo(
     () => ({
       config,

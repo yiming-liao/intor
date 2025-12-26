@@ -1,4 +1,4 @@
-import type { TranslatorContextValue } from "./types";
+import type { TranslatorContextValue } from "@/client/shared/types";
 import * as React from "react";
 
 export const TranslatorContext = React.createContext<

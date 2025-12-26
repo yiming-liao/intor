@@ -1,14 +1,25 @@
 "use client";
 
-import type { TranslatorRuntimeProviderProps } from "./types";
+import type {
+  TranslateHandlers,
+  TranslateHook,
+  TranslatorPlugin,
+} from "intor-translator";
 import * as React from "react";
 import { TranslatorRuntimeContext } from "./context";
+
+export type TranslatorRuntimeProviderProps = {
+  value: {
+    handlers?: TranslateHandlers;
+    plugins?: (TranslatorPlugin | TranslateHook)[];
+  };
+  children: React.ReactNode;
+};
 
 export const TranslatorRuntimeProvider = ({
   value: { handlers, plugins },
   children,
 }: TranslatorRuntimeProviderProps) => {
-  // context value
   const value = React.useMemo(
     () => ({
       handlers,

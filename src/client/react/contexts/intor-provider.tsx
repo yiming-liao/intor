@@ -1,25 +1,19 @@
 "use client";
 
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import type { Locale, LocaleMessages } from "intor-translator";
+import type { IntorInitialValue } from "@/client/shared/types/contexts";
+import type { GenConfigKeys } from "@/shared/types";
 import type * as React from "react";
 import { ConfigProvider } from "./config";
 import { LocaleProvider } from "./locale";
 import { MessagesProvider } from "./messages";
 import { TranslatorProvider } from "./translator";
 
-export interface IntorProviderProps {
-  value: {
-    config: IntorResolvedConfig;
-    initialLocale: Locale;
-    initialMessages?: Readonly<LocaleMessages>;
-    onLocaleChange?: (newLocale: string) => Promise<void> | void;
-    isLoading?: boolean;
-  };
+export interface IntorProviderProps<CK extends GenConfigKeys = "__default__"> {
+  value: IntorInitialValue<CK>;
   children: React.ReactNode;
 }
 
-export const IntorProvider = ({
+export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
   value: {
     config,
     initialLocale,
@@ -28,7 +22,7 @@ export const IntorProvider = ({
     isLoading,
   },
   children,
-}: IntorProviderProps) => {
+}: IntorProviderProps<CK>) => {
   return (
     <ConfigProvider value={{ config }}>
       <LocaleProvider value={{ initialLocale, onLocaleChange }}>
