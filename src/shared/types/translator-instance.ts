@@ -38,18 +38,9 @@ export type TranslatorInstance<
   PK extends string | undefined = undefined,
   Mode extends KeyMode = "auto",
 > = {
-  /** `messages`: The message object containing all translations. */
-  messages: M;
-
-  /** Current locale in use. */
-  locale: Locale<M>;
-
   /** Check if a given key exists in the messages. */
   hasKey: (key?: MessageKey<M, PK, Mode>, targetLocale?: Locale<M>) => boolean;
 
   /** Translate a given key into its string representation. */
-  t: <Result = string>(
-    key?: MessageKey<M, PK, Mode>,
-    replacements?: Replacement,
-  ) => Result;
+  t: (key?: MessageKey<M, PK, Mode>, replacements?: Replacement) => string;
 };

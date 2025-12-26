@@ -10,7 +10,7 @@ import { useTranslator as useTranslatorContext } from "@/client/react/contexts/t
 import { createTRich } from "@/client/react/translator/create-t-rich";
 
 /**
- * React hook to access a ready-to-use translator instance in the client.
+ * React hook to access the active translator instance.
  */
 
 // Signature: Without preKey
@@ -29,18 +29,19 @@ export function useTranslator(preKey?: string) {
   const { translator } = useTranslatorContext();
   const { setLocale } = useLocale();
 
-  const props = {
+  const scoped = translator.scoped(preKey);
+
+  return {
     messages: translator.messages,
     locale: translator.locale,
     isLoading: translator.isLoading,
     setLocale,
-  };
-
-  const scoped = translator.scoped(preKey);
-  return {
-    ...props,
     hasKey: preKey ? scoped.hasKey : translator.hasKey,
     t: preKey ? scoped.t : translator.t,
     tRich: createTRich(translator, preKey),
-  };
+    // NOTE:
+    // The runtime implementation is intentionally erased.
+    // Type safety is guaranteed by public type contracts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any;
 }

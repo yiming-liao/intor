@@ -1,17 +1,29 @@
 import type { ReactTagRenderers } from "@/client/react/render";
-import type { TranslatorInstanceClient } from "@/client/shared/types";
-import type { KeyMode, MessageKey } from "@/shared/types";
+import type { KeyMode, MessageKey, TranslatorInstance } from "@/shared/types";
 import type { JSX } from "react/jsx-runtime";
-import { type LocaleMessages, type Replacement } from "intor-translator";
+import {
+  type Locale,
+  type LocaleMessages,
+  type Replacement,
+} from "intor-translator";
 
-/**
- * React-specific translator instance.
- */
 export type TranslatorInstanceReact<
   M extends LocaleMessages,
   PK extends string | undefined = undefined,
   Mode extends KeyMode = "auto",
-> = TranslatorInstanceClient<M, PK, Mode> & {
+> = TranslatorInstance<M, PK, Mode> & {
+  /** `messages`: The message object containing all translations. */
+  messages: M;
+
+  /** Current locale in use. */
+  locale: Locale<M>;
+
+  /** Indicates whether translations are currently loading. */
+  isLoading: boolean;
+
+  /** Update the active locale. */
+  setLocale: (locale: Locale<M>) => void;
+
   /** Translate a key into React nodes using semantic tags */
   tRich: (
     key?: MessageKey<M, PK, Mode>,
