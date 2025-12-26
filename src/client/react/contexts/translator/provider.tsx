@@ -20,8 +20,8 @@ export function TranslatorProvider({
   children,
 }: TranslatorProviderProps) {
   const { config } = useConfig();
-  const { messages, isLoading: internalIsLoading } = useMessages();
   const { locale } = useLocale();
+  const { messages, isLoading: internalIsLoading } = useMessages();
   const runtime = useTranslatorRuntime();
 
   // Treat locale changes as a loading boundary to avoid transient missing states.

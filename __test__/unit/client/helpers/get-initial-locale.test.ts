@@ -12,7 +12,7 @@ const mockConfig = {
 // @ts-expect-error globalThis
 const deleteGlobal = (name: string) => delete globalThis[name];
 
-describe("getInitialLocale", () => {
+describe("getClientLocale", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });

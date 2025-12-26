@@ -4,7 +4,10 @@ import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
-import { useRefetchMessages } from "@/client/react/contexts/messages/utils/use-refetch-messages";
+import {
+  createRefetchMessages,
+  type RefetchMessagesFn,
+} from "@/client/shared/utils/create-refetch-messages";
 import { MessagesContext } from "./context";
 
 export interface MessagesProviderProps {
@@ -28,11 +31,16 @@ export function MessagesProvider({
   const isInitialRenderRef = React.useRef(true);
 
   // Prepares message refetch function.
-  const { refetchMessages } = useRefetchMessages({
-    config,
-    setRuntimeMessages,
-    setIsLoadingMessages,
-  });
+  const refetchMessages: RefetchMessagesFn = React.useMemo(
+    () =>
+      createRefetchMessages({
+        config,
+        onLoadingStart: () => setIsLoadingMessages(true),
+        onLoadingEnd: () => setIsLoadingMessages(false),
+        onMessages: setRuntimeMessages,
+      }),
+    [config, setRuntimeMessages, setIsLoadingMessages],
+  );
 
   // Refetch messages when locale changes (except initial render).
   React.useEffect(() => {
