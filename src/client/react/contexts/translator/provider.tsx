@@ -17,7 +17,16 @@ export function TranslatorProvider({
   const { messages, isLoading: internalIsLoading } = useMessages();
   const { locale } = useLocale();
   const runtime = useTranslatorRuntime();
-  const isLoading = Boolean(externalIsLoading ?? internalIsLoading);
+
+  // Treat locale changes as a loading boundary to avoid transient missing states.
+  // isLoading defaults to false, but is eagerly set to true on locale switches.
+  const prevLocaleRef = React.useRef(locale);
+  // eslint-disable-next-line react-hooks/refs -- intentional render-time read to detect locale switches
+  const localeChanged = prevLocaleRef.current !== locale;
+  React.useEffect(() => {
+    prevLocaleRef.current = locale;
+  }, [locale]);
+  const isLoading = !!externalIsLoading || internalIsLoading || localeChanged;
 
   // context value
   const value = React.useMemo(() => {
