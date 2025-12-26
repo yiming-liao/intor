@@ -17,6 +17,7 @@ export {
   // shared
   clearLoggerPool,
   clearMessagesPool,
+  setGlobalMessagesPool,
 
   // helpers
   loadLocalMessagesFromUrl,

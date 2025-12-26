@@ -15,7 +15,10 @@ export { getTranslator } from "./translator";
 
 // shared
 export { clearLoggerPool } from "./shared/logger/global-logger-pool";
-export { clearMessagesPool } from "./shared/messages/global-messages-pool";
+export {
+  clearMessagesPool,
+  setGlobalMessagesPool,
+} from "./shared/messages/global-messages-pool";
 
 // helpers
 export { loadLocalMessagesFromUrl } from "./helpers";

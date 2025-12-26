@@ -5,6 +5,12 @@ This module defines the server-side runtime of Intor.
 It orchestrates initialization in a server environment by resolving
 the initial locale and preparing translation runtime state.
 
+> #### Server-side message cache
+>
+> Intor caches loaded messages on the server using **Keyv**.  
+> Keyv is used directly as the cache abstraction, allowing full access to its
+> ecosystem (e.g. Redis, in-memory, or other backends) without additional adapters.
+
 ## What this module does
 
 - Provides the main server-side entry point (`intor`)

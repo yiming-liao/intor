@@ -18,8 +18,18 @@ export function getGlobalMessagesPool(): MessagesPool {
 }
 
 /**
+ * Replace the global messages pool.
+ *
+ * - Intended for advanced usage (e.g. Redis, custom cache backends).
+ * - Must be called during application bootstrap.
+ */
+export function setGlobalMessagesPool(pool: MessagesPool): void {
+  globalThis.__INTOR_MESSAGES_POOL__ = pool;
+}
+
+/**
  * Optional: clear all cache
- * Useful in tests or dynamic reloads.
+ * - Useful in tests or dynamic reloads.
  */
 export function clearMessagesPool(): void {
   const pool = getGlobalMessagesPool();
