@@ -7,6 +7,7 @@ run("rm -rf dist");
 run("rollup -c .config/rollup/core.js");
 run("rollup -c .config/rollup/react.js");
 run("rollup -c .config/rollup/next.js");
+run("rollup -c .config/rollup/vue.js");
 
 // dts
 run("tsc -p tsconfig.build.json");
