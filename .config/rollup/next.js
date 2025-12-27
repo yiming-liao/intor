@@ -51,11 +51,7 @@ export default [
            * to ensure a single React Context instance at runtime.
            */
           {
-            find: "@/client/react/contexts/config",
-            replacement: "intor/react",
-          },
-          {
-            find: "@/client/react/contexts/locale",
+            find: "@/client/react",
             replacement: "intor/react",
           },
         ],

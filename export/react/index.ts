@@ -1,17 +1,18 @@
 // intor / react
 
 export {
-  // contexts
+  // provider
   IntorProvider,
   type IntorProviderProps,
-  // Internal context hooks.  (useConfig, useLocale)
-  // Intentionally exported for cross-adapter usage
-  useConfig,
-  useLocale,
+  useIntor, // Internal hook.
 
   // translator
   useTranslator,
   T,
+
+  // navigation
+  useNavigationTarget, // Internal hook.
+  useNavigationStrategy, // Internal hook.
 
   // helpers
   getClientLocale,
