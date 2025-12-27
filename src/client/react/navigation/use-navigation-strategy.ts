@@ -1,6 +1,5 @@
 import type { NavigationTarget } from "@/routing/resolve-navigation-target";
-import { useConfig } from "@/client/react/contexts/config";
-import { useLocale } from "@/client/react/contexts/locale";
+import { useIntor } from "@/client/react/provider";
 import { setLocaleCookieBrowser } from "@/client/shared/utils";
 
 /**
@@ -20,8 +19,7 @@ export type NavigationStrategy =
  * No navigation is performed here.
  */
 export const useNavigationStrategy = () => {
-  const { config } = useConfig();
-  const { setLocale } = useLocale();
+  const { config, setLocale } = useIntor();
   const { loader, cookie } = config;
 
   /** Decide how the given navigation target should be handled. */

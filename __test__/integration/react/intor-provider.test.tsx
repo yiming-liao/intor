@@ -1,8 +1,7 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { IntorProvider } from "@/client/react";
-import { useLocale } from "@/client/react/contexts/locale";
+import { IntorProvider, useIntor } from "@/client/react";
 import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
 import { DEFAULT_COOKIE_OPTIONS } from "@/config/constants/cookie.constants";
 import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
@@ -21,7 +20,7 @@ const mockConfig: IntorResolvedConfig = {
 describe("IntorProvider (integration)", () => {
   it("provides locale through context", () => {
     function Consumer() {
-      const { locale } = useLocale();
+      const { locale } = useIntor();
       return <div data-testid="locale">{locale}</div>;
     }
 

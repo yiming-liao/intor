@@ -5,8 +5,7 @@ import type {
   GenMessages,
 } from "@/shared/types/generated";
 import type { LocalizedNodeKeys } from "intor-translator";
-import { useLocale } from "@/client/react/contexts/locale";
-import { useTranslator as useTranslatorContext } from "@/client/react/contexts/translator";
+import { useIntor } from "@/client/react/provider";
 import { createTRich } from "@/client/react/translator/create-t-rich";
 
 /**
@@ -26,8 +25,7 @@ export function useTranslator<
 
 // Implementation
 export function useTranslator(preKey?: string) {
-  const { translator } = useTranslatorContext();
-  const { setLocale } = useLocale();
+  const { translator, setLocale } = useIntor();
 
   const scoped = translator.scoped(preKey);
 

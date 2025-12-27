@@ -1,10 +1,5 @@
-// contexts
-export {
-  IntorProvider,
-  type IntorProviderProps,
-  useConfig,
-  useLocale,
-} from "./contexts";
+// provider
+export { IntorProvider, type IntorProviderProps, useIntor } from "./provider";
 
 // translator
 export { useTranslator, T } from "./translator";
