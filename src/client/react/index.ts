@@ -4,9 +4,6 @@ export {
   type IntorProviderProps,
   useConfig,
   useLocale,
-  useMessages,
-  TranslatorRuntimeProvider,
-  type TranslatorRuntimeProviderProps,
 } from "./contexts";
 
 // translator

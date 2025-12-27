@@ -5,5 +5,4 @@ export type {
   LocaleContextValue,
   MessagesContextValue,
   TranslatorContextValue,
-  TranslatorRuntimeContextValue,
 } from "./contexts";

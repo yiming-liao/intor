@@ -24,6 +24,8 @@ export interface IntorInitialValue<CK extends GenConfigKeys = "__default__"> {
   config: IntorResolvedConfig;
   initialLocale: GenLocale<CK>;
   initialMessages?: Readonly<LocaleMessages>;
+  handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
   onLocaleChange?: (newLocale: string) => Promise<void> | void;
   isLoading?: boolean;
 }
@@ -48,10 +50,4 @@ export type MessagesContextValue = {
 // translator
 export type TranslatorContextValue = {
   translator: Translator<unknown>;
-};
-
-// translator runtime
-export type TranslatorRuntimeContextValue = {
-  handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
 };

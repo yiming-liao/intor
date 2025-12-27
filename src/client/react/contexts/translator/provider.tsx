@@ -1,28 +1,33 @@
 "use client";
 
+import type {
+  TranslateHandlers,
+  TranslateHook,
+  TranslatorPlugin,
+} from "intor-translator";
 import { Translator } from "intor-translator";
 import * as React from "react";
 import { useConfig } from "@/client/react/contexts/config";
 import { useLocale } from "@/client/react/contexts/locale";
 import { useMessages } from "@/client/react/contexts/messages";
-import { useTranslatorRuntime } from "@/client/react/contexts/translator-runtime";
 import { TranslatorContext } from "./context";
 
 export type TranslatorProviderProps = {
   value?: {
+    handlers?: TranslateHandlers;
+    plugins?: (TranslatorPlugin | TranslateHook)[];
     isLoading?: boolean;
   };
   children: React.ReactNode;
 };
 
 export function TranslatorProvider({
-  value: { isLoading: externalIsLoading } = {},
+  value: { handlers, plugins, isLoading: externalIsLoading } = {},
   children,
 }: TranslatorProviderProps) {
   const { config } = useConfig();
   const { locale } = useLocale();
   const { messages, isLoading: internalIsLoading } = useMessages();
-  const runtime = useTranslatorRuntime();
 
   // Treat locale changes as a loading boundary to avoid transient missing states.
   // isLoading defaults to false, but is eagerly set to true on locale switches.
@@ -42,8 +47,8 @@ export function TranslatorProvider({
       fallbackLocales: config.fallbackLocales,
       loadingMessage: config.translator?.loadingMessage,
       placeholder: config.translator?.placeholder,
-      handlers: runtime?.handlers,
-      plugins: runtime?.plugins,
+      handlers,
+      plugins,
     });
     return { translator };
   }, [
@@ -53,8 +58,8 @@ export function TranslatorProvider({
     config.fallbackLocales,
     config.translator?.loadingMessage,
     config.translator?.placeholder,
-    runtime?.handlers,
-    runtime?.plugins,
+    handlers,
+    plugins,
   ]);
 
   return (

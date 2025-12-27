@@ -18,6 +18,8 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
     config,
     initialLocale,
     initialMessages = config.messages,
+    handlers,
+    plugins,
     onLocaleChange,
     isLoading,
   },
@@ -27,7 +29,7 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
     <ConfigProvider value={{ config }}>
       <LocaleProvider value={{ initialLocale, onLocaleChange }}>
         <MessagesProvider value={{ initialMessages }}>
-          <TranslatorProvider value={{ isLoading }}>
+          <TranslatorProvider value={{ handlers, plugins, isLoading }}>
             {children}
           </TranslatorProvider>
         </MessagesProvider>
