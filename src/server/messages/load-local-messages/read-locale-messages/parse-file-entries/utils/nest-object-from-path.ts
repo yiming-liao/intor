@@ -1,4 +1,4 @@
-import type { Messages } from "@/server/messages/shared/types";
+import type { Messages } from "@/shared/messages";
 
 /**
  * Wraps a value inside nested objects according to a given path.

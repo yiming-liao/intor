@@ -1,7 +1,8 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
-import { loadRemoteMessages } from "@/server/messages/load-remote-messages";
+import { loadRemoteMessages } from "@/shared/messages";
 import { deepMerge } from "@/shared/utils";
+import { resolveLoaderOptions } from "@/shared/utils";
 
 interface CreateRefetchMessagesParams {
   config: IntorResolvedConfig;
@@ -25,13 +26,12 @@ export const createRefetchMessages = ({
   onLoadingEnd,
   onMessages,
 }: CreateRefetchMessagesParams): RefetchMessagesFn => {
-  const { loader } = config;
-
   // Tracks the currently active remote request for this refetcher instance
   let controller: AbortController | null = null;
 
   return async function refetchMessages(newLocale: string) {
     // No-op when remote loading is not enabled
+    const loader = resolveLoaderOptions(config, "client");
     if (!loader || loader.type !== "remote") return;
 
     // Abort previous request
@@ -44,17 +44,19 @@ export const createRefetchMessages = ({
 
     try {
       const loadedMessages = await loadRemoteMessages({
+        // --- Messages Scope ---
         locale: newLocale,
         fallbackLocales: config.fallbackLocales[newLocale] || [],
         namespaces: loader.namespaces,
         rootDir: loader.rootDir,
-        remoteUrl: loader.remoteUrl,
-        remoteHeaders: loader.remoteHeaders,
-        extraOptions: {
-          cacheOptions: config.cache,
-          loggerOptions: { id: config.id, ...config.logger },
-        },
-        signal: controller.signal,
+        // --- Remote Source ---
+        url: loader.url,
+        headers: loader.headers,
+        signal: currentController.signal,
+        // --- Caching ---
+        cacheOptions: config.cache,
+        // --- Observability ---
+        loggerOptions: config.logger,
       });
 
       // Apply state updates only when this request is still the active one

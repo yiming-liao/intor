@@ -8,31 +8,34 @@ export interface RemoteHeaders {
   [key: string]: string | undefined;
 }
 
-/** Base options shared by all message loaders. */
-type BaseLoaderOptions = {
+/** Local message loader options. */
+interface LocalLoader {
+  /** Use local filesystem-based message loading. */
+  type: "local";
   /** Root location for resolving message loading sources. */
   rootDir?: string;
   /** Namespaces to load for all routes. */
   namespaces?: string[];
   /** Maximum number of concurrent loading tasks. */
   concurrency?: number;
-};
-
-/** Local message loader options. */
-type LocalLoader = BaseLoaderOptions & {
-  /** Use local filesystem-based message loading. */
-  type: "local";
-};
+}
 
 /** Remote message loader options. */
-export type RemoteLoader = BaseLoaderOptions & {
+export interface RemoteLoader {
   /** Use remote API-based message loading. */
   type: "remote";
+  /** Root location for resolving message loading sources. */
+  rootDir?: string;
+  /** Namespaces to load for all routes. */
+  namespaces?: string[];
   /** Base URL for fetching remote messages. */
-  remoteUrl: string;
+  url: string;
   /** Optional headers sent with remote requests. */
-  remoteHeaders?: RemoteHeaders;
-};
+  headers?: RemoteHeaders;
+}
 
 // Loader options (Local / Remote)
 export type LoaderOptions = LocalLoader | RemoteLoader;
+
+export type ServerLoaderOptions = LoaderOptions;
+export type ClientLoaderOptions = Omit<RemoteLoader, "type">;

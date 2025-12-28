@@ -1,5 +1,6 @@
 import type { TranslatorInstanceServer } from "./translator-instance";
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
+import type { MessagesReader } from "@/shared/messages";
 import type {
   GenConfigKeys,
   GenLocale,
@@ -13,7 +14,7 @@ import type {
   TranslatorPlugin,
 } from "intor-translator";
 import { Translator } from "intor-translator";
-import { loadMessages, type MessagesReader } from "@/server/messages";
+import { loadMessages } from "@/server/messages";
 
 export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
   config: IntorResolvedConfig;
@@ -44,15 +45,10 @@ export function getTranslator<
 export async function getTranslator<CK extends GenConfigKeys = "__default__">(
   params: GetTranslatorParams<CK> & { preKey?: string },
 ) {
-  const { config, locale, preKey } = params;
+  const { config, locale, preKey, extraOptions } = params;
 
-  const messages = await loadMessages({
-    config,
-    locale,
-    extraOptions: params.extraOptions,
-  });
+  const messages = await loadMessages({ config, locale, extraOptions });
 
-  // Create a Translator instance
   const translator = new Translator<LocaleMessages>({
     locale,
     messages,

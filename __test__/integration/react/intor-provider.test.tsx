@@ -15,6 +15,7 @@ const mockConfig: IntorResolvedConfig = {
   cache: DEFAULT_CACHE_OPTIONS,
   cookie: DEFAULT_COOKIE_OPTIONS,
   routing: DEFAULT_ROUTING_OPTIONS,
+  logger: { id: "test" },
 };
 
 describe("IntorProvider (integration)", () => {

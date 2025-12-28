@@ -12,16 +12,16 @@ import { parseFileEntries } from "./parse-file-entries";
  * 3. Wraps the parsed messages under the locale key.
  */
 export const readLocaleMessages = async ({
-  limit,
-  rootDir = "messages",
   locale,
   namespaces,
-  extraOptions: { exts, messagesReader, loggerOptions } = {},
+  rootDir = "messages",
+  limit,
+  extraOptions: { exts, messagesReader, loggerOptions },
 }: ReadLocaleMessagesParams): Promise<LocaleMessages> => {
   // 1. Collect file entries
   const fileEntries = await collectFileEntries({
-    rootDir: path.resolve(process.cwd(), rootDir, locale),
     namespaces,
+    rootDir: path.resolve(process.cwd(), rootDir, locale),
     limit,
     extraOptions: { exts, loggerOptions },
   });

@@ -1,6 +1,7 @@
 import type { NavigationTarget } from "@/routing/resolve-navigation-target";
 import { useIntor } from "@/client/react/provider";
 import { setLocaleCookieBrowser } from "@/client/shared/utils";
+import { resolveLoaderOptions } from "@/shared/utils";
 
 /**
  * Strategy describing how a navigation should be executed.
@@ -20,7 +21,7 @@ export type NavigationStrategy =
  */
 export const useNavigationStrategy = () => {
   const { config, setLocale } = useIntor();
-  const { loader, cookie } = config;
+  const loader = resolveLoaderOptions(config, "client");
 
   /** Decide how the given navigation target should be handled. */
   const decideNavigation = (target: NavigationTarget): NavigationStrategy => {
@@ -28,10 +29,11 @@ export const useNavigationStrategy = () => {
       return { kind: "external" };
     }
 
-    const fullReloadRequired = loader?.type === "local";
+    const shouldFullReload =
+      loader?.type === "local" || config.routing.forceFullReload;
 
-    if (fullReloadRequired) {
-      setLocaleCookieBrowser(cookie, target.locale); // Persist locale before full page reload
+    if (shouldFullReload) {
+      setLocaleCookieBrowser(config.cookie, target.locale); // Persist locale before full page reload
       return { kind: "reload" };
     }
 

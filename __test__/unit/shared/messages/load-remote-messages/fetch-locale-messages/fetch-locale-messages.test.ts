@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { fetchLocaleMessages } from "@/server/messages/load-remote-messages/fetch-locale-messages";
-import * as isValidMessagesModule from "@/server/messages/shared/utils/is-valid-messages";
-import * as loggerModule from "@/server/shared/logger/get-logger";
+import * as loggerModule from "@/shared/logger/get-logger";
+import { fetchLocaleMessages } from "@/shared/messages/load-remote-messages/fetch-locale-messages";
+import * as isValidMessagesModule from "@/shared/messages/utils/is-valid-messages";
 
-vi.mock("@/server/messages/shared/utils/is-namespace-messages");
+vi.mock("@/shared/messages/utils/is-valid-messages");
 
 describe("fetchLocaleMessages", () => {
   let fetchMock: typeof globalThis.fetch;
@@ -38,11 +38,10 @@ describe("fetchLocaleMessages", () => {
     vi.mocked(isValidMessagesModule.isValidMessages).mockReturnValue(true);
 
     const result = await fetchLocaleMessages({
-      remoteUrl: "https://api.example.com/messages",
+      url: "https://api.example.com/messages",
       locale: "en-US",
-      searchParams: new URLSearchParams(),
-      remoteHeaders: {},
-      extraOptions: {},
+      headers: {},
+      extraOptions: { loggerOptions: { id: "" } },
     });
 
     expect(result).toEqual(data);
@@ -53,11 +52,10 @@ describe("fetchLocaleMessages", () => {
     vi.mocked(fetchMock).mockRejectedValueOnce(new Error("Network error"));
 
     const result = await fetchLocaleMessages({
-      remoteUrl: "https://api.example.com/messages",
+      url: "https://api.example.com/messages",
       locale: "en-US",
-      searchParams: new URLSearchParams(),
-      remoteHeaders: {},
-      extraOptions: {},
+      headers: {},
+      extraOptions: { loggerOptions: { id: "" } },
     });
 
     expect(result).toBeUndefined();
@@ -73,11 +71,10 @@ describe("fetchLocaleMessages", () => {
     } as any);
 
     const result = await fetchLocaleMessages({
-      remoteUrl: "https://api.example.com/messages",
+      url: "https://api.example.com/messages",
       locale: "en-US",
-      searchParams: new URLSearchParams(),
-      remoteHeaders: {},
-      extraOptions: {},
+      headers: {},
+      extraOptions: { loggerOptions: { id: "" } },
     });
 
     expect(result).toBeUndefined();
@@ -94,11 +91,10 @@ describe("fetchLocaleMessages", () => {
     (isValidMessagesModule.isValidMessages as any).mockReturnValue(false);
 
     const result = await fetchLocaleMessages({
-      remoteUrl: "https://api.example.com/messages",
+      url: "https://api.example.com/messages",
       locale: "en-US",
-      searchParams: new URLSearchParams(),
-      remoteHeaders: {},
-      extraOptions: {},
+      headers: {},
+      extraOptions: { loggerOptions: { id: "" } },
     });
 
     expect(result).toBeUndefined();

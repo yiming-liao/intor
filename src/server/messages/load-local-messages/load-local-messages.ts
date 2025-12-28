@@ -2,10 +2,9 @@ import type { LoadLocalMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import pLimit from "p-limit";
-import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
 import { readLocaleMessages } from "@/server/messages/load-local-messages/read-locale-messages";
-import { getLogger } from "@/server/shared/logger/get-logger";
-import { getGlobalMessagesPool } from "@/server/shared/messages/global-messages-pool";
+import { getLogger } from "@/shared/logger";
+import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
 import { normalizeCacheKey } from "@/shared/utils";
 
 /**
@@ -21,21 +20,19 @@ import { normalizeCacheKey } from "@/shared/utils";
  * File system traversal, parsing, and message validation are delegated to lower-level utilities.
  */
 export const loadLocalMessages = async ({
-  pool = getGlobalMessagesPool(),
-  rootDir = "messages",
   locale,
   fallbackLocales,
   namespaces,
-  extraOptions: {
-    concurrency = 10,
-    cacheOptions = DEFAULT_CACHE_OPTIONS,
-    loggerOptions = { id: "default" },
-    exts,
-    messagesReader,
-  } = {},
+  rootDir = "messages",
+  concurrency = 10,
+  exts,
+  messagesReader,
+  pool = getGlobalMessagesPool(),
+  cacheOptions,
   allowCacheWrite = false,
+  loggerOptions,
 }: LoadLocalMessagesParams): Promise<LocaleMessages | undefined> => {
-  const baseLogger = getLogger({ ...loggerOptions });
+  const baseLogger = getLogger(loggerOptions);
   const logger = baseLogger.child({ scope: "load-local-messages" });
 
   const start = performance.now();
@@ -44,7 +41,7 @@ export const loadLocalMessages = async ({
     resolvedRootDir: path.resolve(process.cwd(), rootDir),
   });
 
-  // --- Cache key
+  // --- Cache key ---
   const cacheKey = normalizeCacheKey([
     loggerOptions.id,
     "loaderType:local",
@@ -54,7 +51,7 @@ export const loadLocalMessages = async ({
     (namespaces || []).toSorted().join(","),
   ]);
 
-  // --- Cache read --------------------------------------------------
+  // --- Cache read ---
   if (cacheOptions.enabled && cacheKey) {
     const cached = await pool?.get(cacheKey);
     if (cached) {
@@ -72,16 +69,16 @@ export const loadLocalMessages = async ({
     const candidateLocale = candidateLocales[i];
     const isLast = i === candidateLocales.length - 1;
     try {
-      const readed = await readLocaleMessages({
-        limit,
-        rootDir,
+      const result = await readLocaleMessages({
         locale: candidateLocale,
         namespaces,
-        extraOptions: { loggerOptions, exts, messagesReader },
+        rootDir,
+        limit,
+        extraOptions: { exts, messagesReader, loggerOptions },
       });
       // Stop at the first locale that yields non-empty messages
-      if (Object.values(readed[candidateLocale] || {}).length > 0) {
-        messages = readed;
+      if (Object.values(result[candidateLocale] || {}).length > 0) {
+        messages = result;
         break;
       }
     } catch {
@@ -98,8 +95,8 @@ export const loadLocalMessages = async ({
     }
   }
 
-  // --- Cache write --------------------------------------------------
-  if (allowCacheWrite && cacheOptions.enabled && cacheKey && messages) {
+  // --- Cache write ---
+  if (cacheOptions.enabled && allowCacheWrite && cacheKey && messages) {
     await pool?.set(cacheKey, messages, cacheOptions.ttl);
   }
 

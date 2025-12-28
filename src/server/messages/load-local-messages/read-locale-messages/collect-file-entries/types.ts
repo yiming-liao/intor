@@ -4,11 +4,11 @@ import type { LimitFunction } from "p-limit";
 
 export interface CollectFileEntriesParams {
   readdir?: (typeof fs)["readdir"];
-  limit: LimitFunction;
-  rootDir: string;
   namespaces?: string[];
-  extraOptions?: {
+  rootDir: string;
+  limit: LimitFunction;
+  extraOptions: {
     exts?: string[];
-    loggerOptions?: LoggerOptions & { id?: string };
+    loggerOptions: LoggerOptions;
   };
 }

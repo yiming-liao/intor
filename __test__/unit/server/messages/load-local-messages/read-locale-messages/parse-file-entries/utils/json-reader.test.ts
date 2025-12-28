@@ -1,4 +1,4 @@
-import type { Messages } from "@/server/messages/shared/types";
+import type { Messages } from "@/shared/messages/types";
 import fs from "node:fs/promises";
 import { describe, it, expect, vi } from "vitest";
 import { jsonReader } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";

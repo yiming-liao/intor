@@ -1,8 +1,8 @@
 import type { ParseFileEntriesParams, ParsedFileEntries } from "./types";
-import type { Messages } from "@/server/messages/shared/types";
+import type { Messages } from "@/shared/messages/types";
 import path from "node:path";
-import { isValidMessages } from "@/server/messages/shared/utils/is-valid-messages";
-import { getLogger } from "@/server/shared/logger/get-logger";
+import { getLogger } from "@/shared/logger";
+import { isValidMessages } from "@/shared/messages";
 import { deepMerge } from "@/shared/utils";
 import { jsonReader } from "./utils/json-reader";
 import { nestObjectFromPath } from "./utils/nest-object-from-path";
@@ -41,9 +41,9 @@ import { nestObjectFromPath } from "./utils/nest-object-from-path";
 export async function parseFileEntries({
   fileEntries,
   limit,
-  extraOptions: { messagesReader, loggerOptions } = {},
+  extraOptions: { messagesReader, loggerOptions },
 }: ParseFileEntriesParams): Promise<Messages> {
-  const baseLogger = getLogger({ ...loggerOptions });
+  const baseLogger = getLogger(loggerOptions);
   const logger = baseLogger.child({ scope: "parse-file-entries" });
 
   // Read and parse all file entries

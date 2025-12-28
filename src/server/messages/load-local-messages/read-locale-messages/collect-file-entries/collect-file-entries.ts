@@ -3,7 +3,7 @@ import type { FileEntry } from "@/server/messages/load-local-messages/read-local
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getLogger } from "@/server/shared/logger/get-logger";
+import { getLogger } from "@/shared/logger";
 
 /**
  * Recursively collects all message files under a given root directory.
@@ -24,12 +24,12 @@ import { getLogger } from "@/server/shared/logger/get-logger";
  */
 export async function collectFileEntries({
   readdir = fs.readdir,
-  limit,
-  rootDir,
   namespaces,
-  extraOptions: { exts = [".json"], loggerOptions } = {},
+  rootDir,
+  limit,
+  extraOptions: { exts = [".json"], loggerOptions },
 }: CollectFileEntriesParams): Promise<FileEntry[]> {
-  const baseLogger = getLogger({ ...loggerOptions });
+  const baseLogger = getLogger(loggerOptions);
   const logger = baseLogger.child({ scope: "collect-file-entries" });
 
   const fileEntries: FileEntry[] = [];

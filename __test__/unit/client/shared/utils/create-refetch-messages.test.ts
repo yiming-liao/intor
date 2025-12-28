@@ -2,9 +2,9 @@ import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createRefetchMessages } from "@/client/shared/utils/create-refetch-messages";
-import { loadRemoteMessages } from "@/server/messages/load-remote-messages";
+import { loadRemoteMessages } from "@/shared/messages";
 
-vi.mock("@/server/messages/load-remote-messages", () => ({
+vi.mock("@/shared/messages", () => ({
   loadRemoteMessages: vi.fn(),
 }));
 

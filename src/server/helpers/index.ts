@@ -1,1 +1,1 @@
-export { loadLocalMessagesFromUrl } from "./local-messages-from-url";
+export { loadMessagesFromUrl } from "./local-messages-from-url";

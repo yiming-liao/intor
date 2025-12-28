@@ -3,8 +3,8 @@ import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { loadLocalMessages } from "@/server/messages/load-local-messages/load-local-messages";
 import * as readModule from "@/server/messages/load-local-messages/read-locale-messages";
-import * as loggerModule from "@/server/shared/logger/get-logger";
-import { getGlobalMessagesPool } from "@/server/shared/messages/global-messages-pool";
+import * as loggerModule from "@/shared/logger/get-logger";
+import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
 
 const loggerChildMock = { debug: vi.fn(), trace: vi.fn(), warn: vi.fn() };
 const loggerMock = {
@@ -16,7 +16,7 @@ vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
 vi.mock(
   "@/server/messages/load-local-messages/read-locale-messages/read-locale-messages",
 );
-vi.mock("@/server/shared/messages/global-messages-pool");
+vi.mock("@/shared/messages/global-messages-pool");
 
 describe("loadLocalMessages", () => {
   const mockReadLocaleMessages = readModule.readLocaleMessages;
@@ -36,7 +36,8 @@ describe("loadLocalMessages", () => {
     vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
       locale: "en-US",
-      extraOptions: {},
+      cacheOptions: { enabled: false, ttl: 0 },
+      loggerOptions: { id: "test" },
     });
     expect(result).toEqual(enMessages);
     expect(mockReadLocaleMessages).toHaveBeenCalledTimes(1);
@@ -50,7 +51,8 @@ describe("loadLocalMessages", () => {
     const result = await loadLocalMessages({
       locale: "fr-FR",
       fallbackLocales: ["en-US"],
-      extraOptions: {},
+      cacheOptions: { enabled: false, ttl: 0 },
+      loggerOptions: { id: "test" },
     });
     expect(result).toEqual(enMessages);
     expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
@@ -61,7 +63,8 @@ describe("loadLocalMessages", () => {
     mockPool.get.mockImplementation(async () => cached);
     const result = await loadLocalMessages({
       locale: "en-US",
-      extraOptions: { cacheOptions: { enabled: true, ttl: 60 * 60 * 1000 } },
+      cacheOptions: { enabled: true, ttl: 60 * 60 * 1000 },
+      loggerOptions: { id: "test" },
     });
     expect(result).toEqual(cached);
     expect(mockPool.get).toHaveBeenCalled();
@@ -75,7 +78,8 @@ describe("loadLocalMessages", () => {
     const result = await loadLocalMessages({
       locale: "fr-FR",
       fallbackLocales: ["en-US"],
-      extraOptions: {},
+      cacheOptions: { enabled: false, ttl: 0 },
+      loggerOptions: { id: "test" },
     });
     expect(result).toBeUndefined();
     expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
@@ -86,7 +90,8 @@ describe("loadLocalMessages", () => {
     vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
       locale: "en-US",
-      extraOptions: { cacheOptions: { enabled: false, ttl: 60 * 60 * 1000 } },
+      cacheOptions: { enabled: false, ttl: 60 * 60 * 1000 },
+      loggerOptions: { id: "test" },
     });
     expect(result).toEqual(enMessages);
     expect(mockPool.get).not.toHaveBeenCalled();
@@ -101,7 +106,8 @@ describe("loadLocalMessages", () => {
     const result = await loadLocalMessages({
       locale: "fr-FR",
       fallbackLocales: ["en-US"],
-      extraOptions: {},
+      cacheOptions: { enabled: false, ttl: 0 },
+      loggerOptions: { id: "test" },
     });
     expect(result).toEqual(enMessages);
     expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
@@ -113,9 +119,8 @@ describe("loadLocalMessages", () => {
     vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
       locale: "en-US",
-      extraOptions: {
-        cacheOptions: { enabled: true, ttl: 60 * 60 * 1000 },
-      },
+      cacheOptions: { enabled: true, ttl: 60 * 60 * 1000 },
+      loggerOptions: { id: "test" },
       allowCacheWrite: true,
     });
     expect(result).toEqual(enMessages);

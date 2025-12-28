@@ -9,6 +9,7 @@ import {
 
 // Logger options
 export type LoggerOptions = {
+  id: string;
   level?: LogryLevel;
   normalizeConfig?: NormalizeConfig;
   formatConfig?: FormatConfig;

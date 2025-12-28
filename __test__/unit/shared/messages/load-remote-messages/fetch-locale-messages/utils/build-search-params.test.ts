@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildSearchParams } from "@/server/messages/load-remote-messages/fetch-locale-messages/utils/build-search-params";
+import { buildSearchParams } from "@/shared/messages/load-remote-messages/fetch-locale-messages/utils/build-search-params";
 
 describe("buildSearchParams", () => {
   it("should handle simple string values", () => {

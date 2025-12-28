@@ -1,11 +1,12 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { IntorResult, LocaleResolver } from "@/server/intor/types";
-import type { MessagesReader } from "@/server/messages";
+import type { MessagesReader } from "@/shared/messages";
 import type { GenConfigKeys, GenLocale } from "@/shared/types";
 import type { LocaleMessages } from "intor-translator";
 import { loadMessages } from "@/server/messages";
-import { getLogger } from "@/server/shared/logger/get-logger";
+import { getLogger } from "@/shared/logger";
 import { deepMerge } from "@/shared/utils";
+import { resolveLoaderOptions } from "@/shared/utils";
 
 /**
  * Entry point for initializing Intor.
@@ -27,7 +28,7 @@ export const intor = async <CK extends GenConfigKeys = "__default__">(
     messagesReader?: MessagesReader;
   } = {},
 ): Promise<IntorResult<CK>> => {
-  const baseLogger = getLogger({ id: config.id, ...config.logger });
+  const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
 
@@ -36,13 +37,13 @@ export const intor = async <CK extends GenConfigKeys = "__default__">(
   const locale = isLocaleFunction
     ? await getLocale(config)
     : getLocale || config.defaultLocale;
-
   const source = typeof getLocale === "function" ? "resolver" : "static";
   logger.debug(`Initial locale resolved as "${locale}" via "${source}".`);
 
-  // Load messages (if enabled)
+  // Load messages during initialization when a loader is configured.
   let loadedMessages: LocaleMessages | undefined;
-  if (config.loader) {
+  const loader = resolveLoaderOptions(config, "server");
+  if (loader) {
     loadedMessages = await loadMessages({
       config,
       locale,
@@ -50,7 +51,7 @@ export const intor = async <CK extends GenConfigKeys = "__default__">(
         exts: loadMessagesOptions.exts,
         messagesReader: loadMessagesOptions.messagesReader,
       },
-      allowCacheWrite: true,
+      allowCacheWrite: true, // Intor is the primary cache writer during initialization.
     });
   }
 

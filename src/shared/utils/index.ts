@@ -1,4 +1,5 @@
 export { deepMerge } from "./deep-merge";
+export { resolveLoaderOptions } from "./resolve-loader-options";
 
 // normalizers
 export {

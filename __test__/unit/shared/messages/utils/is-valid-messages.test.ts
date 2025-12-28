@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   isValidMessages,
   isPlainObject,
-} from "@/server/messages/shared/utils/is-valid-messages";
+} from "@/shared/messages/utils/is-valid-messages";
 
 describe("isPlainObject", () => {
   it("should return true for plain objects", () => {
@@ -32,7 +32,7 @@ describe("isPlainObject", () => {
   });
 });
 
-describe("isNamespaceMessages", () => {
+describe("isValidMessages", () => {
   it("should return true for valid NamespaceMessages", () => {
     const valid1 = { en: { hello: "Hello" } };
     const valid2 = { en: { nested: { world: "World" } } };

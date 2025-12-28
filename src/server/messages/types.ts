@@ -1,17 +1,22 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import type { MessagesReader } from "@/server/messages/shared/types";
-import type { GenConfigKeys, GenMessages } from "@/shared/types/generated";
+import type { MessagesReader } from "@/shared/messages/types";
 import type { Locale } from "intor-translator";
 
-export type LoadMessagesOptions = {
+export type LoadMessagesParams = {
   config: IntorResolvedConfig;
   locale: Locale;
   extraOptions?: {
     exts?: string[];
     messagesReader?: MessagesReader;
   };
+
+  /**
+   * Controls whether this load operation is allowed to write into
+   * the shared messages cache.
+   *
+   * This is intended for internal orchestration (e.g. `intor`)
+   * to act as the primary cache writer, while other helpers
+   * may perform read-only loads.
+   */
   allowCacheWrite?: boolean;
 };
-
-export type LoadMessagesResult<CK extends GenConfigKeys = "__default__"> =
-  Promise<GenMessages<CK> | undefined>;

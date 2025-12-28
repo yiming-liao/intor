@@ -1,4 +1,7 @@
-import type { LoadLocalMessagesExtraOptions } from "@/server/messages/load-local-messages";
+import type { CacheResolvedOptions } from "@/config/types/cache.types";
+import type { LoggerOptions } from "@/config/types/logger.types";
+import type { MessagesPool } from "@/shared/messages";
+import type { MessagesReader } from "@/shared/messages/types";
 import { loadLocalMessages } from "@/server/messages/load-local-messages";
 
 /** Parse a multi-value query parameter into a normalized string array. */
@@ -13,10 +16,23 @@ function parseMultiValueParam(values: string[] | null): string[] | undefined {
   return result.length > 0 ? result : undefined;
 }
 
+export interface LoadMessagesFromUrlOptiosn {
+  // --- Local Execution ---
+  concurrency?: number;
+  exts?: string[];
+  messagesReader?: MessagesReader;
+  // --- Caching ---
+  pool?: MessagesPool;
+  cacheOptions?: CacheResolvedOptions;
+  allowCacheWrite?: boolean; // per-call permission
+  // --- Observability ---
+  loggerOptions?: LoggerOptions;
+}
+
 /**
- * Load local locale messages from a URL-based query protocol.
+ * Load locale messages from a URL-based query protocol.
  *
- * - A convenience helper for exposing local messages through a URL-accessible interface.
+ * - This helper is intended for building custom HTTP endpoints
  *
  * @example
  * ```ts
@@ -29,12 +45,12 @@ function parseMultiValueParam(values: string[] | null): string[] | undefined {
  *   "&fallbackLocales=zh-TW"
  * );
  *
- * const messages = await loadLocalMessagesFromUrl(url);
+ * const messages = await loadMessagesFromUrl(url);
  * ```
  */
-export async function loadLocalMessagesFromUrl(
+export async function loadMessagesFromUrl(
   url: URL,
-  extraOptions?: LoadLocalMessagesExtraOptions,
+  options?: LoadMessagesFromUrlOptiosn,
 ) {
   // Parse query parameters
   const rootDir = url.searchParams.get("rootDir") ?? "";
@@ -52,6 +68,12 @@ export async function loadLocalMessagesFromUrl(
     locale,
     namespaces,
     fallbackLocales,
-    extraOptions,
+    concurrency: options?.concurrency,
+    exts: options?.exts,
+    messagesReader: options?.messagesReader,
+    pool: options?.pool,
+    cacheOptions: options?.cacheOptions || { enabled: false, ttl: 0 },
+    allowCacheWrite: options?.allowCacheWrite,
+    loggerOptions: options?.loggerOptions || { id: "default" },
   });
 }

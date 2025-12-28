@@ -1,5 +1,5 @@
 import type { LoggerOptions } from "@/config/types/logger.types";
-import type { MessagesReader } from "@/server/messages/shared/types";
+import type { MessagesReader } from "@/shared/messages/types";
 import type { LimitFunction } from "p-limit";
 
 export interface FileEntry {
@@ -11,13 +11,13 @@ export interface FileEntry {
 }
 
 export interface ReadLocaleMessagesParams {
-  limit: LimitFunction;
-  rootDir?: string;
   locale: string;
   namespaces?: string[];
-  extraOptions?: {
-    loggerOptions?: LoggerOptions & { id?: string };
+  rootDir?: string;
+  limit: LimitFunction;
+  extraOptions: {
     exts?: string[];
     messagesReader?: MessagesReader;
+    loggerOptions: LoggerOptions;
   };
 }

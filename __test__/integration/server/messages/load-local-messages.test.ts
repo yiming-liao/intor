@@ -8,6 +8,8 @@ describe("loadLocalMessages (integration)", () => {
     const result = await loadLocalMessages({
       rootDir,
       locale: "en-US",
+      cacheOptions: { enabled: false, ttl: 0 },
+      loggerOptions: { id: "test" },
     });
 
     expect(result).toEqual({

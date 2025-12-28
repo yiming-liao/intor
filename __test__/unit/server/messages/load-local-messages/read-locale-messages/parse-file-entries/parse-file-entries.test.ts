@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FileEntry } from "@/server/messages/load-local-messages/read-locale-messages";
-import type { Messages } from "@/server/messages/shared/types";
+import type { Messages } from "@/shared/messages/types";
 import type { LimitFunction } from "p-limit";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { parseFileEntries } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries";
 import * as readJsonModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
 import * as nestModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
-import * as validateModule from "@/server/messages/shared/utils/is-valid-messages";
-import * as loggerModule from "@/server/shared/logger/get-logger";
+import * as loggerModule from "@/shared/logger/get-logger";
+import * as validateModule from "@/shared/messages/utils/is-valid-messages";
 
 describe("parseFileEntries", () => {
   const limit = ((fn: any) => fn()) as LimitFunction;
@@ -65,7 +65,7 @@ describe("parseFileEntries", () => {
     const result = await parseFileEntries({
       fileEntries,
       limit,
-      extraOptions: {},
+      extraOptions: { loggerOptions: { id: "test" } },
     });
     expect(result).toEqual({
       a: "A",
@@ -94,7 +94,10 @@ describe("parseFileEntries", () => {
         },
       ],
       limit,
-      extraOptions: { messagesReader: customReader },
+      extraOptions: {
+        messagesReader: customReader,
+        loggerOptions: { id: "test" },
+      },
     });
     expect(customReader).toHaveBeenCalled();
     expect(result).toEqual({ wrapped: { a: "a" } });
@@ -114,6 +117,7 @@ describe("parseFileEntries", () => {
         },
       ],
       limit,
+      extraOptions: { loggerOptions: { id: "test" } },
     });
     expect(errorSpy).toHaveBeenCalled();
   });
@@ -134,6 +138,7 @@ describe("parseFileEntries", () => {
         },
       ],
       limit,
+      extraOptions: { loggerOptions: { id: "test" } },
     });
     expect(errorSpy).toHaveBeenCalled();
     const [[message]] = errorSpy.mock.calls;

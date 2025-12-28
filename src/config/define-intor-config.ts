@@ -38,8 +38,10 @@ export const defineIntorConfig = (
   const routing = resolveRoutingOptions(config.routing);
   const cache = resolveCacheOptions(config.cache);
 
+  const id = config.id ?? "default";
+
   return {
-    id: config.id ?? "default",
+    id,
     messages: config.messages,
     loader: config.loader,
     defaultLocale,
@@ -48,7 +50,9 @@ export const defineIntorConfig = (
     translator: config.translator,
     cookie,
     routing,
-    logger: config.logger,
+    logger: { id, ...config.logger },
     cache,
+    client: config.client,
+    server: config.server,
   };
 };

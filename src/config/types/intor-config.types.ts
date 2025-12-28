@@ -1,5 +1,9 @@
 import type { CookieRawOptions, CookieResolvedOptions } from "./cookie.types";
-import type { LoaderOptions } from "./loader.types";
+import type {
+  ClientLoaderOptions,
+  LoaderOptions,
+  ServerLoaderOptions,
+} from "./loader.types";
 import type { LoggerOptions } from "./logger.types";
 import type {
   RoutingRawOptions,
@@ -28,8 +32,10 @@ export type IntorRawConfig = (
   readonly translator?: TranslatorOptions;
   readonly cookie?: CookieRawOptions;
   readonly routing?: RoutingRawOptions;
-  readonly logger?: LoggerOptions;
+  readonly logger?: Omit<LoggerOptions, "id">;
   readonly cache?: CacheRawOptions;
+  readonly server?: { loader?: ServerLoaderOptions };
+  readonly client?: { loader?: ClientLoaderOptions };
 };
 
 /** Fully resolved configuration after validation and normalization. */
@@ -44,6 +50,8 @@ export type IntorResolvedConfig = (
   readonly translator?: TranslatorOptions;
   readonly cookie: CookieResolvedOptions;
   readonly routing: RoutingResolvedOptions;
-  readonly logger?: LoggerOptions;
+  readonly logger: LoggerOptions;
   readonly cache: CacheResolvedOptions;
+  readonly server?: { loader?: ServerLoaderOptions };
+  readonly client?: { loader?: ClientLoaderOptions };
 };

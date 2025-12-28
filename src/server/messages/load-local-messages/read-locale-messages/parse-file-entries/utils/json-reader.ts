@@ -1,4 +1,4 @@
-import type { Messages } from "@/server/messages/shared/types";
+import type { Messages } from "@/shared/messages";
 import fs from "node:fs/promises";
 
 /**

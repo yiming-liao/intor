@@ -1,5 +1,2 @@
-export type {
-  LoadLocalMessagesParams,
-  LoadLocalMessagesExtraOptions,
-} from "./types";
+export type { LoadLocalMessagesParams } from "./types";
 export { loadLocalMessages } from "./load-local-messages";

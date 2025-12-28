@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { collectFileEntries } from "@/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
-import * as loggerModule from "@/server/shared/logger/get-logger";
+import * as loggerModule from "@/shared/logger/get-logger";
 
 describe("collectFileEntries", () => {
   let mockReaddir: any;
@@ -41,7 +41,10 @@ describe("collectFileEntries", () => {
       readdir: mockReaddir,
       limit: mockLimit,
       rootDir,
-      extraOptions: { exts: [".json"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".json"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files).toHaveLength(2);
@@ -78,7 +81,10 @@ describe("collectFileEntries", () => {
       limit: mockLimit,
       rootDir,
       namespaces: ["auth"],
-      extraOptions: { exts: [".json"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".json"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files).toHaveLength(2);
@@ -99,7 +105,10 @@ describe("collectFileEntries", () => {
       readdir: mockReaddir,
       limit: mockLimit,
       rootDir,
-      extraOptions: { exts: [".yaml"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".yaml"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files).toHaveLength(2);
@@ -114,7 +123,10 @@ describe("collectFileEntries", () => {
       readdir: mockReaddir,
       limit: mockLimit,
       rootDir,
-      extraOptions: { exts: [".json"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".json"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files).toEqual([]);
@@ -130,7 +142,10 @@ describe("collectFileEntries", () => {
       limit: mockLimit,
       rootDir,
       namespaces: ["auth"],
-      extraOptions: { exts: [".json"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".json"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files).toEqual([]);
@@ -146,7 +161,10 @@ describe("collectFileEntries", () => {
       limit: mockLimit,
       rootDir,
       namespaces: ["auth"],
-      extraOptions: { exts: [".json"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".json"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files.map((f) => f.namespace)).toEqual(["index"]);
@@ -162,7 +180,10 @@ describe("collectFileEntries", () => {
       limit: mockLimit,
       rootDir,
       namespaces: ["auth"],
-      extraOptions: { exts: [".json"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".json"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files.map((f) => f.namespace)).toEqual(["auth"]);
@@ -178,7 +199,10 @@ describe("collectFileEntries", () => {
       limit: mockLimit,
       rootDir,
       namespaces: ["auth"],
-      extraOptions: { exts: [".json"], loggerOptions: { level: "silent" } },
+      extraOptions: {
+        exts: [".json"],
+        loggerOptions: { id: "test", level: "silent" },
+      },
     });
 
     expect(files).toEqual([]);

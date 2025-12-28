@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { loadRemoteMessages } from "@/server/messages/load-remote-messages/load-remote-messages";
+import { loadRemoteMessages } from "@/shared/messages";
 
 describe("loadRemoteMessages (integration)", () => {
   it("loads and parses remote messages end-to-end", async () => {
@@ -14,7 +14,9 @@ describe("loadRemoteMessages (integration)", () => {
 
     const result = await loadRemoteMessages({
       locale: "en-US",
-      remoteUrl: "",
+      url: "",
+      cacheOptions: { enabled: false, ttl: 0 },
+      loggerOptions: { id: "test" },
     });
 
     expect(fetch).toHaveBeenCalled();
