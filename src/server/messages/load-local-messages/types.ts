@@ -1,6 +1,6 @@
 import type { CacheResolvedOptions } from "@/config/types/cache.types";
 import type { LoggerOptions } from "@/config/types/logger.types";
-import type { MessagesPool, MessagesReader } from "@/shared/messages";
+import type { MessagesPool, MessagesReader } from "@/core/messages";
 
 export interface LoadLocalMessagesParams {
   // --- Messages Scope ---

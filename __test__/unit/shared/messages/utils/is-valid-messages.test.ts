@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   isValidMessages,
   isPlainObject,
-} from "@/shared/messages/utils/is-valid-messages";
+} from "@/core/messages/utils/is-valid-messages";
 
 describe("isPlainObject", () => {
   it("should return true for plain objects", () => {

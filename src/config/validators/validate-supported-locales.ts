@@ -1,5 +1,5 @@
 import type { IntorRawConfig } from "@/config/types/intor-config.types";
-import { IntorError, IntorErrorCode } from "@/shared/error";
+import { IntorError, IntorErrorCode } from "@/core/error";
 
 /**
  * Validates and resolves the list of supported locales.

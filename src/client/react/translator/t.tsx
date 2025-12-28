@@ -1,5 +1,5 @@
 import type { ReactTagRenderers } from "@/client/react/render";
-import type { GenConfigKeys, GenMessages, MessageKey } from "@/shared/types";
+import type { GenConfigKeys, GenMessages, MessageKey } from "@/core/types";
 import type { Replacement } from "intor-translator";
 import { useTranslator } from "@/client/react/translator/use-translator";
 

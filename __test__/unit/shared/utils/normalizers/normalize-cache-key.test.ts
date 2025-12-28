@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeCacheKey } from "@/shared/utils";
+import { normalizeCacheKey } from "@/core/utils";
 
 describe("normalizeCacheKey", () => {
   it("should return null when key is undefined", () => {

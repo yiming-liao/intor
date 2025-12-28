@@ -4,8 +4,8 @@ import type {
   PathnameDirective,
   ResolvedPathname,
 } from "@/routing/pathname/types";
+import { localizePathname } from "@/core/utils";
 import { all, exceptDefault, none } from "@/routing/pathname/strategies";
-import { localizePathname } from "@/shared/utils";
 
 const assertNever = (x: never): never => {
   throw new Error(`Unhandled prefix strategy: ${x}`);

@@ -1,12 +1,12 @@
 import type { IntorResolvedConfig } from "@/config";
+import type { MessagesReader } from "@/core/messages";
+import type { GenConfigKeys, GenLocale } from "@/core/types";
 import type { IntorResult, LocaleResolver } from "@/server/intor/types";
-import type { MessagesReader } from "@/shared/messages";
-import type { GenConfigKeys, GenLocale } from "@/shared/types";
 import type { LocaleMessages } from "intor-translator";
+import { getLogger } from "@/core/logger";
+import { deepMerge } from "@/core/utils";
+import { resolveLoaderOptions } from "@/core/utils";
 import { loadMessages } from "@/server/messages";
-import { getLogger } from "@/shared/logger";
-import { deepMerge } from "@/shared/utils";
-import { resolveLoaderOptions } from "@/shared/utils";
 
 /**
  * Entry point for initializing Intor.

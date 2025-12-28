@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { describe, it, expect } from "vitest";
-import { getUnprefixedPathname } from "@/shared/utils/pathname/get-unprefixed-pathname";
+import { getUnprefixedPathname } from "@/core/utils/pathname/get-unprefixed-pathname";
 
 const createConfig = (
   overrides?: Partial<IntorResolvedConfig>,

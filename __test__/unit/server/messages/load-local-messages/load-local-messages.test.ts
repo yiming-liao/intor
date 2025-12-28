@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as loggerModule from "@/core/logger/get-logger";
+import { getGlobalMessagesPool } from "@/core/messages/global-messages-pool";
 import { loadLocalMessages } from "@/server/messages/load-local-messages/load-local-messages";
 import * as readModule from "@/server/messages/load-local-messages/read-locale-messages";
-import * as loggerModule from "@/shared/logger/get-logger";
-import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
 
 const loggerChildMock = { debug: vi.fn(), trace: vi.fn(), warn: vi.fn() };
 const loggerMock = {
@@ -16,7 +16,7 @@ vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
 vi.mock(
   "@/server/messages/load-local-messages/read-locale-messages/read-locale-messages",
 );
-vi.mock("@/shared/messages/global-messages-pool");
+vi.mock("@/core/messages/global-messages-pool");
 
 describe("loadLocalMessages", () => {
   const mockReadLocaleMessages = readModule.readLocaleMessages;

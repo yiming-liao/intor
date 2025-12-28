@@ -1,6 +1,6 @@
+import type { GenConfigKeys, GenMessages } from "@/core/types/generated";
 import type { GetTranslatorParams } from "@/server/translator/get-translator";
 import type { TranslatorInstanceServer } from "@/server/translator/translator-instance";
-import type { GenConfigKeys, GenMessages } from "@/shared/types/generated";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { getLocale } from "@/adapters/next/server/get-locale";
 import { getTranslator as getTranslatorCore } from "@/server/translator";

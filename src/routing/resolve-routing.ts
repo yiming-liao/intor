@@ -1,10 +1,10 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { RoutingLocaleSource } from "@/shared/types/routing";
+import type { RoutingLocaleSource } from "@/core/types/routing";
 import {
   getLocaleFromPathname,
   getLocaleFromHost,
   getLocaleFromQuery,
-} from "@/shared/utils";
+} from "@/core/utils";
 import { resolveLocale } from "./locale/resolve-locale";
 import { resolvePathname } from "./pathname/resolve-pathname";
 

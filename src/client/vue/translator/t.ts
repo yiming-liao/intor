@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { VueTagRenderers } from "@/client/vue/render";
 import type { TranslatorInstanceVue } from "@/client/vue/translator/translator-instance";
-import type { MessageKey } from "@/shared/types";
+import type { MessageKey } from "@/core/types";
 import type { LocaleMessages, Replacement } from "intor-translator";
 import { defineComponent, h } from "vue";
 import { useTranslator } from "@/client/vue/translator/use-translator";

@@ -9,4 +9,4 @@ export type {
   // translator-instance
   MessageKey,
   TranslatorInstance,
-} from "@/shared/types";
+} from "@/core/types";

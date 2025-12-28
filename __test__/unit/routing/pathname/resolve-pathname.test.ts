@@ -7,7 +7,7 @@ import { resolvePathname } from "@/routing/pathname/resolve-pathname";
  * Mock pathname localization.
  * Always return the original pathname unchanged.
  */
-vi.mock("@/shared/utils", () => ({
+vi.mock("@/core/utils", () => ({
   localizePathname: (_config: unknown, pathname: string) => ({
     localizedPathname: pathname,
   }),

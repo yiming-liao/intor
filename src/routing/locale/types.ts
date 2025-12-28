@@ -1,4 +1,4 @@
-import type { RoutingLocaleSource } from "@/shared/types/routing";
+import type { RoutingLocaleSource } from "@/core/types/routing";
 
 /** Context for locale resolution. */
 export interface LocaleContext {

@@ -3,8 +3,8 @@ import type { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { setLocaleCookieEdge } from "@/adapters/next/proxy/utils/set-locale-cookie-edge";
+import { getLocaleFromAcceptLanguage } from "@/core/utils";
 import { resolveRouting } from "@/routing";
-import { getLocaleFromAcceptLanguage } from "@/shared/utils";
 
 /**
  * Next.js routing adapter for Intor.

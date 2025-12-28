@@ -1,8 +1,8 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
-import { loadRemoteMessages } from "@/shared/messages";
-import { deepMerge } from "@/shared/utils";
-import { resolveLoaderOptions } from "@/shared/utils";
+import { loadRemoteMessages } from "@/core/messages";
+import { deepMerge } from "@/core/utils";
+import { resolveLoaderOptions } from "@/core/utils";
 
 interface CreateRefetchMessagesParams {
   config: IntorResolvedConfig;

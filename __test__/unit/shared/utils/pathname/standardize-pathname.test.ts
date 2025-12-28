@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { describe, it, expect } from "vitest";
-import { standardizePathname } from "@/shared/utils/pathname/standardize-pathname";
+import { standardizePathname } from "@/core/utils/pathname/standardize-pathname";
 
 describe("standardizePathname", () => {
   const config = {

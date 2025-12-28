@@ -3,7 +3,7 @@ import type { FileEntry } from "@/server/messages/load-local-messages/read-local
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getLogger } from "@/shared/logger";
+import { getLogger } from "@/core/logger";
 
 /**
  * Recursively collects all message files under a given root directory.

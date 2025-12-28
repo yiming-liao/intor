@@ -1,5 +1,5 @@
 import type { ReactTagRenderers } from "@/client/react/render";
-import type { KeyMode, MessageKey, TranslatorInstance } from "@/shared/types";
+import type { KeyMode, MessageKey, TranslatorInstance } from "@/core/types";
 import type { JSX } from "react/jsx-runtime";
 import {
   type Locale,

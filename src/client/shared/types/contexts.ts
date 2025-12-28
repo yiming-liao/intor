@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenLocale } from "@/shared/types";
+import type { GenConfigKeys, GenLocale } from "@/core/types";
 import type {
   Locale,
   LocaleMessages,

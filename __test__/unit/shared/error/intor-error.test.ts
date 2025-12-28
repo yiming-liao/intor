@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { IntorError, IntorErrorCode } from "@/shared/error";
+import { IntorError, IntorErrorCode } from "@/core/error";
 
 describe("IntorError", () => {
   it("should create an error with message and name", () => {

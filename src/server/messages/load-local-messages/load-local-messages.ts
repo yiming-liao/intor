@@ -2,10 +2,10 @@ import type { LoadLocalMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import pLimit from "p-limit";
+import { getLogger } from "@/core/logger";
+import { getGlobalMessagesPool } from "@/core/messages/global-messages-pool";
+import { normalizeCacheKey } from "@/core/utils";
 import { readLocaleMessages } from "@/server/messages/load-local-messages/read-locale-messages";
-import { getLogger } from "@/shared/logger";
-import { getGlobalMessagesPool } from "@/shared/messages/global-messages-pool";
-import { normalizeCacheKey } from "@/shared/utils";
 
 /**
  * Load locale messages from the local file system.

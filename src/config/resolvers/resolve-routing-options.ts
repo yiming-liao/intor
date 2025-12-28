@@ -3,7 +3,7 @@ import type {
   RoutingResolvedOptions,
 } from "@/config/types/routing.types";
 import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
-import { normalizePathname } from "@/shared/utils";
+import { normalizePathname } from "@/core/utils";
 
 export const resolveRoutingOptions = (
   routing: RoutingRawOptions = {},

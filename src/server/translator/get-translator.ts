@@ -1,11 +1,11 @@
 import type { TranslatorInstanceServer } from "./translator-instance";
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import type { MessagesReader } from "@/shared/messages";
+import type { MessagesReader } from "@/core/messages";
 import type {
   GenConfigKeys,
   GenLocale,
   GenMessages,
-} from "@/shared/types/generated";
+} from "@/core/types/generated";
 import type {
   LocaleMessages,
   LocalizedNodeKeys,

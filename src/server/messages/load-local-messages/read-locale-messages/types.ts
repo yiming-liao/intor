@@ -1,5 +1,5 @@
 import type { LoggerOptions } from "@/config/types/logger.types";
-import type { MessagesReader } from "@/shared/messages/types";
+import type { MessagesReader } from "@/core/messages/types";
 import type { LimitFunction } from "p-limit";
 
 export interface FileEntry {

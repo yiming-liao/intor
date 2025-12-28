@@ -1,7 +1,7 @@
 import type { IntorRawConfig } from "@/config";
 import { describe, it, expect } from "vitest";
 import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
-import { IntorError, IntorErrorCode } from "@/shared/error";
+import { IntorError, IntorErrorCode } from "@/core/error";
 
 describe("validateSupportedLocales", () => {
   const configBase = {

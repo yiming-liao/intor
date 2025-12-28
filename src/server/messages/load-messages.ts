@@ -1,9 +1,9 @@
 import type { LoadMessagesParams } from "@/server/messages/types";
 import type { LocaleMessages } from "intor-translator";
+import { getLogger } from "@/core/logger";
+import { loadRemoteMessages } from "@/core/messages";
+import { resolveLoaderOptions } from "@/core/utils";
 import { loadLocalMessages } from "@/server/messages/load-local-messages";
-import { getLogger } from "@/shared/logger";
-import { loadRemoteMessages } from "@/shared/messages";
-import { resolveLoaderOptions } from "@/shared/utils";
 
 /**
  * Load locale messages based on the resolved Intor configuration.

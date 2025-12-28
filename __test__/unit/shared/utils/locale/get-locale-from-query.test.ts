@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
-import { getLocaleFromQuery } from "@/shared/utils/locale/get-locale-from-query";
+import { getLocaleFromQuery } from "@/core/utils/locale/get-locale-from-query";
 
 describe("getLocaleFromQuery", () => {
   const config = {

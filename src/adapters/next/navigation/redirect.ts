@@ -1,10 +1,10 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenLocale } from "@/shared/types/generated";
+import type { GenConfigKeys, GenLocale } from "@/core/types/generated";
 import type { RedirectType } from "next/navigation";
 import { redirect as nextRedirect } from "next/navigation";
 import { getLocale } from "@/adapters/next/server";
-import { localizePathname } from "@/shared/utils";
-import { isExternalDestination } from "@/shared/utils/is-external-destination";
+import { localizePathname } from "@/core/utils";
+import { isExternalDestination } from "@/core/utils/is-external-destination";
 
 /**
  * Locale-aware redirect helper (server-only).

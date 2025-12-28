@@ -1,4 +1,4 @@
-import type { IfGen } from "@/shared/types/generated";
+import type { IfGen } from "@/core/types/generated";
 import {
   type Locale,
   type Replacement,

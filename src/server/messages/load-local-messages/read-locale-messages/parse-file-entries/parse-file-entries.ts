@@ -1,9 +1,9 @@
 import type { ParseFileEntriesParams, ParsedFileEntries } from "./types";
-import type { Messages } from "@/shared/messages/types";
+import type { Messages } from "@/core/messages/types";
 import path from "node:path";
-import { getLogger } from "@/shared/logger";
-import { isValidMessages } from "@/shared/messages";
-import { deepMerge } from "@/shared/utils";
+import { getLogger } from "@/core/logger";
+import { isValidMessages } from "@/core/messages";
+import { deepMerge } from "@/core/utils";
 import { jsonReader } from "./utils/json-reader";
 import { nestObjectFromPath } from "./utils/nest-object-from-path";
 

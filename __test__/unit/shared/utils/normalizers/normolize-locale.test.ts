@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeLocale } from "@/shared/utils";
+import { normalizeLocale } from "@/core/utils";
 
 describe("normalizeLocale", () => {
   it("returns undefined when no locale is provided", () => {

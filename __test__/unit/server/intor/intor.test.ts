@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as loggerModule from "@/core/logger";
+import * as loaderResolver from "@/core/utils/resolve-loader-options";
 import { intor } from "@/server/intor/intor";
 import * as loadMessagesModule from "@/server/messages/load-messages";
-import * as loggerModule from "@/shared/logger";
-import * as loaderResolver from "@/shared/utils/resolve-loader-options";
 
 const loggerChildMock = {
   info: vi.fn(),

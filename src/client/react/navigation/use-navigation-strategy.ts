@@ -1,7 +1,7 @@
 import type { NavigationTarget } from "@/routing/resolve-navigation-target";
 import { useIntor } from "@/client/react/provider";
 import { setLocaleCookieBrowser } from "@/client/shared/utils";
-import { resolveLoaderOptions } from "@/shared/utils";
+import { resolveLoaderOptions } from "@/core/utils";
 
 /**
  * Strategy describing how a navigation should be executed.

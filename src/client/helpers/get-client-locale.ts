@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import { detectBrowserLocale } from "@/client/shared/utils/locale/detect-browser-locale";
 import { getLocaleCookieBrowser } from "@/client/shared/utils/locale/get-locale-cookie-browser";
-import { normalizeLocale } from "@/shared/utils";
+import { normalizeLocale } from "@/core/utils";
 
 /**
  * Resolve the locale in a client-only environment.

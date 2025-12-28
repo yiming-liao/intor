@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isExternalDestination } from "@/shared/utils/is-external-destination";
+import { isExternalDestination } from "@/core/utils/is-external-destination";
 
 describe("isExternalDestination", () => {
   it("treats http URLs as external", () => {

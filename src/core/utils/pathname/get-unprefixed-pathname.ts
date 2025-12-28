@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import { normalizePathname } from "@/shared/utils/normalizers/normalize-pathname";
+import { normalizePathname } from "@/core/utils/normalizers/normalize-pathname";
 
 /**
  * Returns a canonical, locale-agnostic pathname.

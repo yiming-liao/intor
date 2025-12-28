@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { describe, it, expect } from "vitest";
-import { localePrefixPathname } from "@/shared/utils/pathname/locale-prefix-pathname";
+import { localePrefixPathname } from "@/core/utils/pathname/locale-prefix-pathname";
 
 const createConfig = (
   overrides?: Partial<IntorResolvedConfig>,

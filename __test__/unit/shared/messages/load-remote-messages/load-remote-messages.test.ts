@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as loggerModule from "@/shared/logger";
-import * as fetchModule from "@/shared/messages/load-remote-messages/fetch-locale-messages";
-import { loadRemoteMessages } from "@/shared/messages/load-remote-messages/load-remote-messages";
-import * as cacheUtils from "@/shared/utils";
+import * as loggerModule from "@/core/logger";
+import * as fetchModule from "@/core/messages/load-remote-messages/fetch-locale-messages";
+import { loadRemoteMessages } from "@/core/messages/load-remote-messages/load-remote-messages";
+import * as cacheUtils from "@/core/utils";
 
 describe("loadRemoteMessages", () => {
   const loggerChild = {

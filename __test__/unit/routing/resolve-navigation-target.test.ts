@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { localizePathname } from "@/core/utils";
 import { resolveNavigationTarget } from "@/routing/resolve-navigation-target";
-import { localizePathname } from "@/shared/utils";
 
-vi.mock("@/shared/utils", () => ({
+vi.mock("@/core/utils", () => ({
   localizePathname: vi.fn(),
 }));
 

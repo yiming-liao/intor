@@ -1,4 +1,4 @@
-import type { GenConfigKeys, GenLocale } from "@/shared/types/generated";
+import type { GenConfigKeys, GenLocale } from "@/core/types/generated";
 import type {
   NavigateOptions,
   PrefetchOptions,

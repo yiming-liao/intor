@@ -1,9 +1,5 @@
 import type { TranslatorInstanceReact } from "@/client/react/translator/translator-instance";
-import type {
-  IfGen,
-  GenConfigKeys,
-  GenMessages,
-} from "@/shared/types/generated";
+import type { IfGen, GenConfigKeys, GenMessages } from "@/core/types/generated";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { useIntor } from "@/client/react/provider";
 import { createTRich } from "@/client/react/translator/create-t-rich";

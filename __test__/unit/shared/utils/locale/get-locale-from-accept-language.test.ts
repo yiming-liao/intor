@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
-import { getLocaleFromAcceptLanguage } from "@/shared/utils/locale/get-locale-from-accept-language";
+import { getLocaleFromAcceptLanguage } from "@/core/utils/locale/get-locale-from-accept-language";
 
 describe("getLocaleFromAcceptLanguage", () => {
   it("should return undefined when header is missing", () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import type { IntorContextValue, IntorProviderProps } from "./types";
-import type { GenConfigKeys } from "@/shared/types";
+import type { GenConfigKeys } from "@/core/types";
 import { Translator, type LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { LocaleEffects } from "@/client/react/provider/effects/locale-effects";
