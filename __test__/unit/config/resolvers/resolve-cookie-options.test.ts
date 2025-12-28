@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { DEFAULT_COOKIE_OPTIONS } from "@/config/constants/cookie.constants";
+import { DEFAULT_COOKIE_OPTIONS } from "@/config";
 import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";
 
 describe("resolveCookieOptions", () => {

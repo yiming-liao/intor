@@ -1,5 +1,4 @@
-import type { CookieResolvedOptions } from "@/config/types/cookie.types";
-import type { RoutingResolvedOptions } from "@/config/types/routing.types";
+import type { RoutingResolvedOptions, CookieResolvedOptions } from "@/config";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { defineIntorConfig } from "@/config";
 import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";

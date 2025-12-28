@@ -1,4 +1,4 @@
-import type { Messages } from "@/core/messages/types";
+import type { Messages } from "../types";
 
 /** Check if a value is a plain object (not null, not array) */
 export function isPlainObject(

@@ -1,6 +1,6 @@
-import type { RoutingRawOptions } from "@/config/types/routing.types";
+import type { RoutingRawOptions } from "@/config/types/routing";
 import { describe, it, expect } from "vitest";
-import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
+import { DEFAULT_ROUTING_OPTIONS } from "@/config";
 import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
 
 describe("resolveRoutingOptions", () => {

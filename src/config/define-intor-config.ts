@@ -1,7 +1,4 @@
-import type {
-  IntorRawConfig,
-  IntorResolvedConfig,
-} from "@/config/types/intor-config.types";
+import type { IntorRawConfig, IntorResolvedConfig } from "@/config";
 import { resolveCacheOptions } from "@/config/resolvers/resolve-cache-options";
 import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";
 import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";

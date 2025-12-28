@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { loadRemoteMessages } from "@/core/messages";
+import { loadRemoteMessages } from "@/core";
 
 describe("loadRemoteMessages (integration)", () => {
   it("loads and parses remote messages end-to-end", async () => {

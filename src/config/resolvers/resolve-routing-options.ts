@@ -1,9 +1,6 @@
-import type {
-  RoutingRawOptions,
-  RoutingResolvedOptions,
-} from "@/config/types/routing.types";
-import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
-import { normalizePathname } from "@/core/utils";
+import type { RoutingRawOptions, RoutingResolvedOptions } from "../types";
+import { normalizePathname } from "@/core";
+import { DEFAULT_ROUTING_OPTIONS } from "../constants";
 
 export const resolveRoutingOptions = (
   routing: RoutingRawOptions = {},

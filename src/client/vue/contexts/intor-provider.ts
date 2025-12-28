@@ -1,5 +1,5 @@
 import type { IntorInitialValue } from "@/client/shared/types/contexts";
-import type { GenConfigKeys } from "@/core/types";
+import type { GenConfigKeys } from "@/core";
 import type { LocaleMessages } from "intor-translator";
 import { defineComponent, toRef } from "vue";
 import { provideConfig } from "@/client/vue/contexts/config/provider";

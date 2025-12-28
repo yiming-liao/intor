@@ -1,11 +1,11 @@
-import type { IntorResolvedConfig } from "@/config";
 import type {
   PathnameContext,
   PathnameDirective,
   ResolvedPathname,
-} from "@/routing/pathname/types";
-import { localizePathname } from "@/core/utils";
-import { all, exceptDefault, none } from "@/routing/pathname/strategies";
+} from "./types";
+import type { IntorResolvedConfig } from "@/config";
+import { localizePathname } from "@/core";
+import { all, exceptDefault, none } from "./strategies";
 
 const assertNever = (x: never): never => {
   throw new Error(`Unhandled prefix strategy: ${x}`);

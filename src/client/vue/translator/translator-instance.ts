@@ -1,5 +1,5 @@
 import type { VueTagRenderers } from "@/client/vue/render";
-import type { KeyMode, MessageKey, TranslatorInstance } from "@/core/types";
+import type { KeyMode, MessageKey, TranslatorInstance } from "@/core";
 import type { ComputedRef, VNodeChild } from "vue";
 import {
   type Locale,

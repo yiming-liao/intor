@@ -1,5 +1,4 @@
-import type { RemoteHeaders } from "@/config/types/loader.types";
-import type { LoggerOptions } from "@/config/types/logger.types";
+import type { RemoteHeaders, LoggerOptions } from "@/config";
 
 export interface FetcherOptions {
   locale: string;

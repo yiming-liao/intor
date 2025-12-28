@@ -1,4 +1,4 @@
-import type { CookieResolvedOptions } from "@/config/types/cookie.types";
+import type { CookieResolvedOptions } from "@/config";
 
 /**
  * Build a serialized cookie string.

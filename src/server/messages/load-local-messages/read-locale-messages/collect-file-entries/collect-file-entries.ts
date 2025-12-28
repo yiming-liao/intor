@@ -1,9 +1,9 @@
 import type { CollectFileEntriesParams } from "./types";
-import type { FileEntry } from "@/server/messages/load-local-messages/read-locale-messages";
+import type { FileEntry } from "../types";
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getLogger } from "@/core/logger";
+import { getLogger } from "@/core";
 
 /**
  * Recursively collects all message files under a given root directory.

@@ -1,6 +1,6 @@
-import type { ReactTagRenderers } from "@/client/react/render";
+import type { ReactTagRenderers } from "../render";
 import type { Replacement, Translator } from "intor-translator";
-import { renderRichMessageReact } from "@/client/react/render";
+import { renderRichMessageReact } from "../render";
 
 /**
  * Create a React-specific rich translation function.

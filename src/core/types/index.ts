@@ -1,6 +1,7 @@
 // generated
 export type {
   INTOR_GENERATED_KEY,
+  IfGen,
   GenConfigKeys,
   GenConfig,
   GenMessages,
@@ -13,3 +14,6 @@ export type {
   TranslatorInstance,
   KeyMode,
 } from "./translator-instance";
+
+// routing
+export type { RoutingLocaleSource } from "./routing";

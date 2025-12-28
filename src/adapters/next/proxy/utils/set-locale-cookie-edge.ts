@@ -1,4 +1,4 @@
-import type { CookieResolvedOptions } from "@/config/types/cookie.types";
+import type { CookieResolvedOptions } from "@/config";
 import type { NextResponse } from "next/server";
 
 interface SetLocaleCookieParams {

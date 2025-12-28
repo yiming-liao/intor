@@ -1,6 +1,6 @@
-import type { CacheRawOptions } from "@/config/types/cache.types";
+import type { CacheRawOptions } from "@/config/types/cache";
 import { describe, it, expect } from "vitest";
-import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
+import { DEFAULT_CACHE_OPTIONS } from "@/config";
 import { resolveCacheOptions } from "@/config/resolvers/resolve-cache-options";
 
 describe("resolveCacheOptions", () => {

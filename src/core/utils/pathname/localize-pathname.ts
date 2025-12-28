@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import { getUnprefixedPathname } from "@/core/utils/pathname/get-unprefixed-pathname";
-import { localePrefixPathname } from "@/core/utils/pathname/locale-prefix-pathname";
-import { standardizePathname } from "@/core/utils/pathname/standardize-pathname";
+import type { IntorResolvedConfig } from "@/config";
+import { getUnprefixedPathname } from "./get-unprefixed-pathname";
+import { localePrefixPathname } from "./locale-prefix-pathname";
+import { standardizePathname } from "./standardize-pathname";
 
 /**
  * Localizes a pathname by composing canonicalization,

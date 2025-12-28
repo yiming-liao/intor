@@ -1,7 +1,7 @@
 import type { LoadRemoteMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
-import { getLogger } from "@/core/logger";
-import { normalizeCacheKey } from "@/core/utils";
+import { getLogger } from "../../logger";
+import { normalizeCacheKey } from "../../utils";
 import { fetchLocaleMessages } from "./fetch-locale-messages";
 
 /**

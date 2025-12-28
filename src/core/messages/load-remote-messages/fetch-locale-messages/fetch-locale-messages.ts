@@ -1,8 +1,8 @@
 import type { FetcherOptions } from "./types";
 import type { LocaleMessages } from "intor-translator";
-import { getLogger } from "@/core/logger";
-import { buildSearchParams } from "@/core/messages/load-remote-messages/fetch-locale-messages/utils/build-search-params";
-import { isValidMessages } from "@/core/messages/utils/is-valid-messages";
+import { getLogger } from "../../../logger";
+import { isValidMessages } from "../../utils/is-valid-messages";
+import { buildSearchParams } from "./utils/build-search-params";
 
 /**
  * Fetches locale messages from a remote API.

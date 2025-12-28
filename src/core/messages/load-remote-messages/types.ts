@@ -1,7 +1,9 @@
-import type { CacheResolvedOptions } from "@/config/types/cache.types";
-import type { RemoteHeaders } from "@/config/types/loader.types";
-import type { LoggerOptions } from "@/config/types/logger.types";
-import type { MessagesPool } from "@/core/messages/global-messages-pool";
+import type {
+  RemoteHeaders,
+  LoggerOptions,
+  CacheResolvedOptions,
+} from "@/config";
+import type { MessagesPool } from "@/core";
 
 export interface LoadRemoteMessagesParams {
   // --- Messages Scope ---

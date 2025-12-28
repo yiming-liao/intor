@@ -3,7 +3,7 @@ import { usePathname as useNextPathname } from "next/navigation";
 // Rewritten to `intor/react` by Rollup alias at build time.
 // Do not change these paths without updating the alias config.
 import { useIntor } from "@/client/react";
-import { localizePathname } from "@/core/utils";
+import { localizePathname } from "@/core";
 
 /**
  * Custom hook to get the current pathname in different forms based on the active locale.

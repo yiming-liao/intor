@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "@/config";
-import type { LoaderOptions } from "@/config/types/loader.types";
+import type { LoaderOptions } from "@/config/types/loader";
 import { describe, it, expect } from "vitest";
 import { resolveLoaderOptions } from "@/core/utils/resolve-loader-options";
 

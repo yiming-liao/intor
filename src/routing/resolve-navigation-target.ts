@@ -1,7 +1,6 @@
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
-import { localizePathname } from "@/core/utils";
-import { isExternalDestination } from "@/core/utils/is-external-destination";
+import { localizePathname, isExternalDestination } from "@/core";
 
 export interface NavigationTarget {
   /** Locale selected for this navigation */

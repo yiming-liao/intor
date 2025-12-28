@@ -1,11 +1,11 @@
 "use client";
 
 import type { IntorContextValue, IntorProviderProps } from "./types";
-import type { GenConfigKeys } from "@/core/types";
+import type { GenConfigKeys } from "@/core";
 import { Translator, type LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { LocaleEffects } from "@/client/react/provider/effects/locale-effects";
-import { MessagesEffects } from "@/client/react/provider/effects/messages-effects";
+import { LocaleEffects } from "./effects/locale-effects";
+import { MessagesEffects } from "./effects/messages-effects";
 
 export const IntorContext = React.createContext<IntorContextValue | undefined>(
   undefined,

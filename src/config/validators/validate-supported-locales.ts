@@ -1,5 +1,5 @@
-import type { IntorRawConfig } from "@/config/types/intor-config.types";
-import { IntorError, IntorErrorCode } from "@/core/error";
+import type { IntorRawConfig } from "@/config";
+import { IntorError, IntorErrorCode } from "@/core";
 
 /**
  * Validates and resolves the list of supported locales.
@@ -14,14 +14,18 @@ import { IntorError, IntorErrorCode } from "@/core/error";
 export const validateSupportedLocales = (
   config: IntorRawConfig,
 ): readonly string[] => {
-  const { id, loader, supportedLocales } = config;
+  const { id, supportedLocales } = config;
+
+  const hasAnyLoader =
+    !!config.loader || !!config.server?.loader || !!config.client?.loader;
 
   // Ensure supportedLocales is set when using loader
-  if (loader && !supportedLocales) {
+  if (hasAnyLoader && !supportedLocales) {
     throw new IntorError({
       id,
       code: IntorErrorCode.MISSING_SUPPORTED_LOCALES,
-      message: `"supportedLocales" is required when using loader, but it is missing.`,
+      message: `"supportedLocales" is required when using message loaders. 
+                 Please specify all supported locales explicitly.`,
     });
   }
 

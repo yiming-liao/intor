@@ -1,7 +1,7 @@
-import type { ReactTagRenderers } from "@/client/react/render";
-import type { GenConfigKeys, GenMessages, MessageKey } from "@/core/types";
+import type { ReactTagRenderers } from "../render";
+import type { GenConfigKeys, GenMessages, MessageKey } from "@/core";
 import type { Replacement } from "intor-translator";
-import { useTranslator } from "@/client/react/translator/use-translator";
+import { useTranslator } from "./use-translator";
 
 type TProps<CK extends GenConfigKeys = "__default__"> = {
   /** The message key to translate. */

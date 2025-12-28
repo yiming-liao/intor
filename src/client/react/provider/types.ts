@@ -1,6 +1,6 @@
-import type { IntorInitialValue } from "@/client/shared/types/contexts";
+import type { IntorInitialValue } from "../../shared/types/contexts";
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys } from "@/core/types";
+import type { GenConfigKeys } from "@/core";
 import type { Translator } from "intor-translator";
 import type * as React from "react";
 import { type Locale, type LocaleMessages } from "intor-translator";

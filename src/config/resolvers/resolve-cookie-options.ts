@@ -1,8 +1,5 @@
-import type {
-  CookieRawOptions,
-  CookieResolvedOptions,
-} from "@/config/types/cookie.types";
-import { DEFAULT_COOKIE_OPTIONS } from "@/config/constants/cookie.constants";
+import type { CookieRawOptions, CookieResolvedOptions } from "../types";
+import { DEFAULT_COOKIE_OPTIONS } from "../constants";
 
 export const resolveCookieOptions = (
   cookie: CookieRawOptions = {},

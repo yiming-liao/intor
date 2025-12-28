@@ -1,10 +1,12 @@
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { IntorProvider, useIntor } from "@/client/react";
-import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
-import { DEFAULT_COOKIE_OPTIONS } from "@/config/constants/cookie.constants";
-import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants/routing.constants";
+import {
+  DEFAULT_ROUTING_OPTIONS,
+  DEFAULT_COOKIE_OPTIONS,
+  DEFAULT_CACHE_OPTIONS,
+} from "@/config";
 
 const mockConfig: IntorResolvedConfig = {
   id: "test-intor",

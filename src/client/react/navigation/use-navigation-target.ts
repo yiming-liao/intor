@@ -1,8 +1,5 @@
-import { useIntor } from "@/client/react/provider";
-import {
-  resolveNavigationTarget,
-  type NavigationTarget,
-} from "@/routing/resolve-navigation-target";
+import { resolveNavigationTarget, type NavigationTarget } from "@/routing";
+import { useIntor } from "../provider";
 
 /**
  * Hook for resolving locale-aware navigation targets.

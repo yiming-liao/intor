@@ -1,4 +1,4 @@
-import type { LoggerOptions } from "@/config/types/logger.types";
+import type { LoggerOptions } from "@/config";
 import type { FormatConfig, Logger, RenderConfig } from "logry";
 import { logry } from "logry";
 import { getGlobalLoggerPool } from "./global-logger-pool";

@@ -1,8 +1,8 @@
-import type { TranslatorInstanceReact } from "@/client/react/translator/translator-instance";
-import type { IfGen, GenConfigKeys, GenMessages } from "@/core/types/generated";
+import type { TranslatorInstanceReact } from "./translator-instance";
+import type { IfGen, GenConfigKeys, GenMessages } from "@/core";
 import type { LocalizedNodeKeys } from "intor-translator";
-import { useIntor } from "@/client/react/provider";
-import { createTRich } from "@/client/react/translator/create-t-rich";
+import { useIntor } from "../provider";
+import { createTRich } from "./create-t-rich";
 
 /**
  * React hook to access the active translator instance.

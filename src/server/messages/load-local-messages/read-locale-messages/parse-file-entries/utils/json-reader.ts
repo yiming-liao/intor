@@ -1,4 +1,4 @@
-import type { Messages } from "@/core/messages";
+import type { Messages } from "@/core";
 import fs from "node:fs/promises";
 
 /**

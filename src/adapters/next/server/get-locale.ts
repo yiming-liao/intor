@@ -1,8 +1,8 @@
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import type { GenConfigKeys, GenLocale } from "@/core/types/generated";
+import type { IntorResolvedConfig } from "@/config";
+import type { GenConfigKeys, GenLocale } from "@/core";
 import { cookies, headers } from "next/headers";
-import { getLocaleFromAcceptLanguage } from "@/core/utils";
-import { resolveLocale } from "@/routing/locale";
+import { getLocaleFromAcceptLanguage } from "@/core";
+import { resolveLocale } from "@/routing";
 
 /**
  * Get the locale for the current Next.js request.

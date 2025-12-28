@@ -1,5 +1,5 @@
+import type { LocaleContext, ResolvedLocale } from "./types";
 import type { IntorResolvedConfig } from "@/config";
-import type { LocaleContext, ResolvedLocale } from "@/routing/locale/types";
 
 /**
  * Resolve the final locale based on routing configuration.

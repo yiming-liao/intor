@@ -1,4 +1,5 @@
-// shared / types
+// internal
+
 export type {
   // generated
   INTOR_GENERATED_KEY,
@@ -9,4 +10,5 @@ export type {
   // translator-instance
   MessageKey,
   TranslatorInstance,
-} from "@/core/types";
+  KeyMode,
+} from "@/core";

@@ -1,4 +1,4 @@
-import type { RoutingLocaleSource } from "@/core/types/routing";
+import type { RoutingLocaleSource } from "@/core";
 
 type RoutingPrefix = "none" | "all" | "except-default";
 

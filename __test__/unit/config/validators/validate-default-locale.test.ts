@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validateDefaultLocale } from "@/config/validators/validate-default-locale";
-import { IntorError, IntorErrorCode } from "@/core/error";
+import { IntorError, IntorErrorCode } from "@/core";
 
 describe("validateDefaultLocale", () => {
   const configBase = {

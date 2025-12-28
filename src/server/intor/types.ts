@@ -1,5 +1,5 @@
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import type { GenConfigKeys, GenLocale } from "@/core/types/generated";
+import type { IntorResolvedConfig } from "@/config";
+import type { GenConfigKeys, GenLocale } from "@/core";
 import type { LocaleMessages } from "intor-translator";
 
 export type LocaleResolver<CK extends GenConfigKeys = "__default__"> = (

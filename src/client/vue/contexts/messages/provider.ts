@@ -4,7 +4,7 @@ import { ref, computed, provide, watch, type Ref } from "vue";
 import {
   createRefetchMessages,
   type RefetchMessagesFn,
-} from "@/client/shared/utils/create-refetch-messages";
+} from "../../../shared/messages";
 import { MessagesContextKey } from "./context";
 
 interface ProvideMessagesProps {

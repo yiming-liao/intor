@@ -1,8 +1,5 @@
-import type {
-  CacheRawOptions,
-  CacheResolvedOptions,
-} from "@/config/types/cache.types";
-import { DEFAULT_CACHE_OPTIONS } from "@/config/constants/cache.constants";
+import type { CacheRawOptions, CacheResolvedOptions } from "../types";
+import { DEFAULT_CACHE_OPTIONS } from "../constants";
 
 export const resolveCacheOptions = (
   cache?: CacheRawOptions,

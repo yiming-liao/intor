@@ -1,5 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
-import type { LoaderOptions } from "@/config/types/loader.types";
+import type { IntorResolvedConfig, LoaderOptions } from "@/config";
 
 /**
  * Resolve the effective message loader for a given runtime.

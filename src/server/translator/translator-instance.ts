@@ -1,4 +1,4 @@
-import type { KeyMode, TranslatorInstance } from "@/core/types";
+import type { KeyMode, TranslatorInstance } from "@/core";
 import { type Locale, type LocaleMessages } from "intor-translator";
 
 export type TranslatorInstanceServer<

@@ -1,7 +1,7 @@
 import type { IntorRawConfig } from "@/config";
 import { describe, it, expect } from "vitest";
 import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
-import { IntorError, IntorErrorCode } from "@/core/error";
+import { IntorError, IntorErrorCode } from "@/core";
 
 describe("validateSupportedLocales", () => {
   const configBase = {
@@ -9,18 +9,44 @@ describe("validateSupportedLocales", () => {
     messages: { en: {}, zh: {} },
   };
 
-  it("throws if loader is used but supportedLocales is missing", () => {
+  it("throws if root loader is used but supportedLocales is missing", () => {
     expect(() =>
       validateSupportedLocales({
         ...configBase,
-        loader: { some: "option" },
+        loader: { type: "remote", url: "/api" },
       } as unknown as IntorRawConfig),
     ).toThrowError(IntorError);
+  });
 
+  it("throws if server.loader is used but supportedLocales is missing", () => {
+    expect(() =>
+      validateSupportedLocales({
+        ...configBase,
+        server: {
+          loader: { type: "local", rootDir: "messages" },
+        },
+      } as unknown as IntorRawConfig),
+    ).toThrowError(IntorError);
+  });
+
+  it("throws if client.loader is used but supportedLocales is missing", () => {
+    expect(() =>
+      validateSupportedLocales({
+        ...configBase,
+        client: {
+          loader: { url: "/api" },
+        },
+      } as unknown as IntorRawConfig),
+    ).toThrowError(IntorError);
+  });
+
+  it("throws IntorError with correct error code when loader is present without supportedLocales", () => {
     try {
       validateSupportedLocales({
         ...configBase,
-        loader: { some: "option" },
+        server: {
+          loader: { type: "local", rootDir: "messages" },
+        },
       } as unknown as IntorRawConfig);
     } catch (error) {
       expect(error).toBeInstanceOf(IntorError);
@@ -30,19 +56,35 @@ describe("validateSupportedLocales", () => {
     }
   });
 
-  it("returns provided supportedLocales if given", () => {
+  it("returns provided supportedLocales when given (even if loaders exist)", () => {
     const supported = ["en", "zh"];
     const result = validateSupportedLocales({
       ...configBase,
       supportedLocales: supported,
+      server: {
+        loader: { type: "local", rootDir: "messages" },
+      },
     } as unknown as IntorRawConfig);
     expect(result).toEqual(supported);
   });
 
-  it("infers supportedLocales from messages if not provided and loader is absent", () => {
+  it("infers supportedLocales from messages when no loader is configured", () => {
     const result = validateSupportedLocales({
       ...configBase,
     } as unknown as IntorRawConfig);
     expect(result).toEqual(["en", "zh"]);
+  });
+
+  it("allows supportedLocales inference when messages exist and no loader is used", () => {
+    const result = validateSupportedLocales({
+      id: "TEST_ID",
+      messages: {
+        "en-US": {},
+        "zh-TW": {},
+      },
+      defaultLocale: "en-US",
+    } as unknown as IntorRawConfig);
+
+    expect(result).toEqual(["en-US", "zh-TW"]);
   });
 });

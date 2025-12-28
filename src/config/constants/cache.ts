@@ -1,4 +1,4 @@
-import type { CacheResolvedOptions } from "@/config/types/cache.types";
+import type { CacheResolvedOptions } from "../types";
 
 // Default cache options
 export const DEFAULT_CACHE_OPTIONS: CacheResolvedOptions = {

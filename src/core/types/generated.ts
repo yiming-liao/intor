@@ -1,4 +1,4 @@
-import type { PREFIX_PLACEHOLDER } from "@/core/constants/prefix-placeholder";
+import type { PREFIX_PLACEHOLDER } from "../constants";
 import type { LocaleMessages } from "intor-translator";
 
 /**

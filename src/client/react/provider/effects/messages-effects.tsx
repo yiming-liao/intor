@@ -6,7 +6,7 @@ import * as React from "react";
 import {
   createRefetchMessages,
   type RefetchMessagesFn,
-} from "@/client/shared/utils/create-refetch-messages";
+} from "../../../shared/messages";
 
 export interface MessagesEffectsProps {
   config: IntorResolvedConfig;

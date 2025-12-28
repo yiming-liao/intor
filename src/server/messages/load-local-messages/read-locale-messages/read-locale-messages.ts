@@ -1,4 +1,4 @@
-import type { ReadLocaleMessagesParams } from "@/server/messages/load-local-messages/read-locale-messages/types";
+import type { ReadLocaleMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import { collectFileEntries } from "./collect-file-entries";

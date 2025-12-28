@@ -1,4 +1,5 @@
 export type {
+  IntorInitialValue,
   ConfigContextValue,
   LocaleContextValue,
   MessagesContextValue,

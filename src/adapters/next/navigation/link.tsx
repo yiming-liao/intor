@@ -1,6 +1,6 @@
 "use client";
 
-import type { GenConfigKeys, GenLocale } from "@/core/types/generated";
+import type { GenConfigKeys, GenLocale } from "@/core";
 import type { Url } from "next/dist/shared/lib/router/router";
 import type { LinkProps as NextLinkProps } from "next/link";
 import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";

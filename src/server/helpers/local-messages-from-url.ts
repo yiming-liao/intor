@@ -1,8 +1,6 @@
-import type { CacheResolvedOptions } from "@/config/types/cache.types";
-import type { LoggerOptions } from "@/config/types/logger.types";
-import type { MessagesPool } from "@/core/messages";
-import type { MessagesReader } from "@/core/messages/types";
-import { loadLocalMessages } from "@/server/messages/load-local-messages";
+import type { CacheResolvedOptions, LoggerOptions } from "@/config";
+import type { MessagesPool, MessagesReader } from "@/core";
+import { loadLocalMessages } from "../messages/load-local-messages";
 
 /** Parse a multi-value query parameter into a normalized string array. */
 function parseMultiValueParam(values: string[] | null): string[] | undefined {

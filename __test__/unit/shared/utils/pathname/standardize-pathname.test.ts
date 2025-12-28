@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
+import type { IntorResolvedConfig } from "@/config";
 import { describe, it, expect } from "vitest";
 import { standardizePathname } from "@/core/utils/pathname/standardize-pathname";
 

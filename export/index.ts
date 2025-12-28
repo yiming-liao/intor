@@ -1,17 +1,27 @@
-// intor
+// intor (core)
 
-// constants
-export { PREFIX_PLACEHOLDER } from "@/shared/constants";
-
-// shared / utils
 export {
-  deepMerge,
-  // pathname
-  localizePathname,
-} from "@/shared/utils";
+  // constants
+  PREFIX_PLACEHOLDER,
 
-// shared / error
-export { IntorError, IntorErrorCode } from "@/shared/error";
+  // error
+  IntorError,
+  IntorErrorCode,
+
+  // utils
+  deepMerge,
+  localizePathname,
+
+  // logger
+  clearLoggerPool,
+
+  // messages
+  clearMessagesPool,
+  setGlobalMessagesPool,
+  isValidMessages,
+  type Messages,
+  type MessagesReader,
+} from "@/core";
 
 // --- [dependency] intor-translator
 export {

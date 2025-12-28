@@ -6,7 +6,7 @@ import * as React from "react";
 import {
   setLocaleCookieBrowser,
   setDocumentLocale,
-} from "@/client/shared/utils/locale";
+} from "../../../shared/utils";
 
 export interface LocaleEffectsProps {
   config: IntorResolvedConfig;

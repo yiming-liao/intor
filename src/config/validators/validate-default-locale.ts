@@ -1,6 +1,6 @@
-import type { IntorRawConfig } from "@/config/types/intor-config.types";
+import type { IntorRawConfig } from "@/config";
 import type { Locale } from "intor-translator";
-import { IntorError, IntorErrorCode } from "@/core/error";
+import { IntorError, IntorErrorCode } from "@/core";
 
 /**
  * Validates the configured default locale.

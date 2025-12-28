@@ -1,4 +1,4 @@
-import type { IntorRawConfig } from "@/config/types/intor-config.types";
+import type { IntorRawConfig } from "../types";
 import type { FallbackLocalesMap, Locale } from "intor-translator";
 
 /**

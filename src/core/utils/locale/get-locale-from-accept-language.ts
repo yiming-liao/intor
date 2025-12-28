@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizeLocale } from "@/core/utils/normalizers/normalize-locale";
+import { normalizeLocale } from "../normalizers";
 
 /**
  * Resolve locale from the `Accept-Language` header.

@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { setLocaleCookieEdge } from "@/adapters/next/proxy/utils/set-locale-cookie-edge";
-import { getLocaleFromAcceptLanguage } from "@/core/utils";
+import { getLocaleFromAcceptLanguage } from "@/core";
 import { resolveRouting } from "@/routing";
 
 /**

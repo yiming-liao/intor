@@ -1,5 +1,5 @@
 import type { TranslatorInstanceVue } from "@/client/vue/translator/translator-instance";
-import type { IfGen, GenConfigKeys, GenMessages } from "@/core/types/generated";
+import type { IfGen, GenConfigKeys, GenMessages } from "@/core";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { computed } from "vue";
 import { injectLocale } from "@/client/vue/contexts/locale";

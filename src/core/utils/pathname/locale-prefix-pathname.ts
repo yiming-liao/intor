@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "@/config/types/intor-config.types";
-import { PREFIX_PLACEHOLDER } from "@/core/constants/prefix-placeholder";
-import { normalizePathname } from "@/core/utils/normalizers/normalize-pathname";
+import type { IntorResolvedConfig } from "@/config";
+import { PREFIX_PLACEHOLDER } from "../../constants";
+import { normalizePathname } from "../normalizers";
 
 /**
  * Applies routing prefix strategy by resolving the locale placeholder.
