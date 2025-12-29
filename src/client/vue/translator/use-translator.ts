@@ -2,8 +2,7 @@ import type { TranslatorInstanceVue } from "@/client/vue/translator/translator-i
 import type { IfGen, GenConfigKeys, GenMessages } from "@/core";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { computed } from "vue";
-import { injectLocale } from "@/client/vue/contexts/locale";
-import { injectTranslator } from "@/client/vue/contexts/translator";
+import { injectIntor } from "@/client/vue/provider";
 import { createTRich } from "@/client/vue/translator/create-t-rich";
 
 /**
@@ -23,10 +22,9 @@ export function useTranslator<
 
 // Implementation
 export function useTranslator(preKey?: string) {
-  const translatorRef = injectTranslator();
-  const localeRef = injectLocale();
+  const intor = injectIntor();
 
-  const translator = computed(() => translatorRef.value.translator);
+  const translator = computed(() => intor.value.translator);
   const scoped = computed(() =>
     preKey ? translator.value.scoped(preKey) : translator.value,
   );
@@ -38,7 +36,7 @@ export function useTranslator(preKey?: string) {
     messages: computed(() => translator.value.messages),
     locale: computed(() => translator.value.locale),
     isLoading: computed(() => translator.value.isLoading),
-    setLocale: localeRef.value.setLocale,
+    setLocale: intor.value.setLocale,
     hasKey,
     t,
     tRich: createTRich(translator, preKey),

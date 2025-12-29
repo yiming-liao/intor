@@ -2,19 +2,16 @@ import type { BootstrapCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
 import type { GenConfigKeys } from "@/core";
 import type { Translator } from "intor-translator";
-import type * as React from "react";
 import { type Locale, type LocaleMessages } from "intor-translator";
 
-export interface ReactBootstrap<CK extends GenConfigKeys = "__default__">
+export interface VueBootstrap<CK extends GenConfigKeys = "__default__">
   extends BootstrapCore<CK> {
   initialMessages?: Readonly<LocaleMessages>;
   isLoading?: boolean;
 }
 
-export interface IntorProviderProps<CK extends GenConfigKeys = "__default__"> {
-  value: ReactBootstrap<CK>;
-  children: React.ReactNode;
-}
+export type IntorProviderProps<CK extends GenConfigKeys = "__default__"> =
+  VueBootstrap<CK>;
 
 export type IntorContextValue = {
   config: IntorResolvedConfig;

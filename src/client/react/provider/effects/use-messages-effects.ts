@@ -8,36 +8,28 @@ import {
   type RefetchMessagesFn,
 } from "../../../shared/messages";
 
-export interface MessagesEffectsProps {
-  config: IntorResolvedConfig;
+export function useMessagesEffects(
+  config: IntorResolvedConfig,
+  locale: Locale,
   setRuntimeMessages: React.Dispatch<
     React.SetStateAction<LocaleMessages | null>
-  >;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  locale: Locale;
-}
-
-export function MessagesEffects({
-  config,
-  locale,
-  setRuntimeMessages,
-  setIsLoading,
-}: MessagesEffectsProps): null {
-  const isInitialRenderRef = React.useRef(true);
-
+  >,
+  setInternalIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+) {
   // Prepares message refetch function.
   const refetchMessages: RefetchMessagesFn = React.useMemo(
     () =>
       createRefetchMessages({
         config,
-        onLoadingStart: () => setIsLoading(true),
-        onLoadingEnd: () => setIsLoading(false),
+        onLoadingStart: () => setInternalIsLoading(true),
+        onLoadingEnd: () => setInternalIsLoading(false),
         onMessages: setRuntimeMessages,
       }),
-    [config, setRuntimeMessages, setIsLoading],
+    [config, setRuntimeMessages, setInternalIsLoading],
   );
 
   // Refetch messages when locale changes (except initial render).
+  const isInitialRenderRef = React.useRef(true);
   React.useEffect(() => {
     if (isInitialRenderRef.current) {
       isInitialRenderRef.current = false;
@@ -45,6 +37,4 @@ export function MessagesEffects({
     }
     refetchMessages(locale);
   }, [refetchMessages, locale]);
-
-  return null;
 }

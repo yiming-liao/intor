@@ -8,17 +8,10 @@ import {
   setDocumentLocale,
 } from "../../../shared/utils";
 
-export interface LocaleEffectsProps {
-  config: IntorResolvedConfig;
-  locale: Locale;
-}
-
-export function LocaleEffects({ config, locale }: LocaleEffectsProps): null {
+export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
   // Sync locale-related browser side effects.
   React.useEffect(() => {
     setLocaleCookieBrowser(config.cookie, locale);
     setDocumentLocale(locale);
   }, [config.cookie, locale]);
-
-  return null;
 }

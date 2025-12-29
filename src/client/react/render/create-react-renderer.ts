@@ -1,6 +1,6 @@
 import type { ReactTagRenderers } from "./types";
 import type { Renderer } from "intor-translator";
-import { createElement } from "react";
+import * as React from "react";
 
 /**
  * Create a React renderer for semantic rich messages.
@@ -37,7 +37,7 @@ export const createReactRenderer = (options?: {
       }
 
       // Default behavior: render as a native React element
-      return createElement(name, attributes, ...children);
+      return React.createElement(name, attributes, ...children);
     },
   };
 };
