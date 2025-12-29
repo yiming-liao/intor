@@ -9,5 +9,6 @@ export {
   T,
 
   // helpers
+  useLoadMessages,
   getClientLocale,
 } from "@/client/vue";

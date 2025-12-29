@@ -15,5 +15,6 @@ export {
   useNavigationStrategy, // Internal hook.
 
   // helpers
+  useLoadMessages,
   getClientLocale,
 } from "@/client/react";
