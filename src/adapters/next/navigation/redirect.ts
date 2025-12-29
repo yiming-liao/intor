@@ -2,8 +2,8 @@ import type { IntorResolvedConfig } from "@/config";
 import type { GenConfigKeys, GenLocale } from "@/core";
 import type { RedirectType } from "next/navigation";
 import { redirect as nextRedirect } from "next/navigation";
-import { getLocale } from "@/adapters/next/server";
 import { localizePathname, isExternalDestination } from "@/core";
+import { getLocale } from "../server/get-locale"; // NOTE: Import the concrete server module directly to avoid pulling in the full server barrel (Node-only deps).
 
 /**
  * Locale-aware redirect helper (server-only).

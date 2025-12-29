@@ -4,11 +4,8 @@ import type {
   PrefetchOptions,
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter } from "next/navigation";
-import { usePathname } from "@/adapters/next/navigation/use-pathname";
-// NOTE: Internal context imports.
-// Rewritten to `intor/react` by Rollup alias at build time.
-// Do not change these paths without updating the alias config.
-import { useNavigationTarget, useNavigationStrategy } from "@/client/react";
+import { useNavigationTarget, useNavigationStrategy } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { usePathname } from "./use-pathname";
 
 /**
  * Locale-aware router hook.
