@@ -4,8 +4,8 @@ import type { IntorContextValue, IntorProviderProps } from "./types";
 import type { GenConfigKeys } from "@/core";
 import { Translator, type LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { LocaleEffects } from "./effects/locale-effects";
-import { MessagesEffects } from "./effects/messages-effects";
+import { useLocaleEffects } from "@/client/react/provider/effects/use-locale-effects";
+import { useMessagesEffects } from "@/client/react/provider/effects/use-messages-effects";
 
 export const IntorContext = React.createContext<IntorContextValue | undefined>(
   undefined,
@@ -24,16 +24,18 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
   children,
 }: IntorProviderProps<CK>) => {
   // -----------------------------------------------------------------------------
-  // Internal states
+  // Internal state
   // -----------------------------------------------------------------------------
   const [locale, setLocaleState] = React.useState<string>(initialLocale);
   const [runtimeMessages, setRuntimeMessages] =
     React.useState<LocaleMessages | null>(null);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [internalIsLoading, setInternalIsLoading] =
+    React.useState<boolean>(false);
 
-  /**
-   * Request a locale change.
-   */
+  // -----------------------------------------------------------------------------
+  // Locale transition
+  // -----------------------------------------------------------------------------
+  /** Request a locale change. */
   const setLocale = React.useCallback(
     async (newLocale: string) => {
       if (newLocale === locale) return;
@@ -43,22 +45,12 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
     [locale, onLocaleChange],
   );
 
-  /**
-   * Treat locale changes as a loading boundary to avoid transient missing states.
-   * isLoading defaults to false, but is eagerly set to true on locale switches.
-   */
-  const prevLocaleRef = React.useRef(locale);
-  // eslint-disable-next-line react-hooks/refs
-  const localeChanged = prevLocaleRef.current !== locale;
-  React.useEffect(() => {
-    prevLocaleRef.current = locale;
-  }, [locale]);
-
   // -----------------------------------------------------------------------------
   // Effective state
   // -----------------------------------------------------------------------------
-  const effectiveIsLoading = !!externalIsLoading || isLoading || localeChanged;
-  // runtime (client refetch) → initial → config (static)
+  // external > internal > localeTransitioning
+  const effectiveIsLoading = !!externalIsLoading || internalIsLoading;
+  // runtime (client refetch) > initial > config (static)
   const effectiveMessages = React.useMemo(
     () => runtimeMessages || initialMessages || config.messages || {},
     [config.messages, initialMessages, runtimeMessages],
@@ -74,7 +66,7 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
       isLoading: effectiveIsLoading,
       fallbackLocales: config.fallbackLocales,
       loadingMessage: config.translator?.loadingMessage,
-      placeholder: config.translator?.placeholder,
+      missingMessage: config.translator?.missingMessage,
       handlers,
       plugins,
     });
@@ -87,6 +79,12 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
     plugins,
   ]);
 
+  // ---------------------------------------------------------------------------
+  // Side effects
+  // ---------------------------------------------------------------------------
+  useLocaleEffects(config, locale);
+  useMessagesEffects(config, locale, setRuntimeMessages, setInternalIsLoading);
+
   return (
     <IntorContext.Provider
       value={{
@@ -98,14 +96,6 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
         translator,
       }}
     >
-      <LocaleEffects config={config} locale={locale} />
-      <MessagesEffects
-        config={config}
-        locale={locale}
-        setRuntimeMessages={setRuntimeMessages}
-        setIsLoading={setIsLoading}
-      />
-
       {children}
     </IntorContext.Provider>
   );

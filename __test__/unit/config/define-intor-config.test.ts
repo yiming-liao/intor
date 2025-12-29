@@ -35,7 +35,7 @@ describe("defineIntorConfig", () => {
       messages: {},
       supportedLocales: ["en", "zh"],
       defaultLocale: "en",
-      translator: { loadingMessage: "Loading...", placeholder: "MISSING" },
+      translator: { loadingMessage: "Loading...", missingMessage: "MISSING" },
     });
 
     expect(result).toMatchObject({
@@ -44,7 +44,7 @@ describe("defineIntorConfig", () => {
       defaultLocale: "en",
       supportedLocales: ["en", "zh"],
       fallbackLocales: { en: ["zh"] },
-      translator: { loadingMessage: "Loading...", placeholder: "MISSING" },
+      translator: { loadingMessage: "Loading...", missingMessage: "MISSING" },
       cookie: { some: "cookie" },
       routing: { some: "routing" },
     });

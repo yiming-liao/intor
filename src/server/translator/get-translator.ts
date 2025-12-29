@@ -54,7 +54,7 @@ export async function getTranslator<CK extends GenConfigKeys = "__default__">(
     messages,
     fallbackLocales: config.fallbackLocales,
     loadingMessage: config.translator?.loadingMessage,
-    placeholder: config.translator?.placeholder,
+    missingMessage: config.translator?.missingMessage,
     handlers: params.handlers,
     plugins: params.plugins,
   });
