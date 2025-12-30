@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.3.6",
+  "version": "2.3.8",
   "description": "A modular and extensible i18n core designed for TypeScript and JavaScript projects. Intor enables custom translation logic with support for both frontend and backend environments, featuring runtime configuration, caching, adapters, and message loaders.",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor#readme",
@@ -68,6 +68,10 @@
     "./vue": {
       "import": "./dist/vue/export/vue/index.js",
       "types": "./dist/types/export/vue/index.d.ts"
+    },
+    "./svelte": {
+      "import": "./dist/svelte/export/svelte/index.js",
+      "types": "./dist/types/export/svelte/index.d.ts"
     }
   },
   "main": "./dist/export/index.js",
@@ -93,7 +97,7 @@
     "examples:html": "vite --config examples/html/vite.config.ts"
   },
   "dependencies": {
-    "intor-translator": "1.3.1",
+    "intor-translator": "1.3.2",
     "keyv": "5.5.5",
     "logry": "2.1.5",
     "p-limit": "7.2.0"
@@ -130,6 +134,7 @@
     "remark": "15.0.1",
     "remark-gfm": "4.0.1",
     "rollup": "4.53.3",
+    "svelte": "5.46.1",
     "tsc-alias": "1.8.16",
     "tsd": "0.33.0",
     "typescript": "5.8.3",

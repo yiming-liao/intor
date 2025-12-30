@@ -1,17 +1,11 @@
 // intor / svelte
 
 export {
-  // // contexts
-  // IntorProvider,
-  // type IntorProviderProps,
-
-  // // translator
-  // useTranslator,
-  // T,
-
-  // // helpers
-  getClientLocale,
-
-  //
+  // runtime
   createIntor,
+  type IntorRuntime,
+
+  // helpers
+  createMessages,
+  getClientLocale,
 } from "@/client/svelte";
