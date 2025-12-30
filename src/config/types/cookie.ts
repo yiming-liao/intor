@@ -6,8 +6,8 @@ export type CookieRawOptions = {
   persist?: boolean;
   /** Cookie name used to store the locale. Defaults to "intor.locale" */
   name?: string;
-  /** Cookie domain scope. Defaults to null */
-  domain?: string | null;
+  /** Cookie domain scope. Defaults to undefined */
+  domain?: string;
   /** Cookie path scope. Defaults to "/" */
   path?: string;
   /** Cookie max age in seconds. Defaults to 365 days */
@@ -23,4 +23,4 @@ export type CookieRawOptions = {
 // Cookie resolved options
 export type CookieResolvedOptions = Required<
   Omit<CookieRawOptions, "domain">
-> & { domain: string | null };
+> & { domain?: string };

@@ -7,7 +7,7 @@ const baseCookie: CookieResolvedOptions = {
   enabled: true,
   persist: true,
   name: "intor.locale",
-  domain: null,
+  domain: undefined,
   path: "/",
   maxAge: 10,
   httpOnly: false,
@@ -65,7 +65,7 @@ describe("buildCookieString", () => {
     const result = buildCookieString(
       {
         ...baseCookie,
-        domain: null,
+        domain: undefined,
       },
       "en-US",
     );
