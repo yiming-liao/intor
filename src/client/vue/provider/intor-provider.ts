@@ -54,7 +54,8 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     const setLocale = async (newLocale: string) => {
       if (newLocale === locale.value) return;
       locale.value = newLocale;
-      onLocaleChange?.value?.(newLocale); // Notify external listener (fire-and-forget)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onLocaleChange?.value?.(newLocale as any); // Notify external listener (fire-and-forget)
     };
 
     // ---------------------------------------------------------------------------
@@ -107,7 +108,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
       messages: effectiveMessages.value,
       isLoading: effectiveIsLoading.value,
       translator: translator.value,
-    }));
+    })) as unknown as ComputedRef<IntorContextValue>;
     provide(IntorContextKey, contextValue);
     return () => slots.default?.();
   },

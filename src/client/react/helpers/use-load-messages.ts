@@ -1,20 +1,25 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { deepMerge } from "@/core";
+import {
+  deepMerge,
+  type GenConfigKeys,
+  type GenLocale,
+  type GenMessages,
+} from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-interface UseLoadMessagesResult {
-  initialLocale: string;
-  messages: LocaleMessages;
+interface UseLoadMessagesResult<CK extends GenConfigKeys = "__default__"> {
+  initialLocale: GenLocale<CK>;
+  messages: GenMessages<CK>;
   isLoading: boolean;
-  onLocaleChange: (locale: string) => Promise<void>;
+  onLocaleChange: (locale: GenLocale<CK>) => Promise<void>;
 }
 
-export function useLoadMessages(
+export function useLoadMessages<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   loader: (locale: string) => Promise<LocaleMessages>,
-): UseLoadMessagesResult {
+): UseLoadMessagesResult<CK> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
@@ -58,5 +63,5 @@ export function useLoadMessages(
     messages,
     isLoading,
     onLocaleChange,
-  };
+  } as UseLoadMessagesResult<CK>;
 }

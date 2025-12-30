@@ -1,6 +1,10 @@
 import type { NavigationTarget } from "@/routing";
 import { setLocaleCookieBrowser } from "@/client/shared/utils";
-import { resolveLoaderOptions } from "@/core";
+import {
+  resolveLoaderOptions,
+  type GenConfigKeys,
+  type GenLocale,
+} from "@/core";
 import { useIntor } from "../provider";
 
 /**
@@ -19,8 +23,10 @@ export type NavigationStrategy =
  *
  * No navigation is performed here.
  */
-export const useNavigationStrategy = () => {
-  const { config, setLocale } = useIntor();
+export const useNavigationStrategy = <
+  CK extends GenConfigKeys = "__default__",
+>() => {
+  const { config, setLocale } = useIntor<CK>();
   const loader = resolveLoaderOptions(config, "client");
 
   /** Decide how the given navigation target should be handled. */
@@ -37,7 +43,7 @@ export const useNavigationStrategy = () => {
       return { kind: "reload" };
     }
 
-    setLocale(target.locale); // Sync locale state for client-side navigation
+    setLocale(target.locale as GenLocale<CK>); // Sync locale state for client-side navigation
     return { kind: "client" };
   };
 

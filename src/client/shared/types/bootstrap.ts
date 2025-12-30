@@ -17,5 +17,5 @@ export interface BootstrapCore<CK extends GenConfigKeys = "__default__"> {
   initialLocale: GenLocale<CK>;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
-  onLocaleChange?: (newLocale: string) => Promise<void> | void;
+  onLocaleChange?: (newLocale: GenLocale<CK>) => Promise<void> | void;
 }

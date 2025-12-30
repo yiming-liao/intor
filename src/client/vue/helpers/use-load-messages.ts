@@ -1,20 +1,25 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
-import { ref, computed, onMounted, type Ref } from "vue";
-import { deepMerge } from "@/core";
+import { ref, onMounted, type Ref } from "vue";
+import {
+  deepMerge,
+  type GenConfigKeys,
+  type GenLocale,
+  type GenMessages,
+} from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-interface UseLoadMessagesResult {
-  initialLocale: string;
-  messages: Ref<Readonly<LocaleMessages> | undefined>;
+interface UseLoadMessagesResult<CK extends GenConfigKeys = "__default__"> {
+  initialLocale: GenLocale<CK>;
+  messages: Ref<GenMessages<CK>>;
   isLoading: Ref<boolean>;
-  onLocaleChange: (locale: string) => Promise<void>;
+  onLocaleChange: (locale: GenLocale<CK>) => Promise<void>;
 }
 
-export function useLoadMessages(
+export function useLoadMessages<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   loader: (locale: string) => Promise<LocaleMessages>,
-): UseLoadMessagesResult {
+): UseLoadMessagesResult<CK> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
@@ -23,7 +28,7 @@ export function useLoadMessages(
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
-  const messages = ref<LocaleMessages>();
+  const messages = ref<LocaleMessages>(config.messages || {});
   const isLoading = ref(true);
   let activeLocale = initialLocale;
 
@@ -50,8 +55,8 @@ export function useLoadMessages(
 
   return {
     initialLocale,
-    messages: computed(() => messages.value),
-    isLoading: computed(() => isLoading.value),
+    messages,
+    isLoading,
     onLocaleChange,
-  };
+  } as UseLoadMessagesResult<CK>;
 }
