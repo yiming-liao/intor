@@ -34,10 +34,6 @@
       "import": "./dist/core/export/index.js",
       "types": "./dist/types/export/index.d.ts"
     },
-    "./config": {
-      "import": "./dist/core/export/config/index.js",
-      "types": "./dist/types/export/config/index.d.ts"
-    },
     "./server": {
       "import": "./dist/core/export/server/index.js",
       "types": "./dist/types/export/server/index.d.ts"
@@ -74,8 +70,8 @@
       "types": "./dist/types/export/svelte/index.d.ts"
     }
   },
-  "main": "./dist/export/index.js",
-  "module": "./dist/export/index.js",
+  "main": "./dist/core/export/index.js",
+  "module": "./dist/core/export/index.js",
   "files": [
     "dist",
     "README.md",

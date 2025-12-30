@@ -9,18 +9,15 @@ export {
   deepMerge,
   resolveLoaderOptions,
   isExternalDestination,
-
   // normalizers
   normalizePathname,
   normalizeCacheKey,
   normalizeLocale,
-
   // locale
   getLocaleFromAcceptLanguage,
   getLocaleFromPathname,
   getLocaleFromHost,
   getLocaleFromQuery,
-
   // pathname
   localizePathname,
 } from "./utils";

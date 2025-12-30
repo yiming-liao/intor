@@ -23,8 +23,18 @@ export {
   type MessagesReader,
 } from "@/core";
 
+// config
+export {
+  defineIntorConfig,
+
+  // types
+  type IntorRawConfig,
+  type IntorResolvedConfig,
+} from "@/config";
+
 // --- [dependency] intor-translator
 export {
+  Translator,
   // plugin
   type TranslatorPlugin,
   // translate config & handlers
