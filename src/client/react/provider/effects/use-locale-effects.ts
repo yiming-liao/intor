@@ -3,6 +3,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
 import * as React from "react";
+import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
 import {
   setLocaleCookieBrowser,
   setDocumentLocale,
@@ -20,7 +21,10 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
     const localeCookie = getLocaleCookieBrowser(cookie.name);
     const isFirstVisit = !localeCookie;
 
-    if (!isFirstVisit || routing.firstVisit.persist) {
+    if (
+      shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
+      shouldPersist(cookie)
+    ) {
       setLocaleCookieBrowser(cookie, locale);
     }
   }, [locale, cookie, routing.firstVisit.persist]);

@@ -2,25 +2,29 @@
 import type { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { intorProxy } from "@/adapters/next/proxy/intor-proxy";
-import { setLocaleCookieEdge } from "@/adapters/next/proxy/utils/set-locale-cookie-edge";
 import { resolveRouting } from "@/routing/resolve-routing";
 
-vi.mock("@/routing/resolve-routing", () => ({
-  resolveRouting: vi.fn(),
-}));
+const mockCookiesSet = vi.fn();
+
 vi.mock("next/server", () => ({
   NextResponse: {
     redirect: vi.fn((url) => ({
       headers: new Map([["location", url.pathname]]),
+      cookies: { set: mockCookiesSet },
     })),
-    next: vi.fn(() => ({ headers: new Map() })),
+    next: vi.fn(() => ({
+      headers: new Map(),
+      cookies: { set: mockCookiesSet },
+    })),
   },
 }));
+
 vi.mock("next/headers", () => ({
   headers: vi.fn(async () => new Map([["accept-language", "en-US"]])),
 }));
-vi.mock("@/adapters/next/proxy/utils/set-locale-cookie-edge", () => ({
-  setLocaleCookieEdge: vi.fn(),
+
+vi.mock("@/routing/resolve-routing", () => ({
+  resolveRouting: vi.fn(),
 }));
 
 function createRequest(url: string): NextRequest {
@@ -41,12 +45,23 @@ function createRequest(url: string): NextRequest {
   } as unknown as NextRequest;
 }
 
-describe("intorProxy", () => {
+describe("intorProxy (Next.js adapter)", () => {
   const config = {
     defaultLocale: "en",
-    cookie: { name: "locale" },
+    cookie: {
+      enabled: true,
+      persist: true,
+      name: "locale",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      secure: false,
+      httpOnly: false,
+      sameSite: "lax",
+    },
     routing: {
-      firstVisit: { persist: true },
+      firstVisit: {
+        persist: true,
+      },
     },
   } as any;
 
@@ -67,7 +82,7 @@ describe("intorProxy", () => {
     expect(response.headers.get("location")).toBe("/zh-TW/about");
   });
 
-  it("persists locale on first visit when source is detected", async () => {
+  it("persists locale on first visit when persistence is allowed", async () => {
     (resolveRouting as any).mockReturnValue({
       locale: "en",
       localeSource: "detected",
@@ -76,12 +91,14 @@ describe("intorProxy", () => {
     });
     const request = createRequest("https://example.com/");
     await intorProxy(config, request);
-    expect(setLocaleCookieEdge).toHaveBeenCalledWith(
-      expect.objectContaining({ locale: "en" }),
+    expect(mockCookiesSet).toHaveBeenCalledWith(
+      "locale",
+      "en",
+      expect.any(Object),
     );
   });
 
-  it("persists locale when source is not detected", async () => {
+  it("persists locale when source is not detected (return visit)", async () => {
     (resolveRouting as any).mockReturnValue({
       locale: "en",
       localeSource: "cookie",
@@ -90,8 +107,30 @@ describe("intorProxy", () => {
     });
     const request = createRequest("https://example.com/");
     await intorProxy(config, request);
-    expect(setLocaleCookieEdge).toHaveBeenCalledWith(
-      expect.objectContaining({ locale: "en" }),
+    expect(mockCookiesSet).toHaveBeenCalledWith(
+      "locale",
+      "en",
+      expect.any(Object),
     );
+  });
+
+  it("does not persist locale on first visit when persistence is disabled", async () => {
+    const configNoPersist = {
+      ...config,
+      routing: {
+        firstVisit: {
+          persist: false,
+        },
+      },
+    };
+    (resolveRouting as any).mockReturnValue({
+      locale: "en",
+      localeSource: "detected",
+      pathname: "/",
+      shouldRedirect: false,
+    });
+    const request = createRequest("https://example.com/");
+    await intorProxy(configNoPersist, request);
+    expect(mockCookiesSet).not.toHaveBeenCalled();
   });
 });

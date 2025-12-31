@@ -12,9 +12,6 @@ export const setLocaleCookieBrowser = (
 ): void => {
   if (typeof document === "undefined") return;
 
-  // Skip when cookie persistence is disabled
-  if (!cookieOptions.enabled || !cookieOptions.persist) return;
-
   // Build and apply the cookie string
   document.cookie = buildCookieString(cookieOptions, locale);
 };

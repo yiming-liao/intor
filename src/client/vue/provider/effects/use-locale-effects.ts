@@ -1,6 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
 import { watch, type Ref } from "vue";
+import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
 import {
   setLocaleCookieBrowser,
   setDocumentLocale,
@@ -23,7 +24,10 @@ export function useLocaleEffects(
       const localeCookie = getLocaleCookieBrowser(cookie.name);
       const isFirstVisit = !localeCookie;
 
-      if (!isFirstVisit || routing.firstVisit.persist) {
+      if (
+        shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
+        shouldPersist(cookie)
+      ) {
         setLocaleCookieBrowser(cookie, newLocale);
       }
     },

@@ -3,8 +3,10 @@ import type { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { getLocaleFromAcceptLanguage } from "@/core";
+import { buildCookieOptions } from "@/core/utils/build-cookie-options";
+import { normalizeQuery } from "@/core/utils/normalizers/normalize-query";
+import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
 import { resolveRouting } from "@/routing";
-import { setLocaleCookieEdge } from "./utils/set-locale-cookie-edge";
 
 /**
  * Next.js routing adapter for Intor.
@@ -27,7 +29,7 @@ export const intorProxy = async (
   const acceptLanguageHeader = headersStore.get("accept-language");
   const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
     config,
-    acceptLanguageHeader || undefined,
+    acceptLanguageHeader,
   );
 
   // Resolve routing decision (locale + pathname)
@@ -36,7 +38,9 @@ export const intorProxy = async (
     request.nextUrl.pathname,
     {
       host: request.nextUrl.host,
-      query: Object.fromEntries(request.nextUrl.searchParams.entries()),
+      query: normalizeQuery(
+        Object.fromEntries(request.nextUrl.searchParams.entries()),
+      ),
       cookie: request.cookies.get(config.cookie.name)?.value,
       detected: localeFromAcceptLanguage || defaultLocale,
     },
@@ -51,8 +55,11 @@ export const intorProxy = async (
 
   // Persist resolved locale to cookie
   const isFirstVisit = localeSource === "detected";
-  if (!isFirstVisit || routing.firstVisit.persist) {
-    setLocaleCookieEdge({ response, locale, cookie });
+  if (
+    shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
+    shouldPersist(cookie)
+  ) {
+    response.cookies.set(cookie.name, locale, buildCookieOptions(cookie));
   }
 
   return response;
