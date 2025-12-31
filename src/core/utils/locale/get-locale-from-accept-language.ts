@@ -20,7 +20,7 @@ import { normalizeLocale } from "../normalizers";
  */
 export const getLocaleFromAcceptLanguage = (
   config: IntorResolvedConfig,
-  acceptLanguageHeader: string | undefined,
+  acceptLanguageHeader: string | undefined | null,
 ): string | undefined => {
   const { supportedLocales } = config;
 

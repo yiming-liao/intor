@@ -21,7 +21,7 @@ export const getLocale = async <CK extends GenConfigKeys = "__default__">(
   const acceptLanguageHeader = headersStore.get("accept-language");
   const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
     config,
-    acceptLanguageHeader || undefined,
+    acceptLanguageHeader,
   );
 
   // Resolve locale and determine which source was used
