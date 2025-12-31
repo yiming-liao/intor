@@ -4,10 +4,7 @@ import type { LocalizedNodeKeys } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "@/server";
 import { getLocale } from "./get-locale";
 
-type GetTranslatorNextParams<CK extends GenConfigKeys = "__default__"> = Omit<
-  GetTranslatorParams<CK>,
-  "locale"
->;
+type GetTranslatorNextParams = Omit<GetTranslatorParams, "locale">;
 
 /**
  * Create a translator instance for the current Next.js SSR environment.
@@ -17,7 +14,7 @@ type GetTranslatorNextParams<CK extends GenConfigKeys = "__default__"> = Omit<
 
 // Signature: Without preKey
 export function getTranslator<CK extends GenConfigKeys = "__default__">(
-  params: GetTranslatorNextParams<CK>,
+  params: GetTranslatorNextParams,
 ): Promise<TranslatorInstanceServer<GenMessages<CK>>>;
 
 // Signature: With preKey
@@ -25,14 +22,14 @@ export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(
-  params: GetTranslatorNextParams<CK> & { preKey?: PK },
+  params: GetTranslatorNextParams & { preKey?: PK },
 ): Promise<TranslatorInstanceServer<GenMessages<CK>, PK>>;
 
 // Implementation
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(params: GetTranslatorNextParams<CK> & { preKey?: PK }) {
+>(params: GetTranslatorNextParams & { preKey?: PK }) {
   const { config, preKey, handlers, plugins, extraOptions } = params;
 
   const locale = await getLocale(config);

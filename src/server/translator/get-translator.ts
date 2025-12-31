@@ -1,11 +1,6 @@
 import type { TranslatorInstanceServer } from "./translator-instance";
 import type { IntorResolvedConfig } from "@/config";
-import type {
-  MessagesReader,
-  GenConfigKeys,
-  GenLocale,
-  GenMessages,
-} from "@/core";
+import type { MessagesReader, GenConfigKeys, GenMessages } from "@/core";
 import type {
   LocaleMessages,
   LocalizedNodeKeys,
@@ -16,9 +11,9 @@ import type {
 import { Translator } from "intor-translator";
 import { loadMessages } from "../messages";
 
-export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
+export interface GetTranslatorParams {
   config: IntorResolvedConfig;
-  locale: GenLocale<CK>;
+  locale: string;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
   extraOptions?: { exts?: string[]; messagesReader?: MessagesReader };
@@ -30,7 +25,7 @@ export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
 
 // Signature: Without preKey
 export function getTranslator<CK extends GenConfigKeys = "__default__">(
-  params: GetTranslatorParams<CK>,
+  params: GetTranslatorParams,
 ): Promise<TranslatorInstanceServer<GenMessages<CK>>>;
 
 // Signature: With preKey
@@ -38,12 +33,12 @@ export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(
-  params: GetTranslatorParams<CK> & { preKey?: PK },
+  params: GetTranslatorParams & { preKey?: PK },
 ): Promise<TranslatorInstanceServer<GenMessages<CK>, PK>>;
 
 // Implementation
-export async function getTranslator<CK extends GenConfigKeys = "__default__">(
-  params: GetTranslatorParams<CK> & { preKey?: string },
+export async function getTranslator(
+  params: GetTranslatorParams & { preKey?: string },
 ) {
   const { config, locale, preKey, extraOptions } = params;
 
