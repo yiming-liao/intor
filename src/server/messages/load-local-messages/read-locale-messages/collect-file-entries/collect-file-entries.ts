@@ -6,10 +6,10 @@ import path from "node:path";
 import { getLogger } from "@/core";
 
 /**
- * Recursively collects all message files under a given root directory.
+ * Recursively collects message file metadata under a given locale root.
  *
- * - Supports filtering by allowed file extensions and optional namespaces.
- * - Processes directories concurrently using the provided `limit` function.
+ * - Traverses directories and collects matching message files
+ * - Supports filtering by file extensions and optional namespaces
  *
  * @example
  * ```ts
@@ -27,15 +27,19 @@ export async function collectFileEntries({
   namespaces,
   rootDir,
   limit,
-  extraOptions: { exts = [".json"], loggerOptions },
+  exts = [".json"],
+  loggerOptions,
 }: CollectFileEntriesParams): Promise<FileEntry[]> {
   const baseLogger = getLogger(loggerOptions);
   const logger = baseLogger.child({ scope: "collect-file-entries" });
 
   const fileEntries: FileEntry[] = [];
 
+  // Recursive directory walk
   const walk = async (currentDir: string) => {
-    // Read current directory entries
+    // -------------------------------------------------------------------------
+    // Read directory entries
+    // -------------------------------------------------------------------------
     let entries: Dirent[] = [];
     try {
       entries = await readdir(currentDir, { withFileTypes: true });
@@ -46,20 +50,25 @@ export async function collectFileEntries({
       return;
     }
 
-    // Process each directory entry and collect valid files
+    // -------------------------------------------------------------------------
+    // Process entries (files & sub-directories)
+    // -------------------------------------------------------------------------
     const tasks = entries.map((entry) =>
       limit(async () => {
         const fullPath = path.join(currentDir, entry.name);
 
-        // If entry is a directory, recurse into it
+        // Recurse into sub-directories
         if (entry.isDirectory()) {
           await walk(fullPath);
           return;
         }
 
-        // Only include files with extensions in exts[]
+        // Skip unsupported file extensions
         if (!exts.some((ext) => entry.name.endsWith(ext))) return;
 
+        // ---------------------------------------------------------------------
+        // Resolve file entry
+        // ---------------------------------------------------------------------
         const relativePath = path.relative(rootDir, fullPath);
         const ext = path.extname(relativePath);
         const withoutExt = relativePath.slice(0, -ext.length);
@@ -68,7 +77,7 @@ export async function collectFileEntries({
         const namespace = segments.at(0);
         if (!namespace) return;
 
-        // Filter namespaces if a list is provided (always include "index")
+        // Apply namespace filter (always allow "index")
         if (namespaces && namespace !== "index") {
           if (!namespaces.includes(namespace)) return;
         }
@@ -82,6 +91,7 @@ export async function collectFileEntries({
         });
       }),
     );
+
     await Promise.all(tasks);
   };
 

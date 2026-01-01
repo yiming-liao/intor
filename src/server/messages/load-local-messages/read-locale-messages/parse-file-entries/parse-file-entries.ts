@@ -6,12 +6,12 @@ import { jsonReader } from "./utils/json-reader";
 import { nestObjectFromPath } from "./utils/nest-object-from-path";
 
 /**
- * Parse locale message files (JSON or custom formats) into a unified LocaleMessages object.
+ * Parse locale message files into a unified Messages object (single-locale).
  *
- * - Supports JSON and custom formats (via `customReader`)
- * - Uses optional concurrency control (`limit`)
+ * - Reads JSON or custom formats (via `messagesReader`)
+ * - Validates message structure
  * - Builds nested objects based on file path segments
- * - Deep-merges entries that belong to the same namespace
+ * - Deep-merges entries by namespace
  *
  * @example
  * ```plain
@@ -22,16 +22,14 @@ import { nestObjectFromPath } from "./utils/nest-object-from-path";
  *   - en/auth/verify.json  = { d: "D" }
  *```
 
- * The final return value is a LocaleMessages object:
+ * The final return value is a `Messages` object:
  * ```ts
  * {
- *   en: {
- *     a: "A",
- *     ui: { b: "B" },
- *     auth: {
- *       c: "C",
- *       verify: { d: "D" },
- *     },
+ *   a: "A",
+ *   ui: { b: "B" },
+ *   auth: {
+ *     c: "C",
+ *     verify: { d: "D" },
  *   },
  * }
  * ```
@@ -39,40 +37,49 @@ import { nestObjectFromPath } from "./utils/nest-object-from-path";
 export async function parseFileEntries({
   fileEntries,
   limit,
-  extraOptions: { messagesReader, loggerOptions },
+  messagesReader,
+  loggerOptions,
 }: ParseFileEntriesParams): Promise<Messages> {
   const baseLogger = getLogger(loggerOptions);
   const logger = baseLogger.child({ scope: "parse-file-entries" });
 
   // Read and parse all file entries
   const parsedFileEntries: ParsedFileEntries[] = [];
+
   const tasks = fileEntries.map(
     ({ namespace, segments, basename, fullPath, relativePath }) =>
       limit(async () => {
         try {
-          const segsWithoutNs = segments.slice(1);
+          // -------------------------------------------------------------------
+          // Read and validate file content
+          // -------------------------------------------------------------------
           const ext = path.extname(fullPath);
-
-          // Use a custom reader if provided (e.g., for YAML)
-          const json =
+          const raw =
             ext !== ".json" && messagesReader
               ? await messagesReader(fullPath)
               : await jsonReader(fullPath);
 
           // Validate messages structure
-          if (!isValidMessages(json)) {
+          if (!isValidMessages(raw)) {
             throw new Error(
-              "JSON file does not match NamespaceMessages structure",
+              "Parsed content does not match expected Messages structure",
             );
           }
 
-          const isIndex = basename === "index";
-          const keyPath = isIndex ? segsWithoutNs.slice(0, -1) : segsWithoutNs;
+          // -------------------------------------------------------------------
+          // Build nested message object from path segments
+          // -------------------------------------------------------------------
+          const segmentsWithoutNamespace = segments.slice(1);
+          const isIndexFile = basename === "index";
+
+          const keyPath = isIndexFile
+            ? segmentsWithoutNamespace.slice(0, -1)
+            : segmentsWithoutNamespace;
 
           // Nest the parsed content based on the path segments
-          const nested = nestObjectFromPath(keyPath, json);
+          const nestedMessages = nestObjectFromPath(keyPath, raw);
 
-          parsedFileEntries.push({ namespace, messages: nested });
+          parsedFileEntries.push({ namespace, messages: nestedMessages });
           logger.trace(`Parsed message file: ${relativePath}`);
         } catch (error) {
           logger.error("Failed to read or parse file.", {
@@ -82,12 +89,15 @@ export async function parseFileEntries({
         }
       }),
   );
+
   await Promise.all(tasks);
 
-  // Merge all entries belonging to the same namespace
+  // ---------------------------------------------------------------------------
+  // Merge parsed entries by namespace
+  // ---------------------------------------------------------------------------
   const result: Messages = {};
   for (const { namespace, messages } of parsedFileEntries) {
-    // Handle root-level namespace (i.e., [rootDir]/index.json)
+    // Root-level namespace (e.g. [locale]/index.json)
     if (namespace === "index") {
       Object.assign(result, deepMerge(result, messages));
     } else {

@@ -4,28 +4,31 @@ import { getLogger, loadRemoteMessages, resolveLoaderOptions } from "@/core";
 import { loadLocalMessages } from "./load-local-messages";
 
 /**
- * Load locale messages based on the resolved Intor configuration.
+ * Load locale messages according to the resolved Intor loader configuration.
  *
- * This function acts as a thin orchestration layer that:
+ * This function is the top-level orchestration entry for message loading.
+ * It is responsible for:
  *
- * - Selects the appropriate message loader (local or remote)
- * - Applies fallback locale resolution
- * - Delegates caching and concurrency behavior to the underlying loader
+ * - Resolving the active loader strategy (local or remote)
+ * - Dispatching to the appropriate loader implementation
+ * - Passing through cache and read-related options
  *
- * It does not perform message normalization or transformation itself.
+ * Message traversal, parsing, fallback resolution, and caching logic
+ * are delegated to the selected loader.
  */
 export const loadMessages = async ({
   config,
   locale,
-  extraOptions: { exts, messagesReader } = {},
+  readOptions,
   allowCacheWrite = false,
 }: LoadMessagesParams): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "load-messages" });
 
+  // ---------------------------------------------------------------------------
+  // Resolve loader configuration
+  // ---------------------------------------------------------------------------
   const loader = resolveLoaderOptions(config, "server");
-
-  // Guard: no loader configured
   if (!loader) {
     logger.warn(
       "No loader options have been configured in the current config.",
@@ -45,47 +48,37 @@ export const loadMessages = async ({
     cache: config.cache,
   });
 
+  // ---------------------------------------------------------------------------
+  // Dispatch to loader implementation
+  // ---------------------------------------------------------------------------
   let loadedMessages: LocaleMessages | undefined;
-
-  // ====== loader type: local ======
   if (type === "local") {
     loadedMessages = await loadLocalMessages({
-      // --- Messages Scope ---
       locale,
       fallbackLocales,
       namespaces,
       rootDir,
-      // --- Execution ---
       concurrency: loader.concurrency,
-      exts,
-      messagesReader,
-      // --- Caching ---
+      readOptions,
       cacheOptions: config.cache,
       allowCacheWrite,
-      // --- Observability ---
       loggerOptions: config.logger,
     });
-  }
-  // ====== loader type: remote ======
-  else if (type === "remote") {
+  } else if (type === "remote") {
     loadedMessages = await loadRemoteMessages({
-      // --- Messages Scope ---
       locale,
       fallbackLocales,
       namespaces,
       rootDir,
-      // --- Remote Source ---
       url: loader.url,
       headers: loader.headers,
-      // --- Caching ---
       allowCacheWrite,
       cacheOptions: config.cache,
-      // --- Observability ---
       loggerOptions: config.logger,
     });
   }
 
-  // No messages found
+  // Final sanity check
   if (!loadedMessages || Object.keys(loadedMessages).length === 0) {
     logger.warn("No messages found.", { locale, fallbackLocales, namespaces });
   }

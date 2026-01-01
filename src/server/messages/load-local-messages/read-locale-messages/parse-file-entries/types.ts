@@ -6,10 +6,8 @@ import type { LimitFunction } from "p-limit";
 export interface ParseFileEntriesParams {
   fileEntries: FileEntry[];
   limit: LimitFunction;
-  extraOptions: {
-    messagesReader?: MessagesReader;
-    loggerOptions: LoggerOptions;
-  };
+  messagesReader?: MessagesReader;
+  loggerOptions: LoggerOptions;
 }
 
 export interface ParsedFileEntries {

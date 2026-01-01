@@ -65,7 +65,7 @@ describe("parseFileEntries", () => {
     const result = await parseFileEntries({
       fileEntries,
       limit,
-      extraOptions: { loggerOptions: { id: "test" } },
+      loggerOptions: { id: "test" },
     });
     expect(result).toEqual({
       a: "A",
@@ -94,10 +94,9 @@ describe("parseFileEntries", () => {
         },
       ],
       limit,
-      extraOptions: {
-        messagesReader: customReader,
-        loggerOptions: { id: "test" },
-      },
+
+      messagesReader: customReader,
+      loggerOptions: { id: "test" },
     });
     expect(customReader).toHaveBeenCalled();
     expect(result).toEqual({ wrapped: { a: "a" } });
@@ -117,7 +116,7 @@ describe("parseFileEntries", () => {
         },
       ],
       limit,
-      extraOptions: { loggerOptions: { id: "test" } },
+      loggerOptions: { id: "test" },
     });
     expect(errorSpy).toHaveBeenCalled();
   });
@@ -138,7 +137,7 @@ describe("parseFileEntries", () => {
         },
       ],
       limit,
-      extraOptions: { loggerOptions: { id: "test" } },
+      loggerOptions: { id: "test" },
     });
     expect(errorSpy).toHaveBeenCalled();
     const [[message]] = errorSpy.mock.calls;

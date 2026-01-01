@@ -36,7 +36,7 @@ describe("readLocaleMessages", () => {
       limit: vi.fn() as any,
       rootDir: "messages",
       locale: "en",
-      extraOptions: { loggerOptions: { id: "test" } },
+      loggerOptions: { id: "test" },
     };
 
     const result: LocaleMessages = await readLocaleMessages(options);
@@ -61,11 +61,11 @@ describe("readLocaleMessages", () => {
       limit: mockLimit as any,
       rootDir: "messages",
       locale: "en",
-      extraOptions: {
+      readOptions: {
         exts: [".json", ".yaml"],
         messagesReader: mockReader,
-        loggerOptions: { id: "test" },
       },
+      loggerOptions: { id: "test" },
     };
 
     const result = await readLocaleMessages(options);
@@ -86,7 +86,7 @@ describe("readLocaleMessages", () => {
       limit: vi.fn() as any,
       rootDir: "messages",
       locale: "fr",
-      extraOptions: { loggerOptions: { id: "test" } },
+      loggerOptions: { id: "test" },
     });
 
     expect(spyCollect).toHaveBeenCalledWith(

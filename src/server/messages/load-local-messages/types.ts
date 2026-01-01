@@ -1,5 +1,5 @@
 import type { CacheResolvedOptions, LoggerOptions } from "@/config";
-import type { MessagesPool, MessagesReader } from "@/core";
+import type { MessagesPool, MessagesReadOptions } from "@/core";
 
 export interface LoadLocalMessagesParams {
   // --- Messages Scope ---
@@ -10,8 +10,9 @@ export interface LoadLocalMessagesParams {
 
   // --- Local Execution ---
   concurrency?: number;
-  exts?: string[];
-  messagesReader?: MessagesReader;
+
+  // --- Read Behavior ---
+  readOptions?: MessagesReadOptions;
 
   // --- Caching ---
   pool?: MessagesPool;

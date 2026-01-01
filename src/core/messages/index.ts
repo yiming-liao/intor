@@ -13,4 +13,4 @@ export {
 export { isValidMessages } from "./utils/is-valid-messages";
 
 // types
-export type { Messages, MessagesReader } from "./types";
+export type { Messages, MessagesReader, MessagesReadOptions } from "./types";

@@ -8,14 +8,14 @@ import { readLocaleMessages } from "./read-locale-messages";
 /**
  * Load locale messages from the local file system.
  *
- * This function acts as the orchestration layer for local message loading.
- * It is responsible for:
+ * This function serves as the orchestration layer for local message loading.
+ * It coordinates:
  *
- * - Resolving fallback locales in order
- * - Coordinating cache read / write behavior
- * - Limiting concurrent file reads for performance
+ * - Locale resolution with fallbacks
+ * - Cache read / write behavior
+ * - Concurrency control for file system access
  *
- * File system traversal, parsing, and message validation are delegated to lower-level utilities.
+ * File traversal, parsing, and validation are delegated to lower-level utilities.
  */
 export const loadLocalMessages = async ({
   locale,
@@ -23,8 +23,7 @@ export const loadLocalMessages = async ({
   namespaces,
   rootDir = "messages",
   concurrency = 10,
-  exts,
-  messagesReader,
+  readOptions,
   pool = getGlobalMessagesPool(),
   cacheOptions,
   allowCacheWrite = false,
@@ -39,7 +38,9 @@ export const loadLocalMessages = async ({
     resolvedRootDir: path.resolve(process.cwd(), rootDir),
   });
 
-  // --- Cache key ---
+  // ---------------------------------------------------------------------------
+  // Cache key resolution
+  // ---------------------------------------------------------------------------
   const cacheKey = normalizeCacheKey([
     loggerOptions.id,
     "loaderType:local",
@@ -49,20 +50,26 @@ export const loadLocalMessages = async ({
     (namespaces || []).toSorted().join(","),
   ]);
 
-  // --- Cache read ---
-  if (cacheOptions.enabled && cacheKey) {
-    const cached = await pool?.get(cacheKey);
-    if (cached) {
-      logger.debug("Messages cache hit.", { key: cacheKey });
-      return cached;
+  // ---------------------------------------------------------------------------
+  // Cache read
+  // ---------------------------------------------------------------------------
+  if (cacheOptions.enabled) {
+    if (cacheKey) {
+      const cached = await pool?.get(cacheKey);
+      if (cached) {
+        logger.debug("Messages cache hit.", { key: cacheKey });
+        return cached;
+      }
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Resolve locale messages with ordered fallback strategy
+  // ---------------------------------------------------------------------------
   const limit = pLimit(concurrency);
   const candidateLocales = [locale, ...(fallbackLocales || [])];
   let messages: LocaleMessages | undefined;
 
-  // Try each candidate locale in order and stop at the first successful result
   for (let i = 0; i < candidateLocales.length; i++) {
     const candidateLocale = candidateLocales[i];
     const isLast = i === candidateLocales.length - 1;
@@ -72,8 +79,10 @@ export const loadLocalMessages = async ({
         namespaces,
         rootDir,
         limit,
-        extraOptions: { exts, messagesReader, loggerOptions },
+        readOptions,
+        loggerOptions,
       });
+
       // Stop at the first locale that yields non-empty messages
       if (Object.values(result[candidateLocale] || {}).length > 0) {
         messages = result;
@@ -93,9 +102,13 @@ export const loadLocalMessages = async ({
     }
   }
 
-  // --- Cache write ---
-  if (cacheOptions.enabled && allowCacheWrite && cacheKey && messages) {
-    await pool?.set(cacheKey, messages, cacheOptions.ttl);
+  // ---------------------------------------------------------------------------
+  // Cache write (explicitly permitted)
+  // ---------------------------------------------------------------------------
+  if (cacheOptions.enabled && allowCacheWrite) {
+    if (cacheKey && messages) {
+      await pool?.set(cacheKey, messages, cacheOptions.ttl);
+    }
   }
 
   // Final success log with resolved locale and timing

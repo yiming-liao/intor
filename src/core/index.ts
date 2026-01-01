@@ -38,6 +38,7 @@ export {
   // types
   type Messages,
   type MessagesReader,
+  type MessagesReadOptions,
 } from "./messages";
 
 // types

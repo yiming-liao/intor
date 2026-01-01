@@ -5,35 +5,47 @@ import { collectFileEntries } from "./collect-file-entries";
 import { parseFileEntries } from "./parse-file-entries";
 
 /**
- * Read messages for a specific locale from the file system.
+ * Read and assemble messages for a single locale from the file system.
  *
- * 1. Collects file entries under the specified locale directory.
- * 2. Parses each file into a messages object.
- * 3. Wraps the parsed messages under the locale key.
+ * This function acts as a thin orchestration layer:
+ * - Collects message file metadata for the locale
+ * - Parses files into a single Messages object
+ * - Wraps the result under the locale key
+ *
+ * It does not perform validation or transformation itself.
  */
 export const readLocaleMessages = async ({
   locale,
   namespaces,
   rootDir = "messages",
   limit,
-  extraOptions: { exts, messagesReader, loggerOptions },
+  readOptions: { exts, messagesReader } = {},
+  loggerOptions,
 }: ReadLocaleMessagesParams): Promise<LocaleMessages> => {
-  // 1. Collect file entries
+  // ---------------------------------------------------------------------------
+  // Collect message file entries for the locale
+  // ---------------------------------------------------------------------------
   const fileEntries = await collectFileEntries({
     namespaces,
     rootDir: path.resolve(process.cwd(), rootDir, locale),
     limit,
-    extraOptions: { exts, loggerOptions },
+    exts,
+    loggerOptions,
   });
 
-  // 2. Parse file entries
+  // ---------------------------------------------------------------------------
+  // Parse collected files into a Messages object (single-locale)
+  // ---------------------------------------------------------------------------
   const messages = await parseFileEntries({
     fileEntries,
     limit,
-    extraOptions: { messagesReader, loggerOptions },
+    messagesReader,
+    loggerOptions,
   });
 
-  // 3. Wrap the parsed messages under the locale key
+  // ---------------------------------------------------------------------------
+  // Wrap parsed messages under the locale key
+  // ---------------------------------------------------------------------------
   const localeMessages: LocaleMessages = { [locale]: messages };
 
   return localeMessages;

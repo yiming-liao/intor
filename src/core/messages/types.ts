@@ -42,3 +42,13 @@ export type Messages = Record<string, NestedMessage>;
  * ```
  */
 export type MessagesReader = (filePath: string) => Promise<Messages>;
+
+/**
+ * Options for reading locale messages.
+ *
+ * Used across loaders and runtimes to control how messages are read.
+ */
+export interface MessagesReadOptions {
+  exts?: string[];
+  messagesReader?: MessagesReader;
+}

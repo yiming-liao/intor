@@ -7,8 +7,6 @@ export interface CollectFileEntriesParams {
   namespaces?: string[];
   rootDir: string;
   limit: LimitFunction;
-  extraOptions: {
-    exts?: string[];
-    loggerOptions: LoggerOptions;
-  };
+  exts?: string[];
+  loggerOptions: LoggerOptions;
 }
