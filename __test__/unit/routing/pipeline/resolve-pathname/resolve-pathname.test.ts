@@ -9,7 +9,7 @@ import { resolvePathname } from "@/routing/pipeline/resolve-pathname/resolve-pat
  */
 vi.mock("@/routing/pathname", () => ({
   localizePathname: (_config: unknown, pathname: string) => ({
-    localizedPathname: pathname,
+    pathname,
   }),
 }));
 

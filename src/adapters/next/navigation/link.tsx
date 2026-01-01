@@ -39,8 +39,8 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   onClick,
   ...props
 }: LinkProps<CK>): React.JSX.Element => {
-  const { localizedPathname } = usePathname();
-  const { resolveNavigation } = useNavigationTarget(localizedPathname);
+  const { pathname } = usePathname();
+  const { resolveNavigation } = useNavigationTarget(pathname);
   const { decideNavigation } = useNavigationStrategy();
 
   // Normalize Next.js href input into a string destination

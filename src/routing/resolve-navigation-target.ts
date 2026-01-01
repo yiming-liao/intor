@@ -34,8 +34,8 @@ export function resolveNavigationTarget(
 
   // Localize destination when navigating within the app
   if (!isExternal) {
-    const { localizedPathname } = localizePathname(config, destination, locale);
-    destination = localizedPathname;
+    const { pathname } = localizePathname(config, destination, locale);
+    destination = pathname;
   }
 
   return {

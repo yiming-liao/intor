@@ -12,14 +12,14 @@ const mockConfig: IntorResolvedConfig = {
 describe("resolveNavigationTarget", () => {
   beforeEach(() => {
     vi.spyOn(routing, "localizePathname").mockReturnValue({
-      localizedPathname: "/en-US/about",
+      pathname: "/en-US/about",
     } as any);
     vi.clearAllMocks();
   });
 
   it("uses current locale when no locale is provided", () => {
     vi.mocked(localizePathname).mockReturnValue({
-      localizedPathname: "/en-US/about",
+      pathname: "/en-US/about",
     } as any);
     const result = resolveNavigationTarget(mockConfig, "en-US", "/about", {});
     expect(result).toEqual({
@@ -36,7 +36,7 @@ describe("resolveNavigationTarget", () => {
 
   it("uses input locale when it is supported", () => {
     vi.mocked(localizePathname).mockReturnValue({
-      localizedPathname: "/zh-TW/about",
+      pathname: "/zh-TW/about",
     } as any);
     const result = resolveNavigationTarget(mockConfig, "en-US", "/about", {
       locale: "zh-TW",
@@ -47,7 +47,7 @@ describe("resolveNavigationTarget", () => {
 
   it("falls back to current locale when input locale is not supported", () => {
     vi.mocked(localizePathname).mockReturnValue({
-      localizedPathname: "/en-US/about",
+      pathname: "/en-US/about",
     } as any);
     const result = resolveNavigationTarget(mockConfig, "en-US", "/about", {
       locale: "ja-JP" as any,
@@ -58,7 +58,7 @@ describe("resolveNavigationTarget", () => {
 
   it("uses input destination when provided", () => {
     vi.mocked(localizePathname).mockReturnValue({
-      localizedPathname: "/en-US/contact",
+      pathname: "/en-US/contact",
     } as any);
     const result = resolveNavigationTarget(mockConfig, "en-US", "/about", {
       destination: "/contact",

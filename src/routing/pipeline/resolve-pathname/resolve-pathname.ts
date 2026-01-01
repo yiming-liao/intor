@@ -29,7 +29,7 @@ const assertNever = (x: never): never => {
  */
 export const resolvePathname = (
   config: IntorResolvedConfig,
-  pathname: string,
+  rawPathname: string,
   context: PathnameContext,
 ): ResolvedPathname => {
   const { prefix } = config.routing;
@@ -54,10 +54,10 @@ export const resolvePathname = (
     }
   }
 
-  const { localizedPathname } = localizePathname(config, pathname, locale);
+  const { pathname } = localizePathname(config, rawPathname, locale);
 
   return {
-    pathname: localizedPathname,
+    pathname,
     shouldRedirect: directive.type === "redirect",
   };
 };

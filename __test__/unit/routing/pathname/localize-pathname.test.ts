@@ -24,14 +24,14 @@ describe("localizePathname", () => {
     expect(result).toEqual({
       unprefixedPathname: "/about",
       standardizedPathname: "/app/{locale}/about",
-      localizedPathname: "/app/en-US/about",
+      pathname: "/app/en-US/about",
     });
   });
 
   it("replaces locale when a different locale is provided", () => {
     const config = createConfig();
     const result = localizePathname(config, "/app/en-US/about", "zh-TW");
-    expect(result.localizedPathname).toBe("/app/zh-TW/about");
+    expect(result.pathname).toBe("/app/zh-TW/about");
   });
 
   it("handles pathname without an existing locale prefix", () => {
@@ -40,7 +40,7 @@ describe("localizePathname", () => {
     expect(result).toEqual({
       unprefixedPathname: "/about",
       standardizedPathname: "/app/{locale}/about",
-      localizedPathname: "/app/en-US/about",
+      pathname: "/app/en-US/about",
     });
   });
 
@@ -55,7 +55,7 @@ describe("localizePathname", () => {
     expect(result).toEqual({
       unprefixedPathname: "/about",
       standardizedPathname: "/app/{locale}/about",
-      localizedPathname: "/app/about",
+      pathname: "/app/about",
     });
   });
 
@@ -67,7 +67,7 @@ describe("localizePathname", () => {
       } as any,
     });
     const result = localizePathname(config, "/app/en-US/about", "en-US");
-    expect(result.localizedPathname).toBe("/app/about");
+    expect(result.pathname).toBe("/app/about");
   });
 
   it('keeps locale prefix for non-default locale when prefix is "except-default"', () => {
@@ -78,6 +78,6 @@ describe("localizePathname", () => {
       } as any,
     });
     const result = localizePathname(config, "/app/about", "zh-TW");
-    expect(result.localizedPathname).toBe("/app/zh-TW/about");
+    expect(result.pathname).toBe("/app/zh-TW/about");
   });
 });

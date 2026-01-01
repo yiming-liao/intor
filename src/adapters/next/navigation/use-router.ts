@@ -23,8 +23,8 @@ export const useRouter = () => {
     prefetch: nextRouterPrefetch,
     ...rest
   } = useNextRouter();
-  const { localizedPathname } = usePathname();
-  const { resolveNavigation } = useNavigationTarget(localizedPathname);
+  const { pathname } = usePathname();
+  const { resolveNavigation } = useNavigationTarget(pathname);
   const { decideNavigation } = useNavigationStrategy();
 
   const push = <CK extends GenConfigKeys = "__default__">(

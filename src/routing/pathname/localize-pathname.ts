@@ -4,6 +4,33 @@ import { localePrefixPathname } from "./locale-prefix-pathname";
 import { standardizePathname } from "./standardize-pathname";
 
 /**
+ * Represents a group of localized pathname forms.
+ *
+ * Contains pathname representations at different
+ * stages of the localization pipeline.
+ */
+export interface LocalizedPathname {
+  /**
+   * Final, locale-resolved pathname ready for consumption.
+   * @example
+   * "/app/en-US/about"
+   */
+  pathname: string;
+  /**
+   * Pathname with locale prefix removed.
+   * @example
+   * "/about"
+   */
+  unprefixedPathname: string;
+  /**
+   * Canonical pathname with locale placeholder applied.
+   * @example
+   * "/app/{locale}/cms"
+   */
+  standardizedPathname: string;
+}
+
+/**
  * Localizes a pathname by composing canonicalization,
  * standardization, and locale prefix strategies.
  *
@@ -24,11 +51,7 @@ export const localizePathname = (
   config: IntorResolvedConfig,
   rawPathname: string,
   locale?: string,
-): {
-  unprefixedPathname: string;
-  standardizedPathname: string;
-  localizedPathname: string;
-} => {
+): LocalizedPathname => {
   // 1. Canonicalize: extract basePath and strip locale
   const unprefixedPathname = getUnprefixedPathname(config, rawPathname);
 
@@ -36,15 +59,11 @@ export const localizePathname = (
   const standardizedPathname = standardizePathname(config, unprefixedPathname);
 
   // 3. Apply strategy: resolve locale prefix based on routing rules
-  const localizedPathname = localePrefixPathname(
-    config,
-    standardizedPathname,
-    locale,
-  );
+  const pathname = localePrefixPathname(config, standardizedPathname, locale);
 
   return {
+    pathname,
     unprefixedPathname,
     standardizedPathname,
-    localizedPathname,
   };
 };

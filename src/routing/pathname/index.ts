@@ -1,1 +1,1 @@
-export { localizePathname } from "./localize-pathname";
+export { localizePathname, type LocalizedPathname } from "./localize-pathname";
