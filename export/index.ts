@@ -1,20 +1,16 @@
 // intor (core)
 
+// core
 export {
   // constants
   PREFIX_PLACEHOLDER,
-
   // error
   IntorError,
   IntorErrorCode,
-
   // utils
   deepMerge,
-  localizePathname,
-
   // logger
   clearLoggerPool,
-
   // messages
   clearMessagesPool,
   setGlobalMessagesPool,
@@ -26,11 +22,13 @@ export {
 // config
 export {
   defineIntorConfig,
-
   // types
   type IntorRawConfig,
   type IntorResolvedConfig,
 } from "@/config";
+
+// routing
+export { localizePathname } from "@/routing";
 
 // --- [dependency] intor-translator
 export {

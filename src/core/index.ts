@@ -1,5 +1,5 @@
 // constants
-export { PREFIX_PLACEHOLDER } from "./constants";
+export { PREFIX_PLACEHOLDER, INTOR_HEADERS } from "./constants";
 
 // error
 export { IntorError, IntorErrorCode } from "./error";
@@ -13,13 +13,7 @@ export {
   normalizePathname,
   normalizeCacheKey,
   normalizeLocale,
-  // locale
-  getLocaleFromAcceptLanguage,
-  getLocaleFromPathname,
-  getLocaleFromHost,
-  getLocaleFromQuery,
-  // pathname
-  localizePathname,
+  normalizeQuery,
 } from "./utils";
 
 // logger

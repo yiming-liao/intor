@@ -7,15 +7,5 @@ export {
   normalizeCacheKey,
   normalizeLocale,
   normalizePathname,
+  normalizeQuery,
 } from "./normalizers";
-
-// locale
-export {
-  getLocaleFromAcceptLanguage,
-  getLocaleFromPathname,
-  getLocaleFromHost,
-  getLocaleFromQuery,
-} from "./locale";
-
-// pathname
-export { localizePathname } from "./pathname";

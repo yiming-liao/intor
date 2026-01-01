@@ -1,1 +1,1 @@
-export { resolvePathname } from "./resolve-pathname";
+export { localizePathname } from "./localize-pathname";

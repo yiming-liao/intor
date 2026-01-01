@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "@/config";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { localizePathname } from "@/core";
-import * as core from "@/core";
+import { localizePathname } from "@/routing";
+import * as routing from "@/routing/pathname";
 import { resolveNavigationTarget } from "@/routing/resolve-navigation-target";
 
 const mockConfig: IntorResolvedConfig = {
@@ -11,7 +11,7 @@ const mockConfig: IntorResolvedConfig = {
 
 describe("resolveNavigationTarget", () => {
   beforeEach(() => {
-    vi.spyOn(core, "localizePathname").mockReturnValue({
+    vi.spyOn(routing, "localizePathname").mockReturnValue({
       localizedPathname: "/en-US/about",
     } as any);
     vi.clearAllMocks();
