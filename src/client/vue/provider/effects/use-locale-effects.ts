@@ -13,22 +13,38 @@ export function useLocaleEffects(
   locale: Ref<Locale>,
 ) {
   const { cookie, routing } = config;
+  let isFirstSync = true;
 
-  // Sync locale-related browser side effects.
   watch(
     locale,
-    (newLocale) => {
+    (currentLocale) => {
       // Always sync document language
-      setDocumentLocale(newLocale);
+      setDocumentLocale(currentLocale);
 
-      const localeCookie = getLocaleCookieBrowser(cookie.name);
-      const isFirstVisit = !localeCookie;
+      // -------------------------------------------------------------
+      // First sync (initial mount / hydration)
+      // -------------------------------------------------------------
+      if (isFirstSync) {
+        isFirstSync = false;
 
-      if (
-        shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
-        shouldPersist(cookie)
-      ) {
-        setLocaleCookieBrowser(cookie, newLocale);
+        const localeCookie = getLocaleCookieBrowser(cookie.name);
+        const isFirstVisit = !localeCookie;
+
+        if (
+          shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
+          shouldPersist(cookie)
+        ) {
+          setLocaleCookieBrowser(cookie, currentLocale);
+        }
+
+        return;
+      }
+
+      // -------------------------------------------------------------
+      // Subsequent locale changes (user-driven)
+      // -------------------------------------------------------------
+      if (shouldPersist(cookie)) {
+        setLocaleCookieBrowser(cookie, currentLocale);
       }
     },
     { immediate: true },

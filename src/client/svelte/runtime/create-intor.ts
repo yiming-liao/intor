@@ -8,8 +8,8 @@ import { attachMessagesEffects } from "./effects/messages-effects";
 
 export function createIntor<CK extends GenConfigKeys = "__default__">({
   config,
-  initialLocale,
-  initialMessages,
+  locale: initialLocale,
+  messages,
   handlers,
   plugins,
   onLocaleChange,
@@ -45,7 +45,7 @@ export function createIntor<CK extends GenConfigKeys = "__default__">({
   );
   // runtime (client refetch) > initial > config (static)
   const effectiveMessages = derived(
-    [runtimeMessages, initialMessages ?? readable(undefined)],
+    [runtimeMessages, messages ?? readable(undefined)],
     ([$runtime, $initial]) => $runtime || $initial || config.messages || {},
   );
 

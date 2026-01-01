@@ -8,4 +8,4 @@ export { useTranslator, T } from "./translator";
 export { useLoadMessages } from "./helpers";
 
 // helpers (client-shared utilities, re-exported)
-export { getClientLocale } from "@/client/shared/helpers";
+export { getClientLocale } from "../shared/helpers";

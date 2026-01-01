@@ -22,7 +22,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
   props: {
     config: { type: Object, required: true },
     initialLocale: { type: String, required: true },
-    initialMessages: { type: Object as () => LocaleMessages, required: false },
+    messages: { type: Object as () => LocaleMessages, required: false },
     handlers: { type: Object, required: false },
     plugins: { type: Array, required: false },
     onLocaleChange: { type: Function, required: false },
@@ -32,8 +32,8 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
   setup(props, { slots }) {
     const {
       config,
-      initialLocale,
-      initialMessages,
+      locale: initialLocale,
+      messages,
       handlers,
       plugins,
       onLocaleChange,
@@ -68,10 +68,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // runtime (client refetch) > initial > config (static)
     const effectiveMessages = computed<LocaleMessages>(
       () =>
-        runtimeMessages.value ||
-        initialMessages.value ||
-        config.value.messages ||
-        {},
+        runtimeMessages.value || messages.value || config.value.messages || {},
     );
 
     // ---------------------------------------------------------------------------

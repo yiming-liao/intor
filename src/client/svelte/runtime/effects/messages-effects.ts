@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
 import type { Writable } from "svelte/store";
-import { createRefetchMessages } from "@/client/shared/messages/create-refetch-messages";
+import { createRefetchMessages } from "../../../shared/messages";
 
 export function attachMessagesEffects({
   locale,

@@ -12,19 +12,35 @@ import {
 
 export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
   const { cookie, routing } = config;
+  const isFirstSyncRef = React.useRef(true);
 
-  // Sync locale-related browser side effects.
   React.useEffect(() => {
     // Always sync document language
     setDocumentLocale(locale);
 
-    const localeCookie = getLocaleCookieBrowser(cookie.name);
-    const isFirstVisit = !localeCookie;
+    // -----------------------------------------------------------------------
+    // First sync (initial mount / hydration)
+    // -----------------------------------------------------------------------
+    if (isFirstSyncRef.current) {
+      isFirstSyncRef.current = false;
 
-    if (
-      shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
-      shouldPersist(cookie)
-    ) {
+      const localeCookie = getLocaleCookieBrowser(cookie.name);
+      const isFirstVisit = !localeCookie;
+
+      if (
+        shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
+        shouldPersist(cookie)
+      ) {
+        setLocaleCookieBrowser(cookie, locale);
+      }
+
+      return;
+    }
+
+    // -----------------------------------------------------------------------
+    // Subsequent locale changes (user-driven)
+    // -----------------------------------------------------------------------
+    if (shouldPersist(cookie)) {
       setLocaleCookieBrowser(cookie, locale);
     }
   }, [locale, cookie, routing.firstVisit.persist]);

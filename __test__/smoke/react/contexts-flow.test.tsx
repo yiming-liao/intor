@@ -54,7 +54,7 @@ describe("Contexts flow (smoke)", () => {
       <IntorProvider
         value={{
           config: mockConfig,
-          initialLocale: "en-US",
+          locale: "en-US",
         }}
       >
         <Component />

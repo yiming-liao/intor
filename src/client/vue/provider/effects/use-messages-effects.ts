@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
 import { watch, type Ref } from "vue";
-import { createRefetchMessages } from "@/client/shared/messages";
+import { createRefetchMessages } from "../../../shared/messages";
 
 /**
  * Attach message refetch side effects based on locale changes.

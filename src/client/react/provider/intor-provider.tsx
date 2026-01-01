@@ -14,8 +14,8 @@ export const IntorContext = React.createContext<IntorContextValue | undefined>(
 export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
   value: {
     config,
-    initialLocale,
-    initialMessages,
+    locale: initialLocale,
+    messages,
     handlers,
     plugins,
     onLocaleChange,
@@ -52,8 +52,8 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
   const effectiveIsLoading = !!externalIsLoading || internalIsLoading;
   // runtime (client refetch) > initial > config (static)
   const effectiveMessages = React.useMemo(
-    () => runtimeMessages || initialMessages || config.messages || {},
-    [config.messages, initialMessages, runtimeMessages],
+    () => runtimeMessages || messages || config.messages || {},
+    [config.messages, messages, runtimeMessages],
   );
 
   // -----------------------------------------------------------------------------

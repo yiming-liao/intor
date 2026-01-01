@@ -6,7 +6,7 @@ import type * as React from "react";
 
 export interface ReactBootstrap<CK extends GenConfigKeys = "__default__">
   extends BootstrapCore<CK> {
-  initialMessages?: Readonly<GenMessages<CK>>;
+  messages?: Readonly<GenMessages<CK>>;
   isLoading?: boolean;
 }
 

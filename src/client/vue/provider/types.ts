@@ -5,7 +5,7 @@ import type { Translator } from "intor-translator";
 
 export interface VueBootstrap<CK extends GenConfigKeys = "__default__">
   extends BootstrapCore<CK> {
-  initialMessages?: Readonly<GenMessages<CK>>;
+  messages?: Readonly<GenMessages<CK>>;
   isLoading?: boolean;
 }
 

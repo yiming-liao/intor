@@ -1,10 +1,10 @@
 import type { NavigationTarget } from "@/routing";
-import { setLocaleCookieBrowser } from "@/client/shared/utils";
 import {
   resolveLoaderOptions,
   type GenConfigKeys,
   type GenLocale,
 } from "@/core";
+import { setLocaleCookieBrowser } from "../../shared/utils";
 import { useIntor } from "../provider";
 
 /**

@@ -11,7 +11,7 @@ import {
 
 export interface SvelteBootstrap<CK extends GenConfigKeys = "__default__">
   extends BootstrapCore<CK> {
-  initialMessages?: Readable<GenMessages<CK>>;
+  messages?: Readable<GenMessages<CK>>;
   isLoading?: Readable<boolean>;
 }
 

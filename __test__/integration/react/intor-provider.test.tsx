@@ -31,7 +31,7 @@ describe("IntorProvider (integration)", () => {
       <IntorProvider
         value={{
           config: mockConfig,
-          initialLocale: "en-US",
+          locale: "en-US",
         }}
       >
         <Consumer />
