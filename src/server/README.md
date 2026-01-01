@@ -1,55 +1,35 @@
 # Intor Server
 
-This module defines the server-side runtime of Intor.
+Server-side execution layer of Intor.
 
-It orchestrates initialization in a server environment by resolving
-the initial locale and preparing translation runtime state.
+Provides request-scoped primitives for locale resolution,
+message loading, and translator creation.
 
-> #### Server-side message cache
->
-> Intor caches loaded messages on the server using **Keyv**.  
-> Keyv is used directly as the cache abstraction, allowing full access to its
-> ecosystem (e.g. Redis, in-memory, or other backends) without additional adapters.
+---
 
-## What this module does
+## Structure
 
-- Provides the main server-side entry point (`intor`)
-- Resolves the initial locale using a provided locale resolver
-- Loads locale messages from configured sources (local or remote)
-- Prepares runtime state required for server-side translation
+#### • **intor/**
 
-## What this module does NOT do
+High-level server bootstrap entry.  
+ Composes runtime primitives into a complete initialization flow.
 
-- Does not define routing or locale decision policies
-- Does not read request or response objects directly
-- Does not perform redirects or framework-specific side effects
-- Does not manage client-side runtime or UI concerns
+#### • **runtime/**
 
-## Module Overview
+Request-scoped execution lifecycle.  
+ Owns the _ensureMessages → translator_ contract.
 
-- **`intor/`**  
-  The primary server-side entry point that orchestrates locale resolution
-  and message loading.
+#### • **messages/**
 
-- **`messages/`**  
-  Server-side message loading logic, including local and remote loaders
-  and shared message utilities.
+Server-side message loading pipeline.  
+ Handles local / remote loaders, fallbacks, and caching.
 
-- **`translator/`**  
-  Utilities for creating and accessing translation runtime instances.
+#### • **translator/**
 
-- **`shared/`**  
-  Internal shared utilities used across server modules (e.g. logging,
-  message pools).
+Translator instance creation utilities.  
+ Produces snapshot-based translation APIs.
 
-- **`helpers/`**  
-  Optional convenience helpers for integrating Intor into custom server
-  environments (e.g. URL-based message exposure).
+#### • **helpers/**
 
-## Design Philosophy
-
-> **Server runtime orchestrates.**  
-> **Policies decide elsewhere.**
-
-The server layer focuses on coordinating initialization flow and preparing runtime data.  
-All routing decisions and configuration policies are delegated to their respective core modules.
+Optional convenience wrappers.  
+ Shortcuts for common server integration patterns.

@@ -1,2 +1,2 @@
-export { getTranslator, type GetTranslatorParams } from "./get-translator";
+export { createTranslator } from "./create-translator";
 export type { TranslatorInstanceServer } from "./translator-instance";

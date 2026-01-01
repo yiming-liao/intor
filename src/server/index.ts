@@ -5,11 +5,11 @@ export { intor, type IntorResult } from "./intor";
 export { loadMessages } from "./messages";
 
 // translator
+export { type TranslatorInstanceServer } from "./translator";
+
+// helpers
 export {
   getTranslator,
   type GetTranslatorParams,
-  type TranslatorInstanceServer,
-} from "./translator";
-
-// helpers
-export { loadMessagesFromUrl } from "./helpers";
+  loadMessagesFromUrl,
+} from "./helpers";

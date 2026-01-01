@@ -7,9 +7,11 @@ import { getLocale } from "./get-locale";
 type GetTranslatorNextParams = Omit<GetTranslatorParams, "locale">;
 
 /**
- * Create a translator instance for the current Next.js SSR environment.
+ * Create a server-side translator for the current execution context.
  *
- * - Automatically resolves the current locale using the Next.js adapter.
+ * - Automatically resolves the locale from the framework context
+ *
+ * @platform Next.js
  */
 
 // Signature: Without preKey
@@ -30,18 +32,14 @@ export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(params: GetTranslatorNextParams & { preKey?: PK }) {
-  const { config, preKey, handlers, plugins, extraOptions } = params;
+  const { config, preKey, handlers, plugins, readOptions } = params;
 
-  const locale = await getLocale(config);
-
-  const translatorInstance = getTranslatorCore<CK, PK>({
+  return getTranslatorCore<CK, PK>({
     config,
-    locale,
+    locale: await getLocale(config),
     handlers,
     plugins,
-    extraOptions,
+    readOptions,
     preKey,
   });
-
-  return translatorInstance;
 }

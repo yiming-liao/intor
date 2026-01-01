@@ -71,7 +71,7 @@ describe("loadMessages", () => {
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
-      extraOptions: { exts: [".json"] },
+      readOptions: { exts: [".json"] },
       allowCacheWrite: true,
     });
 

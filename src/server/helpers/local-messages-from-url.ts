@@ -1,6 +1,7 @@
-import type { CacheResolvedOptions, LoggerOptions } from "@/config";
-import type { MessagesPool, MessagesReader } from "@/core";
-import { loadLocalMessages } from "../messages/load-local-messages";
+import {
+  loadLocalMessages,
+  type LoadLocalMessagesParams,
+} from "../messages/load-local-messages";
 
 /** Parse a multi-value query parameter into a normalized string array. */
 function parseMultiValueParam(values: string[] | null): string[] | undefined {
@@ -12,19 +13,6 @@ function parseMultiValueParam(values: string[] | null): string[] | undefined {
       .filter(Boolean),
   );
   return result.length > 0 ? result : undefined;
-}
-
-export interface LoadMessagesFromUrlOptiosn {
-  // --- Local Execution ---
-  concurrency?: number;
-  exts?: string[];
-  messagesReader?: MessagesReader;
-  // --- Caching ---
-  pool?: MessagesPool;
-  cacheOptions?: CacheResolvedOptions;
-  allowCacheWrite?: boolean; // per-call permission
-  // --- Observability ---
-  loggerOptions?: LoggerOptions;
 }
 
 /**
@@ -48,7 +36,10 @@ export interface LoadMessagesFromUrlOptiosn {
  */
 export async function loadMessagesFromUrl(
   url: URL,
-  options?: LoadMessagesFromUrlOptiosn,
+  options?: Omit<
+    LoadLocalMessagesParams,
+    "locale" | "fallbackLocales" | "namespaces" | "rootDir"
+  >,
 ) {
   // Parse query parameters
   const rootDir = url.searchParams.get("rootDir") ?? "";
@@ -67,8 +58,7 @@ export async function loadMessagesFromUrl(
     namespaces,
     fallbackLocales,
     concurrency: options?.concurrency,
-    exts: options?.exts,
-    messagesReader: options?.messagesReader,
+    readOptions: options?.readOptions,
     pool: options?.pool,
     cacheOptions: options?.cacheOptions || { enabled: false, ttl: 0 },
     allowCacheWrite: options?.allowCacheWrite,

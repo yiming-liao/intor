@@ -5,7 +5,9 @@ import { getLocaleFromAcceptLanguage } from "@/core";
 import { resolveLocale } from "@/routing";
 
 /**
- * Get the locale for the current Next.js request.
+ * Get the locale for the current execution context.
+ *
+ * @platform Next.js
  */
 export const getLocale = async <CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,

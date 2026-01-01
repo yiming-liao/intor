@@ -1,62 +1,41 @@
-import type { IntorResult, LocaleResolver } from "./types";
+import type { LocaleResolver, IntorResult } from "./types";
+import type { IntorRuntimeOptions } from "../runtime";
 import type { IntorResolvedConfig } from "@/config";
-import type { MessagesReader } from "@/core";
-import type { GenConfigKeys, GenLocale } from "@/core";
-import type { LocaleMessages } from "intor-translator";
-import { deepMerge, resolveLoaderOptions, getLogger } from "@/core";
-import { loadMessages } from "../messages";
+import { getLogger, type GenConfigKeys, type GenLocale } from "@/core";
+import { createIntorRuntime } from "../runtime/create-intor-runtime";
 
 /**
- * Entry point for initializing Intor.
- *
- * This function orchestrates the initialization flow:
- *
- * - Resolves the initial locale using a provided locale resolver
- * - Loads locale messages if the message loader is enabled
- * - Returns a fully-initialized Intor result
- *
- * This function does not perform routing decisions itself.
- * Locale resolution is delegated to the provided `getLocale` implementation.
+ * Server-side bootstrap for SSR-based full-stack frameworks.
  */
-export const intor = async <CK extends GenConfigKeys = "__default__">(
+export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  getLocale: LocaleResolver<CK> | GenLocale<CK>,
-  loadMessagesOptions: {
-    exts?: string[];
-    messagesReader?: MessagesReader;
-  } = {},
-): Promise<IntorResult<CK>> => {
+  localeOrResolver: LocaleResolver<CK> | GenLocale<CK>,
+  options?: IntorRuntimeOptions,
+): Promise<IntorResult<CK>> {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
 
-  // Resolve initial locale
-  const isLocaleFunction = typeof getLocale === "function";
+  // Create runtime (request-scoped)
+  const runtime = createIntorRuntime<CK>(config, options);
+
+  // Resolve locale
+  const isLocaleFunction = typeof localeOrResolver === "function";
   const locale = isLocaleFunction
-    ? await getLocale(config)
-    : getLocale || config.defaultLocale;
-  const source = typeof getLocale === "function" ? "resolver" : "static";
+    ? await localeOrResolver(config)
+    : localeOrResolver || config.defaultLocale;
+  const source = typeof localeOrResolver === "function" ? "resolver" : "static";
   logger.debug(`Initial locale resolved as "${locale}" via "${source}".`);
 
-  // Load messages during initialization when a loader is configured.
-  let loadedMessages: LocaleMessages | undefined;
-  const loader = resolveLoaderOptions(config, "server");
-  if (loader) {
-    loadedMessages = await loadMessages({
-      config,
-      locale,
-      extraOptions: {
-        exts: loadMessagesOptions.exts,
-        messagesReader: loadMessagesOptions.messagesReader,
-      },
-      allowCacheWrite: true, // Intor is the primary cache writer during initialization.
-    });
-  }
+  // Ensure messages & create translator snapshot
+  await runtime.ensureMessages(locale);
+  const translator = runtime.translator(locale);
 
   logger.info("Intor initialized.");
+
   return {
     config,
-    initialLocale: locale as GenLocale<CK>,
-    initialMessages: deepMerge(config.messages, loadedMessages),
+    locale,
+    messages: translator.messages,
   };
-};
+}
