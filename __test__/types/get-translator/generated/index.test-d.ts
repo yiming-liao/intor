@@ -10,17 +10,15 @@ declare global {
   interface IntorGeneratedTypes extends GeneratedTypesFixture {}
 }
 
-const defaults = {
-  config: {} as IntorResolvedConfig,
-  locale: "en-US",
-} as const;
+const config = {} as IntorResolvedConfig;
+const defaults = { locale: "en-US" } as const;
 
 //-------------------------------------------------
 // getTranslator / t()
 //-------------------------------------------------
 // --- GenConfigKeys: __default__ (implicit)
 {
-  const translator = getTranslator({ ...defaults });
+  const translator = getTranslator(config, { ...defaults });
   type Translate = Awaited<typeof translator>["t"];
   expectType<"hello" | "nested.key" | undefined>(
     null as unknown as Parameters<Translate>[0],
@@ -29,19 +27,19 @@ const defaults = {
 
 // With preKey
 {
-  const translator = getTranslator({ ...defaults, preKey: "hello" });
+  const translator = getTranslator(config, { ...defaults, preKey: "hello" });
   type Translate = Awaited<typeof translator>["t"];
   expectType<undefined>(null as unknown as Parameters<Translate>[0]);
 }
 // With preKey
 {
-  const translator = getTranslator({ ...defaults, preKey: "nested" });
+  const translator = getTranslator(config, { ...defaults, preKey: "nested" });
   type Translate = Awaited<typeof translator>["t"];
   expectType<"key" | undefined>(null as unknown as Parameters<Translate>[0]);
 }
 // --- GenConfigKeys: config2 (Specified)
 {
-  const translator = getTranslator<"config2">({ ...defaults });
+  const translator = getTranslator<"config2">(config, { ...defaults });
   type Translate = Awaited<typeof translator>["t"];
   expectType<"hello" | "nested.key" | "nested2.a.b.c.d" | undefined>(
     null as unknown as Parameters<Translate>[0],
@@ -55,7 +53,10 @@ const defaults = {
 
 // With preKey
 {
-  const translator = getTranslator<"config2">({ ...defaults, preKey: "hello" });
+  const translator = getTranslator<"config2">(config, {
+    ...defaults,
+    preKey: "hello",
+  });
   type Translate = Awaited<typeof translator>["t"];
   expectType<
     "key" | "d" | "c.d" | "b.c.d" | "a.b.c.d" | undefined // whole node keys
@@ -63,7 +64,7 @@ const defaults = {
 }
 // With preKey
 {
-  const translator = getTranslator<"config2">({
+  const translator = getTranslator<"config2">(config, {
     ...defaults,
     preKey: "nested",
   });
@@ -74,7 +75,7 @@ const defaults = {
 }
 // With preKey
 {
-  const translator = getTranslator<"config2">({
+  const translator = getTranslator<"config2">(config, {
     ...defaults,
     preKey: "nested2",
   });
@@ -88,13 +89,13 @@ const defaults = {
 //-------------------------------------------------
 // --- GenConfigKeys: __default__ (implicit)
 {
-  const translator = getTranslator({ ...defaults });
+  const translator = getTranslator(config, { ...defaults });
   type Locale = Awaited<typeof translator>["locale"];
   expectType<"en-US" | "zh-TW">(null as unknown as Locale);
 }
 // --- GenConfigKeys: config2 (Specified)
 {
-  const translator = getTranslator<"config2">({ ...defaults });
+  const translator = getTranslator<"config2">(config, { ...defaults });
   type Locale = Awaited<typeof translator>["locale"];
   expectType<"en-US" | "fr-FR">(null as unknown as Locale);
 }

@@ -9,23 +9,21 @@ declare global {
   interface IntorGeneratedTypes {}
 }
 
-const defaults = {
-  config: {} as IntorResolvedConfig,
-  locale: "en-US",
-} as const;
+const config = {} as IntorResolvedConfig;
+const defaults = { locale: "en-US" } as const;
 
 //-------------------------------------------------
 // getTranslator / t()
 //-------------------------------------------------
 {
-  const translator = getTranslator({ ...defaults });
+  const translator = getTranslator(config, { ...defaults });
   type Translate = Awaited<typeof translator>["t"];
   expectType<string | undefined>(null as unknown as Parameters<Translate>[0]);
 }
 
 // With preKey
 {
-  const translator = getTranslator({ ...defaults, preKey: "preKey" });
+  const translator = getTranslator(config, { ...defaults, preKey: "preKey" });
   type Translate = Awaited<typeof translator>["t"];
   expectType<string | undefined>(null as unknown as Parameters<Translate>[0]);
 }
@@ -34,7 +32,7 @@ const defaults = {
 // useTranslator / locale
 //-------------------------------------------------
 {
-  const translator = getTranslator({ ...defaults });
+  const translator = getTranslator(config, { ...defaults });
   type Locale = Awaited<typeof translator>["locale"];
   expectType<string>(null as unknown as Locale);
 }

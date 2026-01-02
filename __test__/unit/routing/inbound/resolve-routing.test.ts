@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 import { resolveLocale } from "@/routing/inbound/resolve-locale";
 import { resolvePathname } from "@/routing/inbound/resolve-pathname";
-import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 
 vi.mock("@/routing/inbound/resolve-locale", () => ({
   resolveLocale: vi.fn(),
