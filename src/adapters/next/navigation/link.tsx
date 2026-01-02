@@ -6,31 +6,29 @@ import type { LinkProps as NextLinkProps } from "next/link";
 import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import NextLink from "next/link";
 import * as React from "react";
-import { useNavigationTarget, useNavigationStrategy } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { useResolveNavigation } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
 import { usePathname } from "./use-pathname";
 
 interface LinkProps<CK extends GenConfigKeys = "__default__">
   extends Omit<NextLinkProps, "href">,
     Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
   href?: Url;
+
   /**
-   * Locale to navigate with.
+   * Optional locale override for this navigation.
    *
-   * If `href` is omitted, the current route is used as the navigation target.
+   * When omitted, the locale is resolved from the current execution context.
    */
   locale?: GenLocale<CK>;
 }
 
 /**
- * Locale-aware Link component.
+ * Render a locale-aware link for the current execution context.
  *
- * Wraps Next.js `Link`
+ * - Resolves a locale-aware navigation destination.
+ * - Determines whether navigation should be executed client-side or via full reload.
  *
- * - Resolves a locale-aware navigation destination
- * - Preserves external navigation behavior
- * - Switches locale via client state or full reload when required
- *
- * This component is responsible only for executing the resolved target.
+ * @platform Next.js
  */
 export const Link = <CK extends GenConfigKeys = "__default__">({
   href,
@@ -40,31 +38,32 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   ...props
 }: LinkProps<CK>): React.JSX.Element => {
   const { pathname } = usePathname();
-  const { resolveNavigation } = useNavigationTarget(pathname);
-  const { decideNavigation } = useNavigationStrategy();
+  const { resolveNavigation } = useResolveNavigation();
 
-  // Normalize Next.js href input into a string destination
+  // Normalize href into a string destination
   const rawDestination =
     typeof href === "string" ? href : href ? formatUrl(href) : undefined;
 
-  // Resolve navigation target
-  const target = resolveNavigation({ destination: rawDestination, locale });
+  // Resolve navigation result for this link
+  const { kind, destination } = resolveNavigation(pathname, {
+    destination: rawDestination,
+    locale,
+  });
 
   const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
 
     // Decide how this navigation should be executed
-    const { kind } = decideNavigation(target);
     if (kind === "reload") {
       e.preventDefault(); // prevent client-side navigation
-      globalThis.location.href = target.destination;
+      globalThis.location.href = destination;
       return;
     }
   };
 
   return (
-    <NextLink href={target.destination} onClick={handleClick} {...props}>
+    <NextLink href={destination} onClick={handleClick} {...props}>
       {children}
     </NextLink>
   );

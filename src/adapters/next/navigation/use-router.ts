@@ -4,17 +4,16 @@ import type {
   PrefetchOptions,
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter } from "next/navigation";
-import { useNavigationTarget, useNavigationStrategy } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { useResolveNavigation } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
 import { usePathname } from "./use-pathname";
 
 /**
- * Locale-aware router hook.
+ * Locale-aware router hook for the current execution context.
  *
- * Wraps Next.js `useRouter`
+ * - Resolves a locale-aware navigation destination.
+ * - Determines whether navigation should be executed client-side or via full reload.
  *
- * - Resolve locale-aware navigation targets
- * - Decide execution strategy (client-side vs full reload)
- * - Preserve correct behavior across navigation types
+ * @platform Next.js
  */
 export const useRouter = () => {
   const {
@@ -24,46 +23,48 @@ export const useRouter = () => {
     ...rest
   } = useNextRouter();
   const { pathname } = usePathname();
-  const { resolveNavigation } = useNavigationTarget(pathname);
-  const { decideNavigation } = useNavigationStrategy();
+  const { resolveNavigation } = useResolveNavigation();
 
   const push = <CK extends GenConfigKeys = "__default__">(
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const { locale } = options || {};
-    const target = resolveNavigation({ destination: href, locale });
-    const { kind } = decideNavigation(target);
+    const { kind, destination } = resolveNavigation(pathname, {
+      destination: href,
+      locale: options?.locale,
+    });
     if (kind === "reload") {
-      globalThis.location.href = target.destination;
+      globalThis.location.href = destination;
       return;
     }
-    nextRouterPush(target.destination, options);
+    nextRouterPush(destination, options);
   };
 
   const replace = <CK extends GenConfigKeys = "__default__">(
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const { locale } = options || {};
-    const target = resolveNavigation({ destination: href, locale });
-    const { kind } = decideNavigation(target);
+    const { kind, destination } = resolveNavigation(pathname, {
+      destination: href,
+      locale: options?.locale,
+    });
     if (kind === "reload") {
-      globalThis.location.href = target.destination;
+      globalThis.location.href = destination;
       return;
     }
-    nextRouterReplace(target.destination, options);
+    nextRouterReplace(destination, options);
   };
 
   const prefetch = <CK extends GenConfigKeys = "__default__">(
     href: string,
     options?: PrefetchOptions & { locale?: GenLocale<CK> },
   ) => {
-    const { locale } = options || {};
-    const target = resolveNavigation({ destination: href, locale });
-    const { kind } = decideNavigation(target);
+    const { kind, destination } = resolveNavigation(pathname, {
+      destination: href,
+      locale: options?.locale,
+    });
     if (kind !== "client") return; // Prefetch only makes sense for client-side navigation
-    nextRouterPrefetch(target.destination, options);
+    nextRouterPrefetch(destination, options);
   };
 
   return {

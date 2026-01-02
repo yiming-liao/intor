@@ -7,25 +7,18 @@ import { localizePathname } from "@/routing";
 import { getLocale } from "../server/get-locale"; // NOTE: Import the concrete server module directly to avoid pulling in the full server barrel (Node-only deps).
 
 /**
- * Locale-aware redirect helper (server-only).
+ * Redirect to a locale-aware destination for the current execution context.
  *
- * Wraps Next.js `redirect`
+ * - Bypasses localization for external destinations.
+ * - Automatically resolves the effective locale from the execution context.
  *
- * - Resolves the effective locale before redirecting
- * - Applies locale prefix for internal destinations
- * - Bypasses localization for external destinations
+ * @platform Next.js
  */
-export const redirect = async <CK extends GenConfigKeys = "__default__">({
-  config,
-  locale,
-  url,
-  type,
-}: {
-  config: IntorResolvedConfig;
-  locale?: GenLocale<CK>;
-  url: string;
-  type?: RedirectType | undefined;
-}) => {
+export const redirect = async <CK extends GenConfigKeys = "__default__">(
+  config: IntorResolvedConfig,
+  url: string,
+  { locale, type }: { locale?: GenLocale<CK>; type?: RedirectType },
+) => {
   // External destinations bypass app routing entirely
   const isExternal = isExternalDestination(url);
   if (isExternal) {

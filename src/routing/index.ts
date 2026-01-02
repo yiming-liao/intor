@@ -12,7 +12,4 @@ export {
   getLocaleFromQuery,
 } from "./locale";
 
-export {
-  resolveNavigationTarget,
-  type NavigationTarget,
-} from "./resolve-navigation-target";
+export { resolveNavigation, type NavigationResult } from "./navigation";

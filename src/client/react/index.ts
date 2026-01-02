@@ -5,7 +5,7 @@ export { IntorProvider, type IntorProviderProps, useIntor } from "./provider";
 export { useTranslator, T } from "./translator";
 
 // navigation
-export { useNavigationTarget, useNavigationStrategy } from "./navigation";
+export { useResolveNavigation } from "./navigation";
 
 // helpers
 export { useLoadMessages } from "./helpers";

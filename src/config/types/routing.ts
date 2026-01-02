@@ -11,6 +11,13 @@ export type RoutingRawOptions = {
     queryKey?: string;
   };
 
+  navigation?: {
+    /** How locale should be represented in navigation URLs. */
+    representation: "path" | "host" | "query";
+    /** Query parameter key used for navigation when representation is query. */
+    queryKey?: string;
+  };
+
   /** Controls how locale prefixes appear in URLs. Defaults to "none". */
   prefix?: RoutingPrefix;
 
@@ -40,6 +47,7 @@ export type RoutingRawOptions = {
 // Routing resolved options
 export type RoutingResolvedOptions = {
   locale: Required<NonNullable<RoutingRawOptions["locale"]>>;
+  navigation: Required<NonNullable<RoutingRawOptions["navigation"]>>;
   prefix: RoutingPrefix;
   firstVisit: Required<NonNullable<RoutingRawOptions["firstVisit"]>>;
   basePath: string;

@@ -12,6 +12,10 @@ export const resolveRoutingOptions = (
       ...DEFAULT_ROUTING_OPTIONS.locale,
       ...routing.locale,
     },
+    navigation: {
+      ...DEFAULT_ROUTING_OPTIONS.navigation,
+      ...routing.navigation,
+    },
     firstVisit: {
       ...DEFAULT_ROUTING_OPTIONS.firstVisit,
       ...routing.firstVisit,
