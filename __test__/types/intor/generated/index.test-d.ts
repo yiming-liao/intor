@@ -19,8 +19,8 @@ const defaults = [{} as IntorResolvedConfig, "en-US"] as const;
 // --- GenConfigKeys: __default__
 {
   const result = intor(...defaults) as Promise<IntorResult>;
-  type InitialLocale = Awaited<typeof result>["initialLocale"];
-  expectType<"en-US" | "zh-TW">(null as unknown as InitialLocale);
+  type Locale = Awaited<typeof result>["locale"];
+  expectType<"en-US" | "zh-TW">(null as unknown as Locale);
 }
 
 // --- GenConfigKeys: config2 (Specified)
@@ -28,6 +28,6 @@ const defaults = [{} as IntorResolvedConfig, "en-US"] as const;
   const result = intor<"config2">(...defaults) as Promise<
     IntorResult<"config2">
   >;
-  type InitialLocale = Awaited<typeof result>["initialLocale"];
-  expectType<"en-US" | "fr-FR">(null as unknown as InitialLocale);
+  type Locale = Awaited<typeof result>["locale"];
+  expectType<"en-US" | "fr-FR">(null as unknown as Locale);
 }

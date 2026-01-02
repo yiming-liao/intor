@@ -16,6 +16,6 @@ const defaults = [{} as IntorResolvedConfig, "en-US"] as const;
 //-------------------------------------------------
 {
   const result = intor(...defaults);
-  type InitialLocale = Awaited<typeof result>["initialLocale"];
-  expectType<string>(null as unknown as InitialLocale);
+  type Locale = Awaited<typeof result>["locale"];
+  expectType<string>(null as unknown as Locale);
 }
