@@ -2,28 +2,20 @@ import type { IntorResolvedConfig } from "@/config";
 import type { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { getLocaleFromAcceptLanguage } from "@/core";
-import { buildCookieOptions } from "@/core/utils/build-cookie-options";
-import { normalizeQuery } from "@/core/utils/normalizers/normalize-query";
-import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
-import { resolveRouting } from "@/routing";
+import { INTOR_HEADERS, normalizeQuery } from "@/core";
+import { getLocaleFromAcceptLanguage, resolveInbound } from "@/routing";
 
 /**
- * Next.js routing adapter for Intor.
+ * Resolves locale-aware routing for the current execution context.
  *
- * Responsibilities:
- * - Collect locale candidates from request-related sources
- * - Delegate routing decisions to the routing core
- * - Apply redirect behavior when required
- * - Materialize routing decisions into persistent state (cookie)
- *   with configurable first-visit behavior
+ * The resolved routing state is exposed via response headers.
+ *
+ * @platform Next.js
  */
 export const intorProxy = async (
   config: IntorResolvedConfig,
   request: NextRequest,
 ): Promise<Response> => {
-  const { defaultLocale, cookie, routing } = config;
-
   // locale from accept-language header
   const headersStore = await headers();
   const acceptLanguageHeader = headersStore.get("accept-language");
@@ -33,7 +25,7 @@ export const intorProxy = async (
   );
 
   // Resolve routing decision (locale + pathname)
-  const { locale, localeSource, pathname, shouldRedirect } = resolveRouting(
+  const { locale, localeSource, pathname, shouldRedirect } = resolveInbound(
     config,
     request.nextUrl.pathname,
     {
@@ -42,7 +34,7 @@ export const intorProxy = async (
         Object.fromEntries(request.nextUrl.searchParams.entries()),
       ),
       cookie: request.cookies.get(config.cookie.name)?.value,
-      detected: localeFromAcceptLanguage || defaultLocale,
+      detected: localeFromAcceptLanguage || config.defaultLocale,
     },
   );
 
@@ -53,14 +45,10 @@ export const intorProxy = async (
     ? NextResponse.redirect(url)
     : NextResponse.next();
 
-  // Persist resolved locale to cookie
-  const isFirstVisit = localeSource === "detected";
-  if (
-    shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
-    shouldPersist(cookie)
-  ) {
-    response.cookies.set(cookie.name, locale, buildCookieOptions(cookie));
-  }
+  // Attach resolved routing metadata to response headers
+  response.headers.set(INTOR_HEADERS.LOCALE, locale);
+  response.headers.set(INTOR_HEADERS.LOCALE_SOURCE, localeSource);
+  response.headers.set(INTOR_HEADERS.PATHNAME, pathname);
 
   return response;
 };

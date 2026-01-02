@@ -11,8 +11,7 @@ export {
   T,
 
   // navigation
-  useNavigationTarget, // Internal hook.
-  useNavigationStrategy, // Internal hook.
+  useResolveNavigation,
 
   // helpers
   useLoadMessages,

@@ -5,7 +5,10 @@ import { getLogger, type GenConfigKeys, type GenLocale } from "@/core";
 import { createIntorRuntime } from "../runtime/create-intor-runtime";
 
 /**
- * Server-side bootstrap for SSR-based full-stack frameworks.
+ * Initializes Intor for the current execution context.
+ *
+ * Provides server-side bootstrap logic for SSR-based
+ * full-stack frameworks.
  */
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,

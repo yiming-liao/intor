@@ -11,19 +11,20 @@ import type {
 import { createIntorRuntime } from "../runtime";
 
 export interface GetTranslatorParams {
-  config: IntorResolvedConfig;
   locale: string;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
   readOptions?: MessagesReadOptions;
+  allowCacheWrite?: boolean;
 }
 
 /**
- * Create a server-side translator for the current execution context.
+ * Get a server-side translator for the current execution context.
  */
 
 // Signature: Without preKey
 export function getTranslator<CK extends GenConfigKeys = "__default__">(
+  config: IntorResolvedConfig,
   params: GetTranslatorParams,
 ): Promise<TranslatorInstanceServer<GenMessages<CK>>>;
 
@@ -32,6 +33,7 @@ export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(
+  config: IntorResolvedConfig,
   params: GetTranslatorParams & { preKey?: PK },
 ): Promise<TranslatorInstanceServer<GenMessages<CK>, PK>>;
 
@@ -39,22 +41,22 @@ export function getTranslator<
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(params: GetTranslatorParams & { preKey?: PK }) {
-  const { config, readOptions, preKey, handlers, plugins } = params;
+>(config: IntorResolvedConfig, params: GetTranslatorParams & { preKey?: PK }) {
+  const { readOptions, allowCacheWrite, preKey, handlers, plugins } = params;
   const locale = params.locale as GenLocale<CK>;
 
   // Create runtime (request-scoped, no cache write)
   const runtime = createIntorRuntime<CK>(config, {
     readOptions,
-    allowCacheWrite: false,
+    allowCacheWrite,
   });
 
   // Ensure messages & create translator snapshot
   await runtime.ensureMessages(locale);
   const translator = runtime.translator(locale, {
+    preKey,
     plugins,
     handlers,
-    preKey,
   });
 
   return {

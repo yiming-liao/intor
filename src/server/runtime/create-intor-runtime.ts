@@ -18,11 +18,10 @@ import { createTranslator } from "../translator";
 /**
  * Create a server-side Intor runtime.
  *
- * The runtime represents a request-scoped execution context.
+ * - The runtime represents a request-scoped execution context.
  * - It enforces a strict initialization protocol:
  * `ensureMessages(locale) → getTranslator(locale)`
- *
- * Messages may be empty, but the ensure step must be completed
+ * - Messages may be empty, but the ensure step must be completed
  * before a translator snapshot can be created.
  */
 export function createIntorRuntime<CK extends GenConfigKeys = "__default__">(
