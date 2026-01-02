@@ -5,7 +5,10 @@ import type { LocalizedNodeKeys } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "@/server";
 import { getLocale } from "./get-locale";
 
-type GetTranslatorNextParams = Omit<GetTranslatorParams, "locale">;
+type GetTranslatorNextParams = Omit<
+  GetTranslatorParams,
+  "locale" | "allowCacheWrite"
+>;
 
 /**
  * Get a server-side translator for the current execution context.
@@ -18,7 +21,7 @@ type GetTranslatorNextParams = Omit<GetTranslatorParams, "locale">;
 // Signature: Without preKey
 export function getTranslator<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  params: GetTranslatorNextParams,
+  params?: GetTranslatorNextParams,
 ): Promise<TranslatorInstanceServer<GenMessages<CK>>>;
 
 // Signature: With preKey
@@ -27,7 +30,7 @@ export function getTranslator<
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,
-  params: GetTranslatorNextParams & { preKey?: PK },
+  params?: GetTranslatorNextParams & { preKey?: PK },
 ): Promise<TranslatorInstanceServer<GenMessages<CK>, PK>>;
 
 // Implementation
@@ -36,10 +39,9 @@ export async function getTranslator<
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,
-  params: GetTranslatorNextParams & { preKey?: PK },
+  params?: GetTranslatorNextParams & { preKey?: PK },
 ) {
-  const { preKey, handlers, plugins, readOptions } = params;
-
+  const { preKey, handlers, plugins, readOptions } = params || {};
   return getTranslatorCore<CK, PK>(config, {
     locale: await getLocale(config),
     preKey,
