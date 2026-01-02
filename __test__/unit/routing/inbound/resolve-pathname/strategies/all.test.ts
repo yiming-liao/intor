@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { PathnameContext } from "@/routing/pipeline/resolve-pathname/types";
+import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
 import { describe, it, expect } from "vitest";
-import { all } from "@/routing/pipeline/resolve-pathname/strategies";
+import { all } from "@/routing/inbound/resolve-pathname/strategies";
 
 describe("all", () => {
   it("passes when URL already has locale prefix", () => {

@@ -7,7 +7,7 @@ describe("getLocaleFromQuery", () => {
     supportedLocales: ["en", "en-US", "zh-TW"] as const,
     routing: {
       locale: {
-        queryKey: "locale",
+        query: { key: "locale" },
       },
     },
   } as any;
@@ -49,25 +49,12 @@ describe("getLocaleFromQuery", () => {
       ...config,
       routing: {
         locale: {
-          queryKey: "lang",
+          query: { key: "lang" },
         },
       },
     } as any;
 
     const result = getLocaleFromQuery(customConfig, { lang: "en" });
-    expect(result).toBe("en");
-  });
-
-  it("falls back to default query key when queryKey is not configured", () => {
-    const configWithoutQueryKey = {
-      supportedLocales: ["en", "zh-TW"] as const,
-      routing: {
-        locale: {},
-      },
-    } as any;
-    const result = getLocaleFromQuery(configWithoutQueryKey, {
-      locale: "en",
-    });
     expect(result).toBe("en");
   });
 });

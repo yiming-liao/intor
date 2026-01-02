@@ -32,8 +32,7 @@ export const resolvePathname = (
   rawPathname: string,
   context: PathnameContext,
 ): ResolvedPathname => {
-  const { prefix } = config.routing;
-  const { locale } = context;
+  const { prefix } = config.routing.navigation.path;
 
   let directive: PathnameDirective;
   switch (prefix) {
@@ -54,7 +53,7 @@ export const resolvePathname = (
     }
   }
 
-  const { pathname } = localizePathname(config, rawPathname, locale);
+  const { pathname } = localizePathname(config, rawPathname, context.locale);
 
   return {
     pathname,

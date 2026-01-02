@@ -3,10 +3,15 @@ import type { RoutingResolvedOptions } from "../types";
 // Default routing options
 export const DEFAULT_ROUTING_OPTIONS: RoutingResolvedOptions = {
   locale: {
-    sources: ["path", "query", "cookie", "detected"] as const,
-    queryKey: "locale",
+    sources: ["path", "query", "cookie", "detected"],
+    query: { key: "locale" },
   },
-  prefix: "none",
+  navigation: {
+    carrier: "path",
+    path: { prefix: "none" },
+    query: { key: "locale" },
+    host: { map: {} },
+  },
   firstVisit: {
     localeSource: "browser",
     redirect: true,

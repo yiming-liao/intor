@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { LocaleContext } from "@/routing/pipeline/resolve-locale/types";
+import type { LocaleContext } from "@/routing/inbound/resolve-locale/types";
 import { describe, it, expect } from "vitest";
-import { resolveLocale } from "@/routing/pipeline/resolve-locale/resolve-locale";
+import { resolveLocale } from "@/routing/inbound/resolve-locale/resolve-locale";
 
 const baseConfig = {
   routing: {

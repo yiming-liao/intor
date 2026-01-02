@@ -20,8 +20,7 @@ export const localePrefixPathname = (
   standardizedPathname: string,
   locale?: string,
 ): string => {
-  const { routing } = config;
-  const { prefix } = routing;
+  const { prefix } = config.routing.navigation.path;
 
   if (prefix !== "none" && !locale) {
     throw new Error('No locale when using prefix "all", "except-default"');

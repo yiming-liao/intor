@@ -2,6 +2,8 @@ import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
 import { isExternalDestination } from "@/core";
 import { localizePathname } from "../pathname";
+import { deriveHostDestination } from "./utils/derive-host-destination";
+import { deriveQueryDestination } from "./utils/derive-query-destination";
 
 export interface NavigationTarget {
   locale: Locale;
@@ -15,7 +17,7 @@ export interface NavigationTarget {
  * This function computes the final destination URL and execution flags
  * based on the current routing configuration and locale context.
  */
-export function deriveNavigationTarget(
+export function deriveTarget(
   config: IntorResolvedConfig,
   currentLocale: Locale,
   currentPathname: string,
@@ -23,39 +25,38 @@ export function deriveNavigationTarget(
 ): NavigationTarget {
   const { supportedLocales, routing } = config;
 
-  // 1. Resolve effective locale (explicit override > current context)
+  // --------------------------------------------------
+  // Resolve effective locale
+  // --------------------------------------------------
   const locale =
     options?.locale && supportedLocales.includes(options?.locale)
       ? options?.locale
       : currentLocale;
 
-  // 2. Resolve raw destination and detect external navigation
+  // --------------------------------------------------
+  // Resolve raw destination and external flag
+  // --------------------------------------------------
   const rawDestination = options?.destination ?? currentPathname;
   const isExternal = isExternalDestination(rawDestination);
 
-  // 3. Project destination according to navigation representation
+  // --------------------------------------------------
+  // Project destination by navigation carrier
+  // --------------------------------------------------
   let destination = rawDestination;
-
   if (!isExternal) {
-    switch (routing.navigation.representation) {
+    switch (routing.navigation.carrier) {
       case "path": {
         destination = localizePathname(config, rawDestination, locale).pathname;
         break;
       }
-      // case "host": {
-      //   const host = resolveHostForLocale(config, locale);
-      //   destination = `https://${host}${rawDestination}`;
-      //   break;
-      // }
-      // case "query": {
-      //   const url = new URL(rawDestination, "http://internal");
-      //   url.searchParams.set(
-      //     config.routing.navigation.queryKey ?? "lang",
-      //     locale,
-      //   );
-      //   destination = `${url.pathname}${url.search}`;
-      //   break;
-      // }
+      case "host": {
+        destination = deriveHostDestination(config, rawDestination, locale);
+        break;
+      }
+      case "query": {
+        destination = deriveQueryDestination(config, rawDestination, locale);
+        break;
+      }
       default: {
         destination = rawDestination;
       }

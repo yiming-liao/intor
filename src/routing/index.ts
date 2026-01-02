@@ -1,5 +1,5 @@
-// pipeline
-export { resolveRouting } from "./pipeline/resolve-routing";
+// inbound
+export { resolveInbound } from "./inbound";
 
 // pathname
 export { localizePathname, type LocalizedPathname } from "./pathname";

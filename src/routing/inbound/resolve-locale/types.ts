@@ -2,13 +2,9 @@ import type { RoutingLocaleSource } from "@/core";
 
 /** Context for locale resolution. */
 export interface LocaleContext {
-  /** Locale extracted from the URL pathname, if present */
   path?: { locale?: string };
-  /** Locale inferred from the request host, if applicable */
   host?: { locale?: string };
-  /** Locale provided via query parameters, if applicable */
   query?: { locale?: string };
-  /** Locale read from cookies, if present */
   cookie?: { locale?: string };
   /**
    * Fallback locale determined by the system.

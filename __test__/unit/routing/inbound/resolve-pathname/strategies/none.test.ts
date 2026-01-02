@@ -1,6 +1,6 @@
-import type { PathnameContext } from "@/routing/pipeline/resolve-pathname/types";
+import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
 import { describe, it, expect } from "vitest";
-import { none } from "@/routing/pipeline/resolve-pathname/strategies";
+import { none } from "@/routing/inbound/resolve-pathname/strategies";
 
 describe("none", () => {
   it("passes using cookie locale when cookie exists", () => {

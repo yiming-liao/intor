@@ -50,4 +50,6 @@ export type {
   KeyMode,
   // routing
   RoutingLocaleSource,
+  RoutingLocaleCarrier,
+  PathLocaleStrategy,
 } from "./types";

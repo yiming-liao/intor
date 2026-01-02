@@ -2,7 +2,7 @@
 import type { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { intorProxy } from "@/adapters/next/proxy/intor-proxy";
-import { resolveRouting } from "@/routing/pipeline/resolve-routing";
+import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 
 const mockCookiesSet = vi.fn();
 
@@ -23,8 +23,8 @@ vi.mock("next/headers", () => ({
   headers: vi.fn(async () => new Map([["accept-language", "en-US"]])),
 }));
 
-vi.mock("@/routing/pipeline/resolve-routing", () => ({
-  resolveRouting: vi.fn(),
+vi.mock("@/routing/inbound/resolve-inbound", () => ({
+  resolveInbound: vi.fn(),
 }));
 
 function createRequest(url: string): NextRequest {
@@ -57,28 +57,28 @@ describe("intorProxy (Next.js adapter)", () => {
   });
 
   it("redirects when routing core requests a redirect", async () => {
-    (resolveRouting as any).mockReturnValue({
+    (resolveInbound as any).mockReturnValue({
       pathname: "/zh-TW/about",
       shouldRedirect: true,
     });
     const request = createRequest("https://example.com/about");
     const response = await intorProxy(config, request);
-    expect(resolveRouting).toHaveBeenCalled();
+    expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBe("/zh-TW/about");
   });
 
   it("passes through when no redirect is required", async () => {
-    (resolveRouting as any).mockReturnValue({
+    (resolveInbound as any).mockReturnValue({
       pathname: "/about",
       shouldRedirect: false,
     });
     const request = createRequest("https://example.com/about");
     await intorProxy(config, request);
-    expect(resolveRouting).toHaveBeenCalled();
+    expect(resolveInbound).toHaveBeenCalled();
   });
 
   it("never sets cookies", async () => {
-    (resolveRouting as any).mockReturnValue({
+    (resolveInbound as any).mockReturnValue({
       pathname: "/",
       shouldRedirect: false,
     });

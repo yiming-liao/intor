@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { resolveLocale } from "@/routing/pipeline/resolve-locale";
-import { resolvePathname } from "@/routing/pipeline/resolve-pathname";
-import { resolveRouting } from "@/routing/pipeline/resolve-routing";
+import { resolveLocale } from "@/routing/inbound/resolve-locale";
+import { resolvePathname } from "@/routing/inbound/resolve-pathname";
+import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 
-vi.mock("@/routing/pipeline/resolve-locale", () => ({
+vi.mock("@/routing/inbound/resolve-locale", () => ({
   resolveLocale: vi.fn(),
 }));
 
-vi.mock("@/routing/pipeline/resolve-pathname", () => ({
+vi.mock("@/routing/inbound/resolve-pathname", () => ({
   resolvePathname: vi.fn(),
 }));
 
@@ -16,7 +16,7 @@ describe("resolveRouting", () => {
   const config = {
     supportedLocales: ["en", "zh-TW"],
     defaultLocale: "en",
-    routing: { locale: { queryKey: "locale" } },
+    routing: { locale: { query: { key: "locale" } } },
   } as any;
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe("resolveRouting", () => {
       pathname: "/zh-TW/about",
       shouldRedirect: true,
     });
-    const result = resolveRouting(config, "/about", {
+    const result = resolveInbound(config, "/about", {
       host: "zh-TW.example.com",
       query: {},
       cookie: undefined,
@@ -69,7 +69,7 @@ describe("resolveRouting", () => {
       pathname: "/about",
       shouldRedirect: false,
     });
-    const result = resolveRouting(config, "/about", {
+    const result = resolveInbound(config, "/about", {
       detected: "en",
     });
     expect(result.shouldRedirect).toBe(false);

@@ -16,4 +16,8 @@ export type {
 } from "./translator-instance";
 
 // routing
-export type { RoutingLocaleSource } from "./routing";
+export type {
+  RoutingLocaleSource,
+  RoutingLocaleCarrier,
+  PathLocaleStrategy,
+} from "./routing";

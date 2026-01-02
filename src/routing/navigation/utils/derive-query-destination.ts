@@ -1,0 +1,17 @@
+import type { IntorResolvedConfig } from "@/config";
+import type { Locale } from "intor-translator";
+
+/**
+ *  Derives a locale-specific destination using query-based navigation.
+ */
+export const deriveQueryDestination = (
+  config: IntorResolvedConfig,
+  rawDestination: string,
+  locale: Locale,
+): string => {
+  const { query } = config.routing.navigation;
+
+  const url = new URL(rawDestination, "http://internal");
+  url.searchParams.set(query.key, locale);
+  return `${url.pathname}${url.search}`;
+};

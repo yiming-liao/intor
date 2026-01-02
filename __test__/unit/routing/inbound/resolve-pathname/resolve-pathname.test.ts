@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { PathnameContext } from "@/routing/pipeline/resolve-pathname/types";
+import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
 import { describe, it, expect, vi } from "vitest";
-import { resolvePathname } from "@/routing/pipeline/resolve-pathname/resolve-pathname";
+import { resolvePathname } from "@/routing/inbound/resolve-pathname/resolve-pathname";
 
 /**
  * Mock pathname localization.
@@ -19,7 +19,10 @@ const createConfig = (
 ): IntorResolvedConfig =>
   ({
     defaultLocale: options?.defaultLocale ?? "en-US",
-    routing: { prefix, firstVisit: { redirect: options?.redirect } },
+    routing: {
+      navigation: { path: { prefix } },
+      firstVisit: { redirect: options?.redirect },
+    },
   }) as IntorResolvedConfig;
 
 const createContext = (

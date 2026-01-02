@@ -26,7 +26,7 @@ export function getLocaleFromQuery(
   if (!query) return;
 
   const { supportedLocales, routing } = config;
-  const key = routing.locale.queryKey ?? "locale";
+  const { key } = routing.locale.query;
 
   const raw = query[key];
   if (!raw) return;

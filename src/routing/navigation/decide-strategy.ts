@@ -1,8 +1,8 @@
-import type { NavigationTarget } from "./derive-navigation-target";
+import type { NavigationTarget } from "./derive-target";
 import type { IntorResolvedConfig } from "@/config";
 import { shouldFullReload } from "@/policies/shoud-full-reload";
 
-export type NavigationStrategy =
+type NavigationStrategy =
   | { kind: "external" } // handled by the browser
   | { kind: "client" } // client-side navigation
   | { kind: "reload" }; // full page reload
@@ -13,7 +13,7 @@ export type NavigationStrategy =
  * This function determines whether navigation should be handled
  * by the browser, performed client-side, or forced to reload.
  */
-export function decideNavigationStrategy(
+export function decideStrategy(
   config: IntorResolvedConfig,
   target: NavigationTarget,
 ): NavigationStrategy {

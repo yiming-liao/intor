@@ -1,44 +1,67 @@
-import type { RoutingLocaleSource } from "@/core";
-
-type RoutingPrefix = "none" | "all" | "except-default";
+import type {
+  RoutingLocaleSource,
+  RoutingLocaleCarrier,
+  PathLocaleStrategy,
+} from "@/core";
 
 // Routing raw options
 export type RoutingRawOptions = {
   locale?: {
-    /** Priority order for resolving the active locale. */
-    sources: Array<RoutingLocaleSource>;
-    /** Query parameter key used for locale resolution. Defaults to "locale". */
-    queryKey?: string;
+    /** Ordered sources used to resolve the active locale. */
+    sources: RoutingLocaleSource[];
+    /** Query key used when resolving locale from URL query. */
+    query?: { key: string };
   };
-
   navigation?: {
-    /** How locale should be represented in navigation URLs. */
-    representation: "path" | "host" | "query";
-    /** Query parameter key used for navigation when representation is query. */
-    queryKey?: string;
+    /**
+     * URL carrier used to represent locale in navigation URLs.
+     *
+     * @example
+     *```plain
+     * path  -> /en/about
+     * query -> ?lang=en
+     * host  -> en.example.com
+     * ```
+     */
+    carrier?: RoutingLocaleCarrier;
+    path?: {
+      /** Controls how locale prefixes appear in path URLs. */
+      prefix?: PathLocaleStrategy;
+    };
+    query?: {
+      /** Query key used when resolving locale from URL query. */
+      key: string;
+    };
+    host?: {
+      /**
+       * Locale-to-host mapping used for host-based routing.
+       *
+       * @example
+       * ```ts
+       * {
+       *   en: "en.example.com",
+       *   zh: "zh.example.com",
+       * }
+       * ```
+       */
+      map: Record<string, string>;
+      /** Fallback host used when no locale mapping is found. */
+      default?: string;
+    };
   };
-
-  /** Controls how locale prefixes appear in URLs. Defaults to "none". */
-  prefix?: RoutingPrefix;
-
   /** Behavior applied on the user's first visit. */
   firstVisit?: {
-    /** Determines which locale to use on first visit. Defaults to "browser" */
+    /** Locale source used on first visit. Defaults to "browser" */
     localeSource?: "default" | "browser";
-    /** Whether to redirect on first visit when locale is resolved. Defaults to true */
+    /** Whether to redirect after resolving locale. Defaults to true */
     redirect?: boolean;
-    /** Whether to persist the resolved locale on the first visit. Defaults to true.*/
+    /** Whether to persist the resolved locale. Defaults to true.*/
     persist?: boolean;
   };
-
   /** Base URL path for routing. Defaults to "/" */
   basePath?: string;
-
   /**
-   * Force a full page reload when the locale changes.
-   *
-   * - This option mainly affects loaders that support client-side
-   * locale switching (e.g. remote loaders).
+   * Force a full page reload when locale changes.
    * - Local loaders always perform a full reload by design.
    */
   forceFullReload?: boolean;
@@ -46,10 +69,18 @@ export type RoutingRawOptions = {
 
 // Routing resolved options
 export type RoutingResolvedOptions = {
-  locale: Required<NonNullable<RoutingRawOptions["locale"]>>;
-  navigation: Required<NonNullable<RoutingRawOptions["navigation"]>>;
-  prefix: RoutingPrefix;
-  firstVisit: Required<NonNullable<RoutingRawOptions["firstVisit"]>>;
+  locale: { sources: RoutingLocaleSource[]; query: { key: string } };
+  navigation: {
+    carrier: RoutingLocaleCarrier;
+    path: { prefix: PathLocaleStrategy };
+    query: { key: string };
+    host: { map: Record<string, string>; default?: string };
+  };
+  firstVisit: {
+    localeSource: "default" | "browser";
+    redirect: boolean;
+    persist: boolean;
+  };
   basePath: string;
   forceFullReload: boolean;
 };

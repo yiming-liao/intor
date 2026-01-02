@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
-import { decideNavigationStrategy } from "./decide-navigation-strategy";
-import { deriveNavigationTarget } from "./derive-navigation-target";
+import { decideStrategy } from "./decide-strategy";
+import { deriveTarget } from "./derive-target";
 
 export type NavigationResult =
   | { destination: string; kind: "external" }
@@ -20,14 +20,15 @@ export function resolveNavigation(
   currentPathname: string,
   options: { destination?: string; locale?: Locale },
 ): NavigationResult {
-  const target = deriveNavigationTarget(
-    config,
-    currentLocale,
-    currentPathname,
-    options,
-  );
+  // --------------------------------------------------
+  // Derive navigation target
+  // --------------------------------------------------
+  const target = deriveTarget(config, currentLocale, currentPathname, options);
 
-  const strategy = decideNavigationStrategy(config, target);
+  // --------------------------------------------------
+  // Decide navigation strategy
+  // --------------------------------------------------
+  const strategy = decideStrategy(config, target);
 
   return {
     destination: target.destination,
