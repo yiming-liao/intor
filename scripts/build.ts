@@ -9,6 +9,7 @@ run("rollup -c .config/rollup/react.js");
 run("rollup -c .config/rollup/next.js");
 run("rollup -c .config/rollup/vue.js");
 run("rollup -c .config/rollup/svelte.js");
+run("rollup -c .config/rollup/express.js");
 
 // dts
 run("tsc -p tsconfig.build.json");

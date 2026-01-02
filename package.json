@@ -53,10 +53,6 @@
       "import": "./dist/next/export/next/proxy/index.js",
       "types": "./dist/types/export/next/proxy/index.d.ts"
     },
-    "./next/middleware": {
-      "import": "./dist/next/export/next/proxy/index.js",
-      "types": "./dist/types/export/next/proxy/index.d.ts"
-    },
     "./next/server": {
       "import": "./dist/next/export/next/server/index.js",
       "types": "./dist/types/export/next/server/index.d.ts"
@@ -68,6 +64,10 @@
     "./svelte": {
       "import": "./dist/svelte/export/svelte/index.js",
       "types": "./dist/types/export/svelte/index.d.ts"
+    },
+    "./express": {
+      "import": "./dist/express/export/express/index.js",
+      "types": "./dist/types/export/express/index.d.ts"
     }
   },
   "main": "./dist/core/export/index.js",
@@ -87,6 +87,7 @@
     "lint:debug": "eslint --debug",
     "test": "vitest",
     "test:types": "tsx scripts/test-types.ts",
+    "test:check": "tsx scripts/check-test-structure.ts",
     "knip": "knip --config .config/knip.config.ts",
     "build": "tsx scripts/build.ts",
     "prepublishOnly": "yarn build",
@@ -106,6 +107,7 @@
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.1",
     "@testing-library/user-event": "14.6.1",
+    "@types/express": "^5.0.6",
     "@types/node": "24.10.1",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
