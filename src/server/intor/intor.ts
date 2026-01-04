@@ -1,4 +1,4 @@
-import type { LocaleResolver, IntorResult } from "./types";
+import type { LocaleResolver, BootstrapSnapshot } from "./types";
 import type { IntorRuntimeOptions } from "../runtime";
 import type { IntorResolvedConfig } from "@/config";
 import { getLogger, type GenConfigKeys, type GenLocale } from "@/core";
@@ -14,7 +14,7 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   localeOrResolver: LocaleResolver<CK> | GenLocale<CK>,
   options?: IntorRuntimeOptions,
-): Promise<IntorResult<CK>> {
+): Promise<BootstrapSnapshot<CK>> {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");

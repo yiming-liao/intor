@@ -1,2 +1,2 @@
 export { intor } from "./intor";
-export type { IntorResult } from "./types";
+export type { BootstrapSnapshot as IntorResult } from "./types";

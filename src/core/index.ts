@@ -44,6 +44,8 @@ export type {
   GenConfig,
   GenMessages,
   GenLocale,
+  // bootstrap
+  BootstrapCore,
   // translator-instance
   MessageKey,
   TranslatorInstance,
