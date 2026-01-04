@@ -6,7 +6,7 @@ import type {
   TranslatorPlugin,
 } from "intor-translator";
 import { Translator } from "intor-translator";
-import { deepMerge } from "@/core";
+import { mergeMessages } from "@/core/messages/merge-messages";
 
 interface CreateTranslatorParams {
   config: IntorResolvedConfig;
@@ -32,7 +32,10 @@ export function createTranslator(
   const { config, locale, messages, preKey, handlers, plugins } = params;
 
   // Merge static config messages with runtime-loaded messages
-  const finalMessages = deepMerge(config.messages, messages);
+  const finalMessages = mergeMessages(config.messages, messages, {
+    config,
+    locale,
+  });
 
   const translator = new Translator<unknown>({
     locale,

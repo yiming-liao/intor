@@ -9,6 +9,9 @@ export {
   setGlobalMessagesPool,
 } from "./global-messages-pool";
 
+// merge-messages
+export { mergeMessages } from "./merge-messages";
+
 // utils
 export { isValidMessages } from "./utils/is-valid-messages";
 

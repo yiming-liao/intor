@@ -89,4 +89,51 @@ describe("deepMerge", () => {
     expect(result).toEqual({ own: 123 });
     expect(result).not.toHaveProperty("inherited");
   });
+
+  describe("onOverride behavior", () => {
+    it("emits an override event when an existing value is replaced", () => {
+      const events: Array<{ path: string; kind: string }> = [];
+      deepMerge(
+        { a: 1 },
+        { a: 2 },
+        { onOverride: ({ path, kind }) => events.push({ path, kind }) },
+      );
+      expect(events).toEqual([{ path: "a", kind: "override" }]);
+    });
+
+    it("emits an add event when a new key is introduced", () => {
+      const events: Array<{ path: string; kind: string }> = [];
+
+      deepMerge(
+        { a: { b: 1 } },
+        { a: { c: 2 } },
+        { onOverride: ({ path, kind }) => events.push({ path, kind }) },
+      );
+      expect(events).toEqual([{ path: "a.c", kind: "add" }]);
+    });
+
+    it("reports correct dot-notated paths for nested overrides", () => {
+      const events: Array<{ path: string; kind: string }> = [];
+      deepMerge(
+        { user: { profile: { name: "Alice" } } },
+        { user: { profile: { name: "Bob" } } },
+        { onOverride: ({ path, kind }) => events.push({ path, kind }) },
+      );
+      expect(events).toEqual([{ path: "user.profile.name", kind: "override" }]);
+    });
+
+    it("does not emit events when b only contributes empty objects", () => {
+      const events: Array<{ path: string; kind: string }> = [];
+      deepMerge(
+        { a: { b: { c: 1 } } },
+        { a: { b: {} } },
+        { onOverride: ({ path, kind }) => events.push({ path, kind }) },
+      );
+      expect(events).toEqual([]);
+    });
+
+    it("does not emit events when options are not provided", () => {
+      expect(() => deepMerge({ a: 1 }, { a: 2 })).not.toThrow();
+    });
+  });
 });

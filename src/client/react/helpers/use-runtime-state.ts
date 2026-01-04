@@ -1,8 +1,9 @@
 import type { RuntimeStateCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
+import type { GenConfigKeys, GenMessages } from "@/core";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { deepMerge, type GenConfigKeys, type GenMessages } from "@/core";
+import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
 interface RuntimeState<CK extends GenConfigKeys = "__default__">
@@ -40,10 +41,12 @@ export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
       // Ignore outdated results when locale changes again.
       if (activeLocaleRef.current !== newLocale) return;
 
-      setMessages(deepMerge(config.messages, loaded));
+      setMessages(
+        mergeMessages(config.messages, loaded, { config, locale: newLocale }),
+      );
       setIsLoading(false);
     },
-    [config.messages, loader],
+    [loader, config],
   );
 
   // ---------------------------------------------------------------------------

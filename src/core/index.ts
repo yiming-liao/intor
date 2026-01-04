@@ -7,6 +7,8 @@ export { IntorError, IntorErrorCode } from "./error";
 // utils
 export {
   deepMerge,
+  type PlainObject,
+  type DeepMergeOverrideEvent,
   resolveLoaderOptions,
   isExternalDestination,
   // normalizers
@@ -21,12 +23,15 @@ export { getLogger, clearLoggerPool } from "./logger";
 
 // messages
 export {
+  // load-remote-messages
   loadRemoteMessages,
   // messages pool
   type MessagesPool,
   getGlobalMessagesPool,
   clearMessagesPool,
   setGlobalMessagesPool,
+  // merge-messages
+  mergeMessages,
   // utils
   isValidMessages,
   // types

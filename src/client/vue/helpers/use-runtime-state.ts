@@ -1,8 +1,9 @@
 import type { RuntimeStateCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
+import type { GenConfigKeys, GenMessages } from "@/core";
 import type { LocaleMessages } from "intor-translator";
 import { ref, onMounted, type Ref } from "vue";
-import { deepMerge, type GenConfigKeys, type GenMessages } from "@/core";
+import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
 export interface RuntimeState<CK extends GenConfigKeys = "__default__">
@@ -39,7 +40,10 @@ export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
     // Ignore outdated results when locale changes again.
     if (activeLocale !== newLocale) return;
 
-    messages.value = deepMerge(config.messages, loaded);
+    messages.value = mergeMessages(config.messages, loaded, {
+      config,
+      locale: newLocale,
+    });
     isLoading.value = false;
   };
 

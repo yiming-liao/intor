@@ -1,6 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
-import { loadRemoteMessages, deepMerge, resolveLoaderOptions } from "@/core";
+import { loadRemoteMessages, resolveLoaderOptions } from "@/core";
+import { mergeMessages } from "@/core";
 
 interface CreateRefetchMessagesParams {
   config: IntorResolvedConfig;
@@ -42,18 +43,14 @@ export const createRefetchMessages = ({
 
     try {
       const loadedMessages = await loadRemoteMessages({
-        // --- Messages Scope ---
         locale: newLocale,
         fallbackLocales: config.fallbackLocales[newLocale] || [],
         namespaces: loader.namespaces,
         rootDir: loader.rootDir,
-        // --- Remote Source ---
         url: loader.url,
         headers: loader.headers,
         signal: currentController.signal,
-        // --- Caching ---
         cacheOptions: config.cache,
-        // --- Observability ---
         loggerOptions: config.logger,
       });
 
@@ -63,7 +60,12 @@ export const createRefetchMessages = ({
         controller === currentController &&
         !currentController.signal.aborted
       ) {
-        onMessages?.(deepMerge(config.messages, loadedMessages));
+        onMessages?.(
+          mergeMessages(config.messages, loadedMessages, {
+            config,
+            locale: newLocale,
+          }),
+        );
       }
     } finally {
       // Clear loading state only if this request is still the active one

@@ -9,11 +9,13 @@ export {
   IntorErrorCode,
   // utils
   deepMerge,
+  resolveLoaderOptions,
   // logger
   clearLoggerPool,
   // messages
   clearMessagesPool,
   setGlobalMessagesPool,
+  mergeMessages,
   isValidMessages,
   type Messages,
   type MessagesReader,
