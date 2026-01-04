@@ -1,1 +1,1 @@
-export type { BootstrapCore } from "./bootstrap";
+export type { RuntimeStateCore } from "./runtime-state";

@@ -6,6 +6,6 @@ export {
   type IntorRuntime,
 
   // helpers
-  createMessages,
+  createRuntimeState,
   getClientLocale,
 } from "@/client/svelte";

@@ -1,36 +1,31 @@
+import type { RuntimeStateCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
-import {
-  deepMerge,
-  type GenConfigKeys,
-  type GenLocale,
-  type GenMessages,
-} from "@/core";
+import { deepMerge, type GenConfigKeys, type GenMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-interface UseLoadMessagesResult<CK extends GenConfigKeys = "__default__"> {
-  initialLocale: GenLocale<CK>;
+interface RuntimeState<CK extends GenConfigKeys = "__default__">
+  extends RuntimeStateCore<CK> {
   messages: GenMessages<CK>;
   isLoading: boolean;
-  onLocaleChange: (locale: GenLocale<CK>) => Promise<void>;
 }
 
-export function useLoadMessages<CK extends GenConfigKeys = "__default__">(
+export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   loader: (locale: string) => Promise<LocaleMessages>,
-): UseLoadMessagesResult<CK> {
+): RuntimeState<CK> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
-  const initialLocale = React.useMemo(() => getClientLocale(config), [config]);
+  const locale = React.useMemo(() => getClientLocale(config), [config]);
 
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
   const [messages, setMessages] = React.useState(config.messages || {});
   const [isLoading, setIsLoading] = React.useState(true);
-  const activeLocaleRef = React.useRef(initialLocale);
+  const activeLocaleRef = React.useRef(locale);
 
   // ---------------------------------------------------------------------------
   // Locale change handler
@@ -55,13 +50,14 @@ export function useLoadMessages<CK extends GenConfigKeys = "__default__">(
   // Initial load
   // ---------------------------------------------------------------------------
   React.useEffect(() => {
-    onLocaleChange(initialLocale);
-  }, [initialLocale, onLocaleChange]);
+    onLocaleChange(locale);
+  }, [locale, onLocaleChange]);
 
   return {
-    initialLocale,
+    config,
+    locale,
     messages,
     isLoading,
     onLocaleChange,
-  } as UseLoadMessagesResult<CK>;
+  } as RuntimeState<CK>;
 }

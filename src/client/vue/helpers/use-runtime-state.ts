@@ -1,36 +1,31 @@
+import type { RuntimeStateCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
 import type { LocaleMessages } from "intor-translator";
 import { ref, onMounted, type Ref } from "vue";
-import {
-  deepMerge,
-  type GenConfigKeys,
-  type GenLocale,
-  type GenMessages,
-} from "@/core";
+import { deepMerge, type GenConfigKeys, type GenMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-interface UseLoadMessagesResult<CK extends GenConfigKeys = "__default__"> {
-  initialLocale: GenLocale<CK>;
+export interface RuntimeState<CK extends GenConfigKeys = "__default__">
+  extends RuntimeStateCore<CK> {
   messages: Ref<GenMessages<CK>>;
   isLoading: Ref<boolean>;
-  onLocaleChange: (locale: GenLocale<CK>) => Promise<void>;
 }
 
-export function useLoadMessages<CK extends GenConfigKeys = "__default__">(
+export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   loader: (locale: string) => Promise<LocaleMessages>,
-): UseLoadMessagesResult<CK> {
+): RuntimeState<CK> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
-  const initialLocale = getClientLocale(config);
+  const locale = getClientLocale(config);
 
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
   const messages = ref<LocaleMessages>(config.messages || {});
   const isLoading = ref(true);
-  let activeLocale = initialLocale;
+  let activeLocale = locale;
 
   // ---------------------------------------------------------------------------
   // Locale change handler
@@ -51,12 +46,13 @@ export function useLoadMessages<CK extends GenConfigKeys = "__default__">(
   // ---------------------------------------------------------------------------
   // Initial load
   // ---------------------------------------------------------------------------
-  onMounted(() => onLocaleChange(initialLocale));
+  onMounted(() => onLocaleChange(locale));
 
   return {
-    initialLocale,
+    config,
+    locale,
     messages,
     isLoading,
     onLocaleChange,
-  } as UseLoadMessagesResult<CK>;
+  } as RuntimeState<CK>;
 }

@@ -14,6 +14,6 @@ export {
   useResolveNavigation,
 
   // helpers
-  useLoadMessages,
+  useRuntimeState,
   getClientLocale,
 } from "@/client/react";

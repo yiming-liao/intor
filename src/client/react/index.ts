@@ -8,7 +8,7 @@ export { useTranslator, T } from "./translator";
 export { useResolveNavigation } from "./navigation";
 
 // helpers
-export { useLoadMessages } from "./helpers";
+export { useRuntimeState } from "./helpers";
 
 // helpers (client-shared utilities, re-exported)
 export { getClientLocale } from "../shared/helpers";

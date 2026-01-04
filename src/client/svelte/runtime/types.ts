@@ -1,7 +1,17 @@
-import type { BootstrapCore } from "../../shared/types";
 import type { SvelteTagRenderers } from "../render";
-import type { GenConfigKeys, GenMessages, MessageKey } from "@/core";
+import type {
+  BootstrapCore,
+  GenConfigKeys,
+  GenLocale,
+  GenMessages,
+  MessageKey,
+} from "@/core";
 import type { KeyMode } from "@/core";
+import type {
+  TranslateHandlers,
+  TranslateHook,
+  TranslatorPlugin,
+} from "intor-translator";
 import type { Readable } from "svelte/store";
 import {
   type Locale,
@@ -10,9 +20,12 @@ import {
 } from "intor-translator";
 
 export interface SvelteBootstrap<CK extends GenConfigKeys = "__default__">
-  extends BootstrapCore<CK> {
+  extends Omit<BootstrapCore<CK>, "messages"> {
   messages?: Readable<GenMessages<CK>>;
   isLoading?: Readable<boolean>;
+  handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
+  onLocaleChange?: (newLocale: GenLocale<CK>) => Promise<void> | void;
 }
 
 export type CreateIntorOptions<CK extends GenConfigKeys = "__default__"> =
