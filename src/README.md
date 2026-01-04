@@ -8,36 +8,43 @@ Each module answers exactly one question and nothing more.
 
 ## Core Modules
 
-#### Config — Intent
+#### • Config — _Intent_
 
 Defines user intent as structured, validated configuration.
 
-#### Routing — Decision
+#### • Routing — _Decision_
 
 Transforms collected context into a single, deterministic routing result.
 
-#### Server — Orchestration
+#### • Server — _Resolution & Bootstrap_
 
-Coordinates initialization flow and prepares translation runtime data.
+Resolves runtime context and produces bootstrap data
+for adapters and runtimes.
 
-#### Client — Runtime
+#### • Client — _Reaction_
 
-Manages client-side locale state, message updates, and browser effects.
+Reacts to resolved decisions and applies them in the execution environment.
 
 ---
 
 ## One-Way Data Flow
 
-- When a server runtime is available (SSR / hybrid environments):
-
-```
-Config → Routing → Server Runtime → Client Runtime
-```
-
-- When running in a pure client environment (CSR only):
+1. When running in a pure client environment (CSR only):
 
 ```
 Config → Client Runtime
+```
+
+2. When running in a server-only environment:
+
+```
+Config → Routing → Server Runtime
+```
+
+3. When both server and client runtimes are involved (SSR / hybrid environments):
+
+```
+Config → Routing → Server Runtime → Client Runtime
 ```
 
 Routing is applied only when request context exists.  
@@ -50,11 +57,3 @@ Runtime layers react to resolved decisions.
 - Intent, decision, and runtime are separated
 - Policies are explicit and deterministic
 - Runtime layers react, never decide
-
----
-
-## Philosophy
-
-> Declare intent.  
-> Decide truth.  
-> React at runtime.

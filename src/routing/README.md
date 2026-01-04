@@ -1,41 +1,28 @@
-# Intor Routing
+# Routing Module
 
-This module defines the routing decision layer of Intor.
+Pure routing logic for Intor.
 
-It converts collected locale and pathname context into a single,
-deterministic routing result used by the runtime and adapters.
+Resolves locale, pathname, and navigation decisions in a deterministic,
+framework-agnostic way.
 
-## What this module does
+---
 
-- Determines the active locale based on configured routing policies
-- Resolves pathname transformations (e.g. locale prefix strategies)
-- Provides a single source of truth for routing decisions
+## Structure
 
-## What this module does NOT do
+#### • **inbound/**
 
-- Does not read from request or response objects
-- Does not perform redirects or side effects
-- Does not depend on any framework APIs
-- Does not manage domain or user state
+Resolves inbound routing state from adapter-collected inputs.  
+ Produces a deterministic routing result used by server and edge adapters.
 
-## Module Overview
+#### • **navigation/**
 
-- **`locale/`**  
-  Locale resolution logic based on configured routing policies and
-  collected locale context.
+Resolves client-side navigation intent into an executable navigation result.  
+ Typically used by client adapters to decide how navigation should occur.
 
-- **`pathname/`**  
-  Pathname resolution and transformation logic, including locale
-  prefix strategies.
+#### • **locale/**
 
-- **`resolve-routing.ts`**  
-  The orchestration entry that combines locale and pathname resolution
-  into a unified routing result.
+Pure utilities for extracting locale information from individual sources.
 
-## Design Philosophy
+#### • **pathname/**
 
-> Adapters collect facts.  
-> Routing decides truth.
-
-Adapters are responsible for collecting routing context from the environment.  
-This module is responsible for applying routing policies to that context in a deterministic way.
+Pure utilities for normalizing and transforming localized pathnames.

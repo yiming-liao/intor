@@ -15,9 +15,3 @@ Fast to start, easy to extend, and free from the usual i18n heaviness.
 [![License](https://img.shields.io/npm/l/intor?style=flat&colorA=000000&colorB=000000)](LICENSE)
 
 </div>
-
-<div align="center">
-
-#### 🍳 Cooking the Intor v2 docs, crafting them to perfection...
-
-</div>

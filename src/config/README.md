@@ -1,48 +1,36 @@
 # Intor Config
 
-This module defines the configuration layer of Intor.
+This document lists all available configuration options for **Intor**.
 
-It transforms user-provided options into a resolved, validated
-configuration that can be safely consumed by the runtime and routing layers.
+## Configuration Options
 
-## What this module does
+#### General
 
-- Defines the structure of Intor configuration
-- Applies default values and normalizes user options
-- Validates configuration consistency and invariants
-- Produces a resolved configuration used as a single source of truth
+- `id`
 
-## What this module does NOT do
+#### Locale & Messages
 
-- Does not read from request or runtime environments
-- Does not perform routing or locale resolution
-- Does not execute side effects or framework-specific logic
+- `defaultLocale` _(required)_
+- `supportedLocales` _(required when loader is configured)_
+- `fallbackLocales`
+- `messages`
 
-## Module Overview
+#### Translator
 
-- **`types/`**  
-  Type definitions that describe the shape of user-provided and resolved
-  configuration objects.
+- `translator`
 
-- **`constants/`**  
-  Shared constant values used across configuration resolution and validation.
+#### Routing & Persistence
 
-- **`resolvers/`**  
-  Pure functions responsible for applying defaults, normalizing options,
-  and resolving derived configuration values.
+- `routing`
+- `cookie`
 
-- **`validators/`**  
-  Validation utilities that enforce configuration invariants and ensure
-  consistency before runtime consumption.
+#### Message Loading
 
-- **`define-intor-config.ts`**  
-  The main entry point for defining and resolving Intor configuration.
+- `loader`
+- `server.loader`
+- `client.loader`
 
-## Design Philosophy
+#### Observability & Infrastructure
 
-> Configuration expresses intent.  
-> Resolution establishes truth.
-
-User configuration is treated as declarative intent.  
-This module resolves and validates that intent into a deterministic,
-trusted configuration for the rest of the system.
+- `logger`
+- `cache`
