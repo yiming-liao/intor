@@ -35,6 +35,7 @@ describe("loadLocalMessages", () => {
     const enMessages: LocaleMessages = { "en-US": { hello: "Hello" } };
     vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
+      id: "test",
       locale: "en-US",
       cacheOptions: { enabled: false, ttl: 0 },
       loggerOptions: { id: "test" },
@@ -49,6 +50,7 @@ describe("loadLocalMessages", () => {
       .mockRejectedValueOnce(new Error("fail"))
       .mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
+      id: "test",
       locale: "fr-FR",
       fallbackLocales: ["en-US"],
       cacheOptions: { enabled: false, ttl: 0 },
@@ -62,6 +64,7 @@ describe("loadLocalMessages", () => {
     const cached: LocaleMessages = { "en-US": { hello: "Cached" } };
     mockPool.get.mockImplementation(async () => cached);
     const result = await loadLocalMessages({
+      id: "test",
       locale: "en-US",
       cacheOptions: { enabled: true, ttl: 60 * 60 * 1000 },
       loggerOptions: { id: "test" },
@@ -76,6 +79,7 @@ describe("loadLocalMessages", () => {
       .mockRejectedValueOnce(new Error("fail1"))
       .mockRejectedValueOnce(new Error("fail2"));
     const result = await loadLocalMessages({
+      id: "test",
       locale: "fr-FR",
       fallbackLocales: ["en-US"],
       cacheOptions: { enabled: false, ttl: 0 },
@@ -89,6 +93,7 @@ describe("loadLocalMessages", () => {
     const enMessages: LocaleMessages = { "en-US": { hello: "Hello" } };
     vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
+      id: "test",
       locale: "en-US",
       cacheOptions: { enabled: false, ttl: 60 * 60 * 1000 },
       loggerOptions: { id: "test" },
@@ -104,6 +109,7 @@ describe("loadLocalMessages", () => {
       .mockResolvedValueOnce({ "fr-FR": {} })
       .mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
+      id: "test",
       locale: "fr-FR",
       fallbackLocales: ["en-US"],
       cacheOptions: { enabled: false, ttl: 0 },
@@ -118,6 +124,7 @@ describe("loadLocalMessages", () => {
     mockPool.get.mockResolvedValueOnce();
     vi.mocked(mockReadLocaleMessages).mockResolvedValueOnce(enMessages);
     const result = await loadLocalMessages({
+      id: "test",
       locale: "en-US",
       cacheOptions: { enabled: true, ttl: 60 * 60 * 1000 },
       loggerOptions: { id: "test" },

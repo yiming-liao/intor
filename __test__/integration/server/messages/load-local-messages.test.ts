@@ -6,6 +6,7 @@ describe("loadLocalMessages (integration)", () => {
     const rootDir = "__test__/mocks/messages";
 
     const result = await loadLocalMessages({
+      id: "test",
       rootDir,
       locale: "en-US",
       cacheOptions: { enabled: false, ttl: 0 },

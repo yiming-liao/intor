@@ -7,16 +7,17 @@ import { fetchLocaleMessages } from "./fetch-locale-messages";
 /**
  * Load locale messages from a remote API.
  *
- * This function acts as the orchestration layer for remote message loading.
- * It is responsible for:
+ * This function serves as the orchestration layer for remote message loading.
+ * It coordinates:
  *
- * - Resolving fallback locales in order
- * - Coordinating cache read / write behavior
+ * - Locale resolution with fallbacks
+ * - Cache read / write behavior
  * - Respecting abort signals across the entire async flow
  *
  * Network fetching and data validation are delegated to lower-level utilities.
  */
 export const loadRemoteMessages = async ({
+  id,
   locale,
   fallbackLocales,
   namespaces,
@@ -41,17 +42,21 @@ export const loadRemoteMessages = async ({
   const start = performance.now();
   logger.debug("Loading remote messages.", { url });
 
-  // --- Cache key ---
+  // ---------------------------------------------------------------------------
+  // Cache key resolution
+  // ---------------------------------------------------------------------------
   const cacheKey = normalizeCacheKey([
-    loggerOptions.id,
+    id,
     "loaderType:remote",
     rootDir,
     locale,
-    (fallbackLocales ?? []).toSorted().join(","),
-    (namespaces ?? []).toSorted().join(","),
+    (fallbackLocales || []).toSorted().join(","),
+    (namespaces || []).toSorted().join(","),
   ]);
 
-  // --- Cache read ---
+  // ---------------------------------------------------------------------------
+  // Cache read
+  // ---------------------------------------------------------------------------
   if (cacheOptions.enabled && cacheKey) {
     const cached = await pool?.get(cacheKey);
     if (signal?.aborted) {
@@ -64,10 +69,12 @@ export const loadRemoteMessages = async ({
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Resolve locale messages with ordered fallback strategy
+  // ---------------------------------------------------------------------------
   const candidateLocales = [locale, ...(fallbackLocales || [])];
   let messages: LocaleMessages | undefined;
 
-  // Try each candidate locale in order and stop at the first successful result
   for (let i = 0; i < candidateLocales.length; i++) {
     const candidateLocale = candidateLocales[i];
     const isLast = i === candidateLocales.length - 1;
@@ -108,13 +115,17 @@ export const loadRemoteMessages = async ({
     }
   }
 
-  // --- Cache write ---
-  if (cacheOptions.enabled && allowCacheWrite && cacheKey && messages) {
+  // ---------------------------------------------------------------------------
+  // Cache write (explicitly permitted)
+  // ---------------------------------------------------------------------------
+  if (cacheOptions.enabled && allowCacheWrite) {
     if (signal?.aborted) {
       logger.debug("Remote message loading aborted before cache write.");
       return;
     }
-    await pool?.set(cacheKey, messages, cacheOptions.ttl);
+    if (cacheKey && messages) {
+      await pool?.set(cacheKey, messages, cacheOptions.ttl);
+    }
   }
 
   // Final success log with resolved locale and timing

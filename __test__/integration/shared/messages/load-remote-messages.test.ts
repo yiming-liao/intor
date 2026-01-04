@@ -13,6 +13,7 @@ describe("loadRemoteMessages (integration)", () => {
     });
 
     const result = await loadRemoteMessages({
+      id: "test",
       locale: "en-US",
       url: "",
       cacheOptions: { enabled: false, ttl: 0 },

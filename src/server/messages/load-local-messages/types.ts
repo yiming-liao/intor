@@ -2,6 +2,8 @@ import type { CacheResolvedOptions, LoggerOptions } from "@/config";
 import type { MessagesPool, MessagesReadOptions } from "@/core";
 
 export interface LoadLocalMessagesParams {
+  id: string;
+
   // --- Messages Scope ---
   locale: string;
   fallbackLocales?: string[];

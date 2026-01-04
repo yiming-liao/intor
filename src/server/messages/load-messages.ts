@@ -36,7 +36,7 @@ export const loadMessages = async ({
     return;
   }
 
-  const { type, namespaces, rootDir } = loader;
+  const { type, namespaces } = loader;
   const fallbackLocales = config.fallbackLocales[locale] || [];
 
   logger.info(`Loading messages for locale "${locale}".`);
@@ -44,7 +44,7 @@ export const loadMessages = async ({
     loaderType: type,
     locale,
     fallbackLocales,
-    namespaces: namespaces && namespaces.length > 0 ? [...namespaces] : "[ALL]",
+    namespaces: namespaces && namespaces.length > 0 ? [...namespaces] : ["*"],
     cache: config.cache,
   });
 
@@ -54,10 +54,11 @@ export const loadMessages = async ({
   let loadedMessages: LocaleMessages | undefined;
   if (type === "local") {
     loadedMessages = await loadLocalMessages({
+      id: config.id,
       locale,
       fallbackLocales,
       namespaces,
-      rootDir,
+      rootDir: loader.rootDir,
       concurrency: loader.concurrency,
       readOptions,
       cacheOptions: config.cache,
@@ -66,10 +67,11 @@ export const loadMessages = async ({
     });
   } else if (type === "remote") {
     loadedMessages = await loadRemoteMessages({
+      id: config.id,
       locale,
       fallbackLocales,
       namespaces,
-      rootDir,
+      rootDir: loader.rootDir,
       url: loader.url,
       headers: loader.headers,
       allowCacheWrite,

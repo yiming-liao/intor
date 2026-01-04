@@ -53,6 +53,7 @@ export async function loadMessagesFromUrl(
 
   // Load local messages
   return loadLocalMessages({
+    id: options?.id || "default",
     rootDir,
     locale,
     namespaces,

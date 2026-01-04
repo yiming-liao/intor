@@ -18,6 +18,7 @@ import { readLocaleMessages } from "./read-locale-messages";
  * File traversal, parsing, and validation are delegated to lower-level utilities.
  */
 export const loadLocalMessages = async ({
+  id,
   locale,
   fallbackLocales,
   namespaces,
@@ -42,7 +43,7 @@ export const loadLocalMessages = async ({
   // Cache key resolution
   // ---------------------------------------------------------------------------
   const cacheKey = normalizeCacheKey([
-    loggerOptions.id,
+    id,
     "loaderType:local",
     rootDir,
     locale,

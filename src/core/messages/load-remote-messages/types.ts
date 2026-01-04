@@ -6,6 +6,8 @@ import type {
 import type { MessagesPool } from "@/core";
 
 export interface LoadRemoteMessagesParams {
+  id: string;
+
   // --- Messages Scope ---
   locale: string;
   fallbackLocales?: string[];
