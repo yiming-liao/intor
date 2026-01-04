@@ -4,9 +4,9 @@ import { decideStrategy } from "./decide-strategy";
 import { deriveTarget } from "./derive-target";
 
 export type NavigationResult =
-  | { destination: string; kind: "external" }
-  | { destination: string; kind: "client" }
-  | { destination: string; kind: "reload" };
+  | { locale: Locale; destination: string; kind: "external" }
+  | { locale: Locale; destination: string; kind: "client" }
+  | { locale: Locale; destination: string; kind: "reload" };
 
 /**
  * Resolve a navigation attempt into an executable result.
@@ -18,12 +18,12 @@ export function resolveNavigation(
   config: IntorResolvedConfig,
   currentLocale: Locale,
   currentPathname: string,
-  options: { destination?: string; locale?: Locale },
+  intent: { destination?: string; locale?: Locale },
 ): NavigationResult {
   // --------------------------------------------------
   // Derive navigation target
   // --------------------------------------------------
-  const target = deriveTarget(config, currentLocale, currentPathname, options);
+  const target = deriveTarget(config, currentLocale, currentPathname, intent);
 
   // --------------------------------------------------
   // Decide navigation strategy
@@ -31,6 +31,7 @@ export function resolveNavigation(
   const strategy = decideStrategy(config, target);
 
   return {
+    locale: target.locale,
     destination: target.destination,
     kind: strategy.kind,
   };

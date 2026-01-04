@@ -7,17 +7,17 @@ import { useIntor } from "../provider";
 export function useResolveNavigation() {
   const { config, locale: currentLocale } = useIntor();
 
-  const resolveNavigation = (
+  function resolveNavigation(
     currentPathname: string,
-    options: { destination?: string; locale?: string },
-  ): NavigationResult => {
+    intent: { destination?: string; locale?: string },
+  ): NavigationResult {
     return resolveNavigationCore(
       config,
       currentLocale,
       currentPathname,
-      options,
+      intent,
     );
-  };
+  }
 
-  return { resolveNavigation };
+  return resolveNavigation;
 }

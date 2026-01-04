@@ -21,7 +21,7 @@ export function deriveTarget(
   config: IntorResolvedConfig,
   currentLocale: Locale,
   currentPathname: string,
-  options?: { destination?: string; locale?: Locale },
+  intent?: { destination?: string; locale?: Locale },
 ): NavigationTarget {
   const { supportedLocales, routing } = config;
 
@@ -29,14 +29,14 @@ export function deriveTarget(
   // Resolve effective locale
   // --------------------------------------------------
   const locale =
-    options?.locale && supportedLocales.includes(options?.locale)
-      ? options?.locale
+    intent?.locale && supportedLocales.includes(intent?.locale)
+      ? intent?.locale
       : currentLocale;
 
   // --------------------------------------------------
   // Resolve raw destination and external flag
   // --------------------------------------------------
-  const rawDestination = options?.destination ?? currentPathname;
+  const rawDestination = intent?.destination ?? currentPathname;
   const isExternal = isExternalDestination(rawDestination);
 
   // --------------------------------------------------

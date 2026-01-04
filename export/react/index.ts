@@ -12,6 +12,7 @@ export {
 
   // navigation
   useResolveNavigation,
+  useExecuteNavigation,
 
   // helpers
   useRuntimeState,
