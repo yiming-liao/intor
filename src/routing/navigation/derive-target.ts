@@ -1,9 +1,9 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
-import { isExternalDestination } from "@/core";
 import { localizePathname } from "../pathname";
 import { deriveHostDestination } from "./utils/derive-host-destination";
 import { deriveQueryDestination } from "./utils/derive-query-destination";
+import { isExternalDestination } from "./utils/is-external-destination";
 
 export interface NavigationTarget {
   locale: Locale;
