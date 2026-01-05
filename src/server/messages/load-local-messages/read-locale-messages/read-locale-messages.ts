@@ -27,7 +27,7 @@ export const readLocaleMessages = async ({
   // ---------------------------------------------------------------------------
   const fileEntries = await collectFileEntries({
     namespaces,
-    rootDir: path.resolve(process.cwd(), rootDir, locale),
+    rootDir: path.resolve(rootDir, locale),
     limit,
     exts,
     loggerOptions,

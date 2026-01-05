@@ -12,8 +12,11 @@ import { readLocaleMessages } from "./read-locale-messages";
  * It coordinates:
  *
  * - Locale resolution with fallbacks
- * - Cache read / write behavior
+ * - Process-level memoization (read by default, write by ownership)
  * - Concurrency control for file system access
+ *
+ * Local messages are cached for the lifetime of the process.
+ * Cache writes are restricted to the primary initialization flow.
  *
  * File traversal, parsing, and validation are delegated to lower-level utilities.
  */
@@ -26,7 +29,6 @@ export const loadLocalMessages = async ({
   concurrency = 10,
   readOptions,
   pool = getGlobalMessagesPool(),
-  cacheOptions,
   allowCacheWrite = false,
   loggerOptions,
 }: LoadLocalMessagesParams): Promise<LocaleMessages | undefined> => {
@@ -36,7 +38,7 @@ export const loadLocalMessages = async ({
   const start = performance.now();
   logger.debug("Loading local messages.", {
     rootDir,
-    resolvedRootDir: path.resolve(process.cwd(), rootDir),
+    resolvedRootDir: path.resolve(rootDir),
   });
 
   // ---------------------------------------------------------------------------
@@ -54,13 +56,11 @@ export const loadLocalMessages = async ({
   // ---------------------------------------------------------------------------
   // Cache read
   // ---------------------------------------------------------------------------
-  if (cacheOptions.enabled) {
-    if (cacheKey) {
-      const cached = await pool?.get(cacheKey);
-      if (cached) {
-        logger.debug("Messages cache hit.", { key: cacheKey });
-        return cached;
-      }
+  if (cacheKey) {
+    const cached = await pool?.get(cacheKey);
+    if (cached) {
+      logger.debug("Messages cache hit.", { key: cacheKey });
+      return cached;
     }
   }
 
@@ -106,9 +106,9 @@ export const loadLocalMessages = async ({
   // ---------------------------------------------------------------------------
   // Cache write (explicitly permitted)
   // ---------------------------------------------------------------------------
-  if (cacheOptions.enabled && allowCacheWrite) {
+  if (allowCacheWrite) {
     if (cacheKey && messages) {
-      await pool?.set(cacheKey, messages, cacheOptions.ttl);
+      await pool?.set(cacheKey, messages);
     }
   }
 

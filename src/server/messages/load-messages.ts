@@ -61,7 +61,6 @@ export const loadMessages = async ({
       rootDir: loader.rootDir,
       concurrency: loader.concurrency,
       readOptions,
-      cacheOptions: config.cache,
       allowCacheWrite,
       loggerOptions: config.logger,
     });

@@ -1,4 +1,4 @@
-import type { CacheResolvedOptions, LoggerOptions } from "@/config";
+import type { LoggerOptions } from "@/config";
 import type { MessagesPool, MessagesReadOptions } from "@/core";
 
 export interface LoadLocalMessagesParams {
@@ -18,7 +18,6 @@ export interface LoadLocalMessagesParams {
 
   // --- Caching ---
   pool?: MessagesPool;
-  cacheOptions: CacheResolvedOptions; // per-config policy
   allowCacheWrite?: boolean; // per-call permission
 
   // --- Observability ---

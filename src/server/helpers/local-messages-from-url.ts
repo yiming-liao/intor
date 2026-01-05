@@ -61,7 +61,6 @@ export async function loadMessagesFromUrl(
     concurrency: options?.concurrency,
     readOptions: options?.readOptions,
     pool: options?.pool,
-    cacheOptions: options?.cacheOptions || { enabled: false, ttl: 0 },
     allowCacheWrite: options?.allowCacheWrite,
     loggerOptions: options?.loggerOptions || { id: "default" },
   });

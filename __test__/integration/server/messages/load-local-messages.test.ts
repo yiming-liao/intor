@@ -9,7 +9,6 @@ describe("loadLocalMessages (integration)", () => {
       id: "test",
       rootDir,
       locale: "en-US",
-      cacheOptions: { enabled: false, ttl: 0 },
       loggerOptions: { id: "test" },
     });
 

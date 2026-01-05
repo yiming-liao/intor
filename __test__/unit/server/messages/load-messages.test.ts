@@ -82,7 +82,6 @@ describe("loadMessages", () => {
         namespaces: ["common"],
         rootDir: "messages",
         concurrency: 5,
-        cacheOptions: { enabled: false, ttl: 0 },
         allowCacheWrite: true,
       }),
     );
