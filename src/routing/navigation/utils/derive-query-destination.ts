@@ -9,9 +9,9 @@ export const deriveQueryDestination = (
   rawDestination: string,
   locale: Locale,
 ): string => {
-  const { query } = config.routing.navigation;
+  const { queryKey } = config.routing.outbound;
 
   const url = new URL(rawDestination, "http://internal");
-  url.searchParams.set(query.key, locale);
+  url.searchParams.set(queryKey, locale);
   return `${url.pathname}${url.search}`;
 };

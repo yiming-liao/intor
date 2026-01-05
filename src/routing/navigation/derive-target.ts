@@ -44,7 +44,7 @@ export function deriveTarget(
   // --------------------------------------------------
   let destination = rawDestination;
   if (!isExternal) {
-    switch (routing.navigation.carrier) {
+    switch (routing.outbound.localeCarrier) {
       case "path": {
         destination = localizePathname(config, rawDestination, locale).pathname;
         break;

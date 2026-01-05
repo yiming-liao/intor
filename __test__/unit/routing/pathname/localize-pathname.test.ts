@@ -11,7 +11,7 @@ const createConfig = (
     supportedLocales: ["en-US", "zh-TW"],
     routing: {
       basePath: "/app",
-      navigation: { path: { prefix: "all" } },
+      localePrefix: "all",
       ...overrides?.routing,
     },
     ...overrides,
@@ -48,7 +48,7 @@ describe("localizePathname", () => {
     const config = createConfig({
       routing: {
         basePath: "/app",
-        navigation: { path: { prefix: "none" } },
+        localePrefix: "none",
       } as any,
     });
     const result = localizePathname(config, "/app/en-US/about", "en-US");
@@ -63,7 +63,7 @@ describe("localizePathname", () => {
     const config = createConfig({
       routing: {
         basePath: "/app",
-        navigation: { path: { prefix: "except-default" } },
+        localePrefix: "except-default",
       } as any,
     });
     const result = localizePathname(config, "/app/en-US/about", "en-US");
@@ -74,7 +74,7 @@ describe("localizePathname", () => {
     const config = createConfig({
       routing: {
         basePath: "/app",
-        navigation: { path: { prefix: "except-default" } },
+        localePrefix: "except-default",
       } as any,
     });
     const result = localizePathname(config, "/app/about", "zh-TW");

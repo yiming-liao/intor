@@ -9,7 +9,7 @@ export function exceptDefault(
   config: IntorResolvedConfig,
 ): PathnameDirective {
   const { localeSource, locale } = context;
-  const { redirect } = config.routing.firstVisit;
+  const { redirect } = config.routing.inbound.firstVisit;
 
   const isDefaultLocale = locale === config.defaultLocale;
 

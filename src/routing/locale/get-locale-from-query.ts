@@ -26,9 +26,9 @@ export function getLocaleFromQuery(
   if (!query) return;
 
   const { supportedLocales, routing } = config;
-  const { key } = routing.locale.query;
+  const { queryKey } = routing.inbound;
 
-  const raw = query[key];
+  const raw = query[queryKey];
   if (!raw) return;
 
   const value = Array.isArray(raw) ? raw[0] : raw;

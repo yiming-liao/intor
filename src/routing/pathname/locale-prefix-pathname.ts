@@ -2,15 +2,15 @@ import type { IntorResolvedConfig } from "@/config";
 import { normalizePathname, PREFIX_PLACEHOLDER } from "@/core";
 
 /**
- * Applies routing prefix strategy by resolving the locale placeholder.
+ * Applies the configured locale prefix behavior to a standardized pathname.
  *
  * @example
  * ```ts
- * // config.routing.prefix: "all"
+ * // config.routing.localePrefix: "all"
  * localePrefixPathname({ config, pathname: "/app/{locale}/about", locale: "en-US" });
  * // => /app/en-US/about
  *
- * // config.routing.prefix: "none"
+ * // config.routing.localePrefix: "none"
  * localePrefixPathname({ config, pathname: "/app/{locale}/about", locale: "en-US" });
  * // => /app/about
  * ```
@@ -20,21 +20,23 @@ export const localePrefixPathname = (
   standardizedPathname: string,
   locale?: string,
 ): string => {
-  const { prefix } = config.routing.navigation.path;
+  const { localePrefix } = config.routing;
 
-  if (prefix !== "none" && !locale) {
-    throw new Error('No locale when using prefix "all", "except-default"');
+  if (localePrefix !== "none" && !locale) {
+    throw new Error(
+      'No locale when using localePrefix "all", "except-default"',
+    );
   }
 
-  // prefix: "all"
-  if (prefix === "all") {
+  // localePrefix: "all"
+  if (localePrefix === "all") {
     return normalizePathname(
       standardizedPathname.replaceAll(PREFIX_PLACEHOLDER, locale!),
     );
   }
 
-  // prefix: "except-default"
-  if (prefix === "except-default") {
+  // localePrefix: "except-default"
+  if (localePrefix === "except-default") {
     return locale === config.defaultLocale
       ? normalizePathname(
           standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
@@ -44,7 +46,7 @@ export const localePrefixPathname = (
         );
   }
 
-  // prefix: "none"
+  // localePrefix: "none"
   return normalizePathname(
     standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
   );

@@ -1,73 +1,88 @@
-import type { RoutingRawOptions } from "@/config/types/routing";
 import { describe, it, expect } from "vitest";
-import { DEFAULT_ROUTING_OPTIONS } from "@/config";
+import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants";
 import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
 
 describe("resolveRoutingOptions", () => {
-  it("returns a fully resolved routing config with defaults when no input is provided", () => {
+  it("returns default routing options when raw is undefined", () => {
     const resolved = resolveRoutingOptions();
-    expect(resolved).toEqual({
-      ...DEFAULT_ROUTING_OPTIONS,
-      // ensure nested objects are not shared by reference
-      locale: { ...DEFAULT_ROUTING_OPTIONS.locale },
-      navigation: {
-        ...DEFAULT_ROUTING_OPTIONS.navigation,
-        path: { ...DEFAULT_ROUTING_OPTIONS.navigation.path },
-        query: { ...DEFAULT_ROUTING_OPTIONS.navigation.query },
-        host: { ...DEFAULT_ROUTING_OPTIONS.navigation.host },
-      },
-      firstVisit: { ...DEFAULT_ROUTING_OPTIONS.firstVisit },
-    });
+    expect(resolved).toEqual(DEFAULT_ROUTING_OPTIONS);
   });
 
-  it("merges partial navigation options without dropping defaults", () => {
-    const custom: RoutingRawOptions = {
-      navigation: {
-        path: { prefix: "all" },
-      },
-    };
-    const resolved = resolveRoutingOptions(custom);
-    expect(resolved.navigation).toEqual({
-      carrier: DEFAULT_ROUTING_OPTIONS.navigation.carrier,
-      path: { prefix: "all" }, // overridden
-      query: DEFAULT_ROUTING_OPTIONS.navigation.query, // preserved
-      host: DEFAULT_ROUTING_OPTIONS.navigation.host, // preserved
+  it("projects flat shortcuts into structured options", () => {
+    const resolved = resolveRoutingOptions({
+      localePrefix: "none",
+      queryKey: "lang",
+      forceFullReload: true,
     });
+    expect(resolved.localePrefix).toBe("none"); // projected to inbound
+    expect(resolved.inbound.queryKey).toBe("lang"); // projected to outbound
+    expect(resolved.outbound.queryKey).toBe("lang");
+    expect(resolved.outbound.forceFullReload).toBe(true);
   });
 
-  it("merges locale options correctly", () => {
-    const custom: RoutingRawOptions = {
-      locale: {
-        sources: ["cookie"],
-        query: { key: "lang" },
+  it("allows structured options to override projected flat values", () => {
+    const resolved = resolveRoutingOptions({
+      queryKey: "lang",
+      outbound: {
+        queryKey: "locale",
       },
-    };
-    const resolved = resolveRoutingOptions(custom);
-    expect(resolved.locale).toEqual({
-      sources: ["cookie"],
-      query: { key: "lang" },
     });
+    expect(resolved.inbound.queryKey).toBe("lang");
+    expect(resolved.outbound.queryKey).toBe("locale");
   });
 
-  it("normalizes basePath during resolution", () => {
-    const custom: RoutingRawOptions = {
-      basePath: "",
-    };
-    const resolved = resolveRoutingOptions(custom);
-    expect(resolved.basePath).toBe("/");
+  it("merges structured inbound options correctly", () => {
+    const resolved = resolveRoutingOptions({
+      inbound: {
+        localeSources: ["cookie"],
+        firstVisit: {
+          localeSource: "browser",
+          redirect: false,
+          persist: true,
+        },
+      },
+    });
+    expect(resolved.inbound.localeSources).toEqual(["cookie"]);
+    expect(resolved.inbound.firstVisit.localeSource).toBe("browser");
+    expect(resolved.inbound.firstVisit.redirect).toBe(false);
+    expect(resolved.inbound.firstVisit.persist).toBe(true);
   });
 
-  it("merges firstVisit options partially", () => {
-    const custom: RoutingRawOptions = {
-      firstVisit: {
-        redirect: false,
+  it("merges structured outbound options correctly", () => {
+    const resolved = resolveRoutingOptions({
+      outbound: {
+        localeCarrier: "path",
+        forceFullReload: true,
       },
-    };
-    const resolved = resolveRoutingOptions(custom);
-    expect(resolved.firstVisit).toEqual({
-      localeSource: DEFAULT_ROUTING_OPTIONS.firstVisit.localeSource,
-      redirect: false,
-      persist: DEFAULT_ROUTING_OPTIONS.firstVisit.persist,
     });
+    expect(resolved.outbound.localeCarrier).toBe("path");
+    expect(resolved.outbound.forceFullReload).toBe(true);
+  });
+
+  it("supports mixing flat shortcuts with structured options", () => {
+    const resolved = resolveRoutingOptions({
+      localePrefix: "except-default",
+      forceFullReload: true,
+      outbound: {
+        localeCarrier: "host",
+      },
+    });
+    expect(resolved.localePrefix).toBe("except-default");
+    expect(resolved.outbound.forceFullReload).toBe(true);
+    expect(resolved.outbound.localeCarrier).toBe("host");
+  });
+
+  it("does not leak flat shortcuts into resolved output", () => {
+    const resolved = resolveRoutingOptions({
+      queryKey: "lang",
+      forceFullReload: true,
+    }) as Record<string, unknown>;
+    expect(resolved.queryKey).toBeUndefined();
+    expect(resolved.forceFullReload).toBeUndefined();
+  });
+
+  it("overrides default basePath when basePath is provided in raw options", () => {
+    const resolved = resolveRoutingOptions({ basePath: "/app" });
+    expect(resolved.basePath).toBe("/app");
   });
 });

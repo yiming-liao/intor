@@ -5,8 +5,8 @@ import { resolveLocale } from "@/routing/inbound/resolve-locale/resolve-locale";
 
 const baseConfig = {
   routing: {
-    locale: {
-      sources: ["path", "cookie", "detected"],
+    inbound: {
+      localeSources: ["path", "cookie", "detected"],
     },
   },
 } as IntorResolvedConfig;
@@ -54,8 +54,8 @@ describe("resolveLocale", () => {
   it("respects custom source priority order", () => {
     const config = {
       routing: {
-        locale: {
-          sources: ["cookie", "path", "detected"],
+        inbound: {
+          localeSources: ["cookie", "path", "detected"],
         },
       },
     } as IntorResolvedConfig;
@@ -74,8 +74,8 @@ describe("resolveLocale", () => {
   it("falls back to detected locale when 'detected' is not listed in sources", () => {
     const config = {
       routing: {
-        locale: {
-          sources: ["path", "cookie"],
+        inbound: {
+          localeSources: ["path", "cookie"],
         },
       },
     } as IntorResolvedConfig;

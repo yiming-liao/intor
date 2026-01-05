@@ -1,16 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IntorResolvedConfig } from "@/config";
 import { describe, it, expect } from "vitest";
 import { getLocaleFromQuery } from "@/routing";
 
 describe("getLocaleFromQuery", () => {
   const config = {
     supportedLocales: ["en", "en-US", "zh-TW"] as const,
-    routing: {
-      locale: {
-        query: { key: "locale" },
-      },
-    },
-  } as any;
+    routing: { inbound: { queryKey: "locale" } },
+  } as unknown as IntorResolvedConfig;
 
   it("returns undefined when query is undefined", () => {
     const result = getLocaleFromQuery(config, undefined);
@@ -47,12 +43,8 @@ describe("getLocaleFromQuery", () => {
   it("respects custom query key from config", () => {
     const customConfig = {
       ...config,
-      routing: {
-        locale: {
-          query: { key: "lang" },
-        },
-      },
-    } as any;
+      routing: { inbound: { queryKey: "lang" } },
+    } as IntorResolvedConfig;
 
     const result = getLocaleFromQuery(customConfig, { lang: "en" });
     expect(result).toBe("en");

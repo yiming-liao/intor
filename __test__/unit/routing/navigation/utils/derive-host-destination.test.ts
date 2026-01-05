@@ -7,15 +7,8 @@ const createConfig = (
   defaultHost?: string,
 ): IntorResolvedConfig =>
   ({
-    routing: {
-      navigation: {
-        host: {
-          map: hostMap,
-          default: defaultHost,
-        },
-      },
-    },
-  }) as unknown as IntorResolvedConfig;
+    routing: { outbound: { host: { map: hostMap, default: defaultHost } } },
+  }) as IntorResolvedConfig;
 
 describe("deriveHostDestination", () => {
   it("derives destination using locale-specific host", () => {

@@ -28,7 +28,10 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
       const isFirstVisit = !localeCookie;
 
       if (
-        shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
+        shouldPersistOnFirstVisit(
+          isFirstVisit,
+          routing.inbound.firstVisit.persist,
+        ) &&
         shouldPersist(cookie)
       ) {
         setLocaleCookieBrowser(cookie, locale);
@@ -43,5 +46,5 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
     if (shouldPersist(cookie)) {
       setLocaleCookieBrowser(cookie, locale);
     }
-  }, [locale, cookie, routing.firstVisit.persist]);
+  }, [locale, cookie, routing.inbound.firstVisit.persist]);
 }

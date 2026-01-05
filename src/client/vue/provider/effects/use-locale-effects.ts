@@ -31,7 +31,10 @@ export function useLocaleEffects(
         const isFirstVisit = !localeCookie;
 
         if (
-          shouldPersistOnFirstVisit(isFirstVisit, routing.firstVisit.persist) &&
+          shouldPersistOnFirstVisit(
+            isFirstVisit,
+            routing.inbound.firstVisit.persist,
+          ) &&
           shouldPersist(cookie)
         ) {
           setLocaleCookieBrowser(cookie, currentLocale);

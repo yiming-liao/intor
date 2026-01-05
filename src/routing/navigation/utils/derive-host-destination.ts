@@ -9,7 +9,7 @@ export const deriveHostDestination = (
   rawDestination: string,
   locale: Locale,
 ): string => {
-  const { host } = config.routing.navigation;
+  const { host } = config.routing.outbound;
 
   const resolvedHost = host.map[locale] ?? host.default;
   if (!resolvedHost) return rawDestination;

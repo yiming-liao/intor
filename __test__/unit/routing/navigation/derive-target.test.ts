@@ -29,15 +29,11 @@ vi.mock("@/core", async () => {
 });
 
 const createConfig = (
-  carrier: "path" | "host" | "query",
+  localeCarrier: "path" | "host" | "query",
 ): IntorResolvedConfig =>
   ({
     supportedLocales: ["en-US", "zh-TW"],
-    routing: {
-      navigation: {
-        carrier,
-      },
-    },
+    routing: { outbound: { localeCarrier } },
   }) as unknown as IntorResolvedConfig;
 
 describe("deriveTarget", () => {

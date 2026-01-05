@@ -12,30 +12,20 @@ const assertNever = (x: never): never => {
 };
 
 /**
- * Resolve the final pathname based on routing configuration.
+ * Resolves the canonical pathname based on locale prefix behavior.
  *
- * - This function determines how locale prefixes should be
- * applied to the given pathname based on `config.routing.prefix`.
- *
- * - It delegates the decision to a corresponding prefix
- * strategy (`all`, `except-default`, or `none`) and derives
- * a routing directive from the current pathname context.
- *
- * - The pathname is then localized into its final form,
- * producing a single canonical pathname for the routing flow.
- *
- * - The result also indicates whether a redirect is required
- * to reach the resolved pathname.
+ * The resolved pathname represents the final, normalized form
+ * used for routing and navigation.
  */
 export const resolvePathname = (
   config: IntorResolvedConfig,
   rawPathname: string,
   context: PathnameContext,
 ): ResolvedPathname => {
-  const { prefix } = config.routing.navigation.path;
+  const { localePrefix } = config.routing;
 
   let directive: PathnameDirective;
-  switch (prefix) {
+  switch (localePrefix) {
     case "all": {
       directive = all(context, config);
       break;
@@ -49,7 +39,7 @@ export const resolvePathname = (
       break;
     }
     default: {
-      return assertNever(prefix);
+      return assertNever(localePrefix);
     }
   }
 

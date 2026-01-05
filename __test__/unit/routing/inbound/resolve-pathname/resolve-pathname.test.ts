@@ -20,8 +20,8 @@ const createConfig = (
   ({
     defaultLocale: options?.defaultLocale ?? "en-US",
     routing: {
-      navigation: { path: { prefix } },
-      firstVisit: { redirect: options?.redirect },
+      localePrefix: prefix,
+      inbound: { firstVisit: { redirect: options?.redirect } },
     },
   }) as IntorResolvedConfig;
 

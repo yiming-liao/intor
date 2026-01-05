@@ -1,6 +1,6 @@
 import type { NavigationTarget } from "./derive-target";
 import type { IntorResolvedConfig } from "@/config";
-import { shouldFullReload } from "@/policies/shoud-full-reload";
+import { shouldFullReload } from "@/policies";
 
 type NavigationStrategy =
   | { kind: "external" } // handled by the browser

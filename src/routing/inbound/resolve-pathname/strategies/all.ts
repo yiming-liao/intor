@@ -9,7 +9,7 @@ export function all(
   config: IntorResolvedConfig,
 ): PathnameDirective {
   const { localeSource } = context;
-  const { redirect } = config.routing.firstVisit;
+  const { redirect } = config.routing.inbound.firstVisit;
 
   // path locale present
   if (localeSource === "path") {

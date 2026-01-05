@@ -2,25 +2,18 @@ import type { LocaleContext, ResolvedLocale } from "./types";
 import type { IntorResolvedConfig } from "@/config";
 
 /**
- * Resolve the final locale based on routing configuration.
+ * Resolves the active locale from inbound routing configuration.
  *
- * - This function iterates through locale sources defined in
- * `config.routing.locale.sources` and returns the first
- * matching locale found in the provided context.
- *
- * - If no configured source yields a locale, the detected
- * locale is used as a guaranteed fallback.
- *
- * - The returned locale represents the single source of truth
- * for the remainder of the routing flow.
+ * The first matching locale from the configured sources is used,
+ * with the detected locale as a guaranteed fallback.
  */
 export function resolveLocale(
   config: IntorResolvedConfig,
   context: LocaleContext,
 ): ResolvedLocale {
-  const { sources } = config.routing.locale;
+  const { localeSources } = config.routing.inbound;
 
-  for (const source of sources) {
+  for (const source of localeSources) {
     const locale = context[source]?.locale;
     if (!locale) continue;
     return {

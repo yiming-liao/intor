@@ -6,7 +6,7 @@ export type { LoaderOptions, RemoteHeaders } from "./loader";
 // translator
 export type { TranslatorOptions } from "./translator";
 // routing
-export type { RoutingRawOptions, RoutingResolvedOptions } from "./routing";
+export type { RoutingResolvedOptions } from "./routing";
 // cookie
 export type { CookieRawOptions, CookieResolvedOptions } from "./cookie";
 // logger

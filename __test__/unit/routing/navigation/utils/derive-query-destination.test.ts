@@ -3,15 +3,7 @@ import { describe, it, expect } from "vitest";
 import { deriveQueryDestination } from "@/routing/navigation/utils/derive-query-destination";
 
 const createConfig = (key = "lang"): IntorResolvedConfig =>
-  ({
-    routing: {
-      navigation: {
-        query: {
-          key,
-        },
-      },
-    },
-  }) as unknown as IntorResolvedConfig;
+  ({ routing: { outbound: { queryKey: key } } }) as IntorResolvedConfig;
 
 describe("deriveQueryDestination", () => {
   it("appends locale as query parameter", () => {

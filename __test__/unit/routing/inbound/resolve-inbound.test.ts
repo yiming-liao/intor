@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IntorResolvedConfig } from "@/config";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 import { resolveLocale } from "@/routing/inbound/resolve-locale";
@@ -16,8 +17,8 @@ describe("resolveRouting", () => {
   const config = {
     supportedLocales: ["en", "zh-TW"],
     defaultLocale: "en",
-    routing: { locale: { query: { key: "locale" } } },
-  } as any;
+    routing: { inbound: { queryKey: "locale" } },
+  } as unknown as IntorResolvedConfig;
 
   beforeEach(() => {
     vi.clearAllMocks();
