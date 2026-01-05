@@ -1,4 +1,3 @@
-import type { IfGen } from "@/core";
 import {
   type Locale,
   type Replacement,
@@ -7,7 +6,18 @@ import {
   type LocaleMessages,
 } from "intor-translator";
 
-export type KeyMode = "auto" | "string";
+/** Key resolution strategy. */
+export type KeyMode = "auto" | "strict" | "string";
+
+/** Only allows keys resolved from message definitions. */
+type StrictMessageKey<M, PK extends string | undefined> = PK extends string
+  ? ScopedLeafKeys<M, PK>
+  : LocalizedLeafKeys<M>;
+
+/** Allows resolved keys, with string fallback for DX. */
+type LooseMessageKey<M, PK extends string | undefined> =
+  | StrictMessageKey<M, PK>
+  | (string & {}); // `& {}` preserve literal autocomplete while allowing free-form strings
 
 /**
  * Message key type resolved from translator context.
@@ -23,10 +33,9 @@ export type MessageKey<
   Mode extends KeyMode = "auto",
 > = Mode extends "string"
   ? string
-  : IfGen<
-      PK extends string ? ScopedLeafKeys<M, PK> : LocalizedLeafKeys<M>,
-      string
-    >;
+  : Mode extends "auto"
+    ? LooseMessageKey<M, PK>
+    : StrictMessageKey<M, PK>;
 
 /**
  * Core translator instance interface.

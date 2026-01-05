@@ -13,44 +13,62 @@ declare global {
 
 type Messages = GeneratedTypesFixture["config2"]["Messages"];
 
-//-------------------------------------------------
-// Key
-//-------------------------------------------------
-// Without preKey
+// -------------------------------------------------
+// MessageKey
+// -------------------------------------------------
+
+// auto (default) — no preKey
+expectType<"hello" | "nested.key" | "nested2.a.b.c.d" | (string & {})>(
+  null as unknown as MessageKey<Messages>,
+);
+
+// auto — with preKey
+expectType<"key" | (string & {})>(
+  null as unknown as MessageKey<Messages, "nested">,
+);
+
+// strict — no preKey
 expectType<"hello" | "nested.key" | "nested2.a.b.c.d">(
-  null as unknown as MessageKey<Messages, undefined>,
+  null as unknown as MessageKey<Messages, undefined, "strict">,
 );
 
-// With preKey
-expectType<never>(null as unknown as MessageKey<Messages, "hello">);
-expectType<"key">(null as unknown as MessageKey<Messages, "nested">);
+// strict — with preKey
+expectType<"key">(null as unknown as MessageKey<Messages, "nested", "strict">);
 
-// KeyMode = string
-expectType<string>(null as unknown as MessageKey<Messages, "nested", "string">);
+// string
+expectType<string>(
+  null as unknown as MessageKey<Messages, undefined, "string">,
+);
 
-//-------------------------------------------------
+// -------------------------------------------------
 // TranslatorInstance / t()
-//-------------------------------------------------
-expectType<"hello" | "nested.key" | "nested2.a.b.c.d" | undefined>(
-  null as unknown as Parameters<
-    TranslatorInstance<Messages, undefined>["t"]
-  >[0],
-);
+// -------------------------------------------------
 
-// With preKey
-expectType<undefined>(
-  null as unknown as Parameters<TranslatorInstance<Messages, "hello">["t"]>[0],
-);
-expectType<"key" | undefined>(
+// auto — no preKey
+expectType<
+  "hello" | "nested.key" | "nested2.a.b.c.d" | undefined | (string & {})
+>(null as unknown as Parameters<TranslatorInstance<Messages>["t"]>[0]);
+
+// auto — with preKey
+expectType<"key" | undefined | (string & {})>(
   null as unknown as Parameters<TranslatorInstance<Messages, "nested">["t"]>[0],
 );
-expectType<"a.b.c.d" | undefined>(
+
+// strict — no preKey
+expectType<"hello" | "nested.key" | "nested2.a.b.c.d" | undefined>(
   null as unknown as Parameters<
-    TranslatorInstance<Messages, "nested2">["t"]
+    TranslatorInstance<Messages, undefined, "strict">["t"]
   >[0],
 );
 
-// KeyMode = string
+// strict — with preKey
+expectType<"key" | undefined>(
+  null as unknown as Parameters<
+    TranslatorInstance<Messages, "nested", "strict">["t"]
+  >[0],
+);
+
+// string
 expectType<string | undefined>(
   null as unknown as Parameters<
     TranslatorInstance<Messages, undefined, "string">["t"]
