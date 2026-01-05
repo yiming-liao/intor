@@ -16,43 +16,61 @@ import type {
 
 /** Raw configuration object used to define Intor behavior. */
 export type IntorRawConfig = {
+  /** Identifier for this Intor config scope; defaults to "default" and should be unique across configs. */
   readonly id?: string;
-  // --- Locale & Messages ---
+
+  /** Static locale messages. */
   readonly messages?: LocaleMessages;
+  /** Base locale used for locale resolution and routing decisions. */
   readonly defaultLocale: Locale;
-  readonly supportedLocales?: readonly Locale[];
+  /** Explicit list of locales supported by the application. */
+  readonly supportedLocales: readonly Locale[];
+  /** Locale fallback rules used to determine alternative locales for message loading and lookup. */
   readonly fallbackLocales?: FallbackLocalesMap;
-  // --- Translator ---
+
+  /** Static fallback messages used during translation states. */
   readonly translator?: TranslatorOptions;
-  // --- Routing & Persistence ---
+
+  /** Locale-aware routing behavior and redirection strategy. */
   readonly routing?: RoutingRawOptions;
+  /** Cookie persistence settings for locale resolution. */
   readonly cookie?: CookieRawOptions;
-  // --- Messages Loading ---
+
+  /** Messages loading configuration shared across runtimes. */
   readonly loader?: LoaderOptions;
+  /** Server-specific messages loading overrides. */
   readonly server?: { loader?: ServerLoaderOptions };
+  /** Client-specific messages loading overrides. */
   readonly client?: { loader?: ClientLoaderOptions };
-  // --- Observability & Infrastructure ---
+
+  /** Logging and diagnostic configuration. */
   readonly logger?: Omit<LoggerOptions, "id">;
+  /** Cache policy used by remote messages loading. */
   readonly cache?: CacheRawOptions;
 };
 
 /** Fully resolved configuration after validation and normalization. */
 export type IntorResolvedConfig = {
   readonly id: string;
+
   // --- Locale & Messages ---
   readonly messages?: LocaleMessages;
-  readonly defaultLocale: Locale;
-  readonly supportedLocales: readonly Locale[];
+  readonly defaultLocale: string;
+  readonly supportedLocales: readonly string[];
   readonly fallbackLocales: FallbackLocalesMap;
+
   // --- Translator ---
   readonly translator?: TranslatorOptions;
+
   // --- Routing & Persistence ---
   readonly routing: RoutingResolvedOptions;
   readonly cookie: CookieResolvedOptions;
+
   // --- Messages Loading ---
   readonly loader?: LoaderOptions;
   readonly server?: { loader?: ServerLoaderOptions };
   readonly client?: { loader?: ClientLoaderOptions };
+
   // --- Observability & Infrastructure ---
   readonly logger: LoggerOptions;
   readonly cache: CacheResolvedOptions;

@@ -4,38 +4,44 @@ import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options"
 import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
 import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
 import { validateDefaultLocale } from "@/config/validators/validate-default-locale";
+import { validateId } from "@/config/validators/validate-id";
 import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
 
 /**
- * Defines and resolves an Intor configuration.
+ * Defines the canonical Intor configuration.
  *
- * This is the canonical entry point for transforming a raw configuration
- * into a fully validated and resolved Intor config.
+ * Transforms a raw config into a validated and runtime-ready form by:
+ * - enforcing required invariants
+ * - resolving derived options
+ * - applying stable defaults
  *
- * Responsibilities:
- * - Validate required invariants
- * - Resolve and normalize derived options
- * - Apply stable defaults
- *
- * This function is purely declarative and side-effect free.
- * It does not create runtime instances or attach dynamic behavior.
- *
- * Intended to run once during application initialization.
+ * This function is declarative and side-effect free.
  */
 export const defineIntorConfig = (
   config: IntorRawConfig,
 ): IntorResolvedConfig => {
+  // -----------------------------------------------------------------------------
   // Validators
-  const supportedLocales = validateSupportedLocales(config);
-  const defaultLocale = validateDefaultLocale(config, supportedLocales);
+  // -----------------------------------------------------------------------------
+  const id = validateId(config.id ?? "default");
+  const supportedLocales = validateSupportedLocales(
+    id,
+    config.supportedLocales,
+  );
+  const supportedSet = new Set(supportedLocales);
+  const defaultLocale = validateDefaultLocale(
+    id,
+    config.defaultLocale,
+    supportedSet,
+  );
 
+  // -----------------------------------------------------------------------------
   // Resolvers
-  const fallbackLocales = resolveFallbackLocales(config, supportedLocales);
+  // -----------------------------------------------------------------------------
+  const fallbackLocales = resolveFallbackLocales(config, id, supportedSet);
   const cookie = resolveCookieOptions(config.cookie);
   const routing = resolveRoutingOptions(config.routing);
   const cache = resolveCacheOptions(config.cache);
-
-  const id = config.id ?? "default";
 
   return {
     id,

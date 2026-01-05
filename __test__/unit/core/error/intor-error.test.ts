@@ -21,9 +21,9 @@ describe("IntorError", () => {
   it("should include code if provided", () => {
     const error = new IntorError({
       message: "Missing default locale",
-      code: IntorErrorCode.MISSING_DEFAULT_LOCALE,
+      code: IntorErrorCode.INVALID_CONFIG_ID,
     });
-    expect(error.code).toBe(IntorErrorCode.MISSING_DEFAULT_LOCALE);
+    expect(error.code).toBe(IntorErrorCode.INVALID_CONFIG_ID);
   });
 
   it("should preserve prototype chain", () => {

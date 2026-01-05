@@ -57,5 +57,5 @@ export type {
   // routing
   RoutingLocaleSource,
   RoutingLocaleCarrier,
-  PathLocaleStrategy,
+  LocalePathPrefix,
 } from "./types";

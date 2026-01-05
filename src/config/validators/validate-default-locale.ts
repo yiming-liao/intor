@@ -1,37 +1,20 @@
-import type { IntorRawConfig } from "@/config";
-import type { Locale } from "intor-translator";
 import { IntorError, IntorErrorCode } from "@/core";
 
 /**
- * Validates the configured default locale.
+ * Validates that the configured defaultLocale is supported.
  *
- * - Ensures that `defaultLocale` is explicitly defined.
- * - Ensures that `defaultLocale` is included in `supportedLocales`.
- *
- * This validation is part of the configuration initialization phase
- * and is expected to fail fast when misconfigured.
+ * Fails fast if `defaultLocale` is not included in `supportedLocales`.
  */
 export const validateDefaultLocale = (
-  config: IntorRawConfig,
-  supportedLocales: readonly Locale[],
+  id: string,
+  defaultLocale: string,
+  supportedSet: ReadonlySet<string>,
 ): string => {
-  const { id, defaultLocale } = config;
-
-  // Throw error if defaultLocale is undefined
-  if (!defaultLocale) {
-    throw new IntorError({
-      id,
-      code: IntorErrorCode.MISSING_DEFAULT_LOCALE,
-      message: `The defaultLocale is undefined`,
-    });
-  }
-
-  // Throw error if defaultLocale is not listed in supportedLocales
-  if (!supportedLocales.includes(defaultLocale)) {
+  if (!supportedSet.has(defaultLocale)) {
     throw new IntorError({
       id,
       code: IntorErrorCode.UNSUPPORTED_DEFAULT_LOCALE,
-      message: `The defaultLocale "${defaultLocale}" is not included in the supportedLocales.`,
+      message: `"defaultLocale" must be included in "supportedLocales".`,
     });
   }
 

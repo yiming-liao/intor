@@ -30,16 +30,15 @@ export type RoutingLocaleCarrier = "path" | "host" | "query";
 export type RoutingLocaleSource = RoutingLocaleCarrier | "cookie" | "detected";
 
 /**
- * Strategy used to apply locale information to URL pathnames.
+ * Controls how the locale is prefixed in URL pathnames.
  *
- * A path locale strategy defines how the locale is represented
- * when generating or resolving locale-aware paths.
+ * This option defines whether the locale appears in the path,
+ * and under what conditions.
  *
- * This strategy is only applicable when the navigation carrier
- * is set to "path".
+ * Applicable only when the locale is carried in the path.
  *
  * - "none"           → No locale prefix is applied
  * - "all"            → Locale prefix is always applied
  * - "except-default" → Locale prefix is applied except for the default locale
  */
-export type PathLocaleStrategy = "none" | "all" | "except-default";
+export type LocalePathPrefix = "none" | "all" | "except-default";

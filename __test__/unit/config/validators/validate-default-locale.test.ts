@@ -3,59 +3,30 @@ import { validateDefaultLocale } from "@/config/validators/validate-default-loca
 import { IntorError, IntorErrorCode } from "@/core";
 
 describe("validateDefaultLocale", () => {
-  const configBase = {
-    id: "TEST_ID",
-  };
+  const ID = "test";
 
-  it("throws if defaultLocale is undefined", () => {
+  it("throws if defaultLocale is not included in supportedLocales", () => {
+    const supportedLocaleSet = new Set(["zh", "ja"]);
     expect(() =>
-      // @ts-expect-error undefined
-      validateDefaultLocale({ ...configBase, defaultLocale: undefined }, [
-        "en",
-        "zh",
-      ]),
+      validateDefaultLocale(ID, "en", supportedLocaleSet),
     ).toThrowError(IntorError);
-
-    try {
-      // @ts-expect-error undefined
-      validateDefaultLocale({ ...configBase, defaultLocale: undefined }, [
-        "en",
-        "zh",
-      ]);
-    } catch (error) {
-      expect(error).toBeInstanceOf(IntorError);
-      const e = error as IntorError;
-      expect(e.code).toBe(IntorErrorCode.MISSING_DEFAULT_LOCALE);
-      expect(e.message).toContain("undefined");
-    }
   });
 
-  it("throws if defaultLocale is not in supportedLocales", () => {
-    expect(() =>
-      validateDefaultLocale({ ...configBase, defaultLocale: "fr" }, [
-        "en",
-        "zh",
-      ]),
-    ).toThrowError(IntorError);
-
+  it("throws IntorError with correct error code when defaultLocale is unsupported", () => {
+    const supportedLocaleSet = new Set(["zh", "ja"]);
     try {
-      validateDefaultLocale({ ...configBase, defaultLocale: "fr" }, [
-        "en",
-        "zh",
-      ]);
+      validateDefaultLocale(ID, "en", supportedLocaleSet);
     } catch (error) {
       expect(error).toBeInstanceOf(IntorError);
       const e = error as IntorError;
       expect(e.code).toBe(IntorErrorCode.UNSUPPORTED_DEFAULT_LOCALE);
-      expect(e.message).toContain("fr");
+      expect(e.message).toContain("defaultLocale");
     }
   });
 
-  it("returns defaultLocale if valid", () => {
-    const result = validateDefaultLocale(
-      { ...configBase, defaultLocale: "en" },
-      ["en", "zh"],
-    );
+  it("returns defaultLocale when it is included in supportedLocales", () => {
+    const supportedLocaleSet = new Set(["en", "zh"]);
+    const result = validateDefaultLocale(ID, "en", supportedLocaleSet);
     expect(result).toBe("en");
   });
 });

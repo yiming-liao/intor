@@ -22,5 +22,5 @@ export type {
 export type {
   RoutingLocaleSource,
   RoutingLocaleCarrier,
-  PathLocaleStrategy,
+  LocalePathPrefix,
 } from "./routing";

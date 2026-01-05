@@ -11,7 +11,7 @@ This document lists all available configuration options for **Intor**.
 #### Locale & Messages
 
 - `defaultLocale` _(required)_
-- `supportedLocales` _(required when loader is configured)_
+- `supportedLocales` _(required)_
 - `fallbackLocales`
 - `messages`
 

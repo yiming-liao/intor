@@ -1,73 +1,69 @@
 import type { IntorRawConfig } from "../types";
 import type { FallbackLocalesMap, Locale } from "intor-translator";
+import { getLogger } from "@/core";
 
 /**
- * Resolves and normalizes fallback locale mappings.
+ * Resolves fallbackLocales into a runtime-safe mapping.
  *
- * This utility validates the user-defined `fallbackLocales` configuration
- * against the provided `supportedLocales` list and the configured `defaultLocale`.
- *
- * Resolution rules:
- * - Only locales listed in `supportedLocales` are considered valid fallbacks.
- * - The literal value `"default"` is always allowed and represents the configured default locale.
- * - Fallback entries matching `defaultLocale` are treated as valid.
- * - Invalid fallback locales are ignored and reported via warnings.
- *
- * Notes:
- * - This function is purely defensive and does not throw on invalid input.
- * - Only validated fallback mappings are included in the returned result.
- * - Logging is used for diagnostics only and does not affect the output.
+ * Invalid entries are ignored and reported via warnings.
  */
 export const resolveFallbackLocales = (
   config: IntorRawConfig,
-  supportedLocales: readonly Locale[],
+  id: string,
+  supportedSet: ReadonlySet<string>,
 ): FallbackLocalesMap => {
   const { defaultLocale, fallbackLocales } = config;
 
+  // Fast exit: no fallback configuration provided
   if (!fallbackLocales || typeof fallbackLocales !== "object") {
     return {};
   }
 
-  const supportedSet = new Set(supportedLocales);
-  const validMap: FallbackLocalesMap = {}; // Collected valid fallbacks
-  const invalidFallbackMap = new Map<Locale, Locale[]>(); // Track invalid ones
+  const logger = getLogger({ id }).child({
+    scope: "resolve-fallback-locales",
+  });
 
+  const resolvedMap: FallbackLocalesMap = {};
+  const invalidMap = new Map<Locale, Locale[]>();
+
+  // ---------------------------------------------------------------------------
+  // Normalize each fallback rule
+  // ---------------------------------------------------------------------------
   for (const [locale, fallbacks] of Object.entries(fallbackLocales)) {
+    // Guard: fallback rules for unreachable locales are ignored.
+    if (!supportedSet.has(locale) && locale !== defaultLocale) {
+      logger.warn(
+        `Fallback locale "${locale}" is not listed in supportedLocales.`,
+      );
+      continue;
+    }
+
     const fallbackArray = Array.isArray(fallbacks) ? fallbacks : [];
+    const validFallbacks: string[] = [];
+    const invalidFallbacks: string[] = [];
 
-    // Valid: in supported list, matches default, or literal "default"
-    const validFallbacks = fallbackArray.filter(
-      (fallback) =>
-        fallback === "default" ||
-        supportedSet.has(fallback as Locale) ||
-        fallback === defaultLocale,
-    );
-
-    // Invalid: not "default", not supported, and not defaultLocale
-    const invalidFallbacks = fallbackArray.filter(
-      (fallback) =>
-        fallback !== "default" &&
-        !supportedSet.has(fallback as Locale) &&
-        fallback !== defaultLocale,
-    );
-
-    if (invalidFallbacks.length > 0) {
-      invalidFallbackMap.set(locale as Locale, invalidFallbacks);
+    for (const fallback of fallbackArray) {
+      // A fallback target is considered valid if:
+      // - It exists in `supportedLocales`
+      // - It is the literal value "default"
+      if (fallback === "default" || supportedSet.has(fallback)) {
+        validFallbacks.push(fallback);
+      } else {
+        invalidFallbacks.push(fallback);
+      }
     }
-
-    if (validFallbacks.length > 0) {
-      validMap[locale as Locale] = validFallbacks;
-    }
+    if (invalidFallbacks.length > 0) invalidMap.set(locale, invalidFallbacks);
+    if (validFallbacks.length > 0) resolvedMap[locale] = validFallbacks;
   }
 
-  // Log out invalid fallback locales
-  for (const [locale, invalids] of invalidFallbackMap.entries()) {
-    console.warn(
-      `Invalid fallback locales for "${locale}"`,
-      { invalids: [...invalids] },
-      { scope: "resolveFallbackLocales" },
-    );
+  // ---------------------------------------------------------------------------
+  // Diagnostics: report ignored fallback entries
+  // ---------------------------------------------------------------------------
+  for (const [locale, invalids] of invalidMap.entries()) {
+    logger.warn(`Invalid fallback locales for "${locale}".`, {
+      invalids: invalids.join(", "),
+    });
   }
 
-  return validMap;
+  return resolvedMap;
 };

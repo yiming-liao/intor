@@ -1,86 +1,58 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { IntorRawConfig } from "@/config";
+import { describe, it, expect, vi } from "vitest";
 import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
 
+vi.mock("@/core", () => ({
+  getLogger: () => ({ child: () => ({ warn: vi.fn() }) }),
+}));
+
 describe("resolveFallbackLocales", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  const baseConfig: IntorRawConfig = {
+    id: "TEST_ID",
+    defaultLocale: "en",
+    supportedLocales: ["en", "zh"],
+  };
+
+  const supportedSet = new Set(["en", "zh"]);
+
+  it("returns empty object when fallbackLocales is not provided", () => {
+    const result = resolveFallbackLocales(baseConfig, "TEST_ID", supportedSet);
+    expect(result).toEqual({});
   });
 
-  it("returns only valid fallback locales", () => {
-    const config = {
-      defaultLocale: "en",
-      fallbackLocales: {
-        en: ["zh", "default", "fr"], // fr is invalid
-        zh: ["en"],
-      },
-    };
-
-    const supportedLocales = ["en", "zh"];
-
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    const result = resolveFallbackLocales(config, supportedLocales);
-
-    expect(result).toEqual({
-      en: ["zh", "default"],
-      zh: ["en"],
-    });
-
-    // Should warn for invalid fallback "fr"
-    expect(warnSpy).toHaveBeenCalledWith(
-      'Invalid fallback locales for "en"',
-      { invalids: ["fr"] },
-      { scope: "resolveFallbackLocales" },
+  it("ignores fallback rules for unsupported locale keys", () => {
+    const result = resolveFallbackLocales(
+      { ...baseConfig, fallbackLocales: { fr: ["en"] } },
+      "TEST_ID",
+      supportedSet,
     );
+    expect(result).toEqual({});
   });
 
-  it("handles empty or missing fallbackLocales", () => {
-    const config1 = { defaultLocale: "en" };
-    const config2 = { defaultLocale: "en", fallbackLocales: undefined };
-    const config3 = { defaultLocale: "en", fallbackLocales: null };
-
-    expect(resolveFallbackLocales(config1, ["en", "zh"])).toEqual({});
-    expect(resolveFallbackLocales(config2, ["en", "zh"])).toEqual({});
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect(resolveFallbackLocales(config3 as any, ["en", "zh"])).toEqual({});
-  });
-
-  it("filters fallbacks not in supportedLocales", () => {
-    const config = {
-      defaultLocale: "en",
-      fallbackLocales: {
-        zh: ["fr", "de", "en"], // only "en" is valid
-      },
-    };
-
-    const supportedLocales = ["en", "zh"];
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    const result = resolveFallbackLocales(config, supportedLocales);
-
-    expect(result).toEqual({
-      zh: ["en"],
-    });
-
-    expect(warnSpy).toHaveBeenCalledWith(
-      'Invalid fallback locales for "zh"',
-      { invalids: ["fr", "de"] },
-      { scope: "resolveFallbackLocales" },
+  it("keeps valid fallback locales and literal 'default'", () => {
+    const result = resolveFallbackLocales(
+      { ...baseConfig, fallbackLocales: { zh: ["en", "default"] } },
+      "TEST_ID",
+      supportedSet,
     );
+    expect(result).toEqual({ zh: ["en", "default"] });
   });
 
-  it("handles fallback array containing only 'default'", () => {
-    const config = {
-      defaultLocale: "en",
-      fallbackLocales: {
-        en: ["default"],
-      },
-    };
+  it("filters out invalid fallback targets", () => {
+    const result = resolveFallbackLocales(
+      { ...baseConfig, fallbackLocales: { zh: ["en", "jp", "default"] } },
+      "TEST_ID",
+      supportedSet,
+    );
+    expect(result).toEqual({ zh: ["en", "default"] });
+  });
 
-    const result = resolveFallbackLocales(config, ["en", "zh"]);
-
-    expect(result).toEqual({
-      en: ["default"],
-    });
+  it("returns empty mapping when all fallback targets are invalid", () => {
+    const result = resolveFallbackLocales(
+      { ...baseConfig, fallbackLocales: { zh: ["jp", "kr"] } },
+      "TEST_ID",
+      supportedSet,
+    );
+    expect(result).toEqual({});
   });
 });
