@@ -12,8 +12,8 @@ import { readLocaleMessages } from "./read-locale-messages";
  * It coordinates:
  *
  * - Locale resolution with fallbacks
- * - Process-level memoization (read by default, write by ownership)
  * - Concurrency control for file system access
+ * - Process-level memoization (read by default, write by ownership)
  *
  * Local messages are cached for the lifetime of the process.
  * Cache writes are restricted to the primary initialization flow.
@@ -44,20 +44,22 @@ export const loadLocalMessages = async ({
   // ---------------------------------------------------------------------------
   // Cache key resolution
   // ---------------------------------------------------------------------------
-  const cacheKey = normalizeCacheKey([
-    id,
-    "loaderType:local",
-    rootDir,
-    locale,
-    (fallbackLocales || []).toSorted().join(","),
-    (namespaces || []).toSorted().join(","),
-  ]);
+  const cacheKey = normalizeCacheKey(
+    [
+      id,
+      "loaderType:local",
+      rootDir,
+      locale,
+      fallbackLocales?.toSorted().join(","),
+      namespaces?.toSorted().join(","),
+    ].filter(Boolean),
+  );
 
   // ---------------------------------------------------------------------------
   // Cache read
   // ---------------------------------------------------------------------------
   if (cacheKey) {
-    const cached = await pool?.get(cacheKey);
+    const cached = pool.get(cacheKey);
     if (cached) {
       logger.debug("Messages cache hit.", { key: cacheKey });
       return cached;
@@ -106,10 +108,10 @@ export const loadLocalMessages = async ({
   // ---------------------------------------------------------------------------
   // Cache write (explicitly permitted)
   // ---------------------------------------------------------------------------
-  if (allowCacheWrite) {
-    if (cacheKey && messages) {
-      await pool?.set(cacheKey, messages);
-    }
+  const isProd = process.env.NODE_ENV === "production";
+  const canWriteCache = isProd && allowCacheWrite;
+  if (canWriteCache && cacheKey && messages) {
+    pool.set(cacheKey, messages);
   }
 
   // Final success log with resolved locale and timing

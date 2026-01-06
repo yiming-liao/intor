@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.3.8",
+  "version": "2.3.13",
   "description": "A modular and extensible i18n core designed for TypeScript and JavaScript projects. Intor enables custom translation logic with support for both frontend and backend environments, featuring runtime configuration, caching, adapters, and message loaders.",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor#readme",
@@ -32,11 +32,15 @@
   "exports": {
     ".": {
       "import": "./dist/core/export/index.js",
-      "types": "./dist/types/export/index.d.ts"
+      "types": "./dist/types/export/index.d.ts",
+      "require": "./dist/core/export/index.js",
+      "default": "./dist/core/export/index.js"
     },
     "./server": {
       "import": "./dist/core/export/server/index.js",
-      "types": "./dist/types/export/server/index.d.ts"
+      "types": "./dist/types/export/server/index.d.ts",
+      "require": "./dist/core/export/server/index.js",
+      "default": "./dist/core/export/server/index.js"
     },
     "./internal": {
       "types": "./dist/types/export/internal/index.d.ts"
@@ -67,7 +71,9 @@
     },
     "./express": {
       "import": "./dist/express/export/express/index.js",
-      "types": "./dist/types/export/express/index.d.ts"
+      "types": "./dist/types/export/express/index.d.ts",
+      "require": "./dist/express/export/express/index.js",
+      "default": "./dist/express/export/express/index.js"
     }
   },
   "main": "./dist/core/export/index.js",
@@ -95,8 +101,7 @@
   },
   "dependencies": {
     "intor-translator": "1.3.2",
-    "keyv": "5.5.5",
-    "logry": "2.1.5",
+    "logry": "2.1.6",
     "p-limit": "7.2.0"
   },
   "devDependencies": {

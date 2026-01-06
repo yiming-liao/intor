@@ -671,11 +671,6 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@keyv/serialize@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@keyv/serialize/-/serialize-1.1.1.tgz#0c01dd3a3483882af7cf3878d4e71d505c81fc4a"
-  integrity sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==
-
 "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-0.2.12.tgz#3e78a8b96e6c33a6c517e1894efbd5385a7cb6f2"
@@ -3661,13 +3656,6 @@ json5@^2.2.3:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-keyv@5.5.5:
-  version "5.5.5"
-  resolved "https://registry.yarnpkg.com/keyv/-/keyv-5.5.5.tgz#a975b32fc03e300a0e443c705b103d8b05220834"
-  integrity sha512-FA5LmZVF1VziNc0bIdCSA1IoSVnDCqE8HJIZZv2/W8YmoAM50+tnUgJR/gQZwEeIMleuIOnRnHA/UaZRNeV4iQ==
-  dependencies:
-    "@keyv/serialize" "^1.1.1"
-
 keyv@^4.5.4:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"
@@ -3743,10 +3731,10 @@ log-symbols@^4.0.0:
     chalk "^4.1.0"
     is-unicode-supported "^0.1.0"
 
-logry@2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/logry/-/logry-2.1.5.tgz#4e066e9d9b1ad995b9f786542639aad14c39f11b"
-  integrity sha512-TjCbzE/zpDIn5imNxgReSeEvq64iBWtopHBQMqu7VNCXoN6XAXZsQPCEVCOydpqP6qZ3Vd1PgltGgx+STCWlLg==
+logry@2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/logry/-/logry-2.1.6.tgz#88de5000a2f5467e3af39666661b6346c6c777f9"
+  integrity sha512-BjnvdeH9YAVI3hE0fCVtwAhQV5B5vDEiJMRCuehutc6Mn/q5Aivs7ac6hTBSX200jyhHjnTU8xP79pueQS3fyg==
   dependencies:
     rura "1.0.7"
 

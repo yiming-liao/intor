@@ -14,7 +14,6 @@ export {
   clearLoggerPool,
   // messages
   clearMessagesPool,
-  setGlobalMessagesPool,
   mergeMessages,
   isValidMessages,
   type Messages,

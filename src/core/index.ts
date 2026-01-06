@@ -28,7 +28,6 @@ export {
   type MessagesPool,
   getGlobalMessagesPool,
   clearMessagesPool,
-  setGlobalMessagesPool,
   // merge-messages
   mergeMessages,
   // utils

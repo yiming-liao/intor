@@ -1,36 +1,37 @@
 import type { LocaleMessages } from "intor-translator";
-import Keyv from "keyv";
 
 /**
- * Global messages pool (cross-module + hot-reload safe)
+ * Global messages pool (process-level, hot-reload safe).
+ *
+ * This pool is intentionally minimal:
+ * - No TTL
+ * - No eviction
+ * - No external backends
+ *
+ * Messages are treated as immutable within a process lifecycle.
  */
-export type MessagesPool = Keyv<LocaleMessages>;
+export type MessagesPool = Map<string, LocaleMessages>;
 
 declare global {
   var __INTOR_MESSAGES_POOL__: MessagesPool | undefined;
 }
 
+/**
+ * Get the global messages pool.
+ *
+ * Lazily initialized to ensure:
+ * - Cross-module sharing
+ * - Dev / HMR safety
+ */
 export function getGlobalMessagesPool(): MessagesPool {
   if (!globalThis.__INTOR_MESSAGES_POOL__) {
-    globalThis.__INTOR_MESSAGES_POOL__ = new Keyv<LocaleMessages>();
+    const pool: MessagesPool = new Map();
+    globalThis.__INTOR_MESSAGES_POOL__ = pool;
   }
   return globalThis.__INTOR_MESSAGES_POOL__;
 }
 
-/**
- * Replace the global messages pool.
- *
- * - Intended for advanced usage (e.g. Redis, custom cache backends).
- * - Must be called during application bootstrap.
- */
-export function setGlobalMessagesPool(pool: MessagesPool): void {
-  globalThis.__INTOR_MESSAGES_POOL__ = pool;
-}
-
-/**
- * Optional: clear all cache
- * - Useful in tests or dynamic reloads.
- */
+/** Clear all cached messages. */
 export function clearMessagesPool(): void {
   const pool = getGlobalMessagesPool();
   pool.clear();

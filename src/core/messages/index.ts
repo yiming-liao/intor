@@ -6,7 +6,6 @@ export {
   type MessagesPool,
   getGlobalMessagesPool,
   clearMessagesPool,
-  setGlobalMessagesPool,
 } from "./global-messages-pool";
 
 // merge-messages
