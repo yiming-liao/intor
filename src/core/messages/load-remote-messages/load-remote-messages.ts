@@ -1,7 +1,6 @@
 import type { LoadRemoteMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import { getLogger } from "../../logger";
-import { normalizeCacheKey } from "../../utils";
 import { fetchLocaleMessages } from "./fetch-locale-messages";
 
 /**
@@ -11,13 +10,11 @@ import { fetchLocaleMessages } from "./fetch-locale-messages";
  * It coordinates:
  *
  * - Locale resolution with fallbacks
- * - Cache read / write behavior
  * - Respecting abort signals across the entire async flow
  *
  * Network fetching and data validation are delegated to lower-level utilities.
  */
 export const loadRemoteMessages = async ({
-  id,
   locale,
   fallbackLocales,
   namespaces,
@@ -25,9 +22,6 @@ export const loadRemoteMessages = async ({
   url,
   headers,
   signal,
-  pool,
-  cacheOptions,
-  allowCacheWrite = false,
   loggerOptions,
 }: LoadRemoteMessagesParams): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger(loggerOptions);
@@ -41,33 +35,6 @@ export const loadRemoteMessages = async ({
 
   const start = performance.now();
   logger.debug("Loading remote messages.", { url });
-
-  // ---------------------------------------------------------------------------
-  // Cache key resolution
-  // ---------------------------------------------------------------------------
-  const cacheKey = normalizeCacheKey([
-    id,
-    "loaderType:remote",
-    rootDir,
-    locale,
-    (fallbackLocales || []).toSorted().join(","),
-    (namespaces || []).toSorted().join(","),
-  ]);
-
-  // ---------------------------------------------------------------------------
-  // Cache read
-  // ---------------------------------------------------------------------------
-  if (cacheOptions.enabled && cacheKey) {
-    const cached = await pool?.get(cacheKey);
-    if (signal?.aborted) {
-      logger.debug("Remote message loading aborted after cache read.");
-      return;
-    }
-    if (cached) {
-      logger.debug("Messages cache hit.", { key: cacheKey });
-      return cached;
-    }
-  }
 
   // ---------------------------------------------------------------------------
   // Resolve locale messages with ordered fallback strategy
@@ -112,19 +79,6 @@ export const loadRemoteMessages = async ({
         locale: candidateLocale,
         error,
       });
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Cache write (explicitly permitted)
-  // ---------------------------------------------------------------------------
-  if (cacheOptions.enabled && allowCacheWrite) {
-    if (signal?.aborted) {
-      logger.debug("Remote message loading aborted before cache write.");
-      return;
-    }
-    if (cacheKey && messages) {
-      await pool?.set(cacheKey, messages, cacheOptions.ttl);
     }
   }
 

@@ -43,7 +43,6 @@ export const createRefetchMessages = ({
 
     try {
       const loadedMessages = await loadRemoteMessages({
-        id: config.id,
         locale: newLocale,
         fallbackLocales: config.fallbackLocales[newLocale] || [],
         namespaces: loader.namespaces,
@@ -51,7 +50,6 @@ export const createRefetchMessages = ({
         url: loader.url,
         headers: loader.headers,
         signal: currentController.signal,
-        cacheOptions: config.cache,
         loggerOptions: config.logger,
       });
 

@@ -18,7 +18,6 @@ const loggerMock = {
 };
 
 vi.spyOn(loggerModule, "getLogger").mockReturnValue(loggerMock as any);
-
 vi.spyOn(localModule, "loadLocalMessages");
 vi.spyOn(remoteModule, "loadRemoteMessages");
 vi.spyOn(resolverModule, "resolveLoaderOptions");
@@ -27,7 +26,6 @@ function createConfig(overrides: Partial<any> = {}) {
   return {
     id: "test",
     logger: { id: "test" },
-    cache: { enabled: false, ttl: 0 },
     fallbackLocales: { "en-US": ["zh-TW"] },
     ...overrides,
   };
@@ -40,12 +38,10 @@ beforeEach(() => {
 describe("loadMessages", () => {
   it("returns early and warns when no loader is configured", async () => {
     vi.mocked(resolverModule.resolveLoaderOptions).mockReturnValue(undefined);
-
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
     });
-
     expect(result).toBeUndefined();
     expect(loggerChildMock.warn).toHaveBeenCalledWith(
       "No loader options have been configured in the current config.",
@@ -58,23 +54,19 @@ describe("loadMessages", () => {
     const messages: LocaleMessages = {
       "en-US": { hello: "local" },
     };
-
     vi.mocked(resolverModule.resolveLoaderOptions).mockReturnValue({
       type: "local",
       rootDir: "messages",
       namespaces: ["common"],
       concurrency: 5,
     } as any);
-
     vi.mocked(localModule.loadLocalMessages).mockResolvedValue(messages);
-
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
       readOptions: { exts: [".json"] },
       allowCacheWrite: true,
     });
-
     expect(localModule.loadLocalMessages).toHaveBeenCalledWith(
       expect.objectContaining({
         locale: "en-US",
@@ -93,7 +85,6 @@ describe("loadMessages", () => {
     const messages: LocaleMessages = {
       "en-US": { hello: "remote" },
     };
-
     vi.mocked(resolverModule.resolveLoaderOptions).mockReturnValue({
       type: "remote",
       url: "https://api.example.com",
@@ -101,15 +92,11 @@ describe("loadMessages", () => {
       rootDir: "messages",
       headers: { Authorization: "Bearer token" },
     } as any);
-
     vi.mocked(remoteModule.loadRemoteMessages).mockResolvedValue(messages);
-
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
-      allowCacheWrite: false,
     });
-
     expect(remoteModule.loadRemoteMessages).toHaveBeenCalledWith(
       expect.objectContaining({
         locale: "en-US",
@@ -118,8 +105,6 @@ describe("loadMessages", () => {
         rootDir: "messages",
         url: "https://api.example.com",
         headers: { Authorization: "Bearer token" },
-        cacheOptions: { enabled: false, ttl: 0 },
-        allowCacheWrite: false,
       }),
     );
     expect(localModule.loadLocalMessages).not.toHaveBeenCalled();
@@ -131,14 +116,11 @@ describe("loadMessages", () => {
       type: "remote",
       url: "https://api.example.com",
     } as any);
-
     vi.mocked(remoteModule.loadRemoteMessages).mockResolvedValue(undefined);
-
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
     });
-
     expect(result).toBeUndefined();
     expect(loggerChildMock.warn).toHaveBeenCalledWith(
       "No messages found.",

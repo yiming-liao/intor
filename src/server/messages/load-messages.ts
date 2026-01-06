@@ -36,16 +36,16 @@ export const loadMessages = async ({
     return;
   }
 
-  const { type, namespaces } = loader;
+  const { type, namespaces, rootDir } = loader;
   const fallbackLocales = config.fallbackLocales[locale] || [];
 
   logger.info(`Loading messages for locale "${locale}".`);
   logger.trace("Starting to load messages with runtime context.", {
     loaderType: type,
+    rootDir,
     locale,
     fallbackLocales,
     namespaces: namespaces && namespaces.length > 0 ? [...namespaces] : ["*"],
-    cache: config.cache,
   });
 
   // ---------------------------------------------------------------------------
@@ -58,7 +58,7 @@ export const loadMessages = async ({
       locale,
       fallbackLocales,
       namespaces,
-      rootDir: loader.rootDir,
+      rootDir,
       concurrency: loader.concurrency,
       readOptions,
       allowCacheWrite,
@@ -66,15 +66,12 @@ export const loadMessages = async ({
     });
   } else if (type === "remote") {
     loadedMessages = await loadRemoteMessages({
-      id: config.id,
       locale,
       fallbackLocales,
       namespaces,
-      rootDir: loader.rootDir,
+      rootDir,
       url: loader.url,
       headers: loader.headers,
-      allowCacheWrite,
-      cacheOptions: config.cache,
       loggerOptions: config.logger,
     });
   }
