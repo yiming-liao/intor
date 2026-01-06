@@ -14,6 +14,6 @@ export const deriveHostDestination = (
   const resolvedHost = host.map[locale] ?? host.default;
   if (!resolvedHost) return rawDestination;
 
-  const url = new URL(rawDestination, `https://${resolvedHost}`);
-  return `${url.protocol}//${url.host}${url.pathname}${url.search}`;
+  const url = new URL(rawDestination, "http://internal");
+  return `${url.protocol}//${resolvedHost}${url.pathname}${url.search}`;
 };

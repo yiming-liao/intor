@@ -5,26 +5,37 @@ import type { IntorResolvedConfig } from "@/config";
  * Resolve pathname decision for routing prefix strategy: "all".
  */
 export function all(
-  context: PathnameContext,
   config: IntorResolvedConfig,
+  context: PathnameContext,
 ): PathnameDirective {
-  const { localeSource } = context;
+  const { hasPathLocale, hasPersisted, hasRedirected } = context;
   const { redirect } = config.routing.inbound.firstVisit;
+  const isFirstVisit = !hasPersisted;
 
-  // path locale present
-  if (localeSource === "path") {
+  // ----------------------------------------------------------
+  // URL already canonical
+  // ----------------------------------------------------------
+  if (hasPathLocale) {
     return { type: "pass" };
   }
 
-  // no path locale, cookie locale present
-  if (localeSource === "cookie") {
+  // ----------------------------------------------------------
+  // Prevent infinite redirect in the same navigation flow
+  // ----------------------------------------------------------
+  if (hasRedirected) {
+    return { type: "pass" };
+  }
+
+  // ----------------------------------------------------------
+  // Apply first-visit redirect policy
+  // ----------------------------------------------------------
+  if (isFirstVisit) {
+    if (!redirect) return { type: "pass" };
     return { type: "redirect" };
   }
 
-  // no path locale, no cookie locale (first visit)
-  return !redirect
-    ? // - redirect disabled → pass
-      { type: "pass" }
-    : // - redirect enabled → redirect
-      { type: "redirect" };
+  // ----------------------------------------------------------
+  // Redirect to the locale-prefixed URL
+  // ----------------------------------------------------------
+  return { type: "redirect" };
 }

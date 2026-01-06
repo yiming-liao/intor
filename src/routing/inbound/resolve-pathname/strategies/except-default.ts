@@ -5,38 +5,38 @@ import type { IntorResolvedConfig } from "@/config";
  * Resolve pathname decision for routing prefix strategy: "except-default".
  */
 export function exceptDefault(
-  context: PathnameContext,
   config: IntorResolvedConfig,
+  context: PathnameContext,
 ): PathnameDirective {
-  const { localeSource, locale } = context;
+  const { hasPathLocale, hasPersisted, hasRedirected } = context;
   const { redirect } = config.routing.inbound.firstVisit;
+  const isFirstVisit = !hasPersisted;
+  const isDefaultLocale = context.locale === config.defaultLocale;
 
-  const isDefaultLocale = locale === config.defaultLocale;
-
-  // path locale present
-  if (localeSource === "path") {
+  // ----------------------------------------------------------
+  // URL already canonical
+  // ----------------------------------------------------------
+  if (hasPathLocale) {
     return { type: "pass" };
   }
 
-  // no path locale, cookie locale present
-  if (localeSource === "cookie") {
-    return isDefaultLocale
-      ? // - default locale → pass
-        { type: "pass" }
-      : // - non-default locale → redirect to prefixed URL
-        { type: "redirect" };
-  }
-
-  // no path locale, no cookie locale (first visit)
-  // - redirect disabled → pass
-  if (!redirect) {
+  // ----------------------------------------------------------
+  // Prevent infinite redirect in the same navigation flow
+  // ----------------------------------------------------------
+  if (hasRedirected) {
     return { type: "pass" };
   }
 
-  // - redirect enabled:
-  return isDefaultLocale
-    ? // -- default locale → pass
-      { type: "pass" }
-    : // -- non-default locale → redirect to prefixed URL
-      { type: "redirect" };
+  // ----------------------------------------------------------
+  // Apply first-visit redirect policy
+  // ----------------------------------------------------------
+  if (isFirstVisit) {
+    if (!redirect) return { type: "pass" };
+    return isDefaultLocale ? { type: "pass" } : { type: "redirect" };
+  }
+
+  // ----------------------------------------------------------
+  // Redirect non-default locale to the locale-prefixed URL
+  // ----------------------------------------------------------
+  return isDefaultLocale ? { type: "pass" } : { type: "redirect" };
 }

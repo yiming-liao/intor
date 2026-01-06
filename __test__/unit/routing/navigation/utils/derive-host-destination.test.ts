@@ -7,7 +7,14 @@ const createConfig = (
   defaultHost?: string,
 ): IntorResolvedConfig =>
   ({
-    routing: { outbound: { host: { map: hostMap, default: defaultHost } } },
+    routing: {
+      outbound: {
+        host: {
+          map: hostMap,
+          default: defaultHost,
+        },
+      },
+    },
   }) as IntorResolvedConfig;
 
 describe("deriveHostDestination", () => {
@@ -16,7 +23,7 @@ describe("deriveHostDestination", () => {
       "en-US": "en.example.com",
     });
     const result = deriveHostDestination(config, "/about?x=1", "en-US");
-    expect(result).toBe("https://en.example.com/about?x=1");
+    expect(result).toBe("http://en.example.com/about?x=1");
   });
 
   it("falls back to default host when locale host is not defined", () => {
@@ -27,7 +34,7 @@ describe("deriveHostDestination", () => {
       "default.example.com",
     );
     const result = deriveHostDestination(config, "/contact", "zh-TW");
-    expect(result).toBe("https://default.example.com/contact");
+    expect(result).toBe("http://default.example.com/contact");
   });
 
   it("returns raw destination when no host is resolved", () => {
@@ -45,6 +52,6 @@ describe("deriveHostDestination", () => {
       "/docs/getting-started?ref=nav",
       "ja-JP",
     );
-    expect(result).toBe("https://jp.example.com/docs/getting-started?ref=nav");
+    expect(result).toBe("http://jp.example.com/docs/getting-started?ref=nav");
   });
 });

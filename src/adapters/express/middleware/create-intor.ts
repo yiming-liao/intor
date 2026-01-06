@@ -10,8 +10,8 @@ import { getTranslator, type GetTranslatorParams } from "@/server";
  *
  * The resolved routing state is exposed via response headers.
  *
- * - Convenience routing shortcuts are also bound to the request for downstream consumption.
  * - Acts as the bootstrap entry where cache writes are permitted.
+ * - Convenience routing shortcuts are also bound to the request for downstream consumption.
  *
  * @platform Express
  */
@@ -31,10 +31,13 @@ export function createIntor(
       acceptLanguage,
     );
 
-    // Resolve routing decision (locale + pathname)
-    const { locale, localeSource, pathname } = resolveInbound(
+    // ----------------------------------------------------------
+    // Resolve inbound routing decision (pure computation)
+    // ----------------------------------------------------------
+    const { locale, localeSource, pathname } = await resolveInbound(
       config,
       req.path,
+      false,
       {
         host: req.hostname,
         query: normalizeQuery(req.query),
@@ -43,7 +46,9 @@ export function createIntor(
       },
     );
 
-    // Attach resolved routing metadata to response headers
+    // --------------------------------------------------
+    // Attach routing metadata to response headers
+    // --------------------------------------------------
     req.headers[INTOR_HEADERS.LOCALE] = locale;
     req.headers[INTOR_HEADERS.LOCALE_SOURCE] = localeSource;
     req.headers[INTOR_HEADERS.PATHNAME] = pathname;

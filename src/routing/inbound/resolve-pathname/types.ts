@@ -1,15 +1,17 @@
-import type { RoutingLocaleSource } from "@/core";
-
 /**
  * Context for pathname processing.
  *
  * - Assumes the locale has already been resolved.
  */
 export interface PathnameContext {
-  /** Final resolved locale (single source of truth) */
+  /** Final resolved locale used for pathname decisions */
   locale: string;
-  /** Source from which the locale was resolved */
-  localeSource: RoutingLocaleSource;
+  /** Whether the current URL already contains a locale prefix */
+  hasPathLocale: boolean;
+  /** Whether a locale has been persisted from a previous visit */
+  hasPersisted: boolean;
+  /** Whether a locale redirect has already occurred in this navigation flow */
+  hasRedirected: boolean;
 }
 
 /**

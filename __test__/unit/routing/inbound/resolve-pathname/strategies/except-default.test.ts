@@ -1,83 +1,68 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IntorResolvedConfig } from "@/config";
 import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
 import { describe, it, expect } from "vitest";
 import { exceptDefault } from "@/routing/inbound/resolve-pathname/strategies";
 
-describe("exceptDefault", () => {
+function createConfig(
+  defaultLocale = "en-US",
+  redirect?: boolean,
+): IntorResolvedConfig {
+  return {
+    defaultLocale,
+    routing: { inbound: { firstVisit: { redirect } } },
+  } as IntorResolvedConfig;
+}
+
+function createContext(overrides: Partial<PathnameContext>): PathnameContext {
+  return {
+    locale: "zh-TW",
+    hasPathLocale: false,
+    hasPersisted: true,
+    hasRedirected: false,
+    ...overrides,
+  };
+}
+
+describe("routing prefix strategy: except-default", () => {
   it("passes when URL already has locale prefix", () => {
-    const config = { routing: { inbound: { firstVisit: {} } } } as any;
-    const context: PathnameContext = {
-      localeSource: "path",
-      locale: "any",
-    };
-    expect(exceptDefault(context, config)).toEqual({
-      type: "pass",
-    });
+    const context = createContext({ hasPathLocale: true });
+    const config = createConfig();
+    expect(exceptDefault(config, context)).toEqual({ type: "pass" });
   });
 
-  it("passes when no prefix and cookie locale is default", () => {
-    const config = {
-      routing: { inbound: { firstVisit: {} } },
-      defaultLocale: "en-US",
-    } as any;
-    const context: PathnameContext = {
-      localeSource: "cookie",
-      locale: "en-US",
-    };
-    expect(exceptDefault(context, config)).toEqual({
-      type: "pass",
-    });
-  });
-
-  it("redirects when no prefix and cookie locale is not default", () => {
-    const config = { routing: { inbound: { firstVisit: {} } } } as any;
-    const context: PathnameContext = {
-      localeSource: "cookie",
-      locale: "en-US",
-    };
-    expect(exceptDefault(context, config)).toEqual({
-      type: "redirect",
-    });
+  it("passes when already redirected in the same navigation flow", () => {
+    const context = createContext({ hasRedirected: true });
+    const config = createConfig();
+    expect(exceptDefault(config, context)).toEqual({ type: "pass" });
   });
 
   it("passes on first visit when redirect is disabled", () => {
-    const config = {
-      routing: { inbound: { firstVisit: { redirect: false } } },
-    } as any;
-    const context: PathnameContext = {
-      localeSource: "detected",
-      locale: "en-US",
-    };
-    expect(exceptDefault(context, config)).toEqual({
-      type: "pass",
-    });
+    const context = createContext({ hasPersisted: false });
+    const config = createConfig("en-US", false);
+    expect(exceptDefault(config, context)).toEqual({ type: "pass" });
   });
 
-  it("passes on first visit when detected locale is default", () => {
-    const config = {
-      routing: { inbound: { firstVisit: { redirect: true } } },
-      defaultLocale: "en-US",
-    } as any;
-    const context: PathnameContext = {
-      localeSource: "detected",
-      locale: "en-US",
-    };
-    expect(exceptDefault(context, config)).toEqual({
-      type: "pass",
-    });
+  it("passes on first visit when locale is default", () => {
+    const context = createContext({ hasPersisted: false, locale: "en-US" });
+    const config = createConfig("en-US", true);
+    expect(exceptDefault(config, context)).toEqual({ type: "pass" });
   });
 
-  it("redirects on first visit when detected locale is not default", () => {
-    const config = {
-      routing: { inbound: { firstVisit: { redirect: true } } },
-      defaultLocale: "en-US",
-    } as any;
-    const context: PathnameContext = {
-      localeSource: "detected",
-      locale: "fr-FR",
-    };
-    expect(exceptDefault(context, config)).toEqual({
-      type: "redirect",
-    });
+  it("redirects on first visit when locale is not default", () => {
+    const context = createContext({ hasPersisted: false, locale: "fr-FR" });
+    const config = createConfig("en-US", true);
+    expect(exceptDefault(config, context)).toEqual({ type: "redirect" });
+  });
+
+  it("redirects returning users when locale is not default", () => {
+    const context = createContext({ locale: "fr-FR" });
+    const config = createConfig("en-US", true);
+    expect(exceptDefault(config, context)).toEqual({ type: "redirect" });
+  });
+
+  it("passes returning users when locale is default", () => {
+    const context = createContext({ locale: "en-US" });
+    const config = createConfig("en-US", true);
+    expect(exceptDefault(config, context)).toEqual({ type: "pass" });
   });
 });

@@ -2,34 +2,39 @@
 import type { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { intorProxy } from "@/adapters/next/proxy/intor-proxy";
+import { INTOR_HEADERS } from "@/core";
 import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 
-const mockCookiesSet = vi.fn();
+const mockRedirect = vi.fn();
+const mockNext = vi.fn();
 
 vi.mock("next/server", () => ({
   NextResponse: {
-    redirect: vi.fn((url) => ({
-      headers: new Map([["location", url.pathname]]),
-      cookies: { set: mockCookiesSet },
-    })),
-    next: vi.fn(() => ({
-      headers: new Map(),
-      cookies: { set: mockCookiesSet },
-    })),
+    redirect: vi.fn((url) => {
+      const headers = new Headers();
+      headers.set("location", url.pathname);
+      mockRedirect(url.pathname);
+      return { headers };
+    }),
+    next: vi.fn(() => {
+      const headers = new Headers();
+      mockNext();
+      return { headers };
+    }),
   },
-}));
-
-vi.mock("next/headers", () => ({
-  headers: vi.fn(async () => new Map([["accept-language", "en-US"]])),
 }));
 
 vi.mock("@/routing/inbound/resolve-inbound", () => ({
   resolveInbound: vi.fn(),
 }));
 
-function createRequest(url: string): NextRequest {
+function createRequest(
+  url: string,
+  headers?: Record<string, string>,
+): NextRequest {
   const parsed = new URL(url);
   return {
+    headers: new Headers(headers),
     nextUrl: {
       pathname: parsed.pathname,
       host: parsed.host,
@@ -38,19 +43,12 @@ function createRequest(url: string): NextRequest {
         return { ...this };
       },
     },
-    cookies: {
-      get: vi.fn(),
-    },
+    cookies: { get: vi.fn() },
   } as unknown as NextRequest;
 }
 
 describe("intorProxy (Next.js adapter)", () => {
-  const config = {
-    defaultLocale: "en",
-    cookie: {
-      name: "locale",
-    },
-  } as any;
+  const config = { defaultLocale: "en", cookie: { name: "locale" } } as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -58,6 +56,8 @@ describe("intorProxy (Next.js adapter)", () => {
 
   it("redirects when routing core requests a redirect", async () => {
     (resolveInbound as any).mockReturnValue({
+      locale: "zh-TW",
+      localeSource: "cookie",
       pathname: "/zh-TW/about",
       shouldRedirect: true,
     });
@@ -65,25 +65,46 @@ describe("intorProxy (Next.js adapter)", () => {
     const response = await intorProxy(config, request);
     expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBe("/zh-TW/about");
+    expect(response.headers.get("x-intor-redirected")).toBe("1");
   });
 
   it("passes through when no redirect is required", async () => {
     (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "cookie",
       pathname: "/about",
       shouldRedirect: false,
     });
     const request = createRequest("https://example.com/about");
-    await intorProxy(config, request);
+    const response = await intorProxy(config, request);
     expect(resolveInbound).toHaveBeenCalled();
+    expect(response.headers.get("location")).toBeNull();
+    expect(response.headers.get("x-intor-redirected")).toBeNull();
   });
 
-  it("never sets cookies", async () => {
+  it("exposes resolved routing metadata via response headers", async () => {
     (resolveInbound as any).mockReturnValue({
+      locale: "zh-TW",
+      localeSource: "path",
+      pathname: "/zh-TW/about",
+      shouldRedirect: false,
+    });
+    const request = createRequest("https://example.com/zh-TW/about");
+    const response = await intorProxy(config, request);
+    expect(response.headers.get(INTOR_HEADERS.LOCALE)).toBe("zh-TW");
+    expect(response.headers.get(INTOR_HEADERS.LOCALE_SOURCE)).toBe("path");
+    expect(response.headers.get(INTOR_HEADERS.PATHNAME)).toBe("/zh-TW/about");
+  });
+
+  it("never mutates cookies", async () => {
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "detected",
       pathname: "/",
       shouldRedirect: false,
     });
     const request = createRequest("https://example.com/");
     await intorProxy(config, request);
-    expect(mockCookiesSet).not.toHaveBeenCalled();
+    expect(request.cookies.get).toHaveBeenCalled();
   });
 });

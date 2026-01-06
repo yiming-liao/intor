@@ -13,18 +13,22 @@ vi.mock("@/routing/inbound/resolve-pathname", () => ({
   resolvePathname: vi.fn(),
 }));
 
-describe("resolveRouting", () => {
+describe("resolveInbound", () => {
   const config = {
-    supportedLocales: ["en", "zh-TW"],
     defaultLocale: "en",
-    routing: { inbound: { queryKey: "locale" } },
+    supportedLocales: ["en"],
+    routing: {
+      inbound: {
+        firstVisit: { redirect: true },
+      },
+    },
   } as unknown as IntorResolvedConfig;
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("resolves locale and pathname as a single routing decision", () => {
+  it("resolves locale and pathname as a single inbound decision", async () => {
     (resolveLocale as any).mockReturnValue({
       locale: "zh-TW",
       localeSource: "path",
@@ -33,15 +37,21 @@ describe("resolveRouting", () => {
       pathname: "/zh-TW/about",
       shouldRedirect: true,
     });
-    const result = resolveInbound(config, "/about", {
-      host: "zh-TW.example.com",
-      query: {},
-      cookie: undefined,
-      detected: "en",
-    });
+    const result = await resolveInbound(
+      config,
+      "/about",
+      false, // hasRedirected
+      {
+        host: "zh-TW.example.com",
+        query: {},
+        cookie: undefined,
+        detected: "en",
+      },
+    );
     expect(resolveLocale).toHaveBeenCalledWith(
       config,
       expect.objectContaining({
+        path: expect.any(Object),
         detected: { locale: "en" },
       }),
     );
@@ -50,7 +60,9 @@ describe("resolveRouting", () => {
       "/about",
       expect.objectContaining({
         locale: "zh-TW",
-        localeSource: "path",
+        hasPathLocale: false,
+        hasPersisted: false,
+        hasRedirected: false,
       }),
     );
     expect(result).toEqual({
@@ -61,7 +73,7 @@ describe("resolveRouting", () => {
     });
   });
 
-  it("passes through when no redirect is required", () => {
+  it("passes through when no redirect is required", async () => {
     (resolveLocale as any).mockReturnValue({
       locale: "en",
       localeSource: "cookie",
@@ -70,9 +82,15 @@ describe("resolveRouting", () => {
       pathname: "/about",
       shouldRedirect: false,
     });
-    const result = resolveInbound(config, "/about", {
+    const result = await resolveInbound(config, "/about", false, {
+      cookie: "en",
       detected: "en",
     });
+    expect(resolvePathname).toHaveBeenCalledWith(
+      config,
+      "/about",
+      expect.objectContaining({ locale: "en", hasPersisted: true }),
+    );
     expect(result.shouldRedirect).toBe(false);
     expect(result.pathname).toBe("/about");
   });

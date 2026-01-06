@@ -3,14 +3,8 @@ import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
 import { describe, it, expect, vi } from "vitest";
 import { resolvePathname } from "@/routing/inbound/resolve-pathname/resolve-pathname";
 
-/**
- * Mock pathname localization.
- * Always return the original pathname unchanged.
- */
 vi.mock("@/routing/pathname", () => ({
-  localizePathname: (_config: unknown, pathname: string) => ({
-    pathname,
-  }),
+  localizePathname: (_config: unknown, pathname: string) => ({ pathname }),
 }));
 
 const createConfig = (
@@ -26,11 +20,13 @@ const createConfig = (
   }) as IntorResolvedConfig;
 
 const createContext = (
-  partial?: Partial<PathnameContext>,
+  overrides?: Partial<PathnameContext>,
 ): PathnameContext => ({
   locale: "en-US",
-  localeSource: "detected",
-  ...partial,
+  hasPathLocale: false,
+  hasPersisted: false,
+  hasRedirected: false,
+  ...overrides,
 });
 
 describe("resolvePathname (decision only)", () => {
@@ -38,54 +34,42 @@ describe("resolvePathname (decision only)", () => {
     const config = createConfig("none");
     const context = createContext();
     const result = resolvePathname(config, "/about", context);
-    expect(result).toEqual({
-      pathname: "/about",
-      shouldRedirect: false,
-    });
+    expect(result).toEqual({ pathname: "/about", shouldRedirect: false });
   });
 
-  it("redirects when prefix is 'all' and locale is not from path", () => {
+  it("redirects when prefix is 'all' and URL is not canonical", () => {
     const config = createConfig("all", { redirect: true });
-    const context = createContext({ localeSource: "cookie" });
+    const context = createContext();
     const result = resolvePathname(config, "/about", context);
     expect(result.pathname).toBe("/about");
     expect(result.shouldRedirect).toBe(true);
   });
 
-  it("does not redirect when prefix is 'all' and locale comes from path", () => {
+  it("does not redirect when prefix is 'all' and URL already has locale prefix", () => {
     const config = createConfig("all", { redirect: true });
-    const context = createContext({ localeSource: "path" });
+    const context = createContext({ hasPathLocale: true });
     const result = resolvePathname(config, "/en-US/about", context);
-    expect(result).toEqual({
-      pathname: "/en-US/about",
-      shouldRedirect: false,
-    });
+    expect(result).toEqual({ pathname: "/en-US/about", shouldRedirect: false });
   });
 
-  it("redirects for 'except-default' when locale is non-default and from cookie", () => {
-    const config = createConfig("except-default", {
-      defaultLocale: "en-US",
-    });
-    const context = createContext({
-      locale: "fr-FR",
-      localeSource: "cookie",
-    });
+  it("redirects for 'except-default' when locale is non-default (returning visitor)", () => {
+    const config = createConfig("except-default", { defaultLocale: "en-US" });
+    const context = createContext({ locale: "fr-FR", hasPersisted: true });
     const result = resolvePathname(config, "/about", context);
-    expect(result.pathname).toBe("/about");
     expect(result.shouldRedirect).toBe(true);
   });
 
   it("does not redirect for 'except-default' when locale is default", () => {
-    const config = createConfig("except-default", {
-      defaultLocale: "en-US",
-    });
-    const context = createContext({
-      locale: "en-US",
-    });
+    const config = createConfig("except-default", { defaultLocale: "en-US" });
+    const context = createContext({ locale: "en-US" });
     const result = resolvePathname(config, "/about", context);
-    expect(result).toEqual({
-      pathname: "/about",
-      shouldRedirect: false,
-    });
+    expect(result).toEqual({ pathname: "/about", shouldRedirect: false });
+  });
+
+  it("does not redirect again when already redirected in this flow", () => {
+    const config = createConfig("all", { redirect: true });
+    const context = createContext({ hasRedirected: true });
+    const result = resolvePathname(config, "/about", context);
+    expect(result).toEqual({ pathname: "/about", shouldRedirect: false });
   });
 });

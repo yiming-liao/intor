@@ -28,35 +28,40 @@ interface ResolveInboundResult {
  *
  * No side effects. No navigation.
  */
-export function resolveInbound(
+export async function resolveInbound(
   config: IntorResolvedConfig,
   rawPathname: string,
+  hasRedirected: boolean,
   localeInputs: {
     host?: string;
     query?: Record<string, string | string[] | undefined>;
     cookie?: string;
     detected: string;
   },
-): ResolveInboundResult {
+): Promise<ResolveInboundResult> {
   const { host, query, cookie, detected } = localeInputs;
 
-  // --------------------------------------------------
+  // ------------------------------------------------------
   // Resolve locale from inbound inputs
-  // --------------------------------------------------
+  // ------------------------------------------------------
+  const pathLocale = getLocaleFromPathname(config, rawPathname);
+
   const { locale, localeSource } = resolveLocale(config, {
-    path: { locale: getLocaleFromPathname(config, rawPathname) },
+    path: { locale: pathLocale },
     host: { locale: getLocaleFromHost(config, host) },
     query: { locale: getLocaleFromQuery(config, query) },
     cookie: { locale: cookie },
     detected: { locale: detected },
   });
 
-  // --------------------------------------------------
+  // ------------------------------------------------------
   // Resolve localized pathname and redirect requirement
-  // --------------------------------------------------
+  // ------------------------------------------------------
   const { pathname, shouldRedirect } = resolvePathname(config, rawPathname, {
     locale,
-    localeSource,
+    hasPathLocale: !!pathLocale,
+    hasPersisted: !!cookie,
+    hasRedirected,
   });
 
   return {

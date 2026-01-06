@@ -34,6 +34,10 @@ export function useExecuteNavigation<
 
     // Client-side navigation only
     if (shouldSyncLocale(locale, currentLocale)) {
+      // Eagerly persist locale to avoid stale cookie during client-side navigation.
+      if (shouldPersist(config.cookie)) {
+        setLocaleCookieBrowser(config.cookie, locale);
+      }
       setLocale(locale as GenLocale<CK>);
     }
   }

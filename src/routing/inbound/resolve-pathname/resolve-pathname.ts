@@ -27,15 +27,15 @@ export const resolvePathname = (
   let directive: PathnameDirective;
   switch (localePrefix) {
     case "all": {
-      directive = all(context, config);
+      directive = all(config, context);
       break;
     }
     case "except-default": {
-      directive = exceptDefault(context, config);
+      directive = exceptDefault(config, context);
       break;
     }
     case "none": {
-      directive = none(context);
+      directive = none();
       break;
     }
     default: {

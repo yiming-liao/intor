@@ -3,56 +3,51 @@ import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
 import { describe, it, expect } from "vitest";
 import { all } from "@/routing/inbound/resolve-pathname/strategies";
 
-describe("all", () => {
+function createConfig(redirect?: boolean): IntorResolvedConfig {
+  return {
+    defaultLocale: "en",
+    routing: { inbound: { firstVisit: { redirect } } },
+  } as IntorResolvedConfig;
+}
+
+function createContext(overrides?: Partial<PathnameContext>): PathnameContext {
+  return {
+    locale: "zh-TW",
+    hasPathLocale: false,
+    hasPersisted: true,
+    hasRedirected: false,
+    ...overrides,
+  };
+}
+
+describe("routing prefix strategy: all", () => {
   it("passes when URL already has locale prefix", () => {
-    const config = {
-      routing: { inbound: { firstVisit: {} } },
-    } as IntorResolvedConfig;
-    const context: PathnameContext = {
-      localeSource: "path",
-      locale: "any",
-    };
-    expect(all(context, config)).toEqual({
-      type: "pass",
-    });
+    const context = createContext({ hasPathLocale: true });
+    const config = createConfig();
+    expect(all(config, context)).toEqual({ type: "pass" });
   });
 
-  it("redirects using cookie locale when no prefix but cookie exists", () => {
-    const config = {
-      routing: { inbound: { firstVisit: {} } },
-    } as IntorResolvedConfig;
-    const context: PathnameContext = {
-      localeSource: "cookie",
-      locale: "any",
-    };
-    expect(all(context, config)).toEqual({
-      type: "redirect",
-    });
+  it("passes when already redirected in the same navigation flow", () => {
+    const context = createContext({ hasRedirected: true });
+    const config = createConfig();
+    expect(all(config, context)).toEqual({ type: "pass" });
   });
 
   it("passes on first visit when redirect is disabled", () => {
-    const config = {
-      routing: { inbound: { firstVisit: { redirect: false } } },
-    } as IntorResolvedConfig;
-    const context: PathnameContext = {
-      localeSource: "detected",
-      locale: "any",
-    };
-    expect(all(context, config)).toEqual({
-      type: "pass",
-    });
+    const context = createContext({ hasPersisted: false });
+    const config = createConfig(false);
+    expect(all(config, context)).toEqual({ type: "pass" });
   });
 
   it("redirects on first visit when redirect is enabled", () => {
-    const config = {
-      routing: { inbound: { firstVisit: { redirect: true } } },
-    } as IntorResolvedConfig;
-    const context: PathnameContext = {
-      localeSource: "detected",
-      locale: "any",
-    };
-    expect(all(context, config)).toEqual({
-      type: "redirect",
-    });
+    const context = createContext({ hasPersisted: false });
+    const config = createConfig(true);
+    expect(all(config, context)).toEqual({ type: "redirect" });
+  });
+
+  it("redirects returning users without locale prefix", () => {
+    const context = createContext();
+    const config = createConfig(true);
+    expect(all(config, context)).toEqual({ type: "redirect" });
   });
 });
