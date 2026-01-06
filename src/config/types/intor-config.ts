@@ -1,4 +1,3 @@
-import type { CacheRawOptions, CacheResolvedOptions } from "./cache";
 import type { CookieRawOptions, CookieResolvedOptions } from "./cookie";
 import type {
   ClientLoaderOptions,
@@ -45,8 +44,6 @@ export type IntorRawConfig = {
 
   /** Logging and diagnostic configuration. */
   readonly logger?: Omit<LoggerOptions, "id">;
-  /** Cache policy used by remote messages loading. */
-  readonly cache?: CacheRawOptions;
 };
 
 /** Fully resolved configuration after validation and normalization. */
@@ -73,5 +70,4 @@ export type IntorResolvedConfig = {
 
   // --- Observability & Infrastructure ---
   readonly logger: LoggerOptions;
-  readonly cache: CacheResolvedOptions;
 };

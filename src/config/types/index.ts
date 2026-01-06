@@ -11,5 +11,3 @@ export type { RoutingResolvedOptions } from "./routing";
 export type { CookieRawOptions, CookieResolvedOptions } from "./cookie";
 // logger
 export type { LoggerOptions } from "./logger";
-// cache
-export type { CacheRawOptions, CacheResolvedOptions } from "./cache";

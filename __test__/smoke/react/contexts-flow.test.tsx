@@ -3,11 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { IntorProvider, useIntor } from "@/client/react";
-import {
-  DEFAULT_ROUTING_OPTIONS,
-  DEFAULT_COOKIE_OPTIONS,
-  DEFAULT_CACHE_OPTIONS,
-} from "@/config";
+import { DEFAULT_ROUTING_OPTIONS, DEFAULT_COOKIE_OPTIONS } from "@/config";
 
 // mock fetch
 globalThis.fetch = vi.fn().mockResolvedValue({
@@ -40,7 +36,6 @@ const mockConfig: IntorResolvedConfig = {
   fallbackLocales: {},
   messages: mockMessages,
   loader: { type: "remote", url: "" },
-  cache: DEFAULT_CACHE_OPTIONS,
   cookie: DEFAULT_COOKIE_OPTIONS,
   routing: DEFAULT_ROUTING_OPTIONS,
   logger: { id: "test" },

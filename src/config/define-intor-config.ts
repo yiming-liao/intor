@@ -1,5 +1,4 @@
 import type { IntorRawConfig, IntorResolvedConfig } from "@/config";
-import { resolveCacheOptions } from "@/config/resolvers/resolve-cache-options";
 import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";
 import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
 import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
@@ -41,7 +40,6 @@ export const defineIntorConfig = (
   const fallbackLocales = resolveFallbackLocales(config, id, supportedSet);
   const cookie = resolveCookieOptions(config.cookie);
   const routing = resolveRoutingOptions(config.routing);
-  const cache = resolveCacheOptions(config.cache);
 
   return {
     id,
@@ -54,7 +52,6 @@ export const defineIntorConfig = (
     cookie,
     routing,
     logger: { id, ...config.logger },
-    cache,
     client: config.client,
     server: config.server,
   };
