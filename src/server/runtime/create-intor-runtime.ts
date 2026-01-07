@@ -9,6 +9,7 @@ import type {
 import {
   IntorError,
   IntorErrorCode,
+  resolveLoaderOptions,
   type GenConfigKeys,
   type GenLocale,
 } from "@/core";
@@ -28,6 +29,8 @@ export function createIntorRuntime<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   options?: IntorRuntimeOptions,
 ): IntorRuntime<CK> {
+  const loader = resolveLoaderOptions(config, "server");
+
   // Locale that has completed the ensureMessages() phase
   let ensuredLocale: GenLocale<CK> | undefined;
   // Messages prepared during ensureMessages(); may be empty
@@ -35,14 +38,17 @@ export function createIntorRuntime<CK extends GenConfigKeys = "__default__">(
 
   return {
     async ensureMessages(locale: GenLocale<CK>) {
-      const messages = await loadMessages({
-        config,
-        locale,
-        readOptions: options?.readOptions,
-        allowCacheWrite: options?.allowCacheWrite ?? false,
-      });
+      let messages: LocaleMessages | undefined;
+      if (loader) {
+        messages = await loadMessages({
+          config,
+          locale,
+          readers: options?.readers,
+          allowCacheWrite: options?.allowCacheWrite || false,
+        });
+      }
       ensuredLocale = locale;
-      ensuredMessages = messages;
+      ensuredMessages = messages || {};
     },
 
     translator(
