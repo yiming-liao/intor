@@ -19,7 +19,7 @@ export const resolveFallbackLocales = (
     return {};
   }
 
-  const logger = getLogger({ id }).child({
+  const logger = getLogger({ ...config.logger, id }).child({
     scope: "resolve-fallback-locales",
   });
 
