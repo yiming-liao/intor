@@ -30,6 +30,7 @@ function createConfig(overrides: Partial<any> = {}) {
     ...overrides,
   };
 }
+const dummyReader = vi.fn();
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -64,7 +65,9 @@ describe("loadMessages", () => {
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
-      readOptions: { exts: [".json"] },
+      readers: {
+        json: dummyReader,
+      },
       allowCacheWrite: true,
     });
     expect(localModule.loadLocalMessages).toHaveBeenCalledWith(

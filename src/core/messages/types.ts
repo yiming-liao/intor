@@ -24,16 +24,15 @@ import type { NestedMessage } from "intor-translator";
 export type Messages = Record<string, NestedMessage>;
 
 /**
- * A function that reads messages from a given file path.
+ * A function that reads and parses a message file.
  *
- * - This function is expected to return a `Promise` that resolves to a `Messages` object
- *   representing messages for a single locale.
- * - It can be implemented to support different file formats such as YAML, TOML, or others.
+ * This function is format-specific (YAML, TOML, etc.)
+ * and is NOT responsible for validating the returned structure.
  *
  * @param filePath - The path to the message file to read.
- * @returns A Promise that resolves to a `Messages` object.
+ * @returns A Promise that resolves to parsed, unvalidated content.
  *
- * @example
+ *   @example
  * ```ts
  * const reader: MessagesReader = async (filePath) => {
  *   const content = await fs.promises.readFile(filePath, "utf-8");
@@ -41,14 +40,16 @@ export type Messages = Record<string, NestedMessage>;
  * };
  * ```
  */
-export type MessagesReader = (filePath: string) => Promise<Messages>;
+export type MessagesReader = (filePath: string) => Promise<unknown>;
 
 /**
- * Options for reading locale messages.
+ * A map of file extension (without dot) to message reader.
  *
- * Used across loaders and runtimes to control how messages are read.
+ * Example:
+ * {
+ *   yaml: yamlReader,
+ *   yml: yamlReader,
+ *   toml: tomlReader,
+ * }
  */
-export interface MessagesReadOptions {
-  exts?: string[];
-  messagesReader?: MessagesReader;
-}
+export type MessagesReaders = Record<string, MessagesReader>;

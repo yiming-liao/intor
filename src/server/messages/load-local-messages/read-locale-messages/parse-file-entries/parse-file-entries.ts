@@ -37,7 +37,7 @@ import { nestObjectFromPath } from "./utils/nest-object-from-path";
 export async function parseFileEntries({
   fileEntries,
   limit,
-  messagesReader,
+  readers,
   loggerOptions,
 }: ParseFileEntriesParams): Promise<Messages> {
   const baseLogger = getLogger(loggerOptions);
@@ -53,11 +53,21 @@ export async function parseFileEntries({
           // -------------------------------------------------------------------
           // Read and validate file content
           // -------------------------------------------------------------------
-          const ext = path.extname(fullPath);
-          const raw =
-            ext !== ".json" && messagesReader
-              ? await messagesReader(fullPath)
-              : await jsonReader(fullPath);
+          const ext = path.extname(fullPath).slice(1); // remove dot
+
+          let raw: unknown;
+          if (ext === "json") {
+            raw = await jsonReader(fullPath);
+          } else {
+            const reader = readers?.[ext];
+            if (!reader) {
+              throw new Error(
+                `No message reader registered for .${ext} files. ` +
+                  `Please register a reader for the "${ext}" extension.`,
+              );
+            }
+            raw = await reader(fullPath);
+          }
 
           // Validate messages structure
           if (!isValidMessages(raw)) {

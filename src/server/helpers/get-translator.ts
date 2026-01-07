@@ -1,7 +1,11 @@
 import type { TranslatorInstanceServer } from "../translator/translator-instance";
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenLocale, GenMessages } from "@/core";
-import type { MessagesReadOptions } from "@/core";
+import type {
+  GenConfigKeys,
+  GenLocale,
+  GenMessages,
+  MessagesReaders,
+} from "@/core";
 import type {
   LocalizedNodeKeys,
   TranslateHandlers,
@@ -14,7 +18,7 @@ export interface GetTranslatorParams {
   locale: string;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
-  readOptions?: MessagesReadOptions;
+  readers?: MessagesReaders;
   allowCacheWrite?: boolean;
 }
 
@@ -42,12 +46,12 @@ export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
 >(config: IntorResolvedConfig, params: GetTranslatorParams & { preKey?: PK }) {
-  const { readOptions, allowCacheWrite, preKey, handlers, plugins } = params;
+  const { readers, allowCacheWrite, preKey, handlers, plugins } = params;
   const locale = params.locale as GenLocale<CK>;
 
   // Create runtime (request-scoped, no cache write)
   const runtime = createIntorRuntime<CK>(config, {
-    readOptions,
+    readers,
     allowCacheWrite,
   });
 

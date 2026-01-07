@@ -27,7 +27,7 @@ export const loadLocalMessages = async ({
   namespaces,
   rootDir = "messages",
   concurrency = 10,
-  readOptions,
+  readers,
   pool = getGlobalMessagesPool(),
   allowCacheWrite = false,
   loggerOptions,
@@ -82,7 +82,7 @@ export const loadLocalMessages = async ({
         namespaces,
         rootDir,
         limit,
-        readOptions,
+        readers,
         loggerOptions,
       });
 

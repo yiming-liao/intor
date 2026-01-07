@@ -44,14 +44,14 @@ export async function getTranslator<
   req: Request,
   params?: GetTranslatorExpressParams & { preKey?: PK },
 ) {
-  const { preKey, handlers, plugins, readOptions } = params || {};
+  const { preKey, handlers, plugins, readers } = params || {};
 
   return getTranslatorCore<CK, PK>(config, {
     locale: req.intor?.locale || config.defaultLocale,
     preKey,
     handlers,
     plugins,
-    readOptions,
+    readers,
     allowCacheWrite: false,
   });
 }

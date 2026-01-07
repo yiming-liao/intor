@@ -27,12 +27,13 @@ export async function collectFileEntries({
   namespaces,
   rootDir,
   limit,
-  exts = [".json"],
+  exts = ["json"],
   loggerOptions,
 }: CollectFileEntriesParams): Promise<FileEntry[]> {
   const baseLogger = getLogger(loggerOptions);
   const logger = baseLogger.child({ scope: "collect-file-entries" });
 
+  const supportedExts = new Set(["json", ...exts]);
   const fileEntries: FileEntry[] = [];
 
   // Recursive directory walk
@@ -64,16 +65,18 @@ export async function collectFileEntries({
         }
 
         // Skip unsupported file extensions
-        if (!exts.some((ext) => entry.name.endsWith(ext))) return;
+        const ext = path.extname(entry.name).slice(1); // "json", "yaml"
+        if (!ext || !supportedExts.has(ext)) return;
 
         // ---------------------------------------------------------------------
         // Resolve file entry
         // ---------------------------------------------------------------------
         const relativePath = path.relative(rootDir, fullPath);
-        const ext = path.extname(relativePath);
-        const withoutExt = relativePath.slice(0, -ext.length);
+        const withoutExt = relativePath.slice(
+          0,
+          relativePath.length - (ext.length + 1),
+        );
         const segments = withoutExt.split(path.sep).filter(Boolean);
-
         const namespace = segments.at(0);
         if (!namespace) return;
 
@@ -87,7 +90,7 @@ export async function collectFileEntries({
           fullPath,
           relativePath,
           segments,
-          basename: path.basename(entry.name, ext),
+          basename: path.basename(entry.name, `.${ext}`),
         });
       }),
     );

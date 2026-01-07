@@ -19,7 +19,7 @@ import { loadLocalMessages } from "./load-local-messages";
 export const loadMessages = async ({
   config,
   locale,
-  readOptions,
+  readers,
   allowCacheWrite = false,
 }: LoadMessagesParams): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger(config.logger);
@@ -37,15 +37,15 @@ export const loadMessages = async ({
   }
 
   const { type, namespaces, rootDir } = loader;
-  const fallbackLocales = config.fallbackLocales[locale] || [];
+  const fallbackLocales: string[] = config.fallbackLocales[locale] || [];
 
   logger.info(`Loading messages for locale "${locale}".`);
   logger.trace("Starting to load messages with runtime context.", {
     loaderType: type,
     rootDir,
     locale,
-    fallbackLocales,
-    namespaces: namespaces && namespaces.length > 0 ? [...namespaces] : ["*"],
+    fallbackLocales: fallbackLocales.join(", "),
+    namespaces: namespaces && namespaces.length > 0 ? [...namespaces] : "*",
   });
 
   // ---------------------------------------------------------------------------
@@ -60,7 +60,7 @@ export const loadMessages = async ({
       namespaces,
       rootDir,
       concurrency: loader.concurrency,
-      readOptions,
+      readers,
       allowCacheWrite,
       loggerOptions: config.logger,
     });

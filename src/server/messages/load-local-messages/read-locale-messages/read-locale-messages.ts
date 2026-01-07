@@ -19,7 +19,7 @@ export const readLocaleMessages = async ({
   namespaces,
   rootDir = "messages",
   limit,
-  readOptions: { exts, messagesReader } = {},
+  readers,
   loggerOptions,
 }: ReadLocaleMessagesParams): Promise<LocaleMessages> => {
   // ---------------------------------------------------------------------------
@@ -29,7 +29,7 @@ export const readLocaleMessages = async ({
     namespaces,
     rootDir: path.resolve(rootDir, locale),
     limit,
-    exts,
+    exts: Object.keys(readers || {}),
     loggerOptions,
   });
 
@@ -39,7 +39,7 @@ export const readLocaleMessages = async ({
   const messages = await parseFileEntries({
     fileEntries,
     limit,
-    messagesReader,
+    readers,
     loggerOptions,
   });
 

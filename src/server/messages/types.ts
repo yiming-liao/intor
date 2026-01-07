@@ -1,11 +1,11 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { MessagesReadOptions } from "@/core";
+import type { MessagesReaders } from "@/core";
 import type { Locale } from "intor-translator";
 
 export type LoadMessagesParams = {
   config: IntorResolvedConfig;
   locale: Locale;
-  readOptions?: MessagesReadOptions;
+  readers?: MessagesReaders;
 
   /**
    * Controls whether this load operation is permitted to

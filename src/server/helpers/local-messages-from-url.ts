@@ -59,7 +59,7 @@ export async function loadMessagesFromUrl(
     namespaces,
     fallbackLocales,
     concurrency: options?.concurrency,
-    readOptions: options?.readOptions,
+    readers: options?.readers,
     pool: options?.pool,
     allowCacheWrite: options?.allowCacheWrite,
     loggerOptions: options?.loggerOptions || { id: "default" },

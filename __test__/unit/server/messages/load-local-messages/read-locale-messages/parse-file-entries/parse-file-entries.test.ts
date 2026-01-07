@@ -1,35 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Messages } from "@/core/messages/types";
 import type { FileEntry } from "@/server/messages/load-local-messages/read-locale-messages";
 import type { LimitFunction } from "p-limit";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as loggerModule from "@/core/logger/get-logger";
-import * as validateModule from "@/core/messages/utils/is-valid-messages";
+import * as coreModule from "@/core";
 import { parseFileEntries } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries";
-import * as readJsonModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
+import * as jsonReaderModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
 import * as nestModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
 
 describe("parseFileEntries", () => {
-  const limit = ((fn: any) => fn()) as LimitFunction;
+  const limit = ((fn: any) => Promise.resolve(fn())) as LimitFunction;
   const traceSpy = vi.fn();
   const errorSpy = vi.fn();
 
   beforeEach(() => {
     vi.restoreAllMocks();
-    vi.spyOn(loggerModule, "getLogger").mockReturnValue({
-      core: { level: "trace" },
+    traceSpy.mockReset();
+    errorSpy.mockReset();
+    vi.spyOn(coreModule, "getLogger").mockReturnValue({
       child: () => ({ trace: traceSpy, error: errorSpy }),
     } as any);
+    vi.spyOn(coreModule, "isValidMessages").mockReturnValue(true);
+    vi.spyOn(coreModule, "deepMerge").mockImplementation(
+      (a: any = {}, b: any = {}) => ({ ...a, ...b }),
+    );
+    vi.spyOn(nestModule, "nestObjectFromPath").mockImplementation(
+      (_path, messages) => messages as any,
+    );
   });
 
-  it("should parse files using jsonReader and merge into namespaces correctly", async () => {
-    vi.spyOn(readJsonModule, "jsonReader").mockImplementation(
-      async (fp: string) => {
-        if (fp.endsWith("auth/index.json")) return { c: "C" };
-        if (fp.endsWith("auth/verify.json")) return { d: "D" };
-        if (fp.endsWith("ui.json")) return { b: "B" };
-        if (fp.endsWith("index.json")) return { a: "A" };
-        return {} as Messages;
+  it("parses JSON files and merges namespaces correctly", async () => {
+    vi.spyOn(jsonReaderModule, "jsonReader").mockImplementation(
+      async (fp: string): Promise<any> => {
+        if (fp.endsWith("/auth/index.json")) return { c: "C" };
+        if (fp.endsWith("/auth/verify.json")) return { d: "D" };
+        if (fp.endsWith("/ui.json")) return { b: "B" };
+        if (fp.endsWith("/index.json")) return { a: "A" };
+        return {};
       },
     );
     const fileEntries: FileEntry[] = [
@@ -37,14 +43,14 @@ describe("parseFileEntries", () => {
         namespace: "index",
         fullPath: "/locale/en/index.json",
         relativePath: "index.json",
-        segments: ["index"],
+        segments: ["index", "index"],
         basename: "index",
       },
       {
         namespace: "ui",
         fullPath: "/locale/en/ui.json",
         relativePath: "ui.json",
-        segments: ["ui"],
+        segments: ["ui", "ui"],
         basename: "ui",
       },
       {
@@ -72,75 +78,75 @@ describe("parseFileEntries", () => {
       ui: { b: "B" },
       auth: {
         c: "C",
-        verify: { d: "D" },
+        d: "D",
       },
     });
     expect(traceSpy).toHaveBeenCalledTimes(4);
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 
-  it("should use custom reader when provided", async () => {
-    const customReader = vi.fn(async () => ({ custom: { a: "a" } })) as any;
-    vi.spyOn(nestModule, "nestObjectFromPath").mockReturnValue({
-      wrapped: { a: "a" },
-    });
+  it("uses custom reader for non-json extensions", async () => {
+    const yamlReader = vi.fn(async () => ({ hello: "world" }));
     const result = await parseFileEntries({
       fileEntries: [
         {
           namespace: "index",
           fullPath: "/locale/en/index.yaml",
           relativePath: "index.yaml",
-          segments: ["index"],
+          segments: ["index", "index"],
           basename: "index",
         },
       ],
       limit,
-
-      messagesReader: customReader,
+      readers: { yaml: yamlReader },
       loggerOptions: { id: "test" },
     });
-    expect(customReader).toHaveBeenCalled();
-    expect(result).toEqual({ wrapped: { a: "a" } });
+    expect(yamlReader).toHaveBeenCalledWith("/locale/en/index.yaml");
+    expect(result).toEqual({ hello: "world" });
   });
 
-  it("should log an error when a reader throws", async () => {
-    vi.spyOn(readJsonModule, "jsonReader").mockRejectedValue(new Error("boom"));
-    vi.spyOn(nestModule, "nestObjectFromPath").mockReturnValue({});
+  it("logs error when reader throws", async () => {
+    const badReader = vi.fn(async () => {
+      throw new Error("boom");
+    });
     await parseFileEntries({
+      fileEntries: [
+        {
+          namespace: "index",
+          fullPath: "/locale/en/index.yaml",
+          relativePath: "index.yaml",
+          segments: ["index", "index"],
+          basename: "index",
+        },
+      ],
+      limit,
+      readers: {
+        ".yaml": badReader,
+      },
+      loggerOptions: { id: "test" },
+    });
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("skips file when messages structure is invalid", async () => {
+    vi.spyOn(coreModule, "isValidMessages").mockReturnValue(false);
+    vi.spyOn(jsonReaderModule, "jsonReader").mockResolvedValue({
+      nope: "true",
+    });
+    const result = await parseFileEntries({
       fileEntries: [
         {
           namespace: "index",
           fullPath: "/locale/en/index.json",
           relativePath: "index.json",
-          segments: ["index"],
+          segments: ["index", "index"],
           basename: "index",
         },
       ],
       limit,
       loggerOptions: { id: "test" },
     });
-    expect(errorSpy).toHaveBeenCalled();
-  });
-
-  it("should log an error and skip file when messages structure is invalid", async () => {
-    vi.spyOn(readJsonModule, "jsonReader").mockResolvedValue({
-      not: "valid",
-    } as any);
-    vi.spyOn(validateModule, "isValidMessages").mockReturnValue(false);
-    await parseFileEntries({
-      fileEntries: [
-        {
-          namespace: "index",
-          fullPath: "/locale/en/index.json",
-          relativePath: "index.json",
-          segments: ["index"],
-          basename: "index",
-        },
-      ],
-      limit,
-      loggerOptions: { id: "test" },
-    });
-    expect(errorSpy).toHaveBeenCalled();
-    const [[message]] = errorSpy.mock.calls;
-    expect(message).toBe("Failed to read or parse file.");
+    expect(result).toEqual({});
+    expect(errorSpy).toHaveBeenCalledTimes(1);
   });
 });

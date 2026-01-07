@@ -3,7 +3,7 @@ import type {
   GenConfigKeys,
   GenLocale,
   GenMessages,
-  MessagesReadOptions,
+  MessagesReaders,
 } from "@/core";
 import type {
   LocalizedNodeKeys,
@@ -13,7 +13,7 @@ import type {
 } from "intor-translator";
 
 export interface IntorRuntimeOptions {
-  readOptions?: MessagesReadOptions;
+  readers?: MessagesReaders;
   allowCacheWrite?: boolean;
 }
 

@@ -60,7 +60,7 @@ export function createIntor(
       locale,
       handlers: options?.handlers,
       plugins: options?.plugins,
-      readOptions: options?.readOptions,
+      readers: options?.readers,
       allowCacheWrite: true,
     })) as TranslatorInstance<LocaleMessages, undefined, "string">;
 

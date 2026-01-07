@@ -41,13 +41,13 @@ export async function getTranslator<
   config: IntorResolvedConfig,
   params?: GetTranslatorNextParams & { preKey?: PK },
 ) {
-  const { preKey, handlers, plugins, readOptions } = params || {};
+  const { preKey, handlers, plugins, readers } = params || {};
   return getTranslatorCore<CK, PK>(config, {
     locale: await getLocale(config),
     preKey,
     handlers,
     plugins,
-    readOptions,
+    readers,
     allowCacheWrite: false,
   });
 }

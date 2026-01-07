@@ -18,6 +18,7 @@ export {
   isValidMessages,
   type Messages,
   type MessagesReader,
+  type MessagesReaders,
 } from "@/core";
 
 // config
