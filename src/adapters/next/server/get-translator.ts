@@ -5,10 +5,7 @@ import type { LocalizedNodeKeys } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "@/server";
 import { getLocale } from "./get-locale";
 
-type GetTranslatorNextParams = Omit<
-  GetTranslatorParams,
-  "locale" | "allowCacheWrite"
->;
+type GetTranslatorNextParams = Omit<GetTranslatorParams, "locale">;
 
 /**
  * Get a server-side translator for the current execution context.
@@ -41,13 +38,13 @@ export async function getTranslator<
   config: IntorResolvedConfig,
   params?: GetTranslatorNextParams & { preKey?: PK },
 ) {
-  const { preKey, handlers, plugins, readers } = params || {};
+  const { preKey, handlers, plugins, readers, allowCacheWrite } = params || {};
   return getTranslatorCore<CK, PK>(config, {
     locale: await getLocale(config),
     preKey,
     handlers,
     plugins,
     readers,
-    allowCacheWrite: false,
+    allowCacheWrite,
   });
 }

@@ -5,10 +5,7 @@ import type { Request } from "express";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "@/server";
 
-type GetTranslatorExpressParams = Omit<
-  GetTranslatorParams,
-  "locale" | "allowCacheWrite"
->;
+type GetTranslatorExpressParams = Omit<GetTranslatorParams, "locale">;
 
 /**
  * Get a server-side translator for the current execution context.
@@ -44,7 +41,7 @@ export async function getTranslator<
   req: Request,
   params?: GetTranslatorExpressParams & { preKey?: PK },
 ) {
-  const { preKey, handlers, plugins, readers } = params || {};
+  const { preKey, handlers, plugins, readers, allowCacheWrite } = params || {};
 
   return getTranslatorCore<CK, PK>(config, {
     locale: req.intor?.locale || config.defaultLocale,
@@ -52,6 +49,6 @@ export async function getTranslator<
     handlers,
     plugins,
     readers,
-    allowCacheWrite: false,
+    allowCacheWrite,
   });
 }
