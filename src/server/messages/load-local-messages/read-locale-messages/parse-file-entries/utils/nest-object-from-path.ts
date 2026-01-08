@@ -1,4 +1,4 @@
-import type { Messages } from "@/core";
+import type { MessageObject } from "intor-translator";
 
 /**
  * Wraps a value inside nested objects according to a given path.
@@ -12,8 +12,11 @@ import type { Messages } from "@/core";
  * nestObjectFromPath([], value); // →  { a: "A" }
  * ```
  */
-export function nestObjectFromPath(path: string[], value: Messages): Messages {
-  let obj: Messages = value;
+export function nestObjectFromPath(
+  path: string[],
+  value: MessageObject,
+): MessageObject {
+  let obj: MessageObject = value;
   for (let i = path.length - 1; i >= 0; i--) {
     obj = { [path[i]]: obj };
   }

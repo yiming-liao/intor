@@ -1,7 +1,7 @@
 {
   "name": "intor",
-  "version": "2.3.13",
-  "description": "A modular and extensible i18n core designed for TypeScript and JavaScript projects. Intor enables custom translation logic with support for both frontend and backend environments, featuring runtime configuration, caching, adapters, and message loaders.",
+  "version": "2.3.14",
+  "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor#readme",
   "repository": {
@@ -100,7 +100,7 @@
     "examples:html": "vite --config examples/html/vite.config.ts"
   },
   "dependencies": {
-    "intor-translator": "1.3.2",
+    "intor-translator": "1.4.2",
     "logry": "2.1.6",
     "p-limit": "7.2.0"
   },

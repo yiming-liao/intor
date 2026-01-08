@@ -1,5 +1,5 @@
 import type { ParseFileEntriesParams, ParsedFileEntries } from "./types";
-import type { Messages } from "@/core";
+import type { MessageObject } from "intor-translator";
 import path from "node:path";
 import { getLogger, isValidMessages, deepMerge } from "@/core";
 import { jsonReader } from "./utils/json-reader";
@@ -39,7 +39,7 @@ export async function parseFileEntries({
   limit,
   readers,
   loggerOptions,
-}: ParseFileEntriesParams): Promise<Messages> {
+}: ParseFileEntriesParams): Promise<MessageObject> {
   const baseLogger = getLogger(loggerOptions);
   const logger = baseLogger.child({ scope: "parse-file-entries" });
 
@@ -105,13 +105,16 @@ export async function parseFileEntries({
   // ---------------------------------------------------------------------------
   // Merge parsed entries by namespace
   // ---------------------------------------------------------------------------
-  const result: Messages = {};
+  const result: MessageObject = {};
   for (const { namespace, messages } of parsedFileEntries) {
     // Root-level namespace (e.g. [locale]/index.json)
     if (namespace === "index") {
       Object.assign(result, deepMerge(result, messages));
     } else {
-      result[namespace] = deepMerge(result[namespace] as Messages, messages);
+      result[namespace] = deepMerge(
+        result[namespace] as MessageObject,
+        messages,
+      );
     }
   }
 

@@ -1,6 +1,7 @@
 import type { FileEntry } from "../types";
 import type { LoggerOptions } from "@/config";
-import type { MessagesReaders, Messages } from "@/core";
+import type { MessagesReaders } from "@/core";
+import type { MessageObject } from "intor-translator";
 import type { LimitFunction } from "p-limit";
 
 export interface ParseFileEntriesParams {
@@ -12,5 +13,5 @@ export interface ParseFileEntriesParams {
 
 export interface ParsedFileEntries {
   namespace: string;
-  messages: Messages;
+  messages: MessageObject;
 }

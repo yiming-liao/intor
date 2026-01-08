@@ -15,4 +15,4 @@ export { mergeMessages } from "./merge-messages";
 export { isValidMessages } from "./utils/is-valid-messages";
 
 // types
-export type { Messages, MessagesReader, MessagesReaders } from "./types";
+export type { MessagesReader, MessagesReaders } from "./types";

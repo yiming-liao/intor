@@ -1,4 +1,4 @@
-import type { Messages } from "@/core";
+import type { MessageObject } from "intor-translator";
 import fs from "node:fs/promises";
 
 /**
@@ -7,7 +7,7 @@ import fs from "node:fs/promises";
 export async function jsonReader(
   filePath: string,
   readFile = fs.readFile,
-): Promise<Messages> {
+): Promise<MessageObject> {
   const raw = await readFile(filePath, "utf8");
   const parsed = JSON.parse(raw);
   return parsed;

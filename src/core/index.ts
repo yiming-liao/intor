@@ -33,7 +33,6 @@ export {
   // utils
   isValidMessages,
   // types
-  type Messages,
   type MessagesReader,
   type MessagesReaders,
 } from "./messages";

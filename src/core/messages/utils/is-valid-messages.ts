@@ -1,4 +1,4 @@
-import type { Messages } from "../types";
+import type { MessageObject, MessageValue } from "intor-translator";
 
 /** Check if a value is a plain object (not null, not array) */
 export function isPlainObject(
@@ -8,32 +8,47 @@ export function isPlainObject(
 }
 
 /**
- * Check if a value is a valid **Messages** object.
+ * Check if a value is a valid MessageObject.
  *
- * - Uses an iterative approach to avoid stack overflow with deeply nested objects.
- *
- * @example
- * ```ts
- * isValidMessages({ en: { hello: "Hello" } }) // true
- * isValidMessages({ en: { count: 5 } }) // false
- * ```
+ * - Supports all MessageValue variants (primitive, array, object).
+ * - Uses an iterative approach to avoid stack overflow.
  */
-export function isValidMessages(value: unknown): value is Messages {
+export function isValidMessages(value: unknown): value is MessageObject {
   if (!isPlainObject(value)) return false;
 
-  const stack: Record<string, unknown>[] = [value];
+  const stack: unknown[] = [value];
 
   while (stack.length > 0) {
-    const current = stack.pop()!;
+    const current = stack.pop()! as MessageValue;
 
-    for (const v of Object.values(current)) {
-      if (typeof v === "string") continue;
-      if (isPlainObject(v)) {
-        stack.push(v);
-      } else {
-        return false;
-      }
+    // primitives are always valid
+    if (
+      current === null ||
+      typeof current === "string" ||
+      typeof current === "number" ||
+      typeof current === "boolean"
+    ) {
+      continue;
     }
+
+    // array → validate each item
+    if (Array.isArray(current)) {
+      for (const item of current) {
+        stack.push(item);
+      }
+      continue;
+    }
+
+    // object → validate each value
+    if (isPlainObject(current)) {
+      for (const v of Object.values(current)) {
+        stack.push(v);
+      }
+      continue;
+    }
+
+    // everything else is invalid
+    return false;
   }
 
   return true;

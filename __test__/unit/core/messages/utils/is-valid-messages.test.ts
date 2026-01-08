@@ -5,66 +5,87 @@ import {
 } from "@/core/messages/utils/is-valid-messages";
 
 describe("isPlainObject", () => {
-  it("should return true for plain objects", () => {
+  it("returns true for plain objects", () => {
     expect(isPlainObject({})).toBe(true);
     expect(isPlainObject({ a: 1 })).toBe(true);
     expect(isPlainObject({ a: { b: 2 } })).toBe(true);
   });
 
-  it("should return false for arrays", () => {
+  it("returns false for arrays", () => {
     expect(isPlainObject([])).toBe(false);
     expect(isPlainObject(["a"])).toBe(false);
   });
 
-  it("should return false for null", () => {
+  it("returns false for null", () => {
     expect(isPlainObject(null)).toBe(false);
   });
 
-  it("should return false for primitives", () => {
+  it("returns false for primitives", () => {
     expect(isPlainObject(123)).toBe(false);
     expect(isPlainObject("string")).toBe(false);
     expect(isPlainObject(true)).toBe(false);
     expect(isPlainObject(undefined)).toBe(false);
   });
 
-  it("should return false for functions", () => {
+  it("returns false for functions", () => {
     expect(isPlainObject(() => {})).toBe(false);
   });
 });
 
 describe("isValidMessages", () => {
-  it("should return true for valid NamespaceMessages", () => {
-    const valid1 = { en: { hello: "Hello" } };
-    const valid2 = { en: { nested: { world: "World" } } };
-    expect(isValidMessages(valid1)).toBe(true);
-    expect(isValidMessages(valid2)).toBe(true);
+  it("returns true for valid message trees with primitives", () => {
+    const valid = {
+      en: {
+        text: "hello",
+        count: 42,
+        enabled: true,
+        empty: null,
+      },
+    };
+    expect(isValidMessages(valid)).toBe(true);
   });
 
-  it("should return false if any value is not string or object", () => {
-    const invalid1 = { en: { hello: 123 } };
-    const invalid2 = { en: { nested: { world: [] } } };
-    const invalid3 = { en: null };
-    const invalid4 = ["not", "object"];
-    const invalid5 = "string";
+  it("returns true for nested objects and arrays", () => {
+    const valid = {
+      en: {
+        nested: {
+          value: "ok",
+          flags: [true, false],
+          list: ["a", "b", "c"],
+        },
+      },
+    };
+    expect(isValidMessages(valid)).toBe(true);
+  });
 
+  it("returns false for unsupported leaf types", () => {
+    const invalid1 = { en: { bad: () => {} } };
+    const invalid2 = { en: { bad: Symbol("x") } };
+    const invalid3 = { en: { bad: 1n } };
     expect(isValidMessages(invalid1)).toBe(false);
     expect(isValidMessages(invalid2)).toBe(false);
     expect(isValidMessages(invalid3)).toBe(false);
-    expect(isValidMessages(invalid4)).toBe(false);
-    expect(isValidMessages(invalid5)).toBe(false);
   });
 
-  it("should handle deeply nested valid objects", () => {
-    const deep = { en: { a: { b: { c: { d: "e" } } } } };
-    expect(isValidMessages(deep)).toBe(true);
-  });
-
-  it("should return false for empty array", () => {
-    expect(isValidMessages([])).toBe(false);
-  });
-
-  it("should return false for null or undefined", () => {
+  it("returns false when root is not an object", () => {
     expect(isValidMessages(null)).toBe(false);
     expect(isValidMessages(undefined)).toBe(false);
+    expect(isValidMessages([])).toBe(false);
+    expect(isValidMessages("string")).toBe(false);
+  });
+
+  it("handles deeply nested valid structures", () => {
+    const deep = {
+      en: {
+        a: {
+          b: {
+            c: {
+              d: ["x", { y: 1 }],
+            },
+          },
+        },
+      },
+    };
+    expect(isValidMessages(deep)).toBe(true);
   });
 });

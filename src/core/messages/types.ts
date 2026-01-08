@@ -1,28 +1,3 @@
-import type { NestedMessage } from "intor-translator";
-
-/**
- * Represents a collection of messages for a single locale.
- *
- * - This type does NOT include a locale layer.
- * - Each key represents a namespace or message group, and the value is a
- *   `NestedMessage` object that can contain nested message structures.
- *
- *
- * @example
- * ```ts
- * const messages: Messages = {
- *   ui: {
- *     greeting: "Hello",
- *     farewell: "Goodbye"
- *   },
- *   errors: {
- *     network: "Network error occurred"
- *   }
- * };
- * ```
- */
-export type Messages = Record<string, NestedMessage>;
-
 /**
  * A function that reads and parses a message file.
  *

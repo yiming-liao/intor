@@ -1,4 +1,4 @@
-import type { Messages } from "@/core/messages/types";
+import type { MessageObject } from "intor-translator";
 import fs from "node:fs/promises";
 import { describe, it, expect, vi } from "vitest";
 import { jsonReader } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
@@ -15,7 +15,7 @@ describe("jsonReader", () => {
 
   it("should read and parse a valid JSON file", async () => {
     const filePath = "/path/to/file.json";
-    const mockData: Messages = { hello: "world" };
+    const mockData: MessageObject = { hello: "world" };
     vi.mocked(mockReadFile).mockResolvedValueOnce(JSON.stringify(mockData));
 
     const result = await jsonReader(filePath);

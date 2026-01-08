@@ -16,7 +16,6 @@ export {
   clearMessagesPool,
   mergeMessages,
   isValidMessages,
-  type Messages,
   type MessagesReader,
   type MessagesReaders,
 } from "@/core";
@@ -48,4 +47,6 @@ export {
   type TranslateHook,
   // messages
   type LocaleMessages,
+  type MessageObject,
+  type MessageValue,
 } from "intor-translator";
