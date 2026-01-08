@@ -78,7 +78,7 @@ export function createIntor<CK extends GenConfigKeys = "__default__">({
     internalIsLoading,
   });
 
-  const { scoped, t, tRich } = createIntorApi(translator);
+  const { scoped, t, tRaw, tRich } = createIntorApi(translator);
   return {
     messages: effectiveMessages,
     locale,
@@ -86,6 +86,7 @@ export function createIntor<CK extends GenConfigKeys = "__default__">({
     setLocale,
     scoped,
     t,
+    tRaw,
     tRich,
 
     // optional cleanup

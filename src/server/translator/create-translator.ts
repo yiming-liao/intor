@@ -55,5 +55,6 @@ export function createTranslator(
     locale,
     hasKey: scoped ? scoped.hasKey : translator.hasKey,
     t: scoped ? scoped.t : translator.t,
+    tRaw: scoped ? scoped.tRaw : translator.tRaw,
   };
 }

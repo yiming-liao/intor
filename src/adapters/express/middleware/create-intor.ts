@@ -56,7 +56,7 @@ export function createIntor(
     // --------------------------------------------------
     // Bind inbound routing context
     // --------------------------------------------------
-    const { t, hasKey } = (await getTranslator(config, {
+    const { hasKey, t, tRaw } = (await getTranslator(config, {
       locale,
       handlers: options?.handlers,
       plugins: options?.plugins,
@@ -69,8 +69,9 @@ export function createIntor(
     // DX shortcuts (optional)
     req.locale = locale;
     req.localeSource = localeSource;
-    req.t = t;
     req.hasKey = hasKey;
+    req.t = t;
+    req.tRaw = tRaw;
 
     return next();
   };

@@ -13,6 +13,11 @@ export function createIntorApi(translator: Readable<Translator>) {
     return (key: string, replacements?: Replacement) => $t.t(key, replacements);
   });
 
+  const tRaw = derived(translator, ($t) => {
+    return (key: string, replacements?: Replacement) =>
+      $t.tRaw(key, replacements);
+  });
+
   const tRich = derived(translator, ($t) => {
     return (
       key: string,
@@ -27,6 +32,7 @@ export function createIntorApi(translator: Readable<Translator>) {
   return {
     scoped,
     t,
+    tRaw,
     tRich,
   };
 }

@@ -8,6 +8,7 @@ import type {
 } from "@/core";
 import type { KeyMode } from "@/core";
 import type {
+  MessageValue,
   TranslateHandlers,
   TranslateHook,
   TranslatorPlugin,
@@ -64,6 +65,13 @@ interface ReactiveTranslator<
       key?: MessageKey<GenMessages<CK>, PK, Mode>,
       replacements?: Replacement,
     ) => string
+  >;
+  /** Reactive translation function that returns the raw message value. */
+  tRaw: Readable<
+    (
+      key?: MessageKey<GenMessages<CK>, PK, Mode>,
+      replacements?: Replacement,
+    ) => MessageValue | undefined
   >;
   /** Reactive rich translation function for Svelte templates */
   tRich: Readable<

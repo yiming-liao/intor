@@ -4,6 +4,7 @@ import {
   type ScopedLeafKeys,
   type LocalizedLeafKeys,
   type LocaleMessages,
+  type MessageValue,
 } from "intor-translator";
 
 /** Key resolution strategy. */
@@ -52,4 +53,10 @@ export type TranslatorInstance<
 
   /** Translate a given key into its string representation. */
   t: (key?: MessageKey<M, PK, Mode>, replacements?: Replacement) => string;
+
+  /** Translate a given key and return its raw message value. */
+  tRaw: (
+    key?: MessageKey<M, PK, Mode>,
+    replacements?: Replacement,
+  ) => MessageValue | undefined;
 };

@@ -68,5 +68,6 @@ export async function getTranslator<
     locale,
     hasKey: translator.hasKey,
     t: translator.t,
+    tRaw: translator.tRaw,
   };
 }
