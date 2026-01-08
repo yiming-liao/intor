@@ -27,8 +27,8 @@ export function createIntor(
     // locale from accept-language header
     const acceptLanguage = req.headers["accept-language"];
     const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
-      config,
       acceptLanguage,
+      config.supportedLocales,
     );
 
     // ----------------------------------------------------------

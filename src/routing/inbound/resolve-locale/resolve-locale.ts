@@ -1,11 +1,13 @@
 import type { LocaleContext, ResolvedLocale } from "./types";
 import type { IntorResolvedConfig } from "@/config";
+import { normalizeLocale } from "@/core";
 
 /**
- * Resolves the active locale from inbound routing configuration.
+ * Resolve the active locale from inbound routing configuration.
  *
- * The first matching locale from the configured sources is used,
- * with the detected locale as a guaranteed fallback.
+ * Iterates through configured locale sources and returns the first
+ * normalized, supported locale. Falls back to the detected locale
+ * or the default locale if none match.
  */
 export function resolveLocale(
   config: IntorResolvedConfig,
@@ -15,16 +17,21 @@ export function resolveLocale(
 
   for (const source of localeSources) {
     const locale = context[source]?.locale;
-    if (!locale) continue;
+
+    const normalized = normalizeLocale(locale, config.supportedLocales);
+    if (!normalized) continue;
+
     return {
-      locale,
+      locale: normalized,
       localeSource: source,
     };
   }
 
   // Fallback: detected is always available
   return {
-    locale: context.detected.locale,
+    locale:
+      normalizeLocale(context.detected.locale, config.supportedLocales) ||
+      config.defaultLocale,
     localeSource: "detected",
   };
 }

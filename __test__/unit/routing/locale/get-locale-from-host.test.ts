@@ -1,49 +1,39 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
 import { getLocaleFromHost } from "@/routing";
 
 describe("getLocaleFromHost", () => {
-  const config = {
-    supportedLocales: ["en", "en-US", "zh-TW", "jp"] as const,
-  } as any;
-
   it("returns undefined when host is undefined", () => {
-    const result = getLocaleFromHost(config, undefined);
-    expect(result).toBe(undefined);
+    const result = getLocaleFromHost(undefined);
+    expect(result).toBeUndefined();
   });
 
-  it("extracts locale from left-most subdomain", () => {
-    const result = getLocaleFromHost(config, "en.example.com");
+  it("extracts left-most subdomain as locale candidate", () => {
+    const result = getLocaleFromHost("en.example.com");
     expect(result).toBe("en");
   });
 
-  it("normalizes locale using supportedLocales", () => {
-    const result = getLocaleFromHost(config, "EN-us.example.com");
-    expect(result).toBe("en-US");
+  it("returns left-most subdomain even if it is not a valid locale", () => {
+    const result = getLocaleFromHost("api.example.com");
+    expect(result).toBe("api");
   });
 
-  it("returns undefined when no subdomain is present", () => {
-    const result = getLocaleFromHost(config, "example.com");
-    expect(result).toBeUndefined();
-  });
-
-  it("returns undefined when left-most subdomain is not a locale", () => {
-    const result = getLocaleFromHost(config, "api.jp.example.com");
-    expect(result).toBeUndefined();
+  it("extracts locale from multi-level subdomain host", () => {
+    const result = getLocaleFromHost("jp.shop.example.com");
+    expect(result).toBe("jp");
   });
 
   it("ignores port number in host", () => {
-    const result = getLocaleFromHost(config, "zh-TW.example.com:3000");
+    const result = getLocaleFromHost("zh-TW.example.com:3000");
     expect(result).toBe("zh-TW");
   });
 
-  it("returns undefined for unsupported locale subdomain", () => {
-    const result = getLocaleFromHost(config, "fr.example.com");
-    expect(result).toBeUndefined();
+  it("extracts left-most label even for apex domain", () => {
+    const result = getLocaleFromHost("example.com");
+    expect(result).toBe("example");
   });
 
-  it("returns undefined when hostname has no subdomain (no dot)", () => {
-    const result = getLocaleFromHost(config, "localhost");
+  it("returns undefined when hostname has no dot", () => {
+    const result = getLocaleFromHost("localhost");
     expect(result).toBeUndefined();
   });
 });

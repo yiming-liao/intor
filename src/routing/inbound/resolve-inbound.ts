@@ -44,12 +44,14 @@ export async function resolveInbound(
   // ------------------------------------------------------
   // Resolve locale from inbound inputs
   // ------------------------------------------------------
-  const pathLocale = getLocaleFromPathname(config, rawPathname);
+  const pathLocale = getLocaleFromPathname(rawPathname, config);
 
   const { locale, localeSource } = resolveLocale(config, {
     path: { locale: pathLocale },
-    host: { locale: getLocaleFromHost(config, host) },
-    query: { locale: getLocaleFromQuery(config, query) },
+    host: { locale: getLocaleFromHost(host) },
+    query: {
+      locale: getLocaleFromQuery(query, config.routing.inbound.queryKey),
+    },
     cookie: { locale: cookie },
     detected: { locale: detected },
   });

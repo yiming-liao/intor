@@ -1,52 +1,34 @@
-import type { IntorResolvedConfig } from "@/config";
 import { describe, it, expect } from "vitest";
 import { getLocaleFromQuery } from "@/routing";
 
 describe("getLocaleFromQuery", () => {
-  const config = {
-    supportedLocales: ["en", "en-US", "zh-TW"] as const,
-    routing: { inbound: { queryKey: "locale" } },
-  } as unknown as IntorResolvedConfig;
-
   it("returns undefined when query is undefined", () => {
-    const result = getLocaleFromQuery(config, undefined);
-    expect(result).toBe(undefined);
-  });
-
-  it("extracts locale from query parameter", () => {
-    const result = getLocaleFromQuery(config, { locale: "en" });
-    expect(result).toBe("en");
-  });
-
-  it("normalizes locale value", () => {
-    const result = getLocaleFromQuery(config, { locale: "EN-us" });
-    expect(result).toBe("en-US");
+    const result = getLocaleFromQuery(undefined, "locale");
+    expect(result).toBeUndefined();
   });
 
   it("returns undefined when query parameter is missing", () => {
-    const result = getLocaleFromQuery(config, {});
+    const result = getLocaleFromQuery({}, "locale");
     expect(result).toBeUndefined();
   });
 
-  it("returns undefined when locale is unsupported", () => {
-    const result = getLocaleFromQuery(config, { locale: "fr" });
-    expect(result).toBeUndefined();
+  it("extracts locale from query parameter", () => {
+    const result = getLocaleFromQuery({ locale: "en" }, "locale");
+    expect(result).toBe("en");
   });
 
-  it("uses the first value when query parameter is an array", () => {
-    const result = getLocaleFromQuery(config, {
-      locale: ["zh-TW", "en"],
-    });
+  it("returns the first value when query parameter is an array", () => {
+    const result = getLocaleFromQuery({ locale: ["zh-TW", "en"] }, "locale");
     expect(result).toBe("zh-TW");
   });
 
-  it("respects custom query key from config", () => {
-    const customConfig = {
-      ...config,
-      routing: { inbound: { queryKey: "lang" } },
-    } as IntorResolvedConfig;
+  it("returns raw value without normalization", () => {
+    const result = getLocaleFromQuery({ locale: "EN-us" }, "locale");
+    expect(result).toBe("EN-us");
+  });
 
-    const result = getLocaleFromQuery(customConfig, { lang: "en" });
+  it("respects custom query key", () => {
+    const result = getLocaleFromQuery({ lang: "en" }, "lang");
     expect(result).toBe("en");
   });
 });

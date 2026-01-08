@@ -1,28 +1,27 @@
-import type { IntorResolvedConfig } from "@/config";
-import { normalizeLocale } from "@/core";
-
 /**
- * Extract locale from hostname.
+ * Get locale candidate from hostname.
  *
- * Only the left-most subdomain is considered as a locale candidate, if present.
+ * Returns the left-most hostname label, without validation or normalization.
  *
  * @example
  * ```ts
- * getLocaleFromHost(config, "en.example.com")
+ * getLocaleFromHost("en.example.com")
  * // => "en"
- * getLocaleFromHost(config, "example.com")
- * // => undefined
- * getLocaleFromHost(config, "api.jp.example.com")
+ *
+ * getLocaleFromHost("example.com")
+ * // => "example"
+ *
+ * getLocaleFromHost("api.jp.example.com")
+ * // => "api"
+ *
+ * getLocaleFromHost("localhost")
  * // => undefined
  * ```
  */
 export function getLocaleFromHost(
-  config: IntorResolvedConfig,
   host: string | undefined,
 ): string | undefined {
   if (!host) return;
-
-  const { supportedLocales } = config;
 
   // Remove port (e.g. localhost:3000)
   const hostname = host.split(":")[0];
@@ -30,6 +29,5 @@ export function getLocaleFromHost(
 
   if (parts.length < 2) return;
 
-  const candidate = parts[0];
-  return normalizeLocale(candidate, supportedLocales);
+  return parts[0];
 }

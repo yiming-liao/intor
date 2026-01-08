@@ -1,34 +1,25 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizeLocale } from "@/core";
 
 /**
- * Resolve locale from the `Accept-Language` header.
+ * Get locale candidate from the `Accept-Language` header.
  *
- * - Parses language priorities (`q` values) from the header.
- * - Selects the highest-priority language supported by the application.
- * - Normalizes the matched locale against `supportedLocales`.
- *
- * If no supported locale can be resolved, `undefined` is returned.
+ * Parses language priorities and returns the highest-priority
+ * language present in `supportedLocales`, without normalization.
  *
  * @example
  * ```ts
  * getLocaleFromAcceptLanguage("en-US,en;q=0.8,zh-TW;q=0.9", ["en-US", "zh-TW"])
  * // => "en-US"
+ *
  * getLocaleFromAcceptLanguage("fr,ja;q=0.9", ["en", "zh-TW"])
  * // => undefined
  * ```
  */
 export const getLocaleFromAcceptLanguage = (
-  config: IntorResolvedConfig,
   acceptLanguageHeader: string | undefined | null,
+  supportedLocales: IntorResolvedConfig["supportedLocales"],
 ): string | undefined => {
-  const { supportedLocales } = config;
-
-  if (
-    !acceptLanguageHeader ||
-    !supportedLocales ||
-    supportedLocales.length === 0
-  ) {
+  if (!acceptLanguageHeader || supportedLocales.length === 0) {
     return;
   }
 
@@ -38,9 +29,7 @@ export const getLocaleFromAcceptLanguage = (
   const parsedLanguages = acceptLanguageHeader.split(",").map((part) => {
     const [rawLang, rawQ] = part.split(";");
     const lang = rawLang.trim();
-
     const q = rawQ ? Number.parseFloat(rawQ.split("=")[1]) : 1;
-
     return {
       lang,
       q: Number.isNaN(q) ? 0 : q, // Invalid q values have lowest priority
@@ -55,5 +44,5 @@ export const getLocaleFromAcceptLanguage = (
     supportedLocalesSet.has(lang),
   )?.lang;
 
-  return normalizeLocale(preferred, supportedLocales);
+  return preferred;
 };

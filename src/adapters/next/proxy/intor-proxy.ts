@@ -20,8 +20,8 @@ export const intorProxy = async (
   // locale from accept-language header
   const acceptLanguageHeader = request.headers.get("accept-language");
   const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
-    config,
     acceptLanguageHeader,
+    config.supportedLocales,
   );
 
   // Check whether this navigation flow has already redirected

@@ -18,19 +18,19 @@ const createConfig = (
 describe("getLocaleFromPathname", () => {
   it("detects locale from the first pathname segment", () => {
     const config = createConfig();
-    const result = getLocaleFromPathname(config, "/en-US/about");
+    const result = getLocaleFromPathname("/en-US/about", config);
     expect(result).toBe("en-US");
   });
 
   it("returns undefined when no locale segment is present", () => {
     const config = createConfig();
-    const result = getLocaleFromPathname(config, "/about");
+    const result = getLocaleFromPathname("/about", config);
     expect(result).toBeUndefined();
   });
 
   it("does not treat unsupported locale-like segment as locale", () => {
     const config = createConfig();
-    const result = getLocaleFromPathname(config, "/fr/about");
+    const result = getLocaleFromPathname("/fr/about", config);
     expect(result).toBeUndefined();
   });
 
@@ -41,7 +41,7 @@ describe("getLocaleFromPathname", () => {
         prefix: "all",
       } as any,
     });
-    const result = getLocaleFromPathname(config, "/app/zh-TW/about");
+    const result = getLocaleFromPathname("/app/zh-TW/about", config);
     expect(result).toBe("zh-TW");
   });
 
@@ -52,7 +52,7 @@ describe("getLocaleFromPathname", () => {
         prefix: "all",
       } as any,
     });
-    const result = getLocaleFromPathname(config, "/app");
+    const result = getLocaleFromPathname("/app", config);
     expect(result).toBeUndefined();
   });
 
@@ -63,7 +63,7 @@ describe("getLocaleFromPathname", () => {
         prefix: "all",
       } as any,
     });
-    const result = getLocaleFromPathname(config, "/app/en-US");
+    const result = getLocaleFromPathname("/app/en-US", config);
     expect(result).toBe("en-US");
   });
 });

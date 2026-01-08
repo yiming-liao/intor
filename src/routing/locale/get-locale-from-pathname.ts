@@ -2,19 +2,10 @@ import type { IntorResolvedConfig } from "@/config";
 import { normalizePathname } from "@/core";
 
 /**
- * Extracts the locale from a pathname, if present.
+ * Get locale from pathname.
  *
- * - Normalizes the raw pathname.
- * - Strips the configured basePath.
- * - Inspects the first path segment to determine whether
- *   it matches a supported locale.
- *
- * If no locale segment is found, `undefined` is returned.
- *
- * Note:
- * - The pathname is treated as a canonical source.
- * - Only exact matches against `supportedLocales` are accepted.
- * - ___Locale normalization is intentionally not applied here.___
+ * Extracts the first pathname segment (after basePath) as a locale
+ * if it exactly matches one of the supported locales.
  *
  * @example
  * ```ts
@@ -31,8 +22,8 @@ import { normalizePathname } from "@/core";
  * ```
  */
 export function getLocaleFromPathname(
-  config: IntorResolvedConfig,
   pathname: string,
+  config: IntorResolvedConfig,
 ): string | undefined {
   const { routing, supportedLocales } = config;
   const { basePath } = routing;
