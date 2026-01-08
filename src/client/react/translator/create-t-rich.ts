@@ -15,14 +15,14 @@ import { renderRichMessageReact } from "../render";
  * Intended for React client usage only.
  */
 export const createTRich = (translator: Translator, preKey?: string) => {
-  const scoped = translator.scoped(preKey);
+  const t = preKey ? translator.scoped(preKey).t : translator.t;
 
   return (
     key: string,
     tagRenderers?: ReactTagRenderers,
     replacements?: Replacement,
   ) => {
-    const message = scoped.t(key, replacements);
+    const message = t(key, replacements);
     return renderRichMessageReact(message, tagRenderers);
   };
 };

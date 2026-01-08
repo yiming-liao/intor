@@ -1,6 +1,6 @@
 import type { VueTagRenderers } from "./types";
 import type { VNodeChild } from "vue";
-import { renderRichMessage } from "intor-translator";
+import { renderRichMessage, type MessageValue } from "intor-translator";
 import { createVueRenderer } from "./create-vue-renderer";
 
 /**
@@ -14,7 +14,7 @@ import { createVueRenderer } from "./create-vue-renderer";
  * This function is intended for Vue environments only.
  */
 export function renderRichMessageVue(
-  message: string,
+  message: MessageValue,
   tagRenderers?: VueTagRenderers,
 ): VNodeChild[] {
   const vueRenderer = createVueRenderer({ tagRenderers });

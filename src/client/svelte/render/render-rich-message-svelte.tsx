@@ -1,5 +1,5 @@
 import type { SvelteTagRenderers } from "./types";
-import { renderRichMessage } from "intor-translator";
+import { renderRichMessage, type MessageValue } from "intor-translator";
 import { createSvelteRenderer } from "./create-svelte-renderer";
 
 /**
@@ -12,7 +12,7 @@ import { createSvelteRenderer } from "./create-svelte-renderer";
  * Intended to be used with {@html ...} in Svelte templates.
  */
 export function renderRichMessageSvelte(
-  message: string,
+  message: MessageValue,
   tagRenderers?: SvelteTagRenderers,
 ): string {
   const renderer = createSvelteRenderer({ tagRenderers });

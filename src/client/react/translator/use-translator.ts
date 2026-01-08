@@ -32,7 +32,6 @@ export function useTranslator(preKey?: string) {
     setLocale,
     hasKey: preKey ? scoped.hasKey : translator.hasKey,
     t: preKey ? scoped.t : translator.t,
-    tRaw: preKey ? scoped.tRaw : translator.tRaw,
     tRich: createTRich(translator, preKey),
     // NOTE:
     // The runtime implementation is intentionally erased.

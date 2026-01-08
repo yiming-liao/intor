@@ -39,5 +39,19 @@ export const createSvelteRenderer = (options?: {
         "",
       )}</${name}>`;
     },
+
+    /** Render raw (non-tokenized) message values as escaped HTML strings */
+    raw(value) {
+      if (value == null) return "";
+      if (typeof value === "string" || typeof value === "number") {
+        return escapeHtml(String(value));
+      }
+      if (Array.isArray(value)) {
+        return value.map((v) => escapeHtml(String(v))).join("");
+      }
+      throw new Error(
+        "[intor] Svelte renderer cannot render raw non-string values. ",
+      );
+    },
   };
 };

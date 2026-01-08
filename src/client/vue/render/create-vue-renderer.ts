@@ -11,6 +11,7 @@ import { h } from "vue";
  *
  * - Text nodes → plain strings
  * - Tag nodes → custom renderer or native element
+ * - Raw nodes → rendered as-is by the renderer
  *
  * This renderer is intentionally minimal and stateless.
  */
@@ -39,6 +40,11 @@ export const createVueRenderer = (options?: {
 
       // Default behavior: render as a native Vue element
       return h(name, attributes, children);
+    },
+
+    /** Render raw (non-tokenized) message values */
+    raw(value) {
+      return value as VNodeChild;
     },
   };
 };

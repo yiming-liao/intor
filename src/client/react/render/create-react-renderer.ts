@@ -10,6 +10,7 @@ import * as React from "react";
  *
  * - Text nodes → plain strings
  * - Tag nodes → custom renderer or native element
+ * - Raw nodes → rendered as-is by the renderer
  *
  * This renderer is intentionally minimal and stateless.
  */
@@ -38,6 +39,11 @@ export const createReactRenderer = (options?: {
 
       // Default behavior: render as a native React element
       return React.createElement(name, attributes, ...children);
+    },
+
+    /** Render raw (non-tokenized) message values */
+    raw(value) {
+      return value as React.ReactNode;
     },
   };
 };

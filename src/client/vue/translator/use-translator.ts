@@ -31,7 +31,6 @@ export function useTranslator(preKey?: string) {
 
   const hasKey = computed(() => scoped.value.hasKey);
   const t = computed(() => scoped.value.t);
-  const tRaw = computed(() => scoped.value.tRaw);
 
   return {
     messages: computed(() => translator.value.messages),
@@ -40,7 +39,6 @@ export function useTranslator(preKey?: string) {
     setLocale: intor.value.setLocale,
     hasKey,
     t,
-    tRaw,
     tRich: createTRich(translator, preKey),
     // NOTE:
     // The runtime implementation is intentionally erased.

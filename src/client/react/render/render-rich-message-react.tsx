@@ -1,6 +1,6 @@
 import type { ReactTagRenderers } from "./types";
 import type { JSX } from "react/jsx-runtime";
-import { renderRichMessage } from "intor-translator";
+import { renderRichMessage, type MessageValue } from "intor-translator";
 import { Fragment } from "react/jsx-runtime";
 import { createReactRenderer } from "./create-react-renderer";
 
@@ -15,7 +15,7 @@ import { createReactRenderer } from "./create-react-renderer";
  * This function is intended for React environments only.
  */
 export function renderRichMessageReact(
-  message: string,
+  message: MessageValue,
   tagRenderers?: ReactTagRenderers,
 ): JSX.Element[] {
   const reactRenderer = createReactRenderer({ tagRenderers });

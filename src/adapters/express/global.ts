@@ -17,7 +17,6 @@ declare global {
       localeSource: RoutingLocaleSource;
       hasKey: TranslatorInstance<LocaleMessages, undefined, "string">["hasKey"];
       t: TranslatorInstance<LocaleMessages, undefined, "string">["t"];
-      tRaw: TranslatorInstance<LocaleMessages, undefined, "string">["tRaw"];
     }
   }
 }
