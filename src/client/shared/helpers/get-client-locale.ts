@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config";
 import { normalizeLocale } from "@/core";
-import { detectBrowserLocale, getLocaleCookieBrowser } from "../utils";
+import { detectBrowserLocale, getLocaleFromCookie } from "../utils";
 
 /**
  * Resolve the locale in a client-only environment.
@@ -15,7 +15,7 @@ export function getClientLocale(config: IntorResolvedConfig): string {
   const { defaultLocale, supportedLocales, cookie } = config;
 
   // Locale from browser cookie
-  const cookieLocale = getLocaleCookieBrowser(cookie.name);
+  const cookieLocale = getLocaleFromCookie(cookie.name);
 
   // Locale from browser preference
   const browserLocale = detectBrowserLocale();

@@ -1,4 +1,4 @@
 export { detectBrowserLocale } from "./detect-browser-locale";
-export { getLocaleCookieBrowser } from "./get-locale-cookie-browser";
-export { setLocaleCookieBrowser } from "./set-locale-cookie-browser";
+export { getLocaleFromCookie } from "./get-locale-from-cookie";
+export { setLocaleCookie } from "./set-locale-cookie";
 export { setDocumentLocale } from "./set-document-locale";

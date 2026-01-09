@@ -2,9 +2,9 @@ import type { IntorResolvedConfig } from "@/config";
 import type { Writable } from "svelte/store";
 import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
 import {
-  getLocaleCookieBrowser,
+  getLocaleFromCookie,
   setDocumentLocale,
-  setLocaleCookieBrowser,
+  setLocaleCookie,
 } from "../../../shared/utils";
 
 export function attachLocaleEffects(
@@ -24,7 +24,7 @@ export function attachLocaleEffects(
     if (isFirstSync) {
       isFirstSync = false;
 
-      const localeCookie = getLocaleCookieBrowser(cookie.name);
+      const localeCookie = getLocaleFromCookie(cookie.name);
       const isFirstVisit = !localeCookie;
 
       if (
@@ -34,7 +34,7 @@ export function attachLocaleEffects(
         ) &&
         shouldPersist(cookie)
       ) {
-        setLocaleCookieBrowser(cookie, currentLocale);
+        setLocaleCookie(cookie, currentLocale);
       }
 
       return;
@@ -44,7 +44,7 @@ export function attachLocaleEffects(
     // Subsequent locale changes (user-driven)
     // -------------------------------------------------------------
     if (shouldPersist(cookie)) {
-      setLocaleCookieBrowser(cookie, currentLocale);
+      setLocaleCookie(cookie, currentLocale);
     }
   });
 }

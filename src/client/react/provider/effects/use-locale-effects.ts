@@ -5,9 +5,9 @@ import type { Locale } from "intor-translator";
 import * as React from "react";
 import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
 import {
-  setLocaleCookieBrowser,
+  setLocaleCookie,
   setDocumentLocale,
-  getLocaleCookieBrowser,
+  getLocaleFromCookie,
 } from "../../../shared/utils";
 
 export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
@@ -24,7 +24,7 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
     if (isFirstSyncRef.current) {
       isFirstSyncRef.current = false;
 
-      const localeCookie = getLocaleCookieBrowser(cookie.name);
+      const localeCookie = getLocaleFromCookie(cookie.name);
       const isFirstVisit = !localeCookie;
 
       if (
@@ -34,7 +34,7 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
         ) &&
         shouldPersist(cookie)
       ) {
-        setLocaleCookieBrowser(cookie, locale);
+        setLocaleCookie(cookie, locale);
       }
 
       return;
@@ -44,7 +44,7 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
     // Subsequent locale changes (user-driven)
     // -----------------------------------------------------------------------
     if (shouldPersist(cookie)) {
-      setLocaleCookieBrowser(cookie, locale);
+      setLocaleCookie(cookie, locale);
     }
   }, [locale, cookie, routing.inbound.firstVisit.persist]);
 }

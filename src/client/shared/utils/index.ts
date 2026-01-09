@@ -1,6 +1,6 @@
 export {
   detectBrowserLocale,
-  getLocaleCookieBrowser,
-  setLocaleCookieBrowser,
+  getLocaleFromCookie,
+  setLocaleCookie,
   setDocumentLocale,
 } from "./locale";

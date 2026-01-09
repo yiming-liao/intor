@@ -3,9 +3,9 @@ import type { Locale } from "intor-translator";
 import { watch, type Ref } from "vue";
 import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
 import {
-  setLocaleCookieBrowser,
+  setLocaleCookie,
   setDocumentLocale,
-  getLocaleCookieBrowser,
+  getLocaleFromCookie,
 } from "../../../shared/utils";
 
 export function useLocaleEffects(
@@ -27,7 +27,7 @@ export function useLocaleEffects(
       if (isFirstSync) {
         isFirstSync = false;
 
-        const localeCookie = getLocaleCookieBrowser(cookie.name);
+        const localeCookie = getLocaleFromCookie(cookie.name);
         const isFirstVisit = !localeCookie;
 
         if (
@@ -37,7 +37,7 @@ export function useLocaleEffects(
           ) &&
           shouldPersist(cookie)
         ) {
-          setLocaleCookieBrowser(cookie, currentLocale);
+          setLocaleCookie(cookie, currentLocale);
         }
 
         return;
@@ -47,7 +47,7 @@ export function useLocaleEffects(
       // Subsequent locale changes (user-driven)
       // -------------------------------------------------------------
       if (shouldPersist(cookie)) {
-        setLocaleCookieBrowser(cookie, currentLocale);
+        setLocaleCookie(cookie, currentLocale);
       }
     },
     { immediate: true },

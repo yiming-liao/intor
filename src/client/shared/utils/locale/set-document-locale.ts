@@ -1,7 +1,7 @@
 /**
- * Sets the document language attribute.
+ * Set the document language attribute.
  *
- * - Client-side only
+ * This function relies on `document.documentElement.lang`.
  */
 export function setDocumentLocale(locale: string): void {
   if (typeof document === "undefined") return;

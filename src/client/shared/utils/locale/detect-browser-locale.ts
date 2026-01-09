@@ -1,7 +1,7 @@
 /**
  * Detect the preferred locale from the browser.
  *
- * - Client-side only
+ * This function relies on `navigator.languages` and `navigator.language`.
  */
 export function detectBrowserLocale(): string | undefined {
   if (typeof navigator === "undefined") return undefined;

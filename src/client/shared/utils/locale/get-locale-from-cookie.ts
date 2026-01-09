@@ -1,9 +1,9 @@
 /**
  * Gets the locale value from the browser cookie.
  *
- * - Client-side only
+ * This function relies on `document.cookie`.
  */
-export function getLocaleCookieBrowser(cookieName: string): string | undefined {
+export function getLocaleFromCookie(cookieName: string): string | undefined {
   if (typeof document === "undefined") return undefined;
 
   const cookies = document.cookie.split(";").map((c) => c.trim());

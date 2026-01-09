@@ -2,11 +2,11 @@ import type { CookieResolvedOptions } from "@/config";
 import { buildCookieString } from "../build-cookie-string";
 
 /**
- * Persist locale to browser cookie.
+ * Persist locale to a cookie.
  *
- * - Client-side only
+ * This function relies on `document.cookie`.
  */
-export const setLocaleCookieBrowser = (
+export const setLocaleCookie = (
   cookieOptions: CookieResolvedOptions,
   locale: string,
 ): void => {

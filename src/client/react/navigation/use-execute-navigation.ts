@@ -1,6 +1,6 @@
 import type { GenConfigKeys, GenLocale } from "@/core";
 import type { NavigationResult } from "@/routing";
-import { setLocaleCookieBrowser } from "@/client/shared/utils";
+import { setLocaleCookie } from "@/client/shared/utils";
 import { shouldPersist, shouldSyncLocale } from "@/policies";
 import { useIntor } from "../provider";
 
@@ -25,7 +25,7 @@ export function useExecuteNavigation<
       e?.preventDefault();
       if (shouldSyncLocale(locale, currentLocale)) {
         if (shouldPersist(config.cookie)) {
-          setLocaleCookieBrowser(config.cookie, locale);
+          setLocaleCookie(config.cookie, locale);
         }
       }
       globalThis.location.href = destination;
@@ -36,7 +36,7 @@ export function useExecuteNavigation<
     if (shouldSyncLocale(locale, currentLocale)) {
       // Eagerly persist locale to avoid stale cookie during client-side navigation.
       if (shouldPersist(config.cookie)) {
-        setLocaleCookieBrowser(config.cookie, locale);
+        setLocaleCookie(config.cookie, locale);
       }
       setLocale(locale as GenLocale<CK>);
     }
