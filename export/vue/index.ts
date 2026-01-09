@@ -6,7 +6,7 @@ export {
 
   // translator
   useTranslator,
-  T,
+  Trans,
 
   // helpers
   useRuntimeState,

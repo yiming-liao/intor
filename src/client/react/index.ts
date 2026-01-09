@@ -2,7 +2,7 @@
 export { IntorProvider, type IntorProviderProps, useIntor } from "./provider";
 
 // translator
-export { useTranslator, T } from "./translator";
+export { useTranslator, Trans } from "./translator";
 
 // navigation
 export { useResolveNavigation, useExecuteNavigation } from "./navigation";

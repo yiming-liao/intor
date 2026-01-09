@@ -2,7 +2,7 @@
 export { IntorProvider } from "./provider";
 
 // translator
-export { useTranslator, T } from "./translator";
+export { useTranslator, Trans } from "./translator";
 
 // helpers
 export { useRuntimeState } from "./helpers";

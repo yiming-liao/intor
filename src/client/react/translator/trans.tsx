@@ -3,7 +3,7 @@ import type { GenConfigKeys, GenMessages, Key } from "@/core";
 import type { Replacement } from "intor-translator";
 import { useTranslator } from "./use-translator";
 
-type TProps<CK extends GenConfigKeys = "__default__"> = {
+type TransProps<CK extends GenConfigKeys = "__default__"> = {
   /** The message key to translate. */
   i18nKey: Key<GenMessages<CK>>;
 
@@ -24,11 +24,13 @@ type TProps<CK extends GenConfigKeys = "__default__"> = {
 };
 
 /**
- * `<T />` is a lightweight React component for rendering translated messages.
+ * `<Trans />` is a lightweight React component for rendering rich translations.
  *
- * It is a thin wrapper around `translator.tRich`, designed for use in JSX.
+ * It is a thin adapter around `translator.tRich` and introduces no additional logic.
  */
-export function T<CK extends GenConfigKeys = "__default__">(props: TProps<CK>) {
+export function Trans<CK extends GenConfigKeys = "__default__">(
+  props: TransProps<CK>,
+) {
   const { i18nKey, components, values } = props;
   const translator = useTranslator<CK>();
   return <>{translator.tRich(i18nKey, components, values)}</>;

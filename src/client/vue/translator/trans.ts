@@ -5,8 +5,8 @@ import type { LocaleMessages, Replacement } from "intor-translator";
 import { defineComponent, h } from "vue";
 import { useTranslator } from "@/client/vue/translator/use-translator";
 
-export const T = defineComponent({
-  name: "T",
+export const Trans = defineComponent({
+  name: "Trans",
 
   props: {
     /** The message key to translate. */

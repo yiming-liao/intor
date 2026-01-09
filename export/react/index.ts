@@ -8,7 +8,7 @@ export {
 
   // translator
   useTranslator,
-  T,
+  Trans,
 
   // navigation
   useResolveNavigation,
