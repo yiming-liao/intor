@@ -1,5 +1,5 @@
 // intor
-export { intor, type IntorResult } from "./intor";
+export { intor, type ServerSnapshot } from "./intor";
 
 // messages
 export { loadMessages } from "./messages";

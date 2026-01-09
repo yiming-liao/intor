@@ -1,4 +1,4 @@
-import type { LocaleResolver, BootstrapSnapshot } from "./types";
+import type { LocaleResolver, ServerSnapshot } from "./types";
 import type { IntorRuntimeOptions } from "../runtime";
 import type { IntorResolvedConfig } from "@/config";
 import { getLogger, type GenConfigKeys, type GenLocale } from "@/core";
@@ -7,14 +7,14 @@ import { createIntorRuntime } from "../runtime/create-intor-runtime";
 /**
  * Initializes Intor for the current execution context.
  *
- * Provides server-side bootstrap logic for SSR-based
- * full-stack frameworks.
+ * Produces a server-side snapshot for SSR and
+ * full-stack rendering environments.
  */
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   localeOrResolver: LocaleResolver<CK> | GenLocale<CK>,
   options?: IntorRuntimeOptions,
-): Promise<BootstrapSnapshot<CK>> {
+): Promise<ServerSnapshot<CK>> {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
