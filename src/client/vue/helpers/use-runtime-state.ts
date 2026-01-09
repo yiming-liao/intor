@@ -1,21 +1,21 @@
-import type { RuntimeStateCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenMessages } from "@/core";
-import type { LocaleMessages } from "intor-translator";
+import type { Locale, LocaleMessages } from "intor-translator";
 import { ref, onMounted, type Ref } from "vue";
 import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-export interface RuntimeState<CK extends GenConfigKeys = "__default__">
-  extends RuntimeStateCore<CK> {
-  messages: Ref<GenMessages<CK>>;
+export interface RuntimeState {
+  config: IntorResolvedConfig;
+  locale: Locale;
+  messages: Ref<LocaleMessages>;
+  onLocaleChange: (locale: Locale) => Promise<void>;
   isLoading: Ref<boolean>;
 }
 
-export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
+export function useRuntimeState(
   config: IntorResolvedConfig,
-  loader: (locale: string) => Promise<LocaleMessages>,
-): RuntimeState<CK> {
+  loader: (locale: Locale) => Promise<LocaleMessages>,
+): RuntimeState {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
   // ---------------------------------------------------------------------------
   // Locale change handler
   // ---------------------------------------------------------------------------
-  const onLocaleChange = async (newLocale: string) => {
+  const onLocaleChange = async (newLocale: Locale) => {
     activeLocale = newLocale;
     isLoading.value = true;
 
@@ -58,5 +58,5 @@ export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
     messages,
     isLoading,
     onLocaleChange,
-  } as RuntimeState<CK>;
+  };
 }

@@ -1,36 +1,28 @@
 import type { RuntimeState } from "../helpers/use-runtime-state";
 import type { IntorResolvedConfig } from "@/config";
-import type {
-  BootstrapCore,
-  GenConfigKeys,
-  GenLocale,
-  GenMessages,
-} from "@/core";
-import type { Translator } from "intor-translator";
+import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import type {
   TranslateHandlers,
   TranslateHook,
   TranslatorPlugin,
 } from "intor-translator";
 
-export interface VueBootstrap<CK extends GenConfigKeys = "__default__">
-  extends Partial<Omit<BootstrapCore<CK>, "messages">> {
-  messages?: Readonly<GenMessages<CK>>;
+export interface IntorProviderProps {
+  config?: IntorResolvedConfig;
+  locale?: Locale;
+  messages?: Readonly<LocaleMessages>;
   isLoading?: boolean;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
-  onLocaleChange?: (newLocale: GenLocale<CK>) => Promise<void> | void;
-  runtimeState?: RuntimeState<CK>;
+  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
+  runtimeState?: RuntimeState;
 }
 
-export type IntorProviderProps<CK extends GenConfigKeys = "__default__"> =
-  VueBootstrap<CK>;
-
-export type IntorContextValue<CK extends GenConfigKeys = "__default__"> = {
+export type IntorContextValue = {
   config: IntorResolvedConfig;
-  locale: GenLocale<CK>;
-  setLocale: (locale: GenLocale<CK>) => void;
-  messages: Readonly<GenMessages<CK>>;
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  messages: Readonly<LocaleMessages>;
   isLoading: boolean;
   translator: Translator<unknown>;
 };

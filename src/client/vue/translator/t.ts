@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { VueTagRenderers } from "@/client/vue/render";
 import type { TranslatorInstanceVue } from "@/client/vue/translator/translator-instance";
-import type { MessageKey } from "@/core";
 import type { LocaleMessages, Replacement } from "intor-translator";
 import { defineComponent, h } from "vue";
 import { useTranslator } from "@/client/vue/translator/use-translator";
@@ -12,7 +11,7 @@ export const T = defineComponent({
   props: {
     /** The message key to translate. */
     i18nKey: {
-      type: String as () => MessageKey<LocaleMessages, undefined, "string">,
+      type: String as () => string,
       required: true,
     },
 

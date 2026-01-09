@@ -1,12 +1,11 @@
 import type { CreateIntorOptions, IntorRuntime } from "./types";
-import type { GenConfigKeys, GenLocale } from "@/core";
-import { Translator, type LocaleMessages } from "intor-translator";
+import { Translator, type Locale, type LocaleMessages } from "intor-translator";
 import { writable, derived, get, readable, type Readable } from "svelte/store";
 import { createIntorApi } from "@/client/svelte/runtime/create-intor-api";
 import { attachLocaleEffects } from "./effects/locale-effects";
 import { attachMessagesEffects } from "./effects/messages-effects";
 
-export function createIntor<CK extends GenConfigKeys = "__default__">({
+export function createIntor({
   config,
   locale: initialLocale,
   messages,
@@ -14,11 +13,11 @@ export function createIntor<CK extends GenConfigKeys = "__default__">({
   plugins,
   onLocaleChange,
   isLoading: externalIsLoading,
-}: CreateIntorOptions<CK>): IntorRuntime<CK> {
+}: CreateIntorOptions): IntorRuntime {
   // ---------------------------------------------------------------------------
   // Internal state
   // ---------------------------------------------------------------------------
-  const locale = writable<string>(initialLocale);
+  const locale = writable<Locale>(initialLocale);
   const runtimeMessages = writable<LocaleMessages | null>(null);
   const internalIsLoading = writable(false);
 
@@ -26,7 +25,7 @@ export function createIntor<CK extends GenConfigKeys = "__default__">({
   // Locale transition
   // -----------------------------------------------------------------------------
   /** Request a locale change. */
-  async function setLocale(next: GenLocale<CK>) {
+  async function setLocale(next: Locale) {
     const current = get(locale);
     if (next === current) return;
     locale.set(next);
@@ -70,13 +69,8 @@ export function createIntor<CK extends GenConfigKeys = "__default__">({
   // ---------------------------------------------------------------------------
   // Side effects
   // ---------------------------------------------------------------------------
-  const detachLocaleEffects = attachLocaleEffects(locale, config);
-  const detachMessagesEffects = attachMessagesEffects({
-    config,
-    locale,
-    runtimeMessages,
-    internalIsLoading,
-  });
+  attachLocaleEffects(locale, config);
+  attachMessagesEffects({ config, locale, runtimeMessages, internalIsLoading });
 
   const { scoped, t, tRich } = createIntorApi(translator);
   return {
@@ -87,11 +81,5 @@ export function createIntor<CK extends GenConfigKeys = "__default__">({
     scoped,
     t,
     tRich,
-
-    // optional cleanup
-    destroy() {
-      detachLocaleEffects();
-      detachMessagesEffects();
-    },
-  } as unknown as IntorRuntime<CK>;
+  };
 }

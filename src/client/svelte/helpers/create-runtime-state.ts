@@ -1,21 +1,21 @@
-import type { RuntimeStateCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenMessages } from "@/core";
-import type { LocaleMessages } from "intor-translator";
+import type { Locale, LocaleMessages } from "intor-translator";
 import { writable, type Writable } from "svelte/store";
 import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-interface RuntimeState<CK extends GenConfigKeys = "__default__">
-  extends RuntimeStateCore<CK> {
-  messages: Writable<GenMessages<CK>>;
+interface RuntimeState {
+  config: IntorResolvedConfig;
+  locale: Locale;
+  messages: Writable<LocaleMessages>;
+  onLocaleChange: (locale: Locale) => Promise<void>;
   isLoading: Writable<boolean>;
 }
 
-export function createRuntimeState<CK extends GenConfigKeys = "__default__">(
+export function createRuntimeState(
   config: IntorResolvedConfig,
-  loader: (locale: string) => Promise<LocaleMessages>,
-): RuntimeState<CK> {
+  loader: (locale: Locale) => Promise<LocaleMessages>,
+): RuntimeState {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ export function createRuntimeState<CK extends GenConfigKeys = "__default__">(
   // ---------------------------------------------------------------------------
   // Locale change handler
   // ---------------------------------------------------------------------------
-  const onLocaleChange = async (newLocale: string) => {
+  const onLocaleChange = async (newLocale: Locale) => {
     activeLocale = newLocale;
     isLoading.set(true);
 
@@ -57,5 +57,5 @@ export function createRuntimeState<CK extends GenConfigKeys = "__default__">(
     messages,
     isLoading,
     onLocaleChange,
-  } as RuntimeState<CK>;
+  };
 }

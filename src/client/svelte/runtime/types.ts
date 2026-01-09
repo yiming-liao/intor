@@ -1,82 +1,49 @@
 import type { SvelteTagRenderers } from "../render";
+import type { IntorResolvedConfig } from "@/config";
 import type {
-  BootstrapCore,
-  GenConfigKeys,
-  GenLocale,
-  GenMessages,
-  MessageKey,
-} from "@/core";
-import type { KeyMode } from "@/core";
-import type {
-  MessageValue,
+  Locale,
+  Replacement,
+  LocaleMessages,
   TranslateHandlers,
   TranslateHook,
   TranslatorPlugin,
 } from "intor-translator";
-import type { Readable } from "svelte/store";
-import {
-  type Locale,
-  type LocalizedNodeKeys,
-  type Replacement,
-} from "intor-translator";
+import type { Readable, Writable } from "svelte/store";
 
-export interface SvelteBootstrap<CK extends GenConfigKeys = "__default__">
-  extends Omit<BootstrapCore<CK>, "messages"> {
-  messages?: Readable<GenMessages<CK>>;
+export type CreateIntorOptions = {
+  config: IntorResolvedConfig;
+  locale: Locale;
+  messages?: Readable<LocaleMessages>;
   isLoading?: Readable<boolean>;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
-  onLocaleChange?: (newLocale: GenLocale<CK>) => Promise<void> | void;
-}
+  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
+};
 
-export type CreateIntorOptions<CK extends GenConfigKeys = "__default__"> =
-  SvelteBootstrap<CK>;
-
-export type IntorRuntime<
-  CK extends GenConfigKeys = "__default__",
-  Mode extends KeyMode = "auto",
-> = {
+export type IntorRuntime = {
   /** `messages`: The message object containing all translations. */
-  messages: GenMessages<CK>;
+  messages: Readable<LocaleMessages>;
 
   /** Current locale in use. */
-  locale: Locale<GenMessages<CK>>;
+  locale: Writable<Locale>;
 
   /** Indicates whether translations are currently loading. */
-  isLoading: boolean;
+  isLoading: Readable<boolean>;
 
   /** Update the active locale. */
-  setLocale: (locale: Locale<GenMessages<CK>>) => void;
+  setLocale: (locale: Locale) => void;
 
   /** Create a scoped translator using a preKey */
-  scoped<PK extends string = LocalizedNodeKeys<GenMessages<CK>>>(
-    preKey: PK,
-  ): ReactiveTranslator<CK, PK, Mode>;
-} & ReactiveTranslator<CK, undefined, Mode>;
+  scoped(preKey: string): ReactiveTranslator;
+} & ReactiveTranslator;
 
-interface ReactiveTranslator<
-  CK extends GenConfigKeys = "__default__",
-  PK extends string | undefined = undefined,
-  Mode extends KeyMode = "auto",
-> {
+export interface ReactiveTranslator {
   /** Reactive translation function for Svelte templates */
-  t: Readable<
-    (
-      key?: MessageKey<GenMessages<CK>, PK, Mode>,
-      replacements?: Replacement,
-    ) => string
-  >;
-  /** Reactive translation function that returns the raw message value. */
-  tRaw: Readable<
-    (
-      key?: MessageKey<GenMessages<CK>, PK, Mode>,
-      replacements?: Replacement,
-    ) => MessageValue | undefined
-  >;
+  t: Readable<(key: string, replacements?: Replacement) => string>;
   /** Reactive rich translation function for Svelte templates */
   tRich: Readable<
     (
-      key: MessageKey<GenMessages<CK>, PK, Mode>,
+      key: string,
       tagRenderers?: SvelteTagRenderers,
       replacements?: Replacement,
     ) => string

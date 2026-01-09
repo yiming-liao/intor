@@ -107,7 +107,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
       messages: effectiveMessages.value,
       isLoading: effectiveIsLoading.value,
       translator: translator.value,
-    })) as unknown as ComputedRef<IntorContextValue>;
+    }));
     provide(IntorContextKey, contextValue);
     return () => slots.default?.();
   },

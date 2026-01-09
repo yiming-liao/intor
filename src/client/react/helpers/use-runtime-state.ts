@@ -1,14 +1,15 @@
-import type { RuntimeStateCore } from "../../shared/types";
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenMessages } from "@/core";
+import type { GenConfigKeys, GenLocale, GenMessages } from "@/core";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-interface RuntimeState<CK extends GenConfigKeys = "__default__">
-  extends RuntimeStateCore<CK> {
+interface RuntimeState<CK extends GenConfigKeys = "__default__"> {
+  config: IntorResolvedConfig;
+  locale: GenLocale<CK>;
   messages: GenMessages<CK>;
+  onLocaleChange: (locale: GenLocale<CK>) => Promise<void>;
   isLoading: boolean;
 }
 

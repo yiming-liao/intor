@@ -10,7 +10,8 @@ export function createIntorApi(translator: Readable<Translator>) {
   };
 
   const t = derived(translator, ($t) => {
-    return (key: string, replacements?: Replacement) => $t.t(key, replacements);
+    return (key: string, replacements?: Replacement) =>
+      $t.t(key, replacements) as string;
   });
 
   const tRich = derived(translator, ($t) => {

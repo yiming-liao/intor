@@ -1,9 +1,9 @@
-import type { TranslatorInstanceVue } from "@/client/vue/translator/translator-instance";
-import type { IfGen, GenConfigKeys, GenMessages } from "@/core";
+import type { TranslatorInstanceVue } from "./translator-instance";
+import type { IfGen, GenConfigKeys, GenMessages, GenLocale } from "@/core";
 import type { LocalizedNodeKeys } from "intor-translator";
 import { computed } from "vue";
-import { injectIntor } from "@/client/vue/provider";
-import { createTRich } from "@/client/vue/translator/create-t-rich";
+import { injectIntor } from "..//provider";
+import { createTRich } from "./create-t-rich";
 
 /**
  * Vue composable to access the active translator instance.
@@ -12,7 +12,7 @@ import { createTRich } from "@/client/vue/translator/create-t-rich";
 // Without preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
->(): TranslatorInstanceVue<GenMessages<CK>>;
+>(): TranslatorInstanceVue<GenMessages<CK>, undefined>;
 
 // With preKey
 export function useTranslator<
@@ -21,7 +21,9 @@ export function useTranslator<
 >(preKey: IfGen<PK, string>): TranslatorInstanceVue<GenMessages<CK>, PK>;
 
 // Implementation
-export function useTranslator(preKey?: string) {
+export function useTranslator<CK extends GenConfigKeys = "__default__">(
+  preKey?: string,
+) {
   const intor = injectIntor();
 
   const translator = computed(() => intor.value.translator);
@@ -33,8 +35,8 @@ export function useTranslator(preKey?: string) {
   const t = computed(() => scoped.value.t);
 
   return {
-    messages: computed(() => translator.value.messages),
-    locale: computed(() => translator.value.locale),
+    messages: computed(() => translator.value.messages as GenMessages<CK>),
+    locale: computed(() => translator.value.locale as GenLocale<CK>),
     isLoading: computed(() => translator.value.isLoading),
     setLocale: intor.value.setLocale,
     hasKey,

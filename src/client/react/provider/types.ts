@@ -1,10 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import type {
-  GenConfigKeys,
-  GenLocale,
-  GenMessages,
-  BootstrapCore,
-} from "@/core";
+import type { GenConfigKeys, GenLocale, GenMessages } from "@/core";
 import type {
   TranslateHandlers,
   TranslateHook,
@@ -13,17 +8,16 @@ import type {
 import type { Translator } from "intor-translator";
 import type * as React from "react";
 
-export interface ReactBootstrap<CK extends GenConfigKeys = "__default__">
-  extends Omit<BootstrapCore<CK>, "messages"> {
-  messages?: Readonly<GenMessages<CK>>;
-  isLoading?: boolean;
-  handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
-  onLocaleChange?: (newLocale: GenLocale<CK>) => Promise<void> | void;
-}
-
 export interface IntorProviderProps<CK extends GenConfigKeys = "__default__"> {
-  value: ReactBootstrap<CK>;
+  value: {
+    config: IntorResolvedConfig;
+    locale: GenLocale<CK>;
+    messages?: Readonly<GenMessages<CK>>;
+    isLoading?: boolean;
+    handlers?: TranslateHandlers;
+    plugins?: (TranslatorPlugin | TranslateHook)[];
+    onLocaleChange?: (newLocale: GenLocale<CK>) => Promise<void> | void;
+  };
   children: React.ReactNode;
 }
 
