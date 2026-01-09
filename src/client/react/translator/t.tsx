@@ -1,11 +1,11 @@
 import type { ReactTagRenderers } from "../render";
-import type { GenConfigKeys, GenMessages, MessageKey } from "@/core";
+import type { GenConfigKeys, GenMessages, Key } from "@/core";
 import type { Replacement } from "intor-translator";
 import { useTranslator } from "./use-translator";
 
 type TProps<CK extends GenConfigKeys = "__default__"> = {
   /** The message key to translate. */
-  i18nKey: MessageKey<GenMessages<CK>>;
+  i18nKey: Key<GenMessages<CK>>;
 
   /**
    * Optional React renderers for semantic tags in rich messages.

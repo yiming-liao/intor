@@ -125,7 +125,7 @@ describe("createTranslator()", () => {
       translator: {},
     } as unknown as IntorResolvedConfig;
     const handlers: TranslateHandlers = {
-      formatHandler: (ctx) => ctx.formattedMessage,
+      formatHandler: (ctx) => ctx.formattedMessage!,
     };
     const plugin: TranslateHook = { name: "test", run: () => {} };
     const { t } = createTranslator({

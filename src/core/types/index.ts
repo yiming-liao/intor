@@ -8,12 +8,10 @@ export type {
   GenLocale,
 } from "./generated";
 
-// bootstrap
-export type { BootstrapCore } from "./bootstrap";
-
 // translator-instance
 export type {
-  MessageKey,
+  Key,
+  Value,
   TranslatorInstance,
   KeyMode,
 } from "./translator-instance";

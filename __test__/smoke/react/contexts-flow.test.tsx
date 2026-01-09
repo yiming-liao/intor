@@ -18,7 +18,7 @@ function Component() {
   const { translator, setLocale } = useIntor();
   return (
     <>
-      <div data-testid="text">{translator.t("hello")}</div>
+      <div data-testid="text">{translator.t("hello") as string}</div>
       <button onClick={() => setLocale("zh-TW")}>switch</button>
     </>
   );

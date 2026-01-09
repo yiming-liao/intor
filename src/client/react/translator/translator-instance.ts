@@ -1,5 +1,5 @@
 import type { ReactTagRenderers } from "../render";
-import type { KeyMode, MessageKey, TranslatorInstance } from "@/core";
+import type { KeyMode, Key, TranslatorInstance } from "@/core";
 import type { JSX } from "react/jsx-runtime";
 import {
   type Locale,
@@ -25,8 +25,8 @@ export type TranslatorInstanceReact<
   setLocale: (locale: Locale<M>) => void;
 
   /** Translate a key into React nodes using semantic tags */
-  tRich: (
-    key?: MessageKey<M, PK, Mode>,
+  tRich: <K extends Key<M, PK, Mode>>(
+    key?: K,
     tagRenderers?: ReactTagRenderers,
     replacements?: Replacement,
   ) => JSX.Element[];

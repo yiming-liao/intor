@@ -1,5 +1,5 @@
 import type { VueTagRenderers } from "@/client/vue/render";
-import type { KeyMode, MessageKey, TranslatorInstance } from "@/core";
+import type { KeyMode, Key, TranslatorInstance } from "@/core";
 import type { ComputedRef, VNodeChild } from "vue";
 import {
   type Locale,
@@ -25,8 +25,8 @@ export type TranslatorInstanceVue<
   setLocale: (locale: Locale<M>) => void;
 
   /** Translate a key into React nodes using semantic tags */
-  tRich: (
-    key?: MessageKey<M, PK, Mode>,
+  tRich: <K extends Key<M, PK, Mode>>(
+    key?: K,
     tagRenderers?: VueTagRenderers,
     replacements?: Replacement,
   ) => VNodeChild[];

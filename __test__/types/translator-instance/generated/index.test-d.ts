@@ -1,6 +1,7 @@
 import type {
-  MessageKey,
+  Key,
   TranslatorInstance,
+  Value,
 } from "../../../../dist/types/export/internal";
 import type { GeneratedTypesFixture } from "../../__fixtures__/generated-types";
 import { expectType } from "tsd";
@@ -14,31 +15,52 @@ declare global {
 type Messages = GeneratedTypesFixture["config2"]["Messages"];
 
 // -------------------------------------------------
-// MessageKey
+// Key
 // -------------------------------------------------
 
 // auto (default) — no preKey
 expectType<"hello" | "nested.key" | "nested2.a.b.c.d" | (string & {})>(
-  null as unknown as MessageKey<Messages>,
+  null as unknown as Key<Messages>,
 );
 
 // auto — with preKey
-expectType<"key" | (string & {})>(
-  null as unknown as MessageKey<Messages, "nested">,
-);
+expectType<"key" | (string & {})>(null as unknown as Key<Messages, "nested">);
 
 // strict — no preKey
 expectType<"hello" | "nested.key" | "nested2.a.b.c.d">(
-  null as unknown as MessageKey<Messages, undefined, "strict">,
+  null as unknown as Key<Messages, undefined, "strict">,
 );
 
 // strict — with preKey
-expectType<"key">(null as unknown as MessageKey<Messages, "nested", "strict">);
+expectType<"key">(null as unknown as Key<Messages, "nested", "strict">);
 
 // string
-expectType<string>(
-  null as unknown as MessageKey<Messages, undefined, "string">,
-);
+expectType<string>(null as unknown as Key<Messages, undefined, "string">);
+
+//-------------------------------------------------
+// Value
+//-------------------------------------------------
+type M = {
+  "{locale}": {
+    string: string;
+    number: number;
+    boolean: boolean;
+    null: null;
+    array: string[];
+    nested: { key: string };
+  };
+};
+
+// no preKey
+expectType<string>(null as unknown as Value<M, undefined, "string">);
+expectType<number>(null as unknown as Value<M, undefined, "number">);
+expectType<boolean>(null as unknown as Value<M, undefined, "boolean">);
+expectType<null>(null as unknown as Value<M, undefined, "null">);
+expectType<string[]>(null as unknown as Value<M, undefined, "array">);
+expectType<{ key: string }>(null as unknown as Value<M, undefined, "nested">);
+
+// with preKey
+expectType<string>(null as unknown as Value<M, "nested", "key">);
 
 // -------------------------------------------------
 // TranslatorInstance / t()

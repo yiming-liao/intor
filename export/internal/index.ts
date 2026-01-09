@@ -8,7 +8,8 @@ export type {
   GenMessages,
   GenLocale,
   // translator-instance
-  MessageKey,
+  Key,
+  Value,
   TranslatorInstance,
   KeyMode,
 } from "@/core";
