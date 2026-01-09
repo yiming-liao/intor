@@ -1,20 +1,15 @@
 import type { IntorRuntime, IntorRuntimeOptions } from "./types";
 import type { IntorResolvedConfig } from "@/config";
 import type {
+  Locale,
   LocaleMessages,
   TranslateHandlers,
   TranslateHook,
   TranslatorPlugin,
 } from "intor-translator";
-import {
-  IntorError,
-  IntorErrorCode,
-  resolveLoaderOptions,
-  type GenConfigKeys,
-  type GenLocale,
-} from "@/core";
+import { IntorError, IntorErrorCode, resolveLoaderOptions } from "@/core";
 import { loadMessages } from "../messages";
-import { createTranslator } from "../translator";
+import { createTranslator, type TranslatorInstanceServer } from "../translator";
 
 /**
  * Create a server-side Intor runtime.
@@ -25,19 +20,19 @@ import { createTranslator } from "../translator";
  * - Messages may be empty, but the ensure step must be completed
  * before a translator snapshot can be created.
  */
-export function createIntorRuntime<CK extends GenConfigKeys = "__default__">(
+export function createIntorRuntime(
   config: IntorResolvedConfig,
   options?: IntorRuntimeOptions,
-): IntorRuntime<CK> {
+): IntorRuntime {
   const loader = resolveLoaderOptions(config, "server");
 
   // Locale that has completed the ensureMessages() phase
-  let ensuredLocale: GenLocale<CK> | undefined;
+  let ensuredLocale: Locale | undefined;
   // Messages prepared during ensureMessages(); may be empty
   let ensuredMessages: LocaleMessages | undefined;
 
   return {
-    async ensureMessages(locale: GenLocale<CK>) {
+    async ensureMessages(locale: Locale) {
       let messages: LocaleMessages | undefined;
       if (loader) {
         messages = await loadMessages({
@@ -52,13 +47,13 @@ export function createIntorRuntime<CK extends GenConfigKeys = "__default__">(
     },
 
     translator(
-      locale: GenLocale<CK>,
+      locale: string,
       options: {
         preKey?: string;
         handlers?: TranslateHandlers;
         plugins?: (TranslatorPlugin | TranslateHook)[];
       },
-    ) {
+    ): TranslatorInstanceServer<LocaleMessages> {
       // Guard: translator requires ensureMessages() to be completed for this locale
       if (locale !== ensuredLocale) {
         throw new IntorError({
@@ -74,7 +69,7 @@ export function createIntorRuntime<CK extends GenConfigKeys = "__default__">(
         preKey: options?.preKey,
         handlers: options?.handlers,
         plugins: options?.plugins,
-      });
+      }) as TranslatorInstanceServer<LocaleMessages>;
     },
-  } as IntorRuntime<CK>;
+  };
 }

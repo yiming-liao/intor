@@ -1,11 +1,19 @@
 import type { ReactTagRenderers } from "../render";
-import type { GenConfigKeys, GenMessages, Key } from "@/core";
-import type { Replacement } from "intor-translator";
+import type { GenConfigKeys, GenMessages, GenReplacements } from "@/core";
+import type {
+  LocalizedKey,
+  LocalizedReplacement,
+  Replacement,
+} from "intor-translator";
 import { useTranslator } from "./use-translator";
 
-type TransProps<CK extends GenConfigKeys = "__default__"> = {
+type TransProps<
+  CK extends GenConfigKeys = "__default__",
+  K extends string = LocalizedKey<GenMessages<CK>>,
+  R extends Replacement = LocalizedReplacement<GenReplacements<CK>, K>,
+> = {
   /** The message key to translate. */
-  i18nKey: Key<GenMessages<CK>>;
+  i18nKey: K | (string & {});
 
   /**
    * Optional React renderers for semantic tags in rich messages.
@@ -20,7 +28,7 @@ type TransProps<CK extends GenConfigKeys = "__default__"> = {
    *
    * These values are passed to the underlying translator.
    */
-  values?: Replacement;
+  values?: R | Replacement;
 };
 
 /**

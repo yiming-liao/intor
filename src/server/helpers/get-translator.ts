@@ -1,13 +1,8 @@
 import type { TranslatorInstanceServer } from "../translator/translator-instance";
 import type { IntorResolvedConfig } from "@/config";
+import type { GenConfigKeys, GenMessages, MessagesReaders } from "@/core";
 import type {
-  GenConfigKeys,
-  GenLocale,
-  GenMessages,
-  MessagesReaders,
-} from "@/core";
-import type {
-  LocalizedNodeKeys,
+  LocalizedPreKey,
   TranslateHandlers,
   TranslateHook,
   TranslatorPlugin,
@@ -27,30 +22,34 @@ export interface GetTranslatorParams {
  */
 
 // Signature: Without preKey
-export function getTranslator<CK extends GenConfigKeys = "__default__">(
+export function getTranslator<
+  CK extends GenConfigKeys = "__default__",
+  ReplacementSchema = unknown,
+>(
   config: IntorResolvedConfig,
   params: GetTranslatorParams,
-): Promise<TranslatorInstanceServer<GenMessages<CK>>>;
+): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema>>;
 
 // Signature: With preKey
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
+  ReplacementSchema = unknown,
+  PK extends string = LocalizedPreKey<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,
-  params: GetTranslatorParams & { preKey?: PK },
-): Promise<TranslatorInstanceServer<GenMessages<CK>, PK>>;
+  params: Omit<GetTranslatorParams, "preKey"> & { preKey?: PK },
+): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, PK>>;
 
 // Implementation
-export async function getTranslator<
-  CK extends GenConfigKeys = "__default__",
-  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(config: IntorResolvedConfig, params: GetTranslatorParams & { preKey?: PK }) {
+export async function getTranslator(
+  config: IntorResolvedConfig,
+  params: GetTranslatorParams & { preKey?: string },
+) {
   const { readers, allowCacheWrite, preKey, handlers, plugins } = params;
-  const locale = params.locale as GenLocale<CK>;
+  const locale = params.locale;
 
   // Create runtime (request-scoped, no cache write)
-  const runtime = createIntorRuntime<CK>(config, {
+  const runtime = createIntorRuntime(config, {
     readers,
     allowCacheWrite,
   });

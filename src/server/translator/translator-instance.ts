@@ -1,11 +1,11 @@
-import type { KeyMode, TranslatorInstance } from "@/core";
+import type { TranslatorInstance } from "@/core";
 import { type Locale, type LocaleMessages } from "intor-translator";
 
 export type TranslatorInstanceServer<
   M extends LocaleMessages,
+  ReplacementSchema = unknown,
   PK extends string | undefined = undefined,
-  Mode extends KeyMode = "auto",
-> = TranslatorInstance<M, PK, Mode> & {
+> = TranslatorInstance<M, ReplacementSchema, PK> & {
   /** `messages`: The message object containing all translations. */
   messages: M;
 

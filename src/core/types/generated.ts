@@ -1,5 +1,5 @@
 import type { PREFIX_PLACEHOLDER } from "../constants";
-import type { LocaleMessages } from "intor-translator";
+import type { LocaleMessages, Replacement } from "intor-translator";
 
 /**
  * ================================================
@@ -45,7 +45,6 @@ export type GenConfigKeys = IfGen<GeneratedConfigKeys, string>;
 /**
  * Configuration shape for a given config key.
  * - If `IntorGeneratedTypes` is not defined, falls back to default shape.
- * Otherwise, picks `Locales` and `Messages` according to the key.
  */
 export type GenConfig<CK extends GenConfigKeys> = IfGen<
   // generated mode
@@ -53,15 +52,17 @@ export type GenConfig<CK extends GenConfigKeys> = IfGen<
     ? IntorGeneratedTypes[CK] extends {
         Locales: infer L extends string;
         Messages: Record<typeof PREFIX_PLACEHOLDER, infer M>;
+        Replacements?: infer R;
       }
       ? {
           Locales: L;
           Messages: Record<L, M>;
+          Replacements: R;
         }
       : never
     : never,
   // fallback mode
-  { Locales: string; Messages: LocaleMessages }
+  { Locales: string; Messages: LocaleMessages; Replacements: Replacement }
 >;
 
 /** Extracts messages for a given config key */
@@ -69,3 +70,7 @@ export type GenMessages<CK extends GenConfigKeys> = GenConfig<CK>["Messages"];
 
 /** Extracts locales for a given config key */
 export type GenLocale<CK extends GenConfigKeys> = GenConfig<CK>["Locales"];
+
+/** Extracts replacements for a given config key */
+export type GenReplacements<CK extends GenConfigKeys> =
+  GenConfig<CK>["Replacements"];

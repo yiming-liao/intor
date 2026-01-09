@@ -2,7 +2,7 @@ import type { IntorResolvedConfig } from "@/config";
 import type { GenConfigKeys, GenMessages } from "@/core";
 import type { GetTranslatorParams, TranslatorInstanceServer } from "@/server";
 import type { Request } from "express";
-import type { LocalizedNodeKeys } from "intor-translator";
+import type { LocalizedPreKey } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "@/server";
 
 type GetTranslatorExpressParams = Omit<GetTranslatorParams, "locale">;
@@ -16,39 +16,44 @@ type GetTranslatorExpressParams = Omit<GetTranslatorParams, "locale">;
  */
 
 // Signature: Without preKey
-export function getTranslator<CK extends GenConfigKeys = "__default__">(
+export function getTranslator<
+  CK extends GenConfigKeys = "__default__",
+  ReplacementSchema = unknown,
+>(
   config: IntorResolvedConfig,
   req: Request,
   params?: GetTranslatorExpressParams,
-): Promise<TranslatorInstanceServer<GenMessages<CK>>>;
+): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema>>;
 
 // Signature: With preKey
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
+  ReplacementSchema = unknown,
+  PK extends string = LocalizedPreKey<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,
   req: Request,
   params?: GetTranslatorExpressParams & { preKey?: PK },
-): Promise<TranslatorInstanceServer<GenMessages<CK>, PK>>;
+): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, PK>>;
 
 // Implementation
-export async function getTranslator<
-  CK extends GenConfigKeys = "__default__",
-  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(
+export async function getTranslator(
   config: IntorResolvedConfig,
   req: Request,
-  params?: GetTranslatorExpressParams & { preKey?: PK },
+  params?: GetTranslatorExpressParams & { preKey?: string },
 ) {
   const { preKey, handlers, plugins, readers, allowCacheWrite } = params || {};
 
-  return getTranslatorCore<CK, PK>(config, {
+  return getTranslatorCore(config, {
     locale: req.intor?.locale || config.defaultLocale,
     preKey,
     handlers,
     plugins,
     readers,
     allowCacheWrite,
-  });
+    // NOTE:
+    // The runtime implementation is intentionally erased.
+    // Type safety is guaranteed by public type contracts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }) as any;
 }

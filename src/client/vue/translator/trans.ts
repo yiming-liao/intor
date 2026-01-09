@@ -29,11 +29,7 @@ export const Trans = defineComponent({
   },
 
   setup(props) {
-    const translator = useTranslator() as TranslatorInstanceVue<
-      LocaleMessages,
-      undefined,
-      "string"
-    >;
+    const translator = useTranslator() as TranslatorInstanceVue<LocaleMessages>;
     return () => {
       const nodes = translator.tRich(
         props.i18nKey,

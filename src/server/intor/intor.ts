@@ -1,7 +1,12 @@
 import type { LocaleResolver, ServerSnapshot } from "./types";
 import type { IntorRuntimeOptions } from "../runtime";
 import type { IntorResolvedConfig } from "@/config";
-import { getLogger, type GenConfigKeys, type GenLocale } from "@/core";
+import {
+  getLogger,
+  type GenConfigKeys,
+  type GenLocale,
+  type GenMessages,
+} from "@/core";
 import { createIntorRuntime } from "../runtime/create-intor-runtime";
 
 /**
@@ -20,7 +25,7 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   logger.info("Start Intor initialization.");
 
   // Create runtime (request-scoped)
-  const runtime = createIntorRuntime<CK>(config, options);
+  const runtime = createIntorRuntime(config, options);
 
   // Resolve locale
   const isLocaleFunction = typeof localeOrResolver === "function";
@@ -39,6 +44,6 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   return {
     config,
     locale,
-    messages: translator.messages,
+    messages: translator.messages as GenMessages<CK>,
   };
 }

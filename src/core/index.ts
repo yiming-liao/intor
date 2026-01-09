@@ -46,11 +46,9 @@ export type {
   GenConfig,
   GenMessages,
   GenLocale,
+  GenReplacements,
   // translator-instance
-  Key,
-  Value,
   TranslatorInstance,
-  KeyMode,
   // routing
   RoutingLocaleSource,
   RoutingLocaleCarrier,

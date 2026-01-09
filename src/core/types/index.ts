@@ -6,15 +6,11 @@ export type {
   GenConfig,
   GenMessages,
   GenLocale,
+  GenReplacements,
 } from "./generated";
 
 // translator-instance
-export type {
-  Key,
-  Value,
-  TranslatorInstance,
-  KeyMode,
-} from "./translator-instance";
+export type { TranslatorInstance } from "./translator-instance";
 
 // routing
 export type {

@@ -1,6 +1,6 @@
 import type { TranslatorInstanceVue } from "./translator-instance";
-import type { IfGen, GenConfigKeys, GenMessages, GenLocale } from "@/core";
-import type { LocalizedNodeKeys } from "intor-translator";
+import type { GenConfigKeys, GenMessages, GenLocale } from "@/core";
+import type { LocalizedPreKey } from "intor-translator";
 import { computed } from "vue";
 import { injectIntor } from "..//provider";
 import { createTRich } from "./create-t-rich";
@@ -12,13 +12,15 @@ import { createTRich } from "./create-t-rich";
 // Without preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
->(): TranslatorInstanceVue<GenMessages<CK>, undefined>;
+  ReplacementSchema = unknown,
+>(): TranslatorInstanceVue<GenMessages<CK>, ReplacementSchema, undefined>;
 
 // With preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(preKey: IfGen<PK, string>): TranslatorInstanceVue<GenMessages<CK>, PK>;
+  ReplacementSchema = unknown,
+  PK extends string = LocalizedPreKey<GenMessages<CK>>,
+>(preKey?: PK): TranslatorInstanceVue<GenMessages<CK>, ReplacementSchema, PK>;
 
 // Implementation
 export function useTranslator<CK extends GenConfigKeys = "__default__">(

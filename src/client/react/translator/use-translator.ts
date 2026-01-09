@@ -1,6 +1,6 @@
 import type { TranslatorInstanceReact } from "./translator-instance";
-import type { IfGen, GenConfigKeys, GenMessages, GenLocale } from "@/core";
-import type { LocalizedNodeKeys } from "intor-translator";
+import type { GenConfigKeys, GenMessages, GenLocale } from "@/core";
+import type { LocalizedPreKey } from "intor-translator";
 import { useIntor } from "../provider";
 import { createTRich } from "./create-t-rich";
 
@@ -11,13 +11,15 @@ import { createTRich } from "./create-t-rich";
 // Signature: Without preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
->(): TranslatorInstanceReact<GenMessages<CK>, undefined>;
+  ReplacementSchema = unknown,
+>(): TranslatorInstanceReact<GenMessages<CK>, ReplacementSchema, undefined>;
 
 // Signature: With preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  PK extends string = LocalizedNodeKeys<GenMessages<CK>>,
->(preKey: IfGen<PK, string>): TranslatorInstanceReact<GenMessages<CK>, PK>;
+  ReplacementSchema = unknown,
+  PK extends string = LocalizedPreKey<GenMessages<CK>>,
+>(preKey?: PK): TranslatorInstanceReact<GenMessages<CK>, ReplacementSchema, PK>;
 
 // Implementation
 export function useTranslator<CK extends GenConfigKeys = "__default__">(
