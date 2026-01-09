@@ -10,7 +10,7 @@ import { getTranslator, type GetTranslatorParams } from "@/server";
  *
  * The resolved routing state is exposed via response headers.
  *
- * - Acts as the bootstrap entry where cache writes are permitted.
+ * - Permits cache writes during server execution.
  * - Convenience routing shortcuts are also bound to the request for downstream consumption.
  *
  * @platform Express

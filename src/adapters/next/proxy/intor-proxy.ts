@@ -9,7 +9,7 @@ import { getLocaleFromAcceptLanguage, resolveInbound } from "@/routing";
  *
  * The resolved routing state is exposed via response headers.
  *
- * -  Acts as the canonical routing authority, guaranteeing a canonical routing result for every request.
+ * - Acts as the canonical routing authority, guaranteeing a canonical routing result for every request.
  *
  * @platform Next.js
  */
