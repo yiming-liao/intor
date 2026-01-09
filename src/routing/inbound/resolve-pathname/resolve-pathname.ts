@@ -43,7 +43,7 @@ export const resolvePathname = (
     }
   }
 
-  const { pathname } = localizePathname(config, rawPathname, context.locale);
+  const { pathname } = localizePathname(rawPathname, config, context.locale);
 
   return {
     pathname,

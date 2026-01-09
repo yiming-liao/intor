@@ -9,13 +9,13 @@ import { normalizePathname } from "@/core";
  * // config.supportedLocales: ["en-US"]
  * // config.routing.basePath: "/app"
  * // config.routing.prefix: "all"
- * getUnprefixedPathname(config, "/app/en-US/about" );
+ * canonicalizePathname("/app/en-US/about", config);
  * // => "/about"
  *```
  */
-export function getUnprefixedPathname(
-  config: IntorResolvedConfig,
+export function canonicalizePathname(
   rawPathname: string,
+  config: IntorResolvedConfig,
 ): string {
   const { routing, supportedLocales } = config;
   const { basePath } = routing;

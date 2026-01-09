@@ -2,22 +2,23 @@ import type { IntorResolvedConfig } from "@/config";
 import { normalizePathname, PREFIX_PLACEHOLDER } from "@/core";
 
 /**
- * Applies the configured locale prefix behavior to a standardized pathname.
+ * Materializes a standardized pathname by applying
+ * the configured locale prefix behavior.
  *
  * @example
  * ```ts
  * // config.routing.localePrefix: "all"
- * localePrefixPathname({ config, pathname: "/app/{locale}/about", locale: "en-US" });
+ * materializePathname("/app/{locale}/about", config, "en-US");
  * // => /app/en-US/about
  *
  * // config.routing.localePrefix: "none"
- * localePrefixPathname({ config, pathname: "/app/{locale}/about", locale: "en-US" });
+ * materializePathname("/app/{locale}/about", config, "en-US");
  * // => /app/about
  * ```
  */
-export const localePrefixPathname = (
-  config: IntorResolvedConfig,
+export const materializePathname = (
   standardizedPathname: string,
+  config: IntorResolvedConfig,
   locale?: string,
 ): string => {
   const { localePrefix } = config.routing;

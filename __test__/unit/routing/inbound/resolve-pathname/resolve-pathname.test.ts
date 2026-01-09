@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from "vitest";
 import { resolvePathname } from "@/routing/inbound/resolve-pathname/resolve-pathname";
 
 vi.mock("@/routing/pathname", () => ({
-  localizePathname: (_config: unknown, pathname: string) => ({ pathname }),
+  localizePathname: (pathname: string) => ({ pathname }),
 }));
 
 const createConfig = (

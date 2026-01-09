@@ -20,27 +20,27 @@ const createConfig = (
 describe("localizePathname", () => {
   it("canonicalizes, standardizes, and localizes a pathname (prefix: all)", () => {
     const config = createConfig();
-    const result = localizePathname(config, "/app/en-US/about", "en-US");
+    const result = localizePathname("/app/en-US/about", config, "en-US");
     expect(result).toEqual({
-      unprefixedPathname: "/about",
-      standardizedPathname: "/app/{locale}/about",
       pathname: "/app/en-US/about",
+      unprefixedPathname: "/about",
+      templatedPathname: "/app/{locale}/about",
     });
   });
 
   it("replaces locale when a different locale is provided", () => {
     const config = createConfig();
-    const result = localizePathname(config, "/app/en-US/about", "zh-TW");
+    const result = localizePathname("/app/en-US/about", config, "zh-TW");
     expect(result.pathname).toBe("/app/zh-TW/about");
   });
 
   it("handles pathname without an existing locale prefix", () => {
     const config = createConfig();
-    const result = localizePathname(config, "/app/about", "en-US");
+    const result = localizePathname("/app/about", config, "en-US");
     expect(result).toEqual({
-      unprefixedPathname: "/about",
-      standardizedPathname: "/app/{locale}/about",
       pathname: "/app/en-US/about",
+      unprefixedPathname: "/about",
+      templatedPathname: "/app/{locale}/about",
     });
   });
 
@@ -51,11 +51,11 @@ describe("localizePathname", () => {
         localePrefix: "none",
       } as any,
     });
-    const result = localizePathname(config, "/app/en-US/about", "en-US");
+    const result = localizePathname("/app/en-US/about", config, "en-US");
     expect(result).toEqual({
-      unprefixedPathname: "/about",
-      standardizedPathname: "/app/{locale}/about",
       pathname: "/app/about",
+      unprefixedPathname: "/about",
+      templatedPathname: "/app/{locale}/about",
     });
   });
 
@@ -66,7 +66,7 @@ describe("localizePathname", () => {
         localePrefix: "except-default",
       } as any,
     });
-    const result = localizePathname(config, "/app/en-US/about", "en-US");
+    const result = localizePathname("/app/en-US/about", config, "en-US");
     expect(result.pathname).toBe("/app/about");
   });
 
@@ -77,7 +77,7 @@ describe("localizePathname", () => {
         localePrefix: "except-default",
       } as any,
     });
-    const result = localizePathname(config, "/app/about", "zh-TW");
+    const result = localizePathname("/app/about", config, "zh-TW");
     expect(result.pathname).toBe("/app/zh-TW/about");
   });
 });

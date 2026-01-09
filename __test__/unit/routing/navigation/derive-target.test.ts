@@ -4,18 +4,18 @@ import { describe, it, expect, vi } from "vitest";
 import { deriveTarget } from "@/routing/navigation/derive-target";
 
 vi.mock("@/routing/pathname/localize-pathname", () => ({
-  localizePathname: (_config: any, pathname: string, locale: string) => ({
+  localizePathname: (pathname: string, _config: any, locale: string) => ({
     pathname: `/${locale}${pathname}`,
   }),
 }));
 
 vi.mock("@/routing/navigation/utils/derive-host-destination", () => ({
-  deriveHostDestination: (_config: any, pathname: string, locale: string) =>
+  deriveHostDestination: (pathname: string, _config: any, locale: string) =>
     `https://${locale}.example.com${pathname}`,
 }));
 
 vi.mock("@/routing/navigation/utils/derive-query-destination", () => ({
-  deriveQueryDestination: (_config: any, pathname: string, locale: string) =>
+  deriveQueryDestination: (pathname: string, _config: any, locale: string) =>
     `${pathname}?lang=${locale}`,
 }));
 

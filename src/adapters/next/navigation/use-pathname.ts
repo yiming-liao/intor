@@ -7,15 +7,15 @@ import { localizePathname, type LocalizedPathname } from "@/routing";
  *
  * @example
  * ```ts
- * const { pathname, standardizedPathname, unprefixedPathname } = usePathname();
- * // pathname => "/en-US/about"
- * // standardizedPathname => "/{locale}/about"
+ * const { pathname, unprefixedPathname, templatedPathname } = usePathname();
+ * // pathname => "/app/en-US/about"
  * // unprefixedPathname => "/about"
+ * // templatedPathname => "/app/{locale}/about"
  * ```
  * @platform Next.js
  */
 export const usePathname = (): LocalizedPathname => {
   const { config, locale } = useIntor();
   const rawPathname = useNextPathname();
-  return localizePathname(config, rawPathname, locale);
+  return localizePathname(rawPathname, config, locale);
 };

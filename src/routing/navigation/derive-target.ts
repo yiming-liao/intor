@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
-import { getUnprefixedPathname } from "@/routing/pathname/get-unprefixed-pathname";
+import { canonicalizePathname } from "@/routing/pathname/canonicalize-pathname";
 import { localizePathname } from "../pathname";
 import { deriveHostDestination } from "./utils/derive-host-destination";
 import { deriveQueryDestination } from "./utils/derive-query-destination";
@@ -40,7 +40,7 @@ export function deriveTarget(
   // Use the unprefixed logical path as the navigation base.
   // Locale prefixes are applied later by inbound canonicalization.
   const rawDestination =
-    intent?.destination ?? getUnprefixedPathname(config, currentPathname);
+    intent?.destination ?? canonicalizePathname(currentPathname, config);
   const isExternal = isExternalDestination(rawDestination);
 
   // ----------------------------------------------------------------
@@ -50,15 +50,15 @@ export function deriveTarget(
   if (!isExternal) {
     switch (routing.outbound.localeCarrier) {
       case "path": {
-        destination = localizePathname(config, rawDestination, locale).pathname;
+        destination = localizePathname(rawDestination, config, locale).pathname;
         break;
       }
       case "host": {
-        destination = deriveHostDestination(config, rawDestination, locale);
+        destination = deriveHostDestination(rawDestination, config, locale);
         break;
       }
       case "query": {
-        destination = deriveQueryDestination(config, rawDestination, locale);
+        destination = deriveQueryDestination(rawDestination, config, locale);
         break;
       }
       default: {

@@ -8,10 +8,10 @@ import { localizePathname, type LocalizedPathname } from "@/routing";
  *
  * @example
  * ```ts
- * const { pathname, standardizedPathname, unprefixedPathname } = usePathname();
- * // pathname => "/en-US/about"
- * // standardizedPathname => "/{locale}/about"
+ * const { pathname, unprefixedPathname, templatedPathname } = await getPathname();
+ * // pathname => "/app/en-US/about"
  * // unprefixedPathname => "/about"
+ * // templatedPathname => "/app/{locale}/about"
  * ```
  * @note Requires inbound routing context; otherwise the result may be inferred.
  * @platform Next.js
@@ -22,5 +22,5 @@ export async function getPathname(
   const headersStore = await headers();
   const locale = headersStore.get(INTOR_HEADERS.LOCALE) || config.defaultLocale;
   const rawPathname = headersStore.get(INTOR_HEADERS.PATHNAME) || "/";
-  return localizePathname(config, rawPathname, locale);
+  return localizePathname(rawPathname, config, locale);
 }

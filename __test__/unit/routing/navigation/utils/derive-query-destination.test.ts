@@ -8,21 +8,21 @@ const createConfig = (key = "lang"): IntorResolvedConfig =>
 describe("deriveQueryDestination", () => {
   it("appends locale as query parameter", () => {
     const config = createConfig("locale");
-    const result = deriveQueryDestination(config, "/about", "en-US");
+    const result = deriveQueryDestination("/about", config, "en-US");
     expect(result).toBe("/about?locale=en-US");
   });
 
   it("overwrites existing locale query parameter", () => {
     const config = createConfig("lang");
-    const result = deriveQueryDestination(config, "/docs?lang=zh-TW", "en-US");
+    const result = deriveQueryDestination("/docs?lang=zh-TW", config, "en-US");
     expect(result).toBe("/docs?lang=en-US");
   });
 
   it("preserves existing query parameters", () => {
     const config = createConfig("lang");
     const result = deriveQueryDestination(
-      config,
       "/search?q=intor&page=2",
+      config,
       "ja-JP",
     );
     expect(result).toBe("/search?q=intor&page=2&lang=ja-JP");
@@ -30,7 +30,7 @@ describe("deriveQueryDestination", () => {
 
   it("preserves pathname when raw destination contains no query", () => {
     const config = createConfig("locale");
-    const result = deriveQueryDestination(config, "/pricing", "zh-TW");
+    const result = deriveQueryDestination("/pricing", config, "zh-TW");
     expect(result).toBe("/pricing?locale=zh-TW");
   });
 });

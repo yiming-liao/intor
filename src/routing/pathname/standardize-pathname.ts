@@ -2,28 +2,28 @@ import type { IntorResolvedConfig } from "@/config";
 import { normalizePathname, PREFIX_PLACEHOLDER } from "@/core";
 
 /**
- * Standardizes a canonical pathname by applying the base path
- * and injecting the locale placeholder.
+ * Standardizes a canonical pathname into an internal routing template
+ * by applying the base path and injecting a locale placeholder.
  *
  * @example
  * ```ts
- * // routing.basePath: "/app",
- * standardizePathname({ config, pathname: "/cms" });
- * // => "/app/{locale}/cms"
+ * // config.routing.basePath: "/app",
+ * // config.routing.prefix: "all"
+ * standardizePathname("/about", config);
+ * // => "/app/{locale}/about"
  * ```
  */
 export const standardizePathname = (
+  canonicalizedPathname: string,
   config: IntorResolvedConfig,
-  unprefixedPathname: string,
 ): string => {
-  const { routing } = config;
-  const { basePath } = routing;
+  const { basePath } = config.routing;
 
   // Normalize each segment before join to avoid redundant slashes
   const parts = [
     normalizePathname(basePath),
     PREFIX_PLACEHOLDER,
-    normalizePathname(unprefixedPathname),
+    normalizePathname(canonicalizedPathname),
   ];
 
   // Avoid double slashes between segments

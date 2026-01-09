@@ -22,7 +22,7 @@ describe("deriveHostDestination", () => {
     const config = createConfig({
       "en-US": "en.example.com",
     });
-    const result = deriveHostDestination(config, "/about?x=1", "en-US");
+    const result = deriveHostDestination("/about?x=1", config, "en-US");
     expect(result).toBe("http://en.example.com/about?x=1");
   });
 
@@ -33,13 +33,13 @@ describe("deriveHostDestination", () => {
       },
       "default.example.com",
     );
-    const result = deriveHostDestination(config, "/contact", "zh-TW");
+    const result = deriveHostDestination("/contact", config, "zh-TW");
     expect(result).toBe("http://default.example.com/contact");
   });
 
   it("returns raw destination when no host is resolved", () => {
     const config = createConfig({});
-    const result = deriveHostDestination(config, "/pricing", "en-US");
+    const result = deriveHostDestination("/pricing", config, "en-US");
     expect(result).toBe("/pricing");
   });
 
@@ -48,8 +48,8 @@ describe("deriveHostDestination", () => {
       "ja-JP": "jp.example.com",
     });
     const result = deriveHostDestination(
-      config,
       "/docs/getting-started?ref=nav",
+      config,
       "ja-JP",
     );
     expect(result).toBe("http://jp.example.com/docs/getting-started?ref=nav");
