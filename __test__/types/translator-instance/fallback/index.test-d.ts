@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import type { TranslatorInstance } from "../../../../dist/types/export/internal";
+import type {
+  TranslatorInstance,
+  TranslatorInstanceReact,
+} from "../../../../dist/types/export/internal";
 import type { LocaleMessages, Replacement } from "intor-translator";
 import { expectType } from "tsd";
 
@@ -27,9 +30,15 @@ expectType<Replacement | undefined>(
   null as unknown as Parameters<TranslatorInstance<LocaleMessages>["t"]>[1],
 );
 
-// ReplacementSchema provided (inference mode)
-export const messages = { en: { a: { greeting: "Hello, {name}" }, b: 123 } };
-type R = { "{locale}": { a: { greeting: { name: string } } } };
-declare const t: TranslatorInstance<typeof messages, R>["t"];
-expectType<string>(t("a.greeting", { name: "" }));
-t("a.greeting", {});
+// TranslatorInstanceReact<MessageSchema, ReplacementSchema, RichSchema>
+{
+  type M = { "{locale}": { hello: 'Hello <a href="/">{name}</a>' } };
+  type RE = { "{locale}": { hello: { name: string } } };
+  type RI = { "{locale}": { hello: { a: { href: string } } } };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { t, tRich }: TranslatorInstanceReact<M, RE, RI> = {} as any;
+  expectType<'Hello <a href="/">{name}</a>'>(t("hello", { name: "" }));
+  expectType<React.JSX.Element[]>(
+    tRich("hello", { a: (c, { href }) => `${c}${href}` }, { name: "" }),
+  );
+}

@@ -1,5 +1,10 @@
 import type { PREFIX_PLACEHOLDER } from "../constants";
-import type { LocaleMessages, Replacement } from "intor-translator";
+import type {
+  Locale,
+  LocaleMessages,
+  Replacement,
+  Rich,
+} from "intor-translator";
 
 /**
  * ================================================
@@ -52,25 +57,35 @@ export type GenConfig<CK extends GenConfigKeys> = IfGen<
     ? IntorGeneratedTypes[CK] extends {
         Locales: infer L extends string;
         Messages: Record<typeof PREFIX_PLACEHOLDER, infer M>;
-        Replacements?: infer R;
+        Replacements: infer RE;
+        Rich: infer RI;
       }
       ? {
           Locales: L;
           Messages: Record<L, M>;
-          Replacements: R;
+          Replacements: RE;
+          Rich: RI;
         }
       : never
     : never,
   // fallback mode
-  { Locales: string; Messages: LocaleMessages; Replacements: Replacement }
+  {
+    Locales: Locale;
+    Messages: LocaleMessages;
+    Replacements: Replacement;
+    Rich: Rich;
+  }
 >;
 
-/** Extracts messages for a given config key */
+/** Resolves message schema for a given config key */
 export type GenMessages<CK extends GenConfigKeys> = GenConfig<CK>["Messages"];
 
-/** Extracts locales for a given config key */
+/** Resolves locale union for a given config key */
 export type GenLocale<CK extends GenConfigKeys> = GenConfig<CK>["Locales"];
 
-/** Extracts replacements for a given config key */
+/** Resolves replacement schema for a given config key */
 export type GenReplacements<CK extends GenConfigKeys> =
   GenConfig<CK>["Replacements"];
+
+/** Resolves rich tag schema for a given config key */
+export type GenRich<CK extends GenConfigKeys> = GenConfig<CK>["Rich"];

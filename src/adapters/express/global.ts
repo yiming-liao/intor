@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/require-module-specifiers */
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { TranslatorInstance, RoutingLocaleSource } from "@/core";
-import type { LocaleMessages } from "intor-translator";
+import type { LocaleMessages, Replacement } from "intor-translator";
 
 /**
  * Global type augmentations for Express request
@@ -12,11 +12,15 @@ declare global {
       intor: {
         locale: string;
         localeSource: RoutingLocaleSource;
+        pathname: string;
       };
       locale: string;
-      localeSource: RoutingLocaleSource;
-      hasKey: TranslatorInstance<LocaleMessages, undefined, "string">["hasKey"];
-      t: TranslatorInstance<LocaleMessages, undefined, "string">["t"];
+      hasKey: TranslatorInstance<
+        LocaleMessages,
+        Replacement,
+        "string"
+      >["hasKey"];
+      t: TranslatorInstance<LocaleMessages, Replacement, "string">["t"];
     }
   }
 }

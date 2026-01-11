@@ -7,6 +7,7 @@ export type {
   GenMessages,
   GenLocale,
   GenReplacements,
+  GenRich,
 } from "./generated";
 
 // translator-instance

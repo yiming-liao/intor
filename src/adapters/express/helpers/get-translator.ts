@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenMessages } from "@/core";
+import type { GenConfigKeys, GenMessages, GenReplacements } from "@/core";
 import type { GetTranslatorParams, TranslatorInstanceServer } from "@/server";
 import type { Request } from "express";
 import type { LocalizedPreKey } from "intor-translator";
@@ -18,7 +18,7 @@ type GetTranslatorExpressParams = Omit<GetTranslatorParams, "locale">;
 // Signature: Without preKey
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = unknown,
+  ReplacementSchema = GenReplacements<CK>,
 >(
   config: IntorResolvedConfig,
   req: Request,
@@ -28,7 +28,7 @@ export function getTranslator<
 // Signature: With preKey
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = unknown,
+  ReplacementSchema = GenReplacements<CK>,
   PK extends string = LocalizedPreKey<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,

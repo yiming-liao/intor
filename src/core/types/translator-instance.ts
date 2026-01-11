@@ -18,7 +18,7 @@ type FallbackIfNever<T, Fallback> = [T] extends [never] ? Fallback : T;
  */
 export type TranslatorInstance<
   M extends LocaleMessages,
-  ReplacementSchema = unknown,
+  ReplacementSchema = Replacement,
   PK extends string | undefined = undefined,
 > = {
   /** Check if a given key exists in the messages. */

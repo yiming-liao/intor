@@ -6,13 +6,16 @@ import {
   type LocaleMessages,
   type LocalizedKey,
   type LocalizedReplacement,
+  type LocalizedRich,
   type Replacement,
+  type Rich,
   type ScopedKey,
 } from "intor-translator";
 
 export type TranslatorInstanceVue<
   M extends LocaleMessages,
-  ReplacementSchema = unknown,
+  ReplacementSchema = Replacement,
+  RichSchema = Rich,
   PK extends string | undefined = undefined,
 > = TranslatorInstance<M, ReplacementSchema, PK> & {
   /** `messages`: The message object containing all translations. */
@@ -30,10 +33,11 @@ export type TranslatorInstanceVue<
   /** Translate a key into React nodes using semantic tags */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
-    R extends Replacement = LocalizedReplacement<ReplacementSchema, K>,
+    RI = LocalizedRich<RichSchema, K>,
+    RE = LocalizedReplacement<ReplacementSchema, K>,
   >(
     key?: K | (string & {}),
-    tagRenderers?: VueTagRenderers,
-    replacements?: R | Replacement,
+    tagRenderers?: VueTagRenderers<RI>,
+    replacements?: RE | Replacement,
   ) => VNodeChild[];
 };

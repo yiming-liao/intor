@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Request, Response, NextFunction } from "express";
-import type { LocaleMessages } from "intor-translator";
+import type { LocaleMessages, Replacement } from "intor-translator";
 import { INTOR_HEADERS, normalizeQuery, type TranslatorInstance } from "@/core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
 import { getTranslator, type GetTranslatorParams } from "@/server";
@@ -62,13 +62,12 @@ export function createIntor(
       plugins: options?.plugins,
       readers: options?.readers,
       allowCacheWrite: true,
-    })) as TranslatorInstance<LocaleMessages, undefined, "string">;
+    })) as TranslatorInstance<LocaleMessages, Replacement, "string">;
 
-    req.intor = { locale, localeSource };
+    req.intor = { locale, localeSource, pathname };
 
     // DX shortcuts (optional)
     req.locale = locale;
-    req.localeSource = localeSource;
     req.hasKey = hasKey;
     req.t = t;
 

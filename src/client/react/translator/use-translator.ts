@@ -1,5 +1,11 @@
 import type { TranslatorInstanceReact } from "./translator-instance";
-import type { GenConfigKeys, GenMessages, GenLocale } from "@/core";
+import type {
+  GenConfigKeys,
+  GenMessages,
+  GenLocale,
+  GenReplacements,
+  GenRich,
+} from "@/core";
 import type { LocalizedPreKey } from "intor-translator";
 import { useIntor } from "../provider";
 import { createTRich } from "./create-t-rich";
@@ -11,15 +17,24 @@ import { createTRich } from "./create-t-rich";
 // Signature: Without preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = unknown,
->(): TranslatorInstanceReact<GenMessages<CK>, ReplacementSchema, undefined>;
+  ReplacementSchema = GenReplacements<CK>,
+  RichSchema = GenRich<CK>,
+>(): TranslatorInstanceReact<
+  GenMessages<CK>,
+  ReplacementSchema,
+  RichSchema,
+  undefined
+>;
 
 // Signature: With preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = unknown,
+  ReplacementSchema = GenReplacements<CK>,
+  RichSchema = GenRich<CK>,
   PK extends string = LocalizedPreKey<GenMessages<CK>>,
->(preKey?: PK): TranslatorInstanceReact<GenMessages<CK>, ReplacementSchema, PK>;
+>(
+  preKey?: PK,
+): TranslatorInstanceReact<GenMessages<CK>, ReplacementSchema, RichSchema, PK>;
 
 // Implementation
 export function useTranslator<CK extends GenConfigKeys = "__default__">(

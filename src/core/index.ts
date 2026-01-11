@@ -47,6 +47,7 @@ export type {
   GenMessages,
   GenLocale,
   GenReplacements,
+  GenRich,
   // translator-instance
   TranslatorInstance,
   // routing

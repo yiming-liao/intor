@@ -8,6 +8,12 @@ export type GeneratedTypesFixture = {
         nested: { key: string };
       };
     };
+    Replacements: {
+      "{locale}": { hello: { name: string } };
+    };
+    Rich: {
+      "{locale}": { hello: { a: { href: string } } };
+    };
   };
   config1: {
     Locales: "en-US" | "zh-TW";
@@ -16,6 +22,12 @@ export type GeneratedTypesFixture = {
         hello: string;
         nested: { key: string };
       };
+    };
+    Replacements: {
+      "{locale}": { hello: { name: string } };
+    };
+    Rich: {
+      "{locale}": { hello: { a: { href: string } } };
     };
   };
   config2: {
@@ -26,6 +38,12 @@ export type GeneratedTypesFixture = {
         nested: { key: string };
         nested2: { a: { b: { c: { d: string } } } };
       };
+    };
+    Replacements: {
+      "{locale}": { hello: { name: string } };
+    };
+    Rich: {
+      "{locale}": { hello: { a: { href: string } } };
     };
   };
 };

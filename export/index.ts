@@ -36,17 +36,19 @@ export {
   Translator,
   // plugin
   type TranslatorPlugin,
-  // translate config & handlers
+  // translation pipeline
+  type TranslateContext,
+  type TranslateHook,
   type TranslateHandlers,
+  type HandlerContext,
   type FormatHandler,
   type LoadingHandler,
   type MissingHandler,
-  type HandlerContext,
-  // pipeline
-  type TranslateContext,
-  type TranslateHook,
-  // messages
+  // types
   type LocaleMessages,
   type MessageObject,
   type MessageValue,
+  // messages (post-translation)
+  tokenize,
+  type Token,
 } from "intor-translator";

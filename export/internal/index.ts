@@ -10,3 +10,5 @@ export type {
   // translator-instance
   TranslatorInstance,
 } from "@/core";
+
+export type { TranslatorInstanceReact } from "@/client/react/translator/translator-instance";
