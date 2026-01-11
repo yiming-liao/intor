@@ -16,6 +16,7 @@ const eslintConfig = defineConfig([
     "coverage",
     "examples",
     "**/*.d.ts",
+    "**/*.test-d.ts",
   ]),
 
   // JS

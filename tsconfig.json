@@ -17,5 +17,5 @@
     },
     "noEmit": true
   },
-  "exclude": ["node_modules", "dist", "coverage", "examples"]
+  "exclude": ["node_modules", "dist", "coverage", "examples", "**/**test-d.ts"]
 }
