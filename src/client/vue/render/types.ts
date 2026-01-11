@@ -7,9 +7,9 @@ import type { VNodeChild } from "vue";
  * - `children` are the rendered inner nodes of the tag
  * - `attributes` include both schema-defined and runtime attributes
  */
-type VueTagRenderer<A = Attributes> = (
+type VueTagRenderer = (
   children: VNodeChild[],
-  attributes: A & Attributes,
+  attributes: Attributes,
 ) => VNodeChild;
 
 /**
@@ -23,5 +23,5 @@ type VueTagRenderer<A = Attributes> = (
  * - Fail-soft behavior for dynamic or newly added tags
  */
 export type VueTagRenderers<RichSchema = Rich> = {
-  [K in keyof RichSchema]: VueTagRenderer<RichSchema[K]>;
-} & Record<string, VueTagRenderer>;
+  [K in keyof RichSchema]: VueTagRenderer | VNodeChild;
+} & Record<string, VueTagRenderer | VNodeChild>;

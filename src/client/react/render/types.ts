@@ -6,9 +6,9 @@ import type { Attributes, Rich } from "intor-translator";
  * - `children` are the rendered inner nodes of the tag
  * - `attributes` include both schema-defined and runtime attributes
  */
-type ReactTagRenderer<A = Attributes> = (
+type ReactTagRenderer = (
   children: React.ReactNode[],
-  attributes: A & Attributes,
+  attributes: Attributes,
 ) => React.ReactNode;
 
 /**
@@ -22,5 +22,5 @@ type ReactTagRenderer<A = Attributes> = (
  * - Fail-soft behavior for dynamic or newly added tags
  */
 export type ReactTagRenderers<RichSchema = Rich> = {
-  [K in keyof RichSchema]: ReactTagRenderer<RichSchema[K]>;
-} & Record<string, ReactTagRenderer>;
+  [K in keyof RichSchema]: ReactTagRenderer | React.ReactNode;
+} & Record<string, ReactTagRenderer | React.ReactNode>;
