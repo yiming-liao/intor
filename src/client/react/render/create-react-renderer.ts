@@ -4,22 +4,10 @@ import * as React from "react";
 
 /**
  * Create a React renderer for semantic rich messages.
- *
- * Transforms semantic AST nodes into React nodes.
- * Used together with `render` / `renderRichMessage`.
- *
- * - Text nodes → plain strings
- * - Tag nodes → custom renderer or native element
- * - Raw nodes → rendered as-is by the renderer
- *
- * This renderer is intentionally minimal and stateless.
  */
-export const createReactRenderer = (options?: {
-  /** Optional custom renderers for semantic tags */
-  tagRenderers?: ReactTagRenderers;
-}): Renderer<React.ReactNode> => {
-  const { tagRenderers } = options ?? {};
-
+export const createReactRenderer = (
+  tagRenderers?: ReactTagRenderers,
+): Renderer<React.ReactNode> => {
   return {
     /** Render plain text nodes */
     text(value) {
@@ -27,18 +15,17 @@ export const createReactRenderer = (options?: {
     },
 
     /** Render semantic tag nodes */
-    tag(name, attributes, children) {
-      const renderer = tagRenderers?.[name];
-
-      // Custom tag renderer
-      if (renderer) {
-        return typeof renderer === "function"
-          ? renderer(children, attributes)
-          : renderer;
+    tag(name, _attributes, children) {
+      // Custom tag renderers override
+      const tagRenderer = tagRenderers?.[name];
+      if (tagRenderer) {
+        return typeof tagRenderer === "function"
+          ? tagRenderer(children)
+          : tagRenderer;
       }
 
       // Default behavior: render as a native React element
-      return React.createElement(name, attributes, ...children);
+      return React.createElement(name, null, ...children);
     },
 
     /** Render raw (non-tokenized) message values */

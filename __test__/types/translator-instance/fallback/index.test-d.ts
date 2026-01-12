@@ -34,11 +34,11 @@ expectType<Replacement | undefined>(
 {
   type M = { "{locale}": { hello: 'Hello <a href="/">{name}</a>' } };
   type RE = { "{locale}": { hello: { name: string } } };
-  type RI = { "{locale}": { hello: { a: { href: string } } } };
+  type RI = { "{locale}": { hello: { a: unknown } } };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { t, tRich }: TranslatorInstanceReact<M, RE, RI> = {} as any;
   expectType<'Hello <a href="/">{name}</a>'>(t("hello", { name: "" }));
   expectType<React.JSX.Element[]>(
-    tRich("hello", { a: (c, { href }) => `${c}${href}` }, { name: "" }),
+    tRich("hello", { a: (c) => c }, { name: "" }),
   );
 }

@@ -5,22 +5,10 @@ import { h } from "vue";
 
 /**
  * Create a Vue renderer for semantic rich messages.
- *
- * Transforms semantic AST nodes into Vue VNodes.
- * Used together with `render` / `renderRichMessage`.
- *
- * - Text nodes → plain strings
- * - Tag nodes → custom renderer or native element
- * - Raw nodes → rendered as-is by the renderer
- *
- * This renderer is intentionally minimal and stateless.
  */
-export const createVueRenderer = (options?: {
-  /** Optional custom renderers for semantic tags */
-  tagRenderers?: VueTagRenderers;
-}): Renderer<VNodeChild> => {
-  const { tagRenderers } = options ?? {};
-
+export const createVueRenderer = (
+  tagRenderers?: VueTagRenderers,
+): Renderer<VNodeChild> => {
   return {
     /** Render plain text nodes */
     text(value) {
@@ -28,18 +16,17 @@ export const createVueRenderer = (options?: {
     },
 
     /** Render semantic tag nodes */
-    tag(name, attributes, children) {
-      const renderer = tagRenderers?.[name];
-
+    tag(name, _attributes, children) {
       // Custom tag renderer
-      if (renderer) {
-        return typeof renderer === "function"
-          ? renderer(children, attributes)
-          : renderer;
+      const tagRenderer = tagRenderers?.[name];
+      if (tagRenderer) {
+        return typeof tagRenderer === "function"
+          ? tagRenderer(children)
+          : tagRenderer;
       }
 
       // Default behavior: render as a native Vue element
-      return h(name, attributes, children);
+      return h(name, null, children);
     },
 
     /** Render raw (non-tokenized) message values */

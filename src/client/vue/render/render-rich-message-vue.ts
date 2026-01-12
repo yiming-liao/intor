@@ -17,6 +17,6 @@ export function renderRichMessageVue(
   message: MessageValue,
   tagRenderers?: VueTagRenderers,
 ): VNodeChild[] {
-  const vueRenderer = createVueRenderer({ tagRenderers });
+  const vueRenderer = createVueRenderer(tagRenderers);
   return renderRichMessage(message, vueRenderer);
 }

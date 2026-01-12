@@ -16,9 +16,9 @@ import { createReactRenderer } from "./create-react-renderer";
  */
 export function renderRichMessageReact(
   message: MessageValue,
-  tagRenderers?: ReactTagRenderers,
+  tagComponents?: ReactTagRenderers,
 ): JSX.Element[] {
-  const reactRenderer = createReactRenderer({ tagRenderers });
+  const reactRenderer = createReactRenderer(tagComponents);
   const nodes = renderRichMessage(message, reactRenderer);
 
   // Wrap each top-level node with a Fragment to provide a stable key

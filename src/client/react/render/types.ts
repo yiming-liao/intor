@@ -1,26 +1,11 @@
-import type { Attributes, Rich } from "intor-translator";
+import type { Rich } from "intor-translator";
 
-/**
- * Renderer function for a semantic rich tag.
- *
- * - `children` are the rendered inner nodes of the tag
- * - `attributes` include both schema-defined and runtime attributes
- */
-type ReactTagRenderer = (
-  children: React.ReactNode[],
-  attributes: Attributes,
-) => React.ReactNode;
+/** Renderer function for a semantic rich tag. */
+type ReactTagRenderer =
+  | ((children: React.ReactNode[]) => React.ReactNode)
+  | React.ReactNode;
 
-/**
- * Mapping of rich tags to React renderers.
- *
- * - Known tags are strongly typed based on the generated rich schema
- * - Unknown tags fall back to a generic renderer signature
- *
- * This design ensures:
- * - Accurate autocompletion for generated tags
- * - Fail-soft behavior for dynamic or newly added tags
- */
+/** Mapping of semantic rich tags to React renderers. */
 export type ReactTagRenderers<RichSchema = Rich> = {
-  [K in keyof RichSchema]: ReactTagRenderer | React.ReactNode;
-} & Record<string, ReactTagRenderer | React.ReactNode>;
+  [K in keyof RichSchema]: ReactTagRenderer;
+} & Record<string, ReactTagRenderer>;

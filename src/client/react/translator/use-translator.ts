@@ -52,5 +52,9 @@ export function useTranslator<CK extends GenConfigKeys = "__default__">(
     hasKey: preKey ? scoped.hasKey : translator.hasKey,
     t: preKey ? scoped.t : translator.t,
     tRich: createTRich(translator, preKey),
-  };
+    // NOTE:
+    // The runtime implementation is intentionally erased.
+    // Type safety is guaranteed by public type contracts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any;
 }
