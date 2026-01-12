@@ -1,2 +1,2 @@
 export { createIntor } from "./create-intor";
-export type { IntorRuntime } from "./types";
+export type { IntorStore } from "./types";

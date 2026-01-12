@@ -3,7 +3,7 @@
 export {
   // runtime
   createIntor,
-  type IntorRuntime,
+  type IntorStore,
 
   // helpers
   createRuntimeState,

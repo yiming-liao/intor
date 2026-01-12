@@ -1,7 +1,7 @@
-import type { CreateIntorOptions, IntorRuntime } from "./types";
+import type { CreateIntorOptions, IntorStore } from "./types";
 import { Translator, type Locale, type LocaleMessages } from "intor-translator";
 import { writable, derived, get, readable, type Readable } from "svelte/store";
-import { createIntorApi } from "@/client/svelte/runtime/create-intor-api";
+import { createIntorApi } from "./create-intor-api";
 import { attachLocaleEffects } from "./effects/locale-effects";
 import { attachMessagesEffects } from "./effects/messages-effects";
 
@@ -13,7 +13,7 @@ export function createIntor({
   plugins,
   onLocaleChange,
   isLoading: externalIsLoading,
-}: CreateIntorOptions): IntorRuntime {
+}: CreateIntorOptions): IntorStore {
   // ---------------------------------------------------------------------------
   // Internal state
   // ---------------------------------------------------------------------------

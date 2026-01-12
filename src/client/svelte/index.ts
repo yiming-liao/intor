@@ -1,5 +1,5 @@
 // runtime
-export { createIntor, type IntorRuntime } from "./runtime";
+export { createIntor, type IntorStore } from "./store";
 
 // helpers
 export { createRuntimeState } from "./helpers";

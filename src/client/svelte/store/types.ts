@@ -20,7 +20,7 @@ export type CreateIntorOptions = {
   onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
 };
 
-export type IntorRuntime = {
+export type IntorStore = {
   /** `messages`: The message object containing all translations. */
   messages: Readable<LocaleMessages>;
 
