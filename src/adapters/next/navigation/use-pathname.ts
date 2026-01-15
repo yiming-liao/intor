@@ -1,5 +1,5 @@
 import { usePathname as useNextPathname } from "next/navigation";
-import { useIntor } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { useIntorContext } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
 import { localizePathname, type LocalizedPathname } from "@/routing";
 
 /**
@@ -15,7 +15,7 @@ import { localizePathname, type LocalizedPathname } from "@/routing";
  * @platform Next.js
  */
 export const usePathname = (): LocalizedPathname => {
-  const { config, locale } = useIntor();
+  const { config, locale } = useIntorContext();
   const rawPathname = useNextPathname();
   return localizePathname(rawPathname, config, locale);
 };

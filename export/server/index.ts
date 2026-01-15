@@ -3,7 +3,7 @@
 export {
   // intor
   intor,
-  type ServerSnapshot,
+  type IntorValue,
 
   // messages
   loadMessages,

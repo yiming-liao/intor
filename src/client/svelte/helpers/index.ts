@@ -1,1 +1,1 @@
-export { createRuntimeState } from "./create-runtime-state";
+export { createIntor } from "./create-intor";

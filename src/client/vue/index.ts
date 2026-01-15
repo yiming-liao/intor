@@ -1,11 +1,11 @@
 // contexts
-export { IntorProvider } from "./provider";
+export { IntorProvider, injectIntor } from "./provider";
 
 // translator
 export { useTranslator, Trans } from "./translator";
 
 // helpers
-export { useRuntimeState } from "./helpers";
+export { useIntor } from "./helpers";
 
 // helpers (client-shared utilities, re-exported)
 export { getClientLocale } from "../shared/helpers";

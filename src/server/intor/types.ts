@@ -5,7 +5,7 @@ export type LocaleResolver<CK extends GenConfigKeys = "__default__"> = (
   config: IntorResolvedConfig,
 ) => GenLocale<CK> | Promise<GenLocale<CK>>;
 
-export interface ServerSnapshot<CK extends GenConfigKeys = "__default__"> {
+export interface IntorValue<CK extends GenConfigKeys = "__default__"> {
   config: IntorResolvedConfig;
   locale: GenLocale<CK>;
   messages: Readonly<GenMessages<CK>>;

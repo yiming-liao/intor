@@ -42,8 +42,8 @@ export function useTranslator<CK extends GenConfigKeys = "__default__">(
   preKey?: string,
 ) {
   const intor = injectIntor();
+  const translator = intor.value.translator;
 
-  const translator = computed(() => intor.value.translator);
   const scoped = computed(() =>
     preKey ? translator.value.scoped(preKey) : translator.value,
   );

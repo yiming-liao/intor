@@ -1,21 +1,14 @@
+import type { IntorValue } from "../store";
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale, LocaleMessages } from "intor-translator";
-import { ref, onMounted, type Ref } from "vue";
+import { writable } from "svelte/store";
 import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-export interface RuntimeState {
-  config: IntorResolvedConfig;
-  locale: Locale;
-  messages: Ref<LocaleMessages>;
-  onLocaleChange: (locale: Locale) => Promise<void>;
-  isLoading: Ref<boolean>;
-}
-
-export function useRuntimeState(
+export function createIntor(
   config: IntorResolvedConfig,
   loader: (locale: Locale) => Promise<LocaleMessages>,
-): RuntimeState {
+): Omit<IntorValue, "handlers" | "plugins"> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
@@ -24,8 +17,8 @@ export function useRuntimeState(
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
-  const messages = ref<LocaleMessages>(config.messages || {});
-  const isLoading = ref(true);
+  const messages = writable<LocaleMessages>(config.messages || {});
+  const isLoading = writable<boolean>(true);
   let activeLocale = locale;
 
   // ---------------------------------------------------------------------------
@@ -33,24 +26,23 @@ export function useRuntimeState(
   // ---------------------------------------------------------------------------
   const onLocaleChange = async (newLocale: Locale) => {
     activeLocale = newLocale;
-    isLoading.value = true;
+    isLoading.set(true);
 
     const loaded = await loader(newLocale);
 
     // Ignore outdated results when locale changes again.
     if (activeLocale !== newLocale) return;
 
-    messages.value = mergeMessages(config.messages, loaded, {
-      config,
-      locale: newLocale,
-    });
-    isLoading.value = false;
+    messages.set(
+      mergeMessages(config.messages, loaded, { config, locale: newLocale }),
+    );
+    isLoading.set(false);
   };
 
   // ---------------------------------------------------------------------------
   // Initial load
   // ---------------------------------------------------------------------------
-  onMounted(() => onLocaleChange(locale));
+  onLocaleChange(locale);
 
   return {
     config,

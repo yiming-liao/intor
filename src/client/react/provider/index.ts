@@ -1,3 +1,3 @@
 export { IntorProvider } from "./intor-provider";
-export type { IntorProviderProps } from "./types";
-export { useIntor } from "./use-intor";
+export type { IntorValue, IntorProviderProps } from "./types";
+export { useIntorContext } from "./use-intor-context";

@@ -2,10 +2,10 @@
 
 export {
   // runtime
-  createIntor,
+  createIntorStore,
   type IntorStore,
 
   // helpers
-  createRuntimeState,
+  createIntor,
   getClientLocale,
 } from "@/client/svelte";

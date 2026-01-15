@@ -1,8 +1,14 @@
 import type { ReactTagRenderers } from "../render";
-import type { GenConfigKeys, GenMessages, GenReplacements } from "@/core";
+import type {
+  GenConfigKeys,
+  GenMessages,
+  GenReplacements,
+  GenRich,
+} from "@/core";
 import type {
   LocalizedKey,
   LocalizedReplacement,
+  LocalizedRich,
   Replacement,
 } from "intor-translator";
 import { useTranslator } from "./use-translator";
@@ -10,7 +16,8 @@ import { useTranslator } from "./use-translator";
 type TransProps<
   CK extends GenConfigKeys = "__default__",
   K extends string = LocalizedKey<GenMessages<CK>>,
-  R extends Replacement = LocalizedReplacement<GenReplacements<CK>, K>,
+  RI = LocalizedRich<GenRich<CK>, K>,
+  RE extends Replacement = LocalizedReplacement<GenReplacements<CK>, K>,
 > = {
   /** The message key to translate. */
   i18nKey: K | (string & {});
@@ -21,14 +28,14 @@ type TransProps<
    * Maps a tag name to either a React node or a render function,
    * allowing customization of rich tag rendering.
    */
-  components?: ReactTagRenderers;
+  components?: ReactTagRenderers<RI>;
 
   /**
    * Optional replacement values for message interpolation.
    *
    * These values are passed to the underlying translator.
    */
-  values?: R | Replacement;
+  values?: RE | Replacement;
 };
 
 /**

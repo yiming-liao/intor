@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import type { IntorProviderProps, IntorContextValue } from "./types";
-import type { RuntimeState } from "@/client/vue/helpers/use-runtime-state";
+import type {
+  IntorProviderProps,
+  IntorContextValue,
+  IntorValue,
+} from "./types";
 import type { LocaleMessages } from "intor-translator";
 import { Translator } from "intor-translator";
 import {
@@ -13,23 +16,13 @@ import {
 } from "vue";
 import { useLocaleEffects } from "@/client/vue/provider/effects/use-locale-effects";
 import { useMessagesEffects } from "@/client/vue/provider/effects/use-messages-effects";
-import { resolveRuntime } from "@/client/vue/provider/resolver/resolve-runtime";
 
 export const IntorContextKey: InjectionKey<ComputedRef<IntorContextValue>> =
   Symbol("IntorContext");
 
 export const IntorProvider = defineComponent<IntorProviderProps>({
   name: "IntorProvider",
-  props: {
-    config: { type: Object, required: false },
-    locale: { type: String, required: false },
-    messages: { type: Object as () => LocaleMessages, required: false },
-    handlers: { type: Object, required: false },
-    plugins: { type: Array, required: false },
-    onLocaleChange: { type: Function, required: false },
-    isLoading: { type: Boolean, required: false },
-    runtimeState: { type: Object as () => RuntimeState, required: false },
-  },
+  props: { value: { type: Object as () => IntorValue, required: true } },
 
   setup(props, { slots }) {
     const {
@@ -40,12 +33,12 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
       plugins,
       onLocaleChange,
       isLoading: externalIsLoading,
-    } = resolveRuntime(props);
+    } = props.value;
 
     // ---------------------------------------------------------------------------
     // Internal state
     // ---------------------------------------------------------------------------
-    const locale = ref<string>(initialLocale.value);
+    const locale = ref<string>(initialLocale);
     const runtimeMessages = ref<LocaleMessages | null>(null);
     const internalIsLoading = ref<boolean>(false);
 
@@ -57,7 +50,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
       if (newLocale === locale.value) return;
       locale.value = newLocale;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onLocaleChange?.value?.(newLocale as any); // Notify external listener (fire-and-forget)
+      onLocaleChange?.(newLocale as any); // Notify external listener (fire-and-forget)
     };
 
     // ---------------------------------------------------------------------------
@@ -65,12 +58,11 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // ---------------------------------------------------------------------------
     // external > internal
     const effectiveIsLoading = computed(
-      () => !!externalIsLoading.value || internalIsLoading.value,
+      () => !!externalIsLoading?.value || internalIsLoading.value,
     );
     // runtime (client refetch) > initial > config (static)
     const effectiveMessages = computed(
-      () =>
-        runtimeMessages.value || messages.value || config.value.messages || {},
+      () => runtimeMessages.value || messages?.value || config.messages || {},
     );
 
     // ---------------------------------------------------------------------------
@@ -81,32 +73,25 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
         messages: effectiveMessages.value,
         locale: locale.value,
         isLoading: effectiveIsLoading.value,
-        fallbackLocales: config.value.fallbackLocales,
-        loadingMessage: config.value.translator?.loadingMessage,
-        missingMessage: config.value.translator?.missingMessage,
-        handlers: handlers?.value,
-        plugins: plugins?.value,
+        fallbackLocales: config.fallbackLocales,
+        loadingMessage: config.translator?.loadingMessage,
+        missingMessage: config.translator?.missingMessage,
+        handlers: handlers,
+        plugins: plugins,
       });
     });
 
     // -------------------------------------------------------------------------
     // Side effects
     // -------------------------------------------------------------------------
-    useLocaleEffects(config.value, locale);
-    useMessagesEffects(
-      config.value,
-      locale,
-      runtimeMessages,
-      internalIsLoading,
-    );
+    useLocaleEffects(config, locale);
+    useMessagesEffects(config, locale, runtimeMessages, internalIsLoading);
 
     const contextValue = computed(() => ({
-      config: config.value,
-      locale: locale.value,
+      config,
+      locale,
       setLocale,
-      messages: effectiveMessages.value,
-      isLoading: effectiveIsLoading.value,
-      translator: translator.value,
+      translator,
     }));
     provide(IntorContextKey, contextValue);
     return () => slots.default?.();

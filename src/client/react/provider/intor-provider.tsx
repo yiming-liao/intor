@@ -86,18 +86,7 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
   useMessagesEffects(config, locale, setRuntimeMessages, setInternalIsLoading);
 
   return (
-    <IntorContext.Provider
-      value={
-        {
-          config,
-          locale,
-          setLocale,
-          messages: effectiveMessages,
-          isLoading: effectiveIsLoading,
-          translator,
-        } as unknown as IntorContextValue<CK>
-      }
-    >
+    <IntorContext.Provider value={{ config, locale, setLocale, translator }}>
       {children}
     </IntorContext.Provider>
   );

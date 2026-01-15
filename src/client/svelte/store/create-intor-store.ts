@@ -1,11 +1,11 @@
-import type { CreateIntorOptions, IntorStore } from "./types";
+import type { IntorValue, IntorStore } from "./types";
 import { Translator, type Locale, type LocaleMessages } from "intor-translator";
 import { writable, derived, get, readable, type Readable } from "svelte/store";
-import { createIntorApi } from "./create-intor-api";
+import { createTranslatorBindings } from "./create-translator-bindings";
 import { attachLocaleEffects } from "./effects/locale-effects";
 import { attachMessagesEffects } from "./effects/messages-effects";
 
-export function createIntor({
+export function createIntorStore({
   config,
   locale: initialLocale,
   messages,
@@ -13,7 +13,7 @@ export function createIntor({
   plugins,
   onLocaleChange,
   isLoading: externalIsLoading,
-}: CreateIntorOptions): IntorStore {
+}: IntorValue): IntorStore {
   // ---------------------------------------------------------------------------
   // Internal state
   // ---------------------------------------------------------------------------
@@ -72,7 +72,7 @@ export function createIntor({
   attachLocaleEffects(locale, config);
   attachMessagesEffects({ config, locale, runtimeMessages, internalIsLoading });
 
-  const { scoped, t, tRich } = createIntorApi(translator);
+  const { scoped, t, tRich } = createTranslatorBindings(translator);
   return {
     messages: effectiveMessages,
     locale,

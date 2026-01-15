@@ -1,22 +1,15 @@
+import type { IntorValue } from "../provider";
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenLocale, GenMessages } from "@/core";
+import type { GenConfigKeys } from "@/core";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
-interface RuntimeState<CK extends GenConfigKeys = "__default__"> {
-  config: IntorResolvedConfig;
-  locale: GenLocale<CK>;
-  messages: GenMessages<CK>;
-  onLocaleChange: (locale: GenLocale<CK>) => Promise<void>;
-  isLoading: boolean;
-}
-
-export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
+export function useIntor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   loader: (locale: string) => Promise<LocaleMessages>,
-): RuntimeState<CK> {
+): Omit<IntorValue<CK>, "handlers" | "plugins"> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
@@ -63,5 +56,5 @@ export function useRuntimeState<CK extends GenConfigKeys = "__default__">(
     messages,
     isLoading,
     onLocaleChange,
-  } as RuntimeState<CK>;
+  };
 }

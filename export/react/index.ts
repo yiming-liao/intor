@@ -4,7 +4,7 @@ export {
   // provider
   IntorProvider,
   type IntorProviderProps,
-  useIntor, // Internal hook.
+  useIntorContext, // Internal hook.
 
   // translator
   useTranslator,
@@ -15,6 +15,6 @@ export {
   useExecuteNavigation,
 
   // helpers
-  useRuntimeState,
+  useIntor,
   getClientLocale,
 } from "@/client/react";

@@ -1,4 +1,3 @@
-import type { RuntimeState } from "../helpers/use-runtime-state";
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import type {
@@ -6,23 +5,25 @@ import type {
   TranslateHook,
   TranslatorPlugin,
 } from "intor-translator";
+import type { ComputedRef, Ref } from "vue";
 
-export interface IntorProviderProps {
-  config?: IntorResolvedConfig;
-  locale?: Locale;
-  messages?: Readonly<LocaleMessages>;
-  isLoading?: boolean;
+export interface IntorValue {
+  config: IntorResolvedConfig;
+  locale: Locale;
+  messages?: Ref<LocaleMessages>;
+  isLoading?: Ref<boolean>;
+  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
-  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
-  runtimeState?: RuntimeState;
+}
+
+export interface IntorProviderProps {
+  value: IntorValue;
 }
 
 export type IntorContextValue = {
   config: IntorResolvedConfig;
-  locale: Locale;
+  locale: Ref<string>;
   setLocale: (locale: Locale) => void;
-  messages: Readonly<LocaleMessages>;
-  isLoading: boolean;
-  translator: Translator<unknown>;
+  translator: ComputedRef<Translator<unknown>>;
 };

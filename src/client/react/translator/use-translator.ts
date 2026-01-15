@@ -7,7 +7,7 @@ import type {
   GenRich,
 } from "@/core";
 import type { LocalizedPreKey } from "intor-translator";
-import { useIntor } from "../provider";
+import { useIntorContext } from "../provider";
 import { createTRich } from "./create-t-rich";
 
 /**
@@ -40,7 +40,7 @@ export function useTranslator<
 export function useTranslator<CK extends GenConfigKeys = "__default__">(
   preKey?: string,
 ) {
-  const { translator, setLocale } = useIntor();
+  const { translator, setLocale } = useIntorContext();
 
   const scoped = translator.scoped(preKey);
 

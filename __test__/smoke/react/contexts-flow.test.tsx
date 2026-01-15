@@ -2,7 +2,7 @@ import type { IntorResolvedConfig } from "@/config";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import { IntorProvider, useIntor } from "@/client/react";
+import { IntorProvider, useIntorContext } from "@/client/react";
 import { DEFAULT_ROUTING_OPTIONS, DEFAULT_COOKIE_OPTIONS } from "@/config";
 
 // mock fetch
@@ -15,7 +15,7 @@ globalThis.fetch = vi.fn().mockResolvedValue({
 
 // mock component
 function Component() {
-  const { translator, setLocale } = useIntor();
+  const { translator, setLocale } = useIntorContext();
   return (
     <>
       <div data-testid="text">{translator.t("hello") as string}</div>

@@ -10,14 +10,14 @@ import type {
 } from "intor-translator";
 import type { Readable, Writable } from "svelte/store";
 
-export type CreateIntorOptions = {
+export type IntorValue = {
   config: IntorResolvedConfig;
   locale: Locale;
   messages?: Readable<LocaleMessages>;
   isLoading?: Readable<boolean>;
+  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
-  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
 };
 
 export type IntorStore = {

@@ -1,5 +1,9 @@
 // provider
-export { IntorProvider, type IntorProviderProps, useIntor } from "./provider";
+export {
+  IntorProvider,
+  type IntorProviderProps,
+  useIntorContext,
+} from "./provider";
 
 // translator
 export { useTranslator, Trans } from "./translator";
@@ -8,7 +12,7 @@ export { useTranslator, Trans } from "./translator";
 export { useResolveNavigation, useExecuteNavigation } from "./navigation";
 
 // helpers
-export { useRuntimeState } from "./helpers";
+export { useIntor } from "./helpers";
 
 // helpers (client-shared utilities, re-exported)
 export { getClientLocale } from "../shared/helpers";

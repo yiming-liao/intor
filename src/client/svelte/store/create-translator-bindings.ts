@@ -3,10 +3,10 @@ import type { Replacement } from "intor-translator";
 import { derived, type Readable } from "svelte/store";
 import { renderRichMessageSvelte, type SvelteTagRenderers } from "../render";
 
-export function createIntorApi(translator: Readable<Translator>) {
+export function createTranslatorBindings(translator: Readable<Translator>) {
   const scoped = (preKey: string) => {
     const scopedTranslator = derived(translator, ($t) => $t.scoped(preKey));
-    return createIntorApi(scopedTranslator as Readable<Translator>);
+    return createTranslatorBindings(scopedTranslator as Readable<Translator>);
   };
 
   const t = derived(translator, ($t) => {

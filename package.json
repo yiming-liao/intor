@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.3.14",
+  "version": "2.3.17",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor#readme",
@@ -100,7 +100,7 @@
     "examples:html": "vite --config examples/html/vite.config.ts"
   },
   "dependencies": {
-    "intor-translator": "1.4.2",
+    "intor-translator": "1.4.13",
     "logry": "2.1.6",
     "p-limit": "7.2.0"
   },
@@ -112,7 +112,7 @@
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.1",
     "@testing-library/user-event": "14.6.1",
-    "@types/express": "^5.0.6",
+    "@types/express": "5.0.6",
     "@types/node": "24.10.1",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",

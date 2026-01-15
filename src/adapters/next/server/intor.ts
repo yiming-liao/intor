@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { MessagesReaders } from "@/core";
 import { type GenConfigKeys } from "@/core";
-import { intor as intorCore, type ServerSnapshot } from "@/server";
+import { intor as intorCore, type IntorValue } from "@/server";
 import { getLocale } from "./get-locale";
 
 /**
@@ -14,7 +14,7 @@ import { getLocale } from "./get-locale";
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   readers?: MessagesReaders,
-): Promise<ServerSnapshot<CK>> {
+): Promise<IntorValue<CK>> {
   return await intorCore(config, getLocale, {
     readers,
     allowCacheWrite: true,

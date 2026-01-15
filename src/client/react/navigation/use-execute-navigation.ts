@@ -2,12 +2,12 @@ import type { GenConfigKeys, GenLocale } from "@/core";
 import type { NavigationResult } from "@/routing";
 import { setLocaleCookie } from "@/client/shared/utils";
 import { shouldPersist, shouldSyncLocale } from "@/policies";
-import { useIntor } from "../provider";
+import { useIntorContext } from "../provider";
 
 export function useExecuteNavigation<
   CK extends GenConfigKeys = "__default__",
 >() {
-  const { config, setLocale, locale: currentLocale } = useIntor<CK>();
+  const { config, setLocale, locale: currentLocale } = useIntorContext<CK>();
 
   function executeNavigation(
     result: NavigationResult,

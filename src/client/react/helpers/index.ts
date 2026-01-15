@@ -1,1 +1,1 @@
-export { useRuntimeState } from "./use-runtime-state";
+export { useIntor } from "./use-intor";

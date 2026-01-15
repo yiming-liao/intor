@@ -9,6 +9,6 @@ export {
   Trans,
 
   // helpers
-  useRuntimeState,
+  useIntor,
   getClientLocale,
 } from "@/client/vue";
