@@ -1,12 +1,8 @@
 import type { LocaleResolver, IntorValue } from "./types";
 import type { IntorRuntimeOptions } from "../runtime";
 import type { IntorResolvedConfig } from "@/config";
-import {
-  getLogger,
-  type GenConfigKeys,
-  type GenLocale,
-  type GenMessages,
-} from "@/core";
+import type { Locale } from "intor-translator";
+import { getLogger, type GenConfigKeys, type GenMessages } from "@/core";
 import { createIntorRuntime } from "../runtime/create-intor-runtime";
 
 /**
@@ -17,7 +13,7 @@ import { createIntorRuntime } from "../runtime/create-intor-runtime";
  */
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  localeOrResolver: LocaleResolver<CK> | GenLocale<CK>,
+  localeOrResolver: LocaleResolver | Locale,
   options?: IntorRuntimeOptions,
 ): Promise<IntorValue<CK>> {
   const baseLogger = getLogger(config.logger);

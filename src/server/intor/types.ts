@@ -1,9 +1,10 @@
 import type { IntorResolvedConfig } from "@/config";
+import type { Locale } from "intor-translator";
 import { type GenConfigKeys, type GenLocale, type GenMessages } from "@/core";
 
-export type LocaleResolver<CK extends GenConfigKeys = "__default__"> = (
+export type LocaleResolver = (
   config: IntorResolvedConfig,
-) => GenLocale<CK> | Promise<GenLocale<CK>>;
+) => Locale | Promise<Locale>;
 
 export interface IntorValue<CK extends GenConfigKeys = "__default__"> {
   config: IntorResolvedConfig;
