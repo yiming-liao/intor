@@ -9,6 +9,7 @@ export {
   IntorErrorCode,
   // utils
   deepMerge,
+  type DeepMergeOverrideEvent,
   resolveLoaderOptions,
   // logger
   clearLoggerPool,
