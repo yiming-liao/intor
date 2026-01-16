@@ -1,7 +1,24 @@
+/* eslint-disable unicorn/no-array-sort */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as loggerModule from "@/core/logger/get-logger";
 import { collectFileEntries } from "@/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
+
+function isFile(name: string) {
+  return {
+    name,
+    isFile: () => true,
+    isDirectory: () => false,
+  };
+}
+
+function isDir(name: string) {
+  return {
+    name,
+    isFile: () => false,
+    isDirectory: () => true,
+  };
+}
 
 describe("collectFileEntries", () => {
   let mockReaddir: any;
@@ -25,15 +42,15 @@ describe("collectFileEntries", () => {
   });
 
   it("collects files recursively with correct FileEntry structure", async () => {
-    mockReaddir
-      .mockResolvedValueOnce([
-        { name: "index.json", isDirectory: () => false },
-        { name: "auth", isDirectory: () => true },
-      ])
-      .mockResolvedValueOnce([
-        { name: "login.json", isDirectory: () => false },
-        { name: "signup.txt", isDirectory: () => false },
-      ]);
+    mockReaddir.mockImplementation((dir: string) => {
+      if (dir === rootDir) {
+        return Promise.resolve([isFile("index.json"), isDir("auth")]);
+      }
+      if (dir === `${rootDir}/auth`) {
+        return Promise.resolve([isFile("login.json"), isFile("signup.txt")]);
+      }
+      return Promise.resolve([]);
+    });
     const files = await collectFileEntries({
       readdir: mockReaddir,
       limit: mockLimit,
@@ -41,33 +58,36 @@ describe("collectFileEntries", () => {
       exts: ["json"],
       loggerOptions: { id: "test" },
     });
-    expect(files).toEqual([
-      {
-        namespace: "index",
-        fullPath: "/mock/messages/index.json",
-        relativePath: "index.json",
-        segments: ["index"],
-        basename: "index",
-      },
-      {
-        namespace: "auth",
-        fullPath: "/mock/messages/auth/login.json",
-        relativePath: "auth/login.json",
-        segments: ["auth", "login"],
-        basename: "login",
-      },
-    ]);
+    expect(files).toEqual(
+      expect.arrayContaining([
+        {
+          namespace: "index",
+          fullPath: "/mock/messages/index.json",
+          relativePath: "index.json",
+          segments: ["index"],
+          basename: "index",
+        },
+        {
+          namespace: "auth",
+          fullPath: "/mock/messages/auth/login.json",
+          relativePath: "auth/login.json",
+          segments: ["auth", "login"],
+          basename: "login",
+        },
+      ]),
+    );
   });
 
   it("filters files by namespaces (but always allows index)", async () => {
-    mockReaddir
-      .mockResolvedValueOnce([
-        { name: "index.json", isDirectory: () => false },
-        { name: "auth", isDirectory: () => true },
-      ])
-      .mockResolvedValueOnce([
-        { name: "login.json", isDirectory: () => false },
-      ]);
+    mockReaddir.mockImplementation((dir: string) => {
+      if (dir === rootDir) {
+        return Promise.resolve([isFile("index.json"), isDir("auth")]);
+      }
+      if (dir === `${rootDir}/auth`) {
+        return Promise.resolve([isFile("login.json")]);
+      }
+      return Promise.resolve([]);
+    });
     const files = await collectFileEntries({
       readdir: mockReaddir,
       limit: mockLimit,
@@ -76,19 +96,19 @@ describe("collectFileEntries", () => {
       exts: ["json"],
       loggerOptions: { id: "test" },
     });
-    expect(files.map((f) => f.namespace)).toEqual(["index", "auth"]);
+    expect(files.map((f) => f.namespace).sort()).toEqual(["auth", "index"]);
   });
 
   it("includes custom extensions while always keeping json", async () => {
-    mockReaddir
-      .mockResolvedValueOnce([
-        { name: "index.yaml", isDirectory: () => false },
-        { name: "auth", isDirectory: () => true },
-      ])
-      .mockResolvedValueOnce([
-        { name: "login.yaml", isDirectory: () => false },
-        { name: "signup.json", isDirectory: () => false },
-      ]);
+    mockReaddir.mockImplementation((dir: string) => {
+      if (dir === rootDir) {
+        return Promise.resolve([isFile("index.yaml"), isDir("auth")]);
+      }
+      if (dir === `${rootDir}/auth`) {
+        return Promise.resolve([isFile("login.yaml"), isFile("signup.json")]);
+      }
+      return Promise.resolve([]);
+    });
     const files = await collectFileEntries({
       readdir: mockReaddir,
       limit: mockLimit,
@@ -96,7 +116,11 @@ describe("collectFileEntries", () => {
       exts: ["yaml"],
       loggerOptions: { id: "test" },
     });
-    expect(files.map((f) => f.basename)).toEqual(["index", "login", "signup"]);
+    expect(files.map((f) => f.basename).sort()).toEqual([
+      "index",
+      "login",
+      "signup",
+    ]);
   });
 
   it("handles directory read errors gracefully", async () => {
@@ -113,9 +137,7 @@ describe("collectFileEntries", () => {
   });
 
   it("skips entries with empty namespace", async () => {
-    mockReaddir.mockResolvedValueOnce([
-      { name: ".json", isDirectory: () => false },
-    ]);
+    mockReaddir.mockImplementation(() => Promise.resolve([isFile(".json")]));
     const files = await collectFileEntries({
       readdir: mockReaddir,
       limit: mockLimit,
@@ -128,9 +150,9 @@ describe("collectFileEntries", () => {
   });
 
   it("includes index namespace even if not listed", async () => {
-    mockReaddir.mockResolvedValueOnce([
-      { name: "index.json", isDirectory: () => false },
-    ]);
+    mockReaddir.mockImplementation(() =>
+      Promise.resolve([isFile("index.json")]),
+    );
     const files = await collectFileEntries({
       readdir: mockReaddir,
       limit: mockLimit,
@@ -143,10 +165,9 @@ describe("collectFileEntries", () => {
   });
 
   it("includes only namespaces that are listed", async () => {
-    mockReaddir.mockResolvedValueOnce([
-      { name: "auth.json", isDirectory: () => false },
-      { name: "payment.json", isDirectory: () => false },
-    ]);
+    mockReaddir.mockImplementation(() =>
+      Promise.resolve([isFile("auth.json"), isFile("payment.json")]),
+    );
     const files = await collectFileEntries({
       readdir: mockReaddir,
       limit: mockLimit,

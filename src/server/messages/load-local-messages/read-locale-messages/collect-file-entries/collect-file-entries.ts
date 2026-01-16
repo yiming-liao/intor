@@ -27,7 +27,7 @@ export async function collectFileEntries({
   namespaces,
   rootDir,
   limit,
-  exts = ["json"],
+  exts = [],
   loggerOptions,
 }: CollectFileEntriesParams): Promise<FileEntry[]> {
   const baseLogger = getLogger(loggerOptions);
@@ -52,48 +52,49 @@ export async function collectFileEntries({
     }
 
     // -------------------------------------------------------------------------
-    // Process entries (files & sub-directories)
+    // 1. Recurse into sub-directories (control flow, no limit)
     // -------------------------------------------------------------------------
-    const tasks = entries.map((entry) =>
-      limit(async () => {
-        const fullPath = path.join(currentDir, entry.name);
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      await walk(path.join(currentDir, entry.name));
+    }
 
-        // Recurse into sub-directories
-        if (entry.isDirectory()) {
-          await walk(fullPath);
-          return;
-        }
+    // -------------------------------------------------------------------------
+    // 2. Process files (IO-bound, concurrency-limited)
+    // -------------------------------------------------------------------------
+    const tasks = entries
+      .filter((entry) => entry.isFile())
+      .map((entry) =>
+        limit(async () => {
+          const fullPath = path.join(currentDir, entry.name);
 
-        // Skip unsupported file extensions
-        const ext = path.extname(entry.name).slice(1); // "json", "yaml"
-        if (!ext || !supportedExts.has(ext)) return;
+          const ext = path.extname(entry.name).slice(1);
+          if (!ext || !supportedExts.has(ext)) return;
 
-        // ---------------------------------------------------------------------
-        // Resolve file entry
-        // ---------------------------------------------------------------------
-        const relativePath = path.relative(rootDir, fullPath);
-        const withoutExt = relativePath.slice(
-          0,
-          relativePath.length - (ext.length + 1),
-        );
-        const segments = withoutExt.split(path.sep).filter(Boolean);
-        const namespace = segments.at(0);
-        if (!namespace) return;
+          const relativePath = path.relative(rootDir, fullPath);
+          const withoutExt = relativePath.slice(
+            0,
+            relativePath.length - (ext.length + 1),
+          );
 
-        // Apply namespace filter (always allow "index")
-        if (namespaces && namespace !== "index") {
-          if (!namespaces.includes(namespace)) return;
-        }
+          const segments = withoutExt.split(path.sep).filter(Boolean);
+          const namespace = segments.at(0);
+          if (!namespace) return;
 
-        fileEntries.push({
-          namespace,
-          fullPath,
-          relativePath,
-          segments,
-          basename: path.basename(entry.name, `.${ext}`),
-        });
-      }),
-    );
+          // Apply namespace filter (always allow "index")
+          if (namespaces && namespace !== "index") {
+            if (!namespaces.includes(namespace)) return;
+          }
+
+          fileEntries.push({
+            namespace,
+            fullPath,
+            relativePath,
+            segments,
+            basename: path.basename(entry.name, `.${ext}`),
+          });
+        }),
+      );
 
     await Promise.all(tasks);
   };
