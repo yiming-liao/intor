@@ -19,6 +19,12 @@ export {
   isValidMessages,
   type MessagesReader,
   type MessagesReaders,
+  // internal-metadata
+  INTOR_PREFIX,
+  INTOR_MESSAGES_KIND_KEY,
+  INTOR_MESSAGES_KIND,
+  getMessagesKind,
+  type IntorMessagesKind,
 } from "@/core";
 
 // config
