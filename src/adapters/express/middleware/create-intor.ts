@@ -3,7 +3,11 @@ import type { Request, Response, NextFunction } from "express";
 import type { LocaleMessages, Replacement } from "intor-translator";
 import { INTOR_HEADERS, normalizeQuery, type TranslatorInstance } from "@/core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
-import { getTranslator, type GetTranslatorParams } from "@/server";
+import {
+  parseCookieHeader,
+  getTranslator,
+  type GetTranslatorParams,
+} from "@/server";
 
 /**
  * Resolves locale-aware routing for the current execution context.
@@ -41,7 +45,7 @@ export function createIntor(
       {
         host: req.hostname,
         query: normalizeQuery(req.query),
-        cookie: req.cookies?.[config.cookie.name],
+        cookie: parseCookieHeader(req.headers.cookie)[config.cookie.name],
         detected: localeFromAcceptLanguage || config.defaultLocale,
       },
     );

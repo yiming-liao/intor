@@ -13,3 +13,6 @@ export {
   type GetTranslatorParams,
   loadMessagesFromUrl,
 } from "./helpers";
+
+// shared / utils
+export { parseCookieHeader } from "./shared/utils";
