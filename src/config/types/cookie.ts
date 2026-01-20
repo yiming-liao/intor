@@ -1,7 +1,5 @@
 // Cookie raw options
 export type CookieRawOptions = {
-  /** Enable cookie read/write behavior. Defaults to true */
-  enabled?: boolean;
   /** Whether to persist the resolved locale in a cookie. Defaults to true */
   persist?: boolean;
   /** Cookie name used to store the locale. Defaults to "intor.locale" */

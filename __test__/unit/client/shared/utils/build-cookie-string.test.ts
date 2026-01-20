@@ -4,7 +4,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { buildCookieString } from "@/client/shared/utils/build-cookie-string";
 
 const baseCookie: CookieResolvedOptions = {
-  enabled: true,
   persist: true,
   name: "intor.locale",
   domain: undefined,

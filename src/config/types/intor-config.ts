@@ -68,6 +68,6 @@ export type IntorResolvedConfig = {
   readonly server?: { loader?: ServerLoaderOptions };
   readonly client?: { loader?: ClientLoaderOptions };
 
-  // --- Observability & Infrastructure ---
+  // --- Observability ---
   readonly logger: LoggerOptions;
 };

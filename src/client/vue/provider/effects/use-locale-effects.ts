@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
 import { watch, type Ref } from "vue";
-import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
+import { shouldPersistOnFirstVisit } from "@/policies";
 import {
   setLocaleCookie,
   setDocumentLocale,
@@ -35,7 +35,7 @@ export function useLocaleEffects(
             isFirstVisit,
             routing.inbound.firstVisit.persist,
           ) &&
-          shouldPersist(cookie)
+          cookie.persist
         ) {
           setLocaleCookie(cookie, currentLocale);
         }
@@ -46,7 +46,7 @@ export function useLocaleEffects(
       // -------------------------------------------------------------
       // Subsequent locale changes (user-driven)
       // -------------------------------------------------------------
-      if (shouldPersist(cookie)) {
+      if (cookie.persist) {
         setLocaleCookie(cookie, currentLocale);
       }
     },

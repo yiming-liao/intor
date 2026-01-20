@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Writable } from "svelte/store";
-import { shouldPersist, shouldPersistOnFirstVisit } from "@/policies";
+import { shouldPersistOnFirstVisit } from "@/policies";
 import {
   getLocaleFromCookie,
   setDocumentLocale,
@@ -32,7 +32,7 @@ export function attachLocaleEffects(
           isFirstVisit,
           routing.inbound.firstVisit.persist,
         ) &&
-        shouldPersist(cookie)
+        cookie.persist
       ) {
         setLocaleCookie(cookie, currentLocale);
       }
@@ -43,7 +43,7 @@ export function attachLocaleEffects(
     // -------------------------------------------------------------
     // Subsequent locale changes (user-driven)
     // -------------------------------------------------------------
-    if (shouldPersist(cookie)) {
+    if (cookie.persist) {
       setLocaleCookie(cookie, currentLocale);
     }
   });
