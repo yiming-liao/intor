@@ -1,1 +1,1 @@
-export { createIntor } from "./create-intor";
+export { createIntorMiddleware } from "./create-intor-middleware";

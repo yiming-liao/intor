@@ -19,7 +19,7 @@ import {
  *
  * @platform Express
  */
-export function createIntor(
+export function createIntorMiddleware(
   config: IntorResolvedConfig,
   options?: Omit<GetTranslatorParams, "locale">,
 ) {
