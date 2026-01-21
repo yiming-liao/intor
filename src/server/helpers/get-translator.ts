@@ -12,14 +12,14 @@ import type {
   TranslateHook,
   TranslatorPlugin,
 } from "intor-translator";
-import { createIntorRuntime } from "../runtime";
+import { initTranslator } from "@/server/translator";
 
 export interface GetTranslatorParams {
   locale: string;
-  handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
   readers?: MessagesReaders;
   allowCacheWrite?: boolean;
+  handlers?: TranslateHandlers;
+  plugins?: (TranslatorPlugin | TranslateHook)[];
 }
 
 /**
@@ -53,15 +53,10 @@ export async function getTranslator(
   const { readers, allowCacheWrite, preKey, handlers, plugins } = params;
   const locale = params.locale;
 
-  // Create runtime (request-scoped, no cache write)
-  const runtime = createIntorRuntime(config, {
+  // Initialize a locale-bound translator snapshot with messages loaded
+  const translator = await initTranslator(config, locale, {
     readers,
     allowCacheWrite,
-  });
-
-  // Ensure messages & create translator snapshot
-  await runtime.ensureMessages(locale);
-  const translator = runtime.translator(locale, {
     preKey,
     plugins,
     handlers,
@@ -69,7 +64,7 @@ export async function getTranslator(
 
   return {
     messages: translator.messages,
-    locale,
+    locale: translator.locale,
     hasKey: translator.hasKey,
     t: translator.t,
   };

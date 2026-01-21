@@ -1,9 +1,14 @@
 import type { LocaleResolver, IntorValue } from "./types";
-import type { IntorRuntimeOptions } from "../runtime";
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
-import { getLogger, type GenConfigKeys, type GenMessages } from "@/core";
-import { createIntorRuntime } from "../runtime/create-intor-runtime";
+import {
+  getLogger,
+  type GenConfigKeys,
+  type GenLocale,
+  type GenMessages,
+  type MessagesReaders,
+} from "@/core";
+import { initTranslator } from "../translator";
 
 /**
  * Initializes Intor for the current execution context.
@@ -14,14 +19,11 @@ import { createIntorRuntime } from "../runtime/create-intor-runtime";
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   localeOrResolver: LocaleResolver | Locale,
-  options?: IntorRuntimeOptions,
+  options?: { readers?: MessagesReaders; allowCacheWrite?: boolean },
 ): Promise<IntorValue<CK>> {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
-
-  // Create runtime (request-scoped)
-  const runtime = createIntorRuntime(config, options);
 
   // Resolve locale
   const isLocaleFunction = typeof localeOrResolver === "function";
@@ -31,15 +33,17 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   const source = typeof localeOrResolver === "function" ? "resolver" : "static";
   logger.debug(`Initial locale resolved as "${locale}" via "${source}".`);
 
-  // Ensure messages & create translator snapshot
-  await runtime.ensureMessages(locale);
-  const translator = runtime.translator(locale);
+  // Initialize a locale-bound translator snapshot with messages loaded
+  const translator = await initTranslator(config, locale, {
+    readers: options?.readers,
+    allowCacheWrite: options?.allowCacheWrite,
+  });
 
   logger.info("Intor initialized.");
 
   return {
     config,
-    locale,
-    messages: translator.messages as GenMessages<CK>,
+    locale: translator.locale as GenLocale<CK>,
+    messages: translator.messages as Readonly<GenMessages<CK>>,
   };
 }

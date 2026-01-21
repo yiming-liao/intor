@@ -8,10 +8,11 @@ import type {
 import { Translator } from "intor-translator";
 import { mergeMessages } from "@/core/messages/merge-messages";
 
-interface CreateTranslatorParams {
+export interface CreateTranslatorParams {
   config: IntorResolvedConfig;
   locale: string;
   messages: LocaleMessages;
+  preKey?: string;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
 }
@@ -26,9 +27,7 @@ interface CreateTranslatorParams {
  * The returned object is a read-only translation view
  * and does not expose the underlying Translator instance.
  */
-export function createTranslator(
-  params: CreateTranslatorParams & { preKey?: string },
-) {
+export function createTranslator(params: CreateTranslatorParams) {
   const { config, locale, messages, preKey, handlers, plugins } = params;
 
   // Merge static config messages with runtime-loaded messages
