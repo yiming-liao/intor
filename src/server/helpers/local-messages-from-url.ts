@@ -16,22 +16,21 @@ function parseMultiValueParam(values: string[] | null): string[] | undefined {
 }
 
 /**
- * Load locale messages from a URL-based query protocol.
+ * Load locale messages using a URL-based query protocol.
  *
- * - This helper is intended for building custom HTTP endpoints
+ * This helper parses Intor-compatible URL parameters and
+ * delegates message loading to the local loader.
  *
+ * This helper is intended for building custom HTTP endpoints.
+
  * @example
  * ```ts
- * const url = new URL(
- *   "https://example.com/messages" +
- *   "?locale=en-US" +
- *   "&rootDir=./messages" +
- *   "&namespaces=common" +
- *   "&namespaces=homepage" +
- *   "&fallbackLocales=zh-TW"
- * );
- *
- * const messages = await loadMessagesFromUrl(url);
+ * // In a custom HTTP endpoint
+ * export async function GET(req: Request) {
+ *   const url = new URL(req.url);
+ *   const messages = await loadMessagesFromUrl(url);
+ *   return Response.json(messages);
+ * }
  * ```
  */
 export async function loadMessagesFromUrl(
