@@ -1,5 +1,6 @@
 /**
- * A function that reads and parses a message file.
+ * A function that reads and parses a message file into a message object
+ * for a single locale (without locale prefix).
  *
  * This function is format-specific (YAML, TOML, etc.)
  * and is NOT responsible for validating the returned structure.
@@ -7,11 +8,13 @@
  * @param filePath - The path to the message file to read.
  * @returns A Promise that resolves to parsed, unvalidated content.
  *
- *   @example
+ * @example
  * ```ts
- * const reader: MessagesReader = async (filePath) => {
- *   const content = await fs.promises.readFile(filePath, "utf-8");
- *   return JSON.parse(content) as Messages;
+ * const reader: MessagesReader = async () => {
+ *   // Single-locale message object (no locale prefix)
+ *   return {
+ *     title: "Hello",
+ *   };
  * };
  * ```
  */
@@ -22,8 +25,8 @@ export type MessagesReader = (filePath: string) => Promise<unknown>;
  *
  * Example:
  * {
+ *   md: mdReader,
  *   yaml: yamlReader,
- *   yml: yamlReader,
  *   toml: tomlReader,
  * }
  */
