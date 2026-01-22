@@ -24,10 +24,6 @@ export { getLogger, clearLoggerPool } from "./logger";
 export {
   // load-remote-messages
   loadRemoteMessages,
-  // messages pool
-  type MessagesPool,
-  getGlobalMessagesPool,
-  clearMessagesPool,
   // merge-messages
   mergeMessages,
   // utils

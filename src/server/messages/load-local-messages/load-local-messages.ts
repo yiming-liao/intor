@@ -2,7 +2,8 @@ import type { LoadLocalMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import pLimit from "p-limit";
-import { getLogger, normalizeCacheKey, getGlobalMessagesPool } from "@/core";
+import { getLogger, normalizeCacheKey } from "@/core";
+import { getMessagesPool } from "./cache/messages-pool";
 import { readLocaleMessages } from "./read-locale-messages";
 
 /**
@@ -28,7 +29,7 @@ export const loadLocalMessages = async ({
   rootDir = "messages",
   concurrency = 10,
   readers,
-  pool = getGlobalMessagesPool(),
+  pool = getMessagesPool(),
   allowCacheWrite = false,
   loggerOptions,
 }: LoadLocalMessagesParams): Promise<LocaleMessages | undefined> => {

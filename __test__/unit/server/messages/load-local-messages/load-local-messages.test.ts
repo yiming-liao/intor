@@ -2,7 +2,7 @@
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as loggerModule from "@/core/logger/get-logger";
-import { getGlobalMessagesPool } from "@/core/messages/global-messages-pool";
+import { getMessagesPool } from "@/server/messages/load-local-messages/cache/messages-pool";
 import { loadLocalMessages } from "@/server/messages/load-local-messages/load-local-messages";
 import * as readModule from "@/server/messages/load-local-messages/read-locale-messages";
 
@@ -19,7 +19,7 @@ const loggerMock = {
 vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
 
 vi.mock("@/server/messages/load-local-messages/read-locale-messages");
-vi.mock("@/core/messages/global-messages-pool");
+vi.mock("@/server/messages/load-local-messages/cache/messages-pool");
 
 describe("loadLocalMessages", () => {
   const mockReadLocaleMessages = vi.mocked(readModule.readLocaleMessages);
@@ -29,7 +29,7 @@ describe("loadLocalMessages", () => {
     set: vi.fn(),
   };
 
-  vi.mocked(getGlobalMessagesPool).mockReturnValue(mockPool as any);
+  vi.mocked(getMessagesPool).mockReturnValue(mockPool as any);
 
   const ORIGINAL_ENV = process.env.NODE_ENV;
 

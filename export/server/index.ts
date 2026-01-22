@@ -7,6 +7,7 @@ export {
 
   // messages
   loadMessages,
+  clearMessagesPool,
 
   // translator
   getTranslator,

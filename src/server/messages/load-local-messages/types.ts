@@ -1,5 +1,6 @@
+import type { MessagesPool } from "./cache/messages-pool";
 import type { LoggerOptions } from "@/config";
-import type { MessagesPool, MessagesReaders } from "@/core";
+import type { MessagesReaders } from "@/core";
 
 export interface LoadLocalMessagesParams {
   id: string;

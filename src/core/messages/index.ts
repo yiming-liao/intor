@@ -1,13 +1,6 @@
 // load-remote-messages
 export { loadRemoteMessages } from "./load-remote-messages";
 
-// messages pool
-export {
-  type MessagesPool,
-  getGlobalMessagesPool,
-  clearMessagesPool,
-} from "./global-messages-pool";
-
 // merge-messages
 export { mergeMessages } from "./merge-messages";
 

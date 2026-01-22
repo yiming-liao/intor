@@ -2,7 +2,7 @@
 export { intor, type IntorValue } from "./intor";
 
 // messages
-export { loadMessages } from "./messages";
+export { loadMessages, clearMessagesPool } from "./messages";
 
 // translator
 export { type TranslatorInstanceServer } from "./translator";

@@ -13,8 +13,6 @@ export {
   resolveLoaderOptions,
   // logger
   clearLoggerPool,
-  // messages
-  clearMessagesPool,
   mergeMessages,
   isValidMessages,
   type MessagesReader,
