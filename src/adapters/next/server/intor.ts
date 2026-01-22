@@ -13,10 +13,10 @@ import { getLocale } from "./get-locale";
  */
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  readers?: MessagesReaders,
+  options?: { readers?: MessagesReaders; allowCacheWrite?: boolean },
 ): Promise<IntorValue<CK>> {
   return await intorCore(config, getLocale, {
-    readers,
-    allowCacheWrite: true,
+    readers: options?.readers,
+    allowCacheWrite: options?.allowCacheWrite ?? true,
   });
 }
