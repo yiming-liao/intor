@@ -3,21 +3,21 @@ import type { FileEntry } from "@/server/messages/load-local-messages/read-local
 import type { LimitFunction } from "p-limit";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as coreModule from "@/core";
+import * as nestModule from "@/core/messages/utils/nest-object-from-path";
 import { parseFileEntries } from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries";
 import * as jsonReaderModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/json-reader";
-import * as nestModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries/utils/nest-object-from-path";
 
 describe("parseFileEntries", () => {
   const limit = ((fn: any) => Promise.resolve(fn())) as LimitFunction;
   const traceSpy = vi.fn();
-  const errorSpy = vi.fn();
+  const warnSpy = vi.fn();
 
   beforeEach(() => {
     vi.restoreAllMocks();
     traceSpy.mockReset();
-    errorSpy.mockReset();
+    warnSpy.mockReset();
     vi.spyOn(coreModule, "getLogger").mockReturnValue({
-      child: () => ({ trace: traceSpy, error: errorSpy }),
+      child: () => ({ trace: traceSpy, warn: warnSpy }),
     } as any);
     vi.spyOn(coreModule, "isValidMessages").mockReturnValue(true);
     vi.spyOn(coreModule, "deepMerge").mockImplementation(
@@ -81,8 +81,7 @@ describe("parseFileEntries", () => {
         d: "D",
       },
     });
-    expect(traceSpy).toHaveBeenCalledTimes(4);
-    expect(errorSpy).not.toHaveBeenCalled();
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 
   it("uses custom reader for non-json extensions", async () => {
@@ -125,7 +124,7 @@ describe("parseFileEntries", () => {
       },
       loggerOptions: { id: "test" },
     });
-    expect(errorSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 
   it("skips file when messages structure is invalid", async () => {
@@ -147,6 +146,6 @@ describe("parseFileEntries", () => {
       loggerOptions: { id: "test" },
     });
     expect(result).toEqual({});
-    expect(errorSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 });

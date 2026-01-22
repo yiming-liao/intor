@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { LocaleMessages } from "intor-translator";
+import type { MessageObject } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as loggerModule from "@/core/logger";
-import * as fetchModule from "@/core/messages/load-remote-messages/fetch-locale-messages";
+import * as fetchModule from "@/core/messages/load-remote-messages/fetch-remote-resource";
 import { loadRemoteMessages } from "@/core/messages/load-remote-messages/load-remote-messages";
 
 describe("loadRemoteMessages", () => {
@@ -19,9 +19,8 @@ describe("loadRemoteMessages", () => {
   const baseParams = {
     locale: "en-US",
     fallbackLocales: ["zh-TW"],
-    namespaces: ["common"],
-    rootDir: "messages",
-    url: "https://api.example.com/messages",
+    namespaces: ["common", "error"],
+    url: "https://cdn.example.com/messages",
     headers: { Authorization: "Bearer token" },
     loggerOptions: { id: "test" },
   };
@@ -34,7 +33,7 @@ describe("loadRemoteMessages", () => {
   it("returns early if signal is already aborted", async () => {
     const controller = new AbortController();
     controller.abort();
-    const fetchSpy = vi.spyOn(fetchModule, "fetchLocaleMessages");
+    const fetchSpy = vi.spyOn(fetchModule, "fetchRemoteResource");
     const result = await loadRemoteMessages({
       ...baseParams,
       signal: controller.signal,
@@ -44,54 +43,91 @@ describe("loadRemoteMessages", () => {
     expect(loggerChild.debug).toHaveBeenCalled();
   });
 
-  it("tries fallback locale when primary locale has no messages", async () => {
+  it("loads index and namespace resources and nests them correctly", async () => {
     const fetchSpy = vi
-      .spyOn(fetchModule, "fetchLocaleMessages")
-      .mockResolvedValueOnce({ "en-US": {} })
-      .mockResolvedValueOnce({
-        "zh-TW": { hello: "fallback" },
+      .spyOn(fetchModule, "fetchRemoteResource")
+      .mockImplementation(async ({ url }) => {
+        if (url.endsWith("/index.json")) {
+          return { app: "Intor" } as MessageObject;
+        }
+        if (url.endsWith("/common.json")) {
+          return { title: "Hello" } as MessageObject;
+        }
+        if (url.endsWith("/error.json")) {
+          return { notFound: "Not found" } as MessageObject;
+        }
+        return undefined;
       });
     const result = await loadRemoteMessages(baseParams);
-    expect(fetchSpy).toHaveBeenCalledTimes(2);
-    expect(fetchSpy.mock.calls[0][0].locale).toBe("en-US");
-    expect(fetchSpy.mock.calls[1][0].locale).toBe("zh-TW");
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
     expect(result).toEqual({
-      "zh-TW": { hello: "fallback" },
+      "en-US": {
+        app: "Intor",
+        common: {
+          title: "Hello",
+        },
+        error: {
+          notFound: "Not found",
+        },
+      },
     });
+    expect(loggerChild.trace).toHaveBeenCalled();
   });
 
-  it("returns early when fetch is aborted during execution", async () => {
-    const controller = new AbortController();
-    vi.spyOn(fetchModule, "fetchLocaleMessages").mockImplementation(
-      async () => {
-        controller.abort();
-        throw new DOMException("aborted", "AbortError");
+  it("falls back to next locale when primary locale yields no messages", async () => {
+    vi.spyOn(fetchModule, "fetchRemoteResource").mockImplementation(
+      async ({ url }) => {
+        if (url.includes("/en-US/")) return undefined;
+        if (url.endsWith("/zh-TW/index.json")) {
+          return { app: "Intor TW" } as MessageObject;
+        }
+        return undefined;
       },
     );
+    const result = await loadRemoteMessages(baseParams);
+    expect(result).toEqual({
+      "zh-TW": {
+        app: "Intor TW",
+      },
+    });
+  });
+
+  it("loads only index.json when namespaces is not provided", async () => {
+    vi.spyOn(fetchModule, "fetchRemoteResource").mockResolvedValue({
+      app: "Intor",
+    } as MessageObject);
     const result = await loadRemoteMessages({
       ...baseParams,
-      signal: controller.signal,
+      namespaces: undefined,
     });
-    expect(result).toBeUndefined();
-    expect(loggerChild.debug).toHaveBeenCalled();
+    expect(result).toEqual({
+      "en-US": {
+        app: "Intor",
+      },
+    });
   });
 
-  it("returns undefined and warns when all locales fail", async () => {
-    vi.spyOn(fetchModule, "fetchLocaleMessages").mockRejectedValue(
-      new Error("network error"),
-    );
+  it("returns undefined when all locales yield no messages", async () => {
+    vi.spyOn(fetchModule, "fetchRemoteResource").mockResolvedValue(undefined);
     const result = await loadRemoteMessages(baseParams);
     expect(result).toBeUndefined();
+  });
+
+  it("falls back when primary locale throws fetch error", async () => {
+    vi.spyOn(fetchModule, "fetchRemoteResource")
+      .mockImplementationOnce(async () => {
+        throw new Error("network error");
+      })
+      .mockResolvedValueOnce({ app: "Fallback OK" });
+    const result = await loadRemoteMessages({
+      ...baseParams,
+      namespaces: undefined,
+    });
+    expect(result).toEqual({
+      "zh-TW": {
+        app: "Fallback OK",
+      },
+    });
     expect(loggerChild.warn).toHaveBeenCalled();
-  });
-
-  it("returns messages when primary locale resolves successfully", async () => {
-    const fetched: LocaleMessages = {
-      "en-US": { hello: "world" },
-    };
-    vi.spyOn(fetchModule, "fetchLocaleMessages").mockResolvedValue(fetched);
-    const result = await loadRemoteMessages(baseParams);
-    expect(result).toEqual(fetched);
-    expect(loggerChild.trace).toHaveBeenCalled();
   });
 });

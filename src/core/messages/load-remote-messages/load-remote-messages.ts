@@ -1,25 +1,31 @@
 import type { LoadRemoteMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
+import pLimit from "p-limit";
 import { getLogger } from "../../logger";
-import { fetchLocaleMessages } from "./fetch-locale-messages";
+import { collectRemoteResources } from "./collect-remote-resources";
+import { fetchRemoteResource } from "./fetch-remote-resource";
+import { resolveRemoteResources } from "./resolve-remote-resources";
 
 /**
- * Load locale messages from a remote API.
+ * Load locale messages from a remote source.
  *
  * This function serves as the orchestration layer for remote message loading.
  * It coordinates:
  *
  * - Locale resolution with fallbacks
- * - Respecting abort signals across the entire async flow
+ * - Concurrency control for network requests
+ * - Remote resource fetching and message merging
  *
- * Network fetching and data validation are delegated to lower-level utilities.
+ * Remote messages are fetched on demand and are not memoized at the process level.
+ *
+ * Network requests and response validation are delegated to lower-level utilities.
  */
 export const loadRemoteMessages = async ({
   locale,
   fallbackLocales,
   namespaces,
-  rootDir,
-  url,
+  concurrency,
+  url: baseUrl,
   headers,
   signal,
   loggerOptions,
@@ -34,11 +40,12 @@ export const loadRemoteMessages = async ({
   }
 
   const start = performance.now();
-  logger.debug("Loading remote messages.", { url });
+  logger.debug("Loading remote messages.", { baseUrl });
 
-  // ---------------------------------------------------------------------------
+  // ----------------------------------------------------------------
   // Resolve locale messages with ordered fallback strategy
-  // ---------------------------------------------------------------------------
+  // ----------------------------------------------------------------
+  const limit = concurrency ? pLimit(concurrency) : undefined;
   const candidateLocales = [locale, ...(fallbackLocales || [])];
   let messages: LocaleMessages | undefined;
 
@@ -46,25 +53,47 @@ export const loadRemoteMessages = async ({
     const candidateLocale = candidateLocales[i];
     const isLast = i === candidateLocales.length - 1;
     try {
-      const fetched = await fetchLocaleMessages({
+      // -----------------------------------------------------------------
+      // Collect remote message resources for the locale
+      // -----------------------------------------------------------------
+      const resources = collectRemoteResources({
         locale: candidateLocale,
+        baseUrl,
         namespaces,
-        rootDir,
-        url,
-        headers,
-        signal,
-        extraOptions: { loggerOptions },
       });
-      // Stop at the first locale that yields non-empty messages
-      if (fetched && Object.values(fetched[candidateLocale] || {}).length > 0) {
-        messages = fetched;
-        break;
-      }
-    } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
+
+      // -----------------------------------------------------------------
+      // Fetch all message chunks in parallel
+      // -----------------------------------------------------------------
+      const fetchUrl = (url: string) =>
+        fetchRemoteResource({ url, headers, signal, loggerOptions });
+      const results = await Promise.all(
+        resources.map(({ url }) =>
+          limit ? limit(() => fetchUrl(url)) : fetchUrl(url),
+        ),
+      );
+
+      // Guard: no valid remote resources
+      if (!results.some(Boolean)) continue;
+
+      // -----------------------------------------------------------------
+      // Resolve and merge remote message resources
+      // -----------------------------------------------------------------
+      const resolved = resolveRemoteResources(
+        resources.map((res, i) => ({ path: res.path, data: results[i] })),
+      );
+
+      // -----------------------------------------------------------------
+      // Wrap resolved messages into locale-scoped LocaleMessages
+      // -----------------------------------------------------------------
+      messages = { [candidateLocale]: resolved };
+      break;
+    } catch {
+      if (signal?.aborted) {
         logger.debug("Remote message loading aborted.");
         return;
       }
+
       if (isLast) {
         logger.warn("Failed to load messages for all candidate locales.", {
           locale,
@@ -72,20 +101,16 @@ export const loadRemoteMessages = async ({
         });
       } else {
         logger.warn(
-          `Failed to fetch locale messages for "${candidateLocale}", trying next fallback.`,
+          `Failed to load locale messages for "${candidateLocale}", trying next fallback.`,
         );
       }
-      logger.trace("Remote fetch error detail.", {
-        locale: candidateLocale,
-        error,
-      });
     }
   }
 
   // Final success log with resolved locale and timing
   if (messages) {
     logger.trace("Finished loading remote messages.", {
-      loadedLocale: messages ? Object.keys(messages)[0] : undefined,
+      loadedLocale: Object.keys(messages)[0],
       duration: `${Math.round(performance.now() - start)} ms`,
     });
   }

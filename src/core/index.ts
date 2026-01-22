@@ -28,6 +28,7 @@ export {
   mergeMessages,
   // utils
   isValidMessages,
+  nestObjectFromPath,
   // types
   type MessagesReader,
   type MessagesReaders,

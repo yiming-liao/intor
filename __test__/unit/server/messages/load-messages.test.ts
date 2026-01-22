@@ -105,9 +105,9 @@ describe("loadMessages", () => {
         locale: "en-US",
         fallbackLocales: ["zh-TW"],
         namespaces: ["common"],
-        rootDir: "messages",
         url: "https://api.example.com",
         headers: { Authorization: "Bearer token" },
+        loggerOptions: { id: "test" },
       }),
     );
     expect(localModule.loadLocalMessages).not.toHaveBeenCalled();

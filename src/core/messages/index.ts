@@ -5,7 +5,7 @@ export { loadRemoteMessages } from "./load-remote-messages";
 export { mergeMessages } from "./merge-messages";
 
 // utils
-export { isValidMessages } from "./utils/is-valid-messages";
+export { isValidMessages, nestObjectFromPath } from "./utils";
 
 // types
 export type { MessagesReader, MessagesReaders } from "./types";

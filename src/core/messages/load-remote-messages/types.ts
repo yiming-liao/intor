@@ -5,7 +5,9 @@ export interface LoadRemoteMessagesParams {
   locale: string;
   fallbackLocales?: string[];
   namespaces?: string[];
-  rootDir?: string;
+
+  // --- Execution ---
+  concurrency?: number;
 
   // --- Remote Source ---
   url: string;

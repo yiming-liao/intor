@@ -8,11 +8,7 @@ export { loadMessages, clearMessagesPool } from "./messages";
 export { type TranslatorInstanceServer } from "./translator";
 
 // helpers
-export {
-  getTranslator,
-  type GetTranslatorParams,
-  loadMessagesFromUrl,
-} from "./helpers";
+export { getTranslator, type GetTranslatorParams } from "./helpers";
 
 // shared / utils
 export { parseCookieHeader } from "./shared/utils";

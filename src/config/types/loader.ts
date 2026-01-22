@@ -12,22 +12,22 @@ export interface RemoteHeaders {
 interface LocalLoader {
   /** Use local filesystem-based message loading. */
   type: "local";
-  /** Root location for resolving message loading sources. */
-  rootDir?: string;
   /** Namespaces to load for all routes. */
   namespaces?: string[];
   /** Maximum number of concurrent loading tasks. */
   concurrency?: number;
+  /** Root location for resolving message loading sources. */
+  rootDir?: string;
 }
 
 /** Remote message loader options. */
 export interface RemoteLoader {
   /** Use remote API-based message loading. */
   type: "remote";
-  /** Root location for resolving message loading sources. */
-  rootDir?: string;
   /** Namespaces to load for all routes. */
   namespaces?: string[];
+  /** Maximum number of concurrent loading tasks. */
+  concurrency?: number;
   /** Base URL for fetching remote messages. */
   url: string;
   /** Optional headers sent with remote requests. */

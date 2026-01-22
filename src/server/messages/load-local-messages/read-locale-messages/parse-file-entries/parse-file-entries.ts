@@ -1,9 +1,13 @@
 import type { ParseFileEntriesParams, ParsedFileEntries } from "./types";
 import type { MessageObject } from "intor-translator";
 import path from "node:path";
-import { getLogger, isValidMessages, deepMerge } from "@/core";
+import {
+  getLogger,
+  isValidMessages,
+  deepMerge,
+  nestObjectFromPath,
+} from "@/core";
 import { jsonReader } from "./utils/json-reader";
-import { nestObjectFromPath } from "./utils/nest-object-from-path";
 
 /**
  * Parse locale message files into a unified Messages object (single-locale).
@@ -46,58 +50,56 @@ export async function parseFileEntries({
   // Read and parse all file entries
   const parsedFileEntries: ParsedFileEntries[] = [];
 
-  const tasks = fileEntries.map(
-    ({ namespace, segments, basename, fullPath, relativePath }) =>
-      limit(async () => {
-        try {
-          // -------------------------------------------------------------------
-          // Read and validate file content
-          // -------------------------------------------------------------------
-          const ext = path.extname(fullPath).slice(1); // remove dot
+  const tasks = fileEntries.map(({ namespace, segments, basename, fullPath }) =>
+    limit(async () => {
+      try {
+        // -------------------------------------------------------------------
+        // Read and validate file content
+        // -------------------------------------------------------------------
+        const ext = path.extname(fullPath).slice(1); // remove dot
 
-          let raw: unknown;
-          if (ext === "json") {
-            raw = await jsonReader(fullPath);
-          } else {
-            const reader = readers?.[ext];
-            if (!reader) {
-              throw new Error(
-                `No message reader registered for .${ext} files. ` +
-                  `Please register a reader for the "${ext}" extension.`,
-              );
-            }
-            raw = await reader(fullPath);
-          }
-
-          // Validate messages structure
-          if (!isValidMessages(raw)) {
+        let raw: unknown;
+        if (ext === "json") {
+          raw = await jsonReader(fullPath);
+        } else {
+          const reader = readers?.[ext];
+          if (!reader) {
             throw new Error(
-              "Parsed content does not match expected Messages structure",
+              `No message reader registered for .${ext} files. ` +
+                `Please register a reader for the "${ext}" extension.`,
             );
           }
-
-          // -------------------------------------------------------------------
-          // Build nested message object from path segments
-          // -------------------------------------------------------------------
-          const segmentsWithoutNamespace = segments.slice(1);
-          const isIndexFile = basename === "index";
-
-          const keyPath = isIndexFile
-            ? segmentsWithoutNamespace.slice(0, -1)
-            : segmentsWithoutNamespace;
-
-          // Nest the parsed content based on the path segments
-          const nestedMessages = nestObjectFromPath(keyPath, raw);
-
-          parsedFileEntries.push({ namespace, messages: nestedMessages });
-          logger.trace(`Parsed message file: ${relativePath}`);
-        } catch (error) {
-          logger.error("Failed to read or parse file.", {
-            path: fullPath,
-            error,
-          });
+          raw = await reader(fullPath);
         }
-      }),
+
+        // Validate messages structure
+        if (!isValidMessages(raw)) {
+          throw new Error(
+            "Parsed content does not match expected Messages structure",
+          );
+        }
+
+        // -------------------------------------------------------------------
+        // Build nested message object from path segments
+        // -------------------------------------------------------------------
+        const segmentsWithoutNamespace = segments.slice(1);
+        const isIndexFile = basename === "index";
+
+        const keyPath = isIndexFile
+          ? segmentsWithoutNamespace.slice(0, -1)
+          : segmentsWithoutNamespace;
+
+        // Nest the parsed content based on the path segments
+        const nestedMessages = nestObjectFromPath(keyPath, raw);
+
+        parsedFileEntries.push({ namespace, messages: nestedMessages });
+      } catch (error) {
+        logger.warn("Failed to read or parse file.", {
+          path: fullPath,
+          error,
+        });
+      }
+    }),
   );
 
   await Promise.all(tasks);

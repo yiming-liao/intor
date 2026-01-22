@@ -11,7 +11,4 @@ export {
 
   // translator
   getTranslator,
-
-  // helpers
-  loadMessagesFromUrl,
 } from "@/server";
