@@ -47,6 +47,7 @@ export const createRefetchMessages = ({
         fallbackLocales: config.fallbackLocales[newLocale] || [],
         namespaces: loader.namespaces,
         concurrency: loader.concurrency,
+        fetch: globalThis.fetch,
         url: loader.url,
         headers: loader.headers,
         signal: currentController.signal,

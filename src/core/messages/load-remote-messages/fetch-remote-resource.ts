@@ -1,9 +1,11 @@
+import type { RuntimeFetch } from "../../types";
 import type { RemoteHeaders, LoggerOptions } from "@/config";
 import type { MessageObject } from "intor-translator";
 import { getLogger } from "../../logger";
 import { isValidMessages } from "../utils/is-valid-messages";
 
 interface FetchLocaleMessagesParams {
+  fetch: RuntimeFetch;
   url: string;
   headers?: RemoteHeaders;
   signal?: AbortSignal;
@@ -22,6 +24,7 @@ interface FetchLocaleMessagesParams {
  * - Handling abort and network errors
  */
 export async function fetchRemoteResource({
+  fetch,
   url,
   headers,
   signal,

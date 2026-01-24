@@ -57,4 +57,6 @@ export type {
   RoutingLocaleSource,
   RoutingLocaleCarrier,
   LocalePathPrefix,
+  // runtime-fetch
+  RuntimeFetch,
 } from "./types";

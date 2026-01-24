@@ -23,6 +23,7 @@ describe("loadRemoteMessages", () => {
     url: "https://cdn.example.com/messages",
     headers: { Authorization: "Bearer token" },
     loggerOptions: { id: "test" },
+    fetch,
   };
 
   beforeEach(() => {

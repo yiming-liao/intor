@@ -7,6 +7,7 @@ import {
   type GenLocale,
   type GenMessages,
   type MessagesReaders,
+  type RuntimeFetch,
 } from "@/core";
 import { initTranslator } from "../translator";
 
@@ -19,7 +20,11 @@ import { initTranslator } from "../translator";
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   localeOrResolver: LocaleResolver | Locale,
-  options?: { readers?: MessagesReaders; allowCacheWrite?: boolean },
+  options?: {
+    readers?: MessagesReaders;
+    allowCacheWrite?: boolean;
+    fetch?: RuntimeFetch;
+  },
 ): Promise<IntorValue<CK>> {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
@@ -37,6 +42,7 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   const translator = await initTranslator(config, locale, {
     readers: options?.readers,
     allowCacheWrite: options?.allowCacheWrite,
+    fetch: options?.fetch || globalThis.fetch,
   });
 
   logger.info("Intor initialized.");

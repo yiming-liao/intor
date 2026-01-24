@@ -5,6 +5,7 @@ import type {
   GenMessages,
   GenReplacements,
   MessagesReaders,
+  RuntimeFetch,
 } from "@/core";
 import type {
   LocalizedPreKey,
@@ -18,6 +19,7 @@ export interface GetTranslatorParams {
   locale: string;
   readers?: MessagesReaders;
   allowCacheWrite?: boolean;
+  fetch?: RuntimeFetch;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
 }
@@ -50,13 +52,14 @@ export async function getTranslator(
   config: IntorResolvedConfig,
   params: GetTranslatorParams & { preKey?: string },
 ) {
-  const { readers, allowCacheWrite, preKey, handlers, plugins } = params;
-  const locale = params.locale;
+  const { locale, readers, allowCacheWrite, fetch, preKey, handlers, plugins } =
+    params;
 
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
     readers,
     allowCacheWrite,
+    fetch: fetch || globalThis.fetch,
     preKey,
     plugins,
     handlers,

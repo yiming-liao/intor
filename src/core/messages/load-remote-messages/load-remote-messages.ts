@@ -25,6 +25,7 @@ export const loadRemoteMessages = async ({
   fallbackLocales,
   namespaces,
   concurrency,
+  fetch,
   url: baseUrl,
   headers,
   signal,
@@ -66,7 +67,7 @@ export const loadRemoteMessages = async ({
       // Fetch all message chunks in parallel
       // -----------------------------------------------------------------
       const fetchUrl = (url: string) =>
-        fetchRemoteResource({ url, headers, signal, loggerOptions });
+        fetchRemoteResource({ url, headers, signal, loggerOptions, fetch });
       const results = await Promise.all(
         resources.map(({ url }) =>
           limit ? limit(() => fetchUrl(url)) : fetchUrl(url),

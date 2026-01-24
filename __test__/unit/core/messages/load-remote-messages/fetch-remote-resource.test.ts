@@ -13,23 +13,27 @@ describe("fetchRemoteResource", () => {
     child: vi.fn(() => loggerChild),
   };
 
-  const baseParams = {
+  let mockFetch: any;
+
+  const baseParams = () => ({
     url: "https://cdn.example.com/en/common.json",
     headers: { Authorization: "Bearer token" },
     loggerOptions: { id: "test" },
-  };
+    fetch: mockFetch,
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(loggerModule, "getLogger").mockReturnValue(logger as any);
+    mockFetch = vi.fn();
   });
 
   it("returns parsed messages when fetch succeeds", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
+    mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({ title: "Hello" }),
     } as any);
-    const result = await fetchRemoteResource(baseParams);
+    const result = await fetchRemoteResource(baseParams());
     expect(result).toEqual({ title: "Hello" });
   });
 
@@ -39,7 +43,7 @@ describe("fetchRemoteResource", () => {
       status: 404,
       statusText: "Not Found",
     } as any);
-    const result = await fetchRemoteResource(baseParams);
+    const result = await fetchRemoteResource(baseParams());
     expect(result).toBeUndefined();
     expect(loggerChild.warn).toHaveBeenCalled();
   });
@@ -49,30 +53,34 @@ describe("fetchRemoteResource", () => {
       ok: true,
       json: async () => "not-an-object",
     } as any);
-    const result = await fetchRemoteResource(baseParams);
+    const result = await fetchRemoteResource(baseParams());
     expect(result).toBeUndefined();
     expect(loggerChild.warn).toHaveBeenCalled();
   });
 
   it("returns early when fetch is aborted", async () => {
     const controller = new AbortController();
-    controller.abort();
-    globalThis.fetch = vi
+    const mockFetch = vi
       .fn()
       .mockRejectedValue(
         Object.assign(new Error("Aborted"), { name: "AbortError" }),
       );
+    controller.abort();
     const result = await fetchRemoteResource({
-      ...baseParams,
+      ...baseParams(),
+      fetch: mockFetch,
       signal: controller.signal,
     });
     expect(result).toBeUndefined();
-    expect(loggerChild.debug).toHaveBeenCalled();
+    expect(loggerChild.debug).toHaveBeenCalledWith(
+      "Remote fetch aborted.",
+      expect.objectContaining({ url: baseParams().url }),
+    );
   });
 
   it("returns undefined on network error", async () => {
     globalThis.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
-    const result = await fetchRemoteResource(baseParams);
+    const result = await fetchRemoteResource(baseParams());
     expect(result).toBeUndefined();
     expect(loggerChild.warn).toHaveBeenCalled();
   });

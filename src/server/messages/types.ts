@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { MessagesReaders } from "@/core";
+import type { MessagesReaders, RuntimeFetch } from "@/core";
 import type { Locale } from "intor-translator";
 
 export type LoadMessagesParams = {
@@ -12,4 +12,6 @@ export type LoadMessagesParams = {
    * write into the shared messages cache.
    */
   allowCacheWrite?: boolean;
+
+  fetch: RuntimeFetch;
 };

@@ -9,7 +9,7 @@ import {
 } from "./create-translator";
 
 export interface InitTranslatorOptions
-  extends Pick<LoadMessagesParams, "readers" | "allowCacheWrite">,
+  extends Pick<LoadMessagesParams, "readers" | "allowCacheWrite" | "fetch">,
     Pick<CreateTranslatorParams, "preKey" | "handlers" | "plugins"> {}
 
 /**
@@ -21,23 +21,30 @@ export interface InitTranslatorOptions
 export async function initTranslator(
   config: IntorResolvedConfig,
   locale: Locale,
-  options?: InitTranslatorOptions,
+  options: InitTranslatorOptions,
 ): Promise<TranslatorInstanceServer<LocaleMessages>> {
   const {
     readers,
     allowCacheWrite = false,
+    fetch,
     preKey,
     handlers,
     plugins,
-  } = options || {};
+  } = options;
 
   const loader = resolveLoaderOptions(config, "server");
 
   // Load messages
   let messages: LocaleMessages = {};
   if (loader) {
-    messages =
-      (await loadMessages({ config, locale, readers, allowCacheWrite })) || {};
+    const loaded = await loadMessages({
+      config,
+      locale,
+      readers,
+      allowCacheWrite,
+      fetch,
+    });
+    messages = loaded || {};
   }
 
   // Create immutable translator snapshot

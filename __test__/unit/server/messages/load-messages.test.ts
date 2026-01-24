@@ -42,6 +42,7 @@ describe("loadMessages", () => {
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
+      fetch,
     });
     expect(result).toBeUndefined();
     expect(loggerChildMock.warn).toHaveBeenCalledWith(
@@ -69,6 +70,7 @@ describe("loadMessages", () => {
         json: dummyReader,
       },
       allowCacheWrite: true,
+      fetch,
     });
     expect(localModule.loadLocalMessages).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -99,6 +101,7 @@ describe("loadMessages", () => {
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
+      fetch,
     });
     expect(remoteModule.loadRemoteMessages).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -123,6 +126,7 @@ describe("loadMessages", () => {
     const result = await loadMessages({
       config: createConfig() as any,
       locale: "en-US",
+      fetch,
     });
     expect(result).toBeUndefined();
     expect(loggerChildMock.warn).toHaveBeenCalledWith(

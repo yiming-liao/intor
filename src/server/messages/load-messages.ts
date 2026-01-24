@@ -21,6 +21,7 @@ export const loadMessages = async ({
   locale,
   readers,
   allowCacheWrite = false,
+  fetch,
 }: LoadMessagesParams): Promise<LocaleMessages | undefined> => {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "load-messages" });
@@ -70,6 +71,7 @@ export const loadMessages = async ({
       fallbackLocales,
       namespaces,
       concurrency,
+      fetch,
       url: loader.url,
       headers: loader.headers,
       loggerOptions: config.logger,

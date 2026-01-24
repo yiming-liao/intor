@@ -19,3 +19,6 @@ export type {
   RoutingLocaleCarrier,
   LocalePathPrefix,
 } from "./routing";
+
+// runtime-fetch
+export type { RuntimeFetch } from "./runtime-fetch";

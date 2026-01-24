@@ -1,3 +1,4 @@
+import type { RuntimeFetch } from "../../types";
 import type { RemoteHeaders, LoggerOptions } from "@/config";
 
 export interface LoadRemoteMessagesParams {
@@ -8,6 +9,7 @@ export interface LoadRemoteMessagesParams {
 
   // --- Execution ---
   concurrency?: number;
+  fetch: RuntimeFetch;
 
   // --- Remote Source ---
   url: string;

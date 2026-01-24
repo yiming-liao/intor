@@ -42,19 +42,22 @@ describe("initTranslator", () => {
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
     const result = await initTranslator(mockConfig, "en", {
       allowCacheWrite: true,
-    }); // --- loadMessages is called with normalized options
-    expect(loadMessages).toHaveBeenCalledWith({
-      config: mockConfig,
-      locale: "en",
-      readers: undefined,
-      allowCacheWrite: true,
-    }); // --- translator snapshot uses loaded messages
+    } as any);
+    expect(loadMessages).toHaveBeenCalledWith(
+      expect.objectContaining({
+        config: mockConfig,
+        locale: "en",
+        readers: undefined,
+        allowCacheWrite: true,
+        fetch: undefined,
+      }),
+    );
     expect(createTranslator).toHaveBeenCalledWith(
       expect.objectContaining({
         locale: "en",
         messages: { en: { hello: "world" } },
       }),
-    ); // --- returned value is the snapshot
+    );
     expect(result).toBe(mockTranslator);
   });
 
@@ -66,8 +69,8 @@ describe("initTranslator", () => {
     );
     vi.mocked(resolveLoaderOptions).mockReturnValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
-    await initTranslator(mockConfig, "en"); // --- loadMessages must not be called
-    expect(loadMessages).not.toHaveBeenCalled(); // --- translator is still created with empty messages
+    await initTranslator(mockConfig, "en", {} as any);
+    expect(loadMessages).not.toHaveBeenCalled();
     expect(createTranslator).toHaveBeenCalledWith(
       expect.objectContaining({
         messages: {},
@@ -84,7 +87,7 @@ describe("initTranslator", () => {
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
-    await initTranslator(mockConfig, "en");
+    await initTranslator(mockConfig, "en", {} as any);
     expect(createTranslator).toHaveBeenCalledWith(
       expect.objectContaining({
         messages: {},
@@ -92,19 +95,31 @@ describe("initTranslator", () => {
     );
   });
 
-  it("defaults allowCacheWrite to false when options are not provided", async () => {
+  it("defaults allowCacheWrite to false when not provided", async () => {
     const { resolveLoaderOptions } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
-    const { createTranslator } = await import(
-      "@/server/translator/create-translator"
-    );
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue({});
-    vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
-    await initTranslator(mockConfig, "en");
+    await initTranslator(mockConfig, "en", {} as any);
     expect(loadMessages).toHaveBeenCalledWith(
       expect.objectContaining({
         allowCacheWrite: false,
+      }),
+    );
+  });
+
+  it("passes fetch through when provided", async () => {
+    const { resolveLoaderOptions } = await import("@/core");
+    const { loadMessages } = await import("@/server/messages");
+    const mockFetch = vi.fn();
+    vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
+    vi.mocked(loadMessages).mockResolvedValue({});
+    await initTranslator(mockConfig, "en", {
+      fetch: mockFetch,
+    });
+    expect(loadMessages).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fetch: mockFetch,
       }),
     );
   });
