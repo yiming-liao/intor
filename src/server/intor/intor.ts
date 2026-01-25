@@ -1,4 +1,4 @@
-import type { LocaleResolver, IntorValue } from "./types";
+import type { IntorValue } from "./types";
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale } from "intor-translator";
 import {
@@ -19,7 +19,7 @@ import { initTranslator } from "../translator";
  */
 export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  localeOrResolver: LocaleResolver | Locale,
+  locale: Locale,
   options?: {
     readers?: MessagesReaders;
     allowCacheWrite?: boolean;
@@ -29,14 +29,7 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
-
-  // Resolve locale
-  const isLocaleFunction = typeof localeOrResolver === "function";
-  const locale = isLocaleFunction
-    ? await localeOrResolver(config)
-    : localeOrResolver || config.defaultLocale;
-  const source = typeof localeOrResolver === "function" ? "resolver" : "static";
-  logger.debug(`Initial locale resolved as "${locale}" via "${source}".`);
+  logger.debug(`Initializing Intor with locale "${locale}".`);
 
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {

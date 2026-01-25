@@ -15,7 +15,7 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
   options?: { readers?: MessagesReaders; allowCacheWrite?: boolean },
 ): Promise<IntorValue<CK>> {
-  return await intorCore(config, getLocale, {
+  return await intorCore(config, await getLocale(config), {
     readers: options?.readers,
     allowCacheWrite: options?.allowCacheWrite ?? true,
   });
