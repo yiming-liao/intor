@@ -1,5 +1,5 @@
+import type { ResolveInboundResult } from "./types";
 import type { IntorResolvedConfig } from "@/config";
-import type { RoutingLocaleSource } from "@/core";
 import {
   getLocaleFromPathname,
   getLocaleFromHost,
@@ -7,17 +7,6 @@ import {
 } from "../locale";
 import { resolveLocale } from "./resolve-locale";
 import { resolvePathname } from "./resolve-pathname";
-
-interface ResolveInboundResult {
-  /** Resolved locale */
-  locale: string;
-  /** Locale source used for resolution */
-  localeSource: RoutingLocaleSource;
-  /** Localized pathname */
-  pathname: string;
-  /** Whether redirect is required */
-  shouldRedirect: boolean;
-}
 
 /**
  * Resolves inbound routing state.

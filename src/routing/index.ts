@@ -1,5 +1,5 @@
 // inbound
-export { resolveInbound } from "./inbound";
+export { resolveInbound, type InboundContext } from "./inbound";
 
 // pathname
 export { localizePathname, type LocalizedPathname } from "./pathname";

@@ -1,7 +1,8 @@
 /* eslint-disable unicorn/require-module-specifiers */
 /* eslint-disable @typescript-eslint/no-namespace */
-import type { TranslatorInstance, RoutingLocaleSource } from "@/core";
-import type { LocaleMessages, Replacement } from "intor-translator";
+import type { TranslatorInstance } from "@/core";
+import type { InboundContext } from "@/routing";
+import type { Locale, LocaleMessages, Replacement } from "intor-translator";
 
 /**
  * Global type augmentations for Express request
@@ -9,12 +10,8 @@ import type { LocaleMessages, Replacement } from "intor-translator";
 declare global {
   namespace Express {
     interface Request {
-      intor: {
-        locale: string;
-        localeSource: RoutingLocaleSource;
-        pathname: string;
-      };
-      locale: string;
+      intor: InboundContext;
+      locale: Locale;
       hasKey: TranslatorInstance<
         LocaleMessages,
         Replacement,
