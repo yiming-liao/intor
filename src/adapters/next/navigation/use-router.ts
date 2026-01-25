@@ -3,9 +3,8 @@ import type {
   NavigateOptions,
   PrefetchOptions,
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter as useNextRouter } from "next/navigation";
+import { useRouter as useNextRouter, usePathname } from "next/navigation";
 import { useResolveNavigation, useExecuteNavigation } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
-import { usePathname } from "./use-pathname";
 
 /**
  * Locale-aware router hook for the current execution context.
@@ -22,7 +21,7 @@ export const useRouter = () => {
     prefetch: nextRouterPrefetch,
     ...rest
   } = useNextRouter();
-  const { pathname } = usePathname();
+  const pathname = usePathname();
   const resolveNavigation = useResolveNavigation();
   const executeNavigation = useExecuteNavigation();
 
