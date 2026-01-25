@@ -1,8 +1,10 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizePathname } from "@/core";
+import { normalizePathname, PREFIX_PLACEHOLDER } from "@/core";
 
 /**
  * Returns a canonical, locale-agnostic pathname.
+ *
+ * Accepts `{locale}` as a locale placeholder segment.
  *
  * @example
  * ```ts
@@ -19,11 +21,9 @@ export function canonicalizePathname(
 ): string {
   const { routing, supportedLocales } = config;
   const { basePath } = routing;
-
-  // 1. Normalize pathname
   const normalizedPathname = normalizePathname(rawPathname);
 
-  // 2. Strip basePath
+  // Strip basePath
   let prefixedPathname = normalizedPathname;
   if (basePath && normalizedPathname === basePath) {
     prefixedPathname = "/";
@@ -31,14 +31,16 @@ export function canonicalizePathname(
     prefixedPathname = normalizedPathname.slice(basePath.length);
   }
 
-  // 3. Detect locale segment
+  // Detect locale segment
   const firstSegment = prefixedPathname.split("/").find(Boolean);
   const locale =
-    firstSegment && supportedLocales.includes(firstSegment)
-      ? firstSegment
-      : undefined;
+    firstSegment === PREFIX_PLACEHOLDER
+      ? PREFIX_PLACEHOLDER
+      : firstSegment && supportedLocales.includes(firstSegment)
+        ? firstSegment
+        : undefined;
 
-  // 4. Strip locale segment
+  // Strip locale segment
   return locale
     ? prefixedPathname.slice(locale.length + 1) || "/"
     : prefixedPathname;
