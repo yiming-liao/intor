@@ -37,13 +37,15 @@ export type TranslatorInstanceSvelte<
   t: Readable<TranslatorInstance<M, ReplacementSchema, PK>["t"]>;
 
   /** Translate a key into an HTML string using semantic rich tags. */
-  tRich: <
-    K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
-    RI = LocalizedRich<RichSchema, K>,
-    RE = LocalizedReplacement<ReplacementSchema, K>,
-  >(
-    key?: K | (string & {}),
-    tagRenderers?: SvelteTagRenderers<RI>,
-    replacements?: RE | Replacement,
-  ) => string;
+  tRich: Readable<
+    <
+      K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
+      RI = LocalizedRich<RichSchema, K>,
+      RE = LocalizedReplacement<ReplacementSchema, K>,
+    >(
+      key?: K | (string & {}),
+      tagRenderers?: SvelteTagRenderers<RI>,
+      replacements?: RE | Replacement,
+    ) => string
+  >;
 };

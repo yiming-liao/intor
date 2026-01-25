@@ -1,6 +1,5 @@
 import type { SvelteTagRenderers } from "../render";
 import type { Replacement, Translator } from "intor-translator";
-import { derived, get, type Readable } from "svelte/store";
 import { renderRichMessageSvelte } from "../render";
 
 /**
@@ -15,18 +14,15 @@ import { renderRichMessageSvelte } from "../render";
  *
  * Intended for Svelte client usage only.
  */
-export const createTRich = (
-  translator: Readable<Translator>,
-  preKey?: string,
-) => {
-  const t = derived(translator, ($t) => (preKey ? $t.scoped(preKey).t : $t.t));
+export const createTRich = (translator: Translator, preKey?: string) => {
+  const t = preKey ? translator.scoped(preKey).t : translator.t;
 
   return (
     key: string,
     tagRenderers?: SvelteTagRenderers,
     replacements?: Replacement,
   ) => {
-    const message = get(t)(key, replacements);
+    const message = t(key, replacements);
     return renderRichMessageSvelte(message, tagRenderers);
   };
 };

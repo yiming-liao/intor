@@ -51,7 +51,7 @@ export function useTranslator(preKey?: string) {
     setLocale,
     hasKey: derived(scoped, ($t) => $t.hasKey),
     t: derived(scoped, ($t) => $t.t),
-    tRich: createTRich(translator, preKey),
+    tRich: derived(translator, ($t) => createTRich($t, preKey)),
     // NOTE:
     // The runtime implementation is intentionally erased.
     // Type safety is guaranteed by public type contracts.

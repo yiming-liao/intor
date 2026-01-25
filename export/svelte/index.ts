@@ -1,11 +1,14 @@
 // intor / svelte
 
 export {
-  // runtime
-  createIntorStore,
-  type IntorStore,
+  // provider
+  createIntorStore, // @internal
+  IntorProvider,
+  useIntorContext, // @internal
+
+  // translator
+  useTranslator,
 
   // helpers
-  createIntor,
   getClientLocale,
 } from "@/client/svelte";
