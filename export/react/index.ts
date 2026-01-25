@@ -4,15 +4,11 @@ export {
   // provider
   IntorProvider,
   type IntorProviderProps,
-  useIntorContext, // Internal hook.
+  useIntorContext, // @internal
 
   // translator
   useTranslator,
   Trans,
-
-  // navigation
-  useResolveNavigation,
-  useExecuteNavigation,
 
   // helpers
   useIntor,

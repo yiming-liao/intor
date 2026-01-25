@@ -40,21 +40,7 @@ export default [
     },
     plugins: [
       alias({
-        entries: [
-          /**
-           * IMPORTANT:
-           * Next adapter source (e.g. src/adapters/next/navigation/use-pathname.ts)
-           * must import internal react contexts for TypeScript to work,
-           * but at runtime it MUST consume the public `intor/react` context.
-           *
-           * This alias rewrites internal context imports to `intor/react`
-           * to ensure a single React Context instance at runtime.
-           */
-          {
-            find: "@/client/react",
-            replacement: "intor/react",
-          },
-        ],
+        entries: [{ find: "@/client/react", replacement: "intor/react" }],
       }),
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       preserveDirectives(),

@@ -72,4 +72,39 @@ describe("canonicalizePathname", () => {
     const result = canonicalizePathname("/fr/about", config);
     expect(result).toBe("/fr/about");
   });
+
+  it("detects and strips locale placeholder segment", () => {
+    const config = createConfig();
+    const result = canonicalizePathname("/{locale}/about", config);
+    expect(result).toBe("/about");
+  });
+
+  it("strips both basePath and locale placeholder segment", () => {
+    const config = createConfig({
+      routing: {
+        basePath: "/app",
+        prefix: "all",
+      } as any,
+    });
+    const result = canonicalizePathname("/app/{locale}/about", config);
+    expect(result).toBe("/about");
+  });
+
+  it("returns '/' when only locale placeholder is present", () => {
+    const config = createConfig();
+    const result = canonicalizePathname("/{locale}", config);
+    expect(result).toBe("/");
+  });
+
+  it("does not strip placeholder-like segment if it is not the locale placeholder", () => {
+    const config = createConfig();
+    const result = canonicalizePathname("/{lang}/about", config);
+    expect(result).toBe("/{lang}/about");
+  });
+
+  it("does not strip locale placeholder if it is not the first segment", () => {
+    const config = createConfig();
+    const result = canonicalizePathname("/about/{locale}", config);
+    expect(result).toBe("/about/{locale}");
+  });
 });

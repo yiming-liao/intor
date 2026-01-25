@@ -4,7 +4,9 @@ import type {
   PrefetchOptions,
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter, usePathname } from "next/navigation";
-import { useResolveNavigation, useExecuteNavigation } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { executeNavigation } from "@/client";
+import { useIntorContext } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { resolveNavigation } from "@/routing";
 
 /**
  * Locale-aware router hook for the current execution context.
@@ -15,15 +17,14 @@ import { useResolveNavigation, useExecuteNavigation } from "@/client/react"; // 
  * @platform Next.js
  */
 export const useRouter = () => {
+  const { config, locale: currentLocale, setLocale } = useIntorContext();
+  const currentPathname = usePathname();
   const {
     push: nextRouterPush,
     replace: nextRouterReplace,
     prefetch: nextRouterPrefetch,
     ...rest
   } = useNextRouter();
-  const pathname = usePathname();
-  const resolveNavigation = useResolveNavigation();
-  const executeNavigation = useExecuteNavigation();
 
   // --------------------------------------------------
   // push
@@ -32,11 +33,13 @@ export const useRouter = () => {
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const navigationResult = resolveNavigation(pathname, {
-      destination: href,
-      locale: options?.locale,
-    });
-    executeNavigation(navigationResult);
+    const navigationResult = resolveNavigation(
+      config,
+      currentLocale,
+      currentPathname,
+      { destination: href, locale: options?.locale },
+    );
+    executeNavigation(navigationResult, { config, currentLocale, setLocale });
     nextRouterPush(navigationResult.destination, options);
   };
 
@@ -47,11 +50,13 @@ export const useRouter = () => {
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const navigationResult = resolveNavigation(pathname, {
-      destination: href,
-      locale: options?.locale,
-    });
-    executeNavigation(navigationResult);
+    const navigationResult = resolveNavigation(
+      config,
+      currentLocale,
+      currentPathname,
+      { destination: href, locale: options?.locale },
+    );
+    executeNavigation(navigationResult, { config, currentLocale, setLocale });
     nextRouterReplace(navigationResult.destination, options);
   };
 
@@ -62,10 +67,12 @@ export const useRouter = () => {
     href: string,
     options?: PrefetchOptions & { locale?: GenLocale<CK> },
   ) => {
-    const { kind, destination } = resolveNavigation(pathname, {
-      destination: href,
-      locale: options?.locale,
-    });
+    const { kind, destination } = resolveNavigation(
+      config,
+      currentLocale,
+      currentPathname,
+      { destination: href, locale: options?.locale },
+    );
     if (kind !== "client") return; // Prefetch only makes sense for client-side navigation
     nextRouterPrefetch(destination, options);
   };

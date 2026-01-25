@@ -7,7 +7,9 @@ import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import { useResolveNavigation, useExecuteNavigation } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { executeNavigation } from "@/client";
+import { useIntorContext } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { resolveNavigation } from "@/routing";
 
 interface LinkProps<CK extends GenConfigKeys = "__default__">
   extends Omit<NextLinkProps, "href">,
@@ -37,19 +39,20 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   onClick,
   ...props
 }: LinkProps<CK>): React.JSX.Element => {
-  const pathname = usePathname();
-  const resolveNavigation = useResolveNavigation();
-  const executeNavigation = useExecuteNavigation();
+  const { config, locale: currentLocale, setLocale } = useIntorContext();
+  const currentPathname = usePathname();
 
   // Normalize href into a string destination
   const rawDestination =
     typeof href === "string" ? href : href ? formatUrl(href) : undefined;
 
   // Resolve navigation result for this link
-  const navigationResult = resolveNavigation(pathname, {
-    destination: rawDestination,
-    locale,
-  });
+  const navigationResult = resolveNavigation(
+    config,
+    currentLocale,
+    currentPathname,
+    { destination: rawDestination, locale },
+  );
 
   // --------------------------------------------------
   // Execute navigation on user interaction
@@ -57,7 +60,11 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
-    executeNavigation(navigationResult, e);
+    executeNavigation(
+      navigationResult,
+      { config, currentLocale, setLocale },
+      e,
+    );
   };
 
   return (
