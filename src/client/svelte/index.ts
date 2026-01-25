@@ -1,8 +1,8 @@
-// runtime
-export { createIntorStore, type IntorStore } from "./store";
+// provider
+export { createIntorStore, IntorProvider, useIntorContext } from "./provider";
 
-// helpers
-export { createIntor } from "./helpers";
+// translator
+export { useTranslator } from "./translator";
 
 // helpers (client-shared utilities, re-exported)
 export { getClientLocale } from "../shared/helpers";

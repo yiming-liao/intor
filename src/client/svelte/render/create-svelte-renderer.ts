@@ -25,13 +25,11 @@ export const createSvelteRenderer = (options?: {
 
     /** Render semantic tag nodes */
     tag(name, attributes, children) {
-      const renderer = tagRenderers?.[name];
-
-      // Custom tag renderer
-      if (renderer) {
-        return typeof renderer === "function"
-          ? renderer(children, attributes)
-          : renderer;
+      const tagRenderer = tagRenderers?.[name];
+      if (tagRenderer) {
+        return typeof tagRenderer === "function"
+          ? tagRenderer(children)
+          : tagRenderer;
       }
 
       // Default behavior: render as native HTML tag
