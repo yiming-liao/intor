@@ -37,61 +37,6 @@ describe("createTranslator()", () => {
     });
   });
 
-  it("uses root translator when preKey is not provided", () => {
-    const config: IntorResolvedConfig = {
-      messages: {
-        en: {
-          common: {
-            greeting: "Hello",
-          },
-        },
-      },
-      fallbackLocales: {},
-      translator: {},
-    } as unknown as IntorResolvedConfig;
-    const { hasKey, t } = createTranslator({
-      config,
-      locale: "en",
-      messages: {
-        en: {
-          common: {
-            greeting: "Hello",
-          },
-        },
-      },
-    });
-    expect(hasKey("common.greeting")).toBe(true);
-    expect(t("common.greeting")).toBe("Hello");
-  });
-
-  it("scopes translator when preKey is provided", () => {
-    const config: IntorResolvedConfig = {
-      messages: {
-        en: {
-          common: {
-            greeting: "Hello",
-          },
-        },
-      },
-      fallbackLocales: {},
-      translator: {},
-    } as unknown as IntorResolvedConfig;
-    const { hasKey, t } = createTranslator({
-      config,
-      locale: "en",
-      messages: {
-        en: {
-          common: {
-            greeting: "Hello",
-          },
-        },
-      },
-      preKey: "common",
-    });
-    expect(hasKey("greeting")).toBe(true);
-    expect(t("greeting")).toBe("Hello");
-  });
-
   it("falls back to config locale messages when runtime locale messages are missing", () => {
     const config: IntorResolvedConfig = {
       messages: {

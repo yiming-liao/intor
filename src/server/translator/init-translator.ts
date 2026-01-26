@@ -1,6 +1,5 @@
-import type { TranslatorInstanceServer } from "./translator-instance";
 import type { IntorResolvedConfig } from "@/config";
-import type { Locale, LocaleMessages } from "intor-translator";
+import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import { resolveLoaderOptions } from "@/core";
 import { loadMessages, type LoadMessagesParams } from "../messages";
 import {
@@ -10,24 +9,23 @@ import {
 
 export interface InitTranslatorOptions
   extends Pick<LoadMessagesParams, "readers" | "allowCacheWrite" | "fetch">,
-    Pick<CreateTranslatorParams, "preKey" | "handlers" | "plugins"> {}
+    Pick<CreateTranslatorParams, "handlers" | "plugins"> {}
 
 /**
- * Initializes a server-side translator for a specific locale.
+ * Initialize a locale-bound Translator snapshot.
  *
- * - Performs message loading during initialization.
- * - Returns an immutable translator snapshot.
+ * - Resolves loader options and loads messages if configured
+ * - Creates an immutable Translator instance for server usage
  */
 export async function initTranslator(
   config: IntorResolvedConfig,
   locale: Locale,
   options: InitTranslatorOptions,
-): Promise<TranslatorInstanceServer<LocaleMessages>> {
+): Promise<Translator<unknown>> {
   const {
     readers,
     allowCacheWrite = false,
     fetch,
-    preKey,
     handlers,
     plugins,
   } = options;
@@ -48,12 +46,5 @@ export async function initTranslator(
   }
 
   // Create immutable translator snapshot
-  return createTranslator({
-    config,
-    locale,
-    messages,
-    preKey,
-    handlers,
-    plugins,
-  }) as TranslatorInstanceServer<LocaleMessages>;
+  return createTranslator({ config, locale, messages, handlers, plugins });
 }

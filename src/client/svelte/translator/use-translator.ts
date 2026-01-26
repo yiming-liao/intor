@@ -7,8 +7,8 @@ import type {
 } from "@/core";
 import type { LocalizedPreKey } from "intor-translator";
 import { derived } from "svelte/store";
+import { createTRich } from "@/core";
 import { useIntorContext } from "../provider";
-import { createTRich } from "./create-t-rich";
 
 /**
  * Svelte utility for accessing the active Intor translator instance.
@@ -39,10 +39,7 @@ export function useTranslator<
 // Implementation
 export function useTranslator(preKey?: string) {
   const { translator, locale, setLocale } = useIntorContext();
-
-  const scoped = preKey
-    ? derived(translator, ($t) => $t.scoped(preKey))
-    : translator;
+  const scoped = derived(translator, ($t) => $t.scoped(preKey));
 
   return {
     messages: derived(translator, ($t) => $t.messages),
@@ -51,7 +48,7 @@ export function useTranslator(preKey?: string) {
     setLocale,
     hasKey: derived(scoped, ($t) => $t.hasKey),
     t: derived(scoped, ($t) => $t.t),
-    tRich: derived(translator, ($t) => createTRich($t, preKey)),
+    tRich: derived(scoped, ($t) => createTRich($t.t)),
     // NOTE:
     // The runtime implementation is intentionally erased.
     // Type safety is guaranteed by public type contracts.

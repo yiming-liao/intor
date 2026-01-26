@@ -1,22 +1,19 @@
-import type { SvelteTagRenderers } from "./types";
+import type { TagRenderers } from "./types";
 import type { Renderer } from "intor-translator";
 import { escapeHtml } from "./utils/escape-html";
 import { renderAttributes } from "./utils/render-attributes";
 
 /**
- * Create a Svelte renderer for semantic rich messages.
+ * Create an HTML string renderer for semantic rich messages.
  *
- * - Transforms semantic AST nodes into HTML strings.
- * - Intended to be used with {@html ...} in Svelte templates.
+ * - Transforms semantic rich AST nodes into escaped HTML strings.
+ * - Can be used in any HTML-based environment.
  *
  * This renderer is intentionally minimal and stateless.
  */
-export const createSvelteRenderer = (options?: {
-  /** Optional custom renderers for semantic tags */
-  tagRenderers?: SvelteTagRenderers;
-}): Renderer<string> => {
-  const { tagRenderers } = options ?? {};
-
+export const createHtmlRenderer = (
+  tagRenderers?: TagRenderers,
+): Renderer<string> => {
   return {
     /** Render plain text nodes */
     text(value) {
@@ -48,7 +45,7 @@ export const createSvelteRenderer = (options?: {
         return value.map((v) => escapeHtml(String(v))).join("");
       }
       throw new Error(
-        "[intor] Svelte renderer cannot render raw non-string values. ",
+        "[intor] HTML renderer cannot render raw non-primitive values.",
       );
     },
   };

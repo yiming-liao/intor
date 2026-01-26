@@ -16,7 +16,6 @@ export const createReactRenderer = (
 
     /** Render semantic tag nodes */
     tag(name, _attributes, children) {
-      // Custom tag renderers override
       const tagRenderer = tagRenderers?.[name];
       if (tagRenderer) {
         return typeof tagRenderer === "function"

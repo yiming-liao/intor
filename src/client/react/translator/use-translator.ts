@@ -41,7 +41,6 @@ export function useTranslator<CK extends GenConfigKeys = "__default__">(
   preKey?: string,
 ) {
   const { translator, setLocale } = useIntorContext();
-
   const scoped = translator.scoped(preKey);
 
   return {
@@ -49,9 +48,9 @@ export function useTranslator<CK extends GenConfigKeys = "__default__">(
     locale: translator.locale as GenLocale<CK>,
     isLoading: translator.isLoading,
     setLocale,
-    hasKey: preKey ? scoped.hasKey : translator.hasKey,
-    t: preKey ? scoped.t : translator.t,
-    tRich: createTRich(translator, preKey),
+    hasKey: scoped.hasKey,
+    t: scoped.t,
+    tRich: createTRich(scoped.t),
     // NOTE:
     // The runtime implementation is intentionally erased.
     // Type safety is guaranteed by public type contracts.

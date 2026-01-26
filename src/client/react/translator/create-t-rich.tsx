@@ -1,6 +1,11 @@
 import type { ReactTagRenderers } from "../render";
-import type { Replacement, Translator } from "intor-translator";
-import { renderRichMessageReact } from "../render";
+import {
+  renderRichMessage,
+  type Replacement,
+  type TranslatorMethods,
+} from "intor-translator";
+import { Fragment } from "react/jsx-runtime";
+import { createReactRenderer } from "../render";
 
 /**
  * Create a React-specific rich translation function.
@@ -14,15 +19,15 @@ import { renderRichMessageReact } from "../render";
  *
  * Intended for React client usage only.
  */
-export const createTRich = (translator: Translator, preKey?: string) => {
-  const t = preKey ? translator.scoped(preKey).t : translator.t;
-
+export const createTRich = (t: TranslatorMethods["t"]) => {
   return (
     key: string,
     tagRenderers?: ReactTagRenderers,
     replacements?: Replacement,
   ) => {
     const message = t(key, replacements);
-    return renderRichMessageReact(message, tagRenderers);
+    const reactRenderer = createReactRenderer(tagRenderers);
+    const nodes = renderRichMessage(message, reactRenderer);
+    return nodes.map((node, index) => <Fragment key={index}>{node}</Fragment>);
   };
 };

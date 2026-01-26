@@ -40,6 +40,16 @@ export {
   type IntorMessagesKind,
 } from "./messages";
 
+// render
+export {
+  createHtmlRenderer,
+  type TagRenderers,
+  type HtmlTagRenderers,
+} from "./render";
+
+// translator
+export { createTRich } from "./translator";
+
 // types
 export type {
   // generated

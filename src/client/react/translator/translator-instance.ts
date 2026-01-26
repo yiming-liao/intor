@@ -37,7 +37,7 @@ export type TranslatorInstanceReact<
     RE = LocalizedReplacement<ReplacementSchema, K>,
   >(
     key?: K | (string & {}),
-    tagRenderers?: ReactTagRenderers<RI>,
+    tagRenderers?: ReactTagRenderers<RI> | ReactTagRenderers,
     replacements?: RE | Replacement,
   ) => JSX.Element[];
 };

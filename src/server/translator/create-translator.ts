@@ -12,23 +12,21 @@ export interface CreateTranslatorParams {
   config: IntorResolvedConfig;
   locale: string;
   messages: LocaleMessages;
-  preKey?: string;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
 }
 
 /**
- * Create a server-side translator snapshot.
+ * Create a server-side Translator instance for a fixed locale.
  *
  * - Merges static config messages with runtime-loaded messages
- * - Creates a Translator instance for a fixed locale
- * - Optionally scopes the translator with a preKey
- *
- * The returned object is a read-only translation view
- * and does not expose the underlying Translator instance.
+ * - Initializes a Translator bound to a specific locale
+ * - Injects fallback rules, handlers, and plugins from config
  */
-export function createTranslator(params: CreateTranslatorParams) {
-  const { config, locale, messages, preKey, handlers, plugins } = params;
+export function createTranslator(
+  params: CreateTranslatorParams,
+): Translator<unknown> {
+  const { config, locale, messages, handlers, plugins } = params;
 
   // Merge static config messages with runtime-loaded messages
   const finalMessages = mergeMessages(config.messages, messages, {
@@ -46,13 +44,5 @@ export function createTranslator(params: CreateTranslatorParams) {
     plugins,
   });
 
-  // Apply scoped view when preKey is provided
-  const scoped = preKey ? translator.scoped(preKey) : null;
-
-  return {
-    messages: finalMessages,
-    locale,
-    hasKey: scoped ? scoped.hasKey : translator.hasKey,
-    t: scoped ? scoped.t : translator.t,
-  };
+  return translator;
 }

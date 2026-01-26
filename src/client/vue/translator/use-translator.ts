@@ -43,22 +43,16 @@ export function useTranslator<CK extends GenConfigKeys = "__default__">(
 ) {
   const intor = injectIntor();
   const translator = intor.value.translator;
-
-  const scoped = computed(() =>
-    preKey ? translator.value.scoped(preKey) : translator.value,
-  );
-
-  const hasKey = computed(() => scoped.value.hasKey);
-  const t = computed(() => scoped.value.t);
+  const scoped = computed(() => translator.value.scoped(preKey));
 
   return {
     messages: computed(() => translator.value.messages as GenMessages<CK>),
     locale: computed(() => translator.value.locale as GenLocale<CK>),
     isLoading: computed(() => translator.value.isLoading),
     setLocale: intor.value.setLocale,
-    hasKey,
-    t,
-    tRich: createTRich(translator, preKey),
+    hasKey: computed(() => scoped.value.hasKey),
+    t: computed(() => scoped.value.t),
+    tRich: computed(() => createTRich(scoped.value.t)),
     // NOTE:
     // The runtime implementation is intentionally erased.
     // Type safety is guaranteed by public type contracts.

@@ -17,7 +17,6 @@ export const createVueRenderer = (
 
     /** Render semantic tag nodes */
     tag(name, _attributes, children) {
-      // Custom tag renderer
       const tagRenderer = tagRenderers?.[name];
       if (tagRenderer) {
         return typeof tagRenderer === "function"

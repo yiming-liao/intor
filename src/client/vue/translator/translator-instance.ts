@@ -37,7 +37,7 @@ export type TranslatorInstanceVue<
     RE = LocalizedReplacement<ReplacementSchema, K>,
   >(
     key?: K | (string & {}),
-    tagRenderers?: VueTagRenderers<RI>,
+    tagRenderers?: VueTagRenderers<RI> | VueTagRenderers,
     replacements?: RE | Replacement,
   ) => VNodeChild[];
 };

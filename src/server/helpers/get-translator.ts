@@ -1,18 +1,20 @@
 import type { TranslatorInstanceServer } from "../translator/translator-instance";
 import type { IntorResolvedConfig } from "@/config";
 import type {
-  GenConfigKeys,
-  GenMessages,
-  GenReplacements,
-  MessagesReaders,
-  RuntimeFetch,
-} from "@/core";
-import type {
   LocalizedPreKey,
   TranslateHandlers,
   TranslateHook,
   TranslatorPlugin,
 } from "intor-translator";
+import {
+  createTRich,
+  type GenConfigKeys,
+  type GenMessages,
+  type GenReplacements,
+  type GenRich,
+  type MessagesReaders,
+  type RuntimeFetch,
+} from "@/core";
 import { initTranslator } from "@/server/translator";
 
 export interface GetTranslatorParams {
@@ -32,20 +34,31 @@ export interface GetTranslatorParams {
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
+  RichSchema = GenRich<CK>,
 >(
   config: IntorResolvedConfig,
   params: GetTranslatorParams,
-): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema>>;
+): Promise<
+  TranslatorInstanceServer<
+    GenMessages<CK>,
+    ReplacementSchema,
+    RichSchema,
+    undefined
+  >
+>;
 
 // Signature: With preKey
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
+  RichSchema = GenRich<CK>,
   PK extends string = LocalizedPreKey<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,
   params: GetTranslatorParams & { preKey?: PK },
-): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, PK>>;
+): Promise<
+  TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
+>;
 
 // Implementation
 export async function getTranslator(
@@ -60,15 +73,20 @@ export async function getTranslator(
     readers,
     allowCacheWrite,
     fetch: fetch || globalThis.fetch,
-    preKey,
     plugins,
     handlers,
   });
+  const scoped = translator.scoped(preKey);
 
   return {
     messages: translator.messages,
     locale: translator.locale,
-    hasKey: translator.hasKey,
-    t: translator.t,
-  };
+    hasKey: scoped.hasKey,
+    t: scoped.t,
+    tRich: createTRich(scoped.t),
+    // NOTE:
+    // The runtime implementation is intentionally erased.
+    // Type safety is guaranteed by public type contracts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any;
 }

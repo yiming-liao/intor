@@ -1,2 +1,2 @@
-export { renderRichMessageVue } from "./render-rich-message-vue";
+export { createVueRenderer } from "./create-vue-renderer";
 export type { VueTagRenderers } from "./types";

@@ -1,6 +1,4 @@
-import type { SvelteTagRenderers } from "../render";
-import type { TranslatorInstance } from "@/core";
-import type { Readable, Writable } from "svelte/store";
+import type { HtmlTagRenderers, TranslatorInstance } from "@/core";
 import {
   type Locale,
   type LocaleMessages,
@@ -11,6 +9,7 @@ import {
   type Rich,
   type ScopedKey,
 } from "intor-translator";
+import { type Readable, type Writable } from "svelte/store";
 
 export type TranslatorInstanceSvelte<
   M extends LocaleMessages,
@@ -44,7 +43,7 @@ export type TranslatorInstanceSvelte<
       RE = LocalizedReplacement<ReplacementSchema, K>,
     >(
       key?: K | (string & {}),
-      tagRenderers?: SvelteTagRenderers<RI>,
+      tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers,
       replacements?: RE | Replacement,
     ) => string
   >;
