@@ -1,5 +1,10 @@
 // provider
-export { createIntorStore, IntorProvider, useIntorContext } from "./provider";
+export {
+  createIntorStore,
+  IntorProvider,
+  type IntorProviderProps,
+  useIntorContext,
+} from "./provider";
 
 // translator
 export { useTranslator } from "./translator";

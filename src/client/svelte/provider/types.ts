@@ -19,6 +19,12 @@ export interface IntorValue {
   plugins?: (TranslatorPlugin | TranslateHook)[];
 }
 
+export interface IntorProviderProps {
+  value: IntorValue;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children: () => any;
+}
+
 export interface IntorContextValue {
   config: IntorResolvedConfig;
   locale: Writable<Locale>;
