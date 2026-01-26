@@ -17,7 +17,7 @@ export const intorProxy = async (
   config: IntorResolvedConfig,
   request: NextRequest,
 ): Promise<Response> => {
-  // locale from accept-language header
+  // Locale from Accept-Language header
   const acceptLanguageHeader = request.headers.get("accept-language");
   const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
     acceptLanguageHeader,

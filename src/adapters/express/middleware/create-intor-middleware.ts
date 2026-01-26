@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Request, Response, NextFunction } from "express";
 import type { LocaleMessages, Replacement } from "intor-translator";
-import { INTOR_HEADERS, normalizeQuery, type TranslatorInstance } from "@/core";
+import { normalizeQuery, type TranslatorInstance } from "@/core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
 import {
   parseCookieHeader,
@@ -28,7 +28,7 @@ export function createIntorMiddleware(
     _res: Response,
     next: NextFunction,
   ) {
-    // locale from accept-language header
+    // Locale from Accept-Language header
     const acceptLanguage = req.headers["accept-language"];
     const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
       acceptLanguage,
@@ -51,15 +51,10 @@ export function createIntorMiddleware(
     );
 
     // --------------------------------------------------
-    // Attach routing metadata to response headers
-    // --------------------------------------------------
-    req.headers[INTOR_HEADERS.LOCALE] = locale;
-    req.headers[INTOR_HEADERS.LOCALE_SOURCE] = localeSource;
-    req.headers[INTOR_HEADERS.PATHNAME] = pathname;
-
-    // --------------------------------------------------
     // Bind inbound routing context
     // --------------------------------------------------
+    req.intor = { locale, localeSource, pathname };
+
     const { hasKey, t } = (await getTranslator(config, {
       locale,
       handlers: options?.handlers,
@@ -67,8 +62,6 @@ export function createIntorMiddleware(
       readers: options?.readers,
       allowCacheWrite: true,
     })) as TranslatorInstance<LocaleMessages, Replacement, "string">;
-
-    req.intor = { locale, localeSource, pathname };
 
     // DX shortcuts (optional)
     req.locale = locale;
