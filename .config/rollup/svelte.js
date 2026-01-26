@@ -2,8 +2,9 @@
 import typescript from "@rollup/plugin-typescript";
 import package_ from "../../package.json" with { type: "json" };
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
+import copy from "rollup-plugin-copy";
 
-const EXTERNALS = ["svelte", "svelte/store"];
+const EXTERNALS = ["svelte", "svelte/store", /\.svelte$/];
 
 /** @type {import('rollup').RollupOptions[]} */
 export default [
@@ -22,6 +23,14 @@ export default [
     },
     plugins: [
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
+      copy({
+        targets: [
+          {
+            src: "src/client/svelte/provider/intor-provider.svelte",
+            dest: "dist/svelte/src/client/svelte/provider",
+          },
+        ],
+      }),
       fileSizeSummary(),
     ],
   },
