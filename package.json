@@ -49,6 +49,14 @@
       "import": "./dist/react/export/react/index.js",
       "types": "./dist/types/export/react/index.d.ts"
     },
+    "./vue": {
+      "import": "./dist/vue/export/vue/index.js",
+      "types": "./dist/types/export/vue/index.d.ts"
+    },
+    "./svelte": {
+      "import": "./dist/svelte/export/svelte/index.js",
+      "types": "./dist/types/export/svelte/index.d.ts"
+    },
     "./next": {
       "import": "./dist/next/export/next/index.js",
       "types": "./dist/types/export/next/index.d.ts"
@@ -61,20 +69,6 @@
       "import": "./dist/next/export/next/server/index.js",
       "types": "./dist/types/export/next/server/index.d.ts"
     },
-    "./vue": {
-      "import": "./dist/vue/export/vue/index.js",
-      "types": "./dist/types/export/vue/index.d.ts"
-    },
-    "./svelte": {
-      "import": "./dist/svelte/export/svelte/index.js",
-      "types": "./dist/types/export/svelte/index.d.ts"
-    },
-    "./express": {
-      "import": "./dist/express/export/express/index.js",
-      "types": "./dist/types/export/express/index.d.ts",
-      "require": "./dist/express/export/express/index.js",
-      "default": "./dist/express/export/express/index.js"
-    },
     "./svelte-kit": {
       "import": "./dist/svelte-kit/export/svelte-kit/index.js",
       "types": "./dist/types/export/svelte-kit/index.d.ts"
@@ -82,6 +76,12 @@
     "./svelte-kit/server": {
       "import": "./dist/svelte-kit/export/svelte-kit/server/index.js",
       "types": "./dist/types/export/svelte-kit/server/index.d.ts"
+    },
+    "./express": {
+      "import": "./dist/express/export/express/index.js",
+      "types": "./dist/types/export/express/index.d.ts",
+      "require": "./dist/express/export/express/index.js",
+      "default": "./dist/express/export/express/index.js"
     }
   },
   "main": "./dist/core/export/index.js",
