@@ -34,7 +34,7 @@ export {
 } from "@/config";
 
 // routing
-export { localizePathname } from "@/routing";
+export { localizePathname, type InboundContext } from "@/routing";
 
 // --- [dependency] intor-translator
 export {
