@@ -31,7 +31,7 @@ export const createRefetchMessages = ({
   return async function refetchMessages(newLocale: string) {
     // No-op when remote loading is not enabled
     const loader = resolveLoaderOptions(config, "client");
-    if (!loader || loader.type !== "remote") return;
+    if (!loader || loader.mode !== "remote") return;
 
     // Abort previous request
     controller?.abort();

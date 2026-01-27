@@ -52,12 +52,12 @@ describe("loadMessages", () => {
     expect(remoteModule.loadRemoteMessages).not.toHaveBeenCalled();
   });
 
-  it("delegates to local loader when loader type is local", async () => {
+  it("delegates to local loader when loader mode is local", async () => {
     const messages: LocaleMessages = {
       "en-US": { hello: "local" },
     };
     vi.mocked(resolverModule.resolveLoaderOptions).mockReturnValue({
-      type: "local",
+      mode: "local",
       rootDir: "messages",
       namespaces: ["common"],
       concurrency: 5,
@@ -86,12 +86,12 @@ describe("loadMessages", () => {
     expect(result).toEqual(messages);
   });
 
-  it("delegates to remote loader when loader type is remote", async () => {
+  it("delegates to remote loader when loader mode is remote", async () => {
     const messages: LocaleMessages = {
       "en-US": { hello: "remote" },
     };
     vi.mocked(resolverModule.resolveLoaderOptions).mockReturnValue({
-      type: "remote",
+      mode: "remote",
       url: "https://api.example.com",
       namespaces: ["common"],
       rootDir: "messages",
@@ -119,7 +119,7 @@ describe("loadMessages", () => {
 
   it("warns when no messages are found", async () => {
     vi.mocked(resolverModule.resolveLoaderOptions).mockReturnValue({
-      type: "remote",
+      mode: "remote",
       url: "https://api.example.com",
     } as any);
     vi.mocked(remoteModule.loadRemoteMessages).mockResolvedValue(undefined);

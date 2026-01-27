@@ -7,6 +7,6 @@ import { resolveLoaderOptions } from "@/core";
 export function shouldFullReload(config: IntorResolvedConfig): boolean {
   const loader = resolveLoaderOptions(config, "client");
   return (
-    loader?.type === "local" || config.routing.outbound.forceFullReload === true
+    loader?.mode === "local" || config.routing.outbound.forceFullReload === true
   );
 }

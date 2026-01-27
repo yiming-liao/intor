@@ -23,17 +23,21 @@ export const resolveLoaderOptions = (
   config: IntorResolvedConfig,
   runtime: "client" | "server",
 ): LoaderOptions | undefined => {
-  // --- runtime: client ---
+  // ------------------------------------------------
+  // runtime: client
+  // ------------------------------------------------
   if (runtime === "client") {
     const client = config.client?.loader;
     if (client) {
       // Client loader is always remote by design
-      return { type: "remote", ...client };
+      return { mode: "remote", ...client };
     }
 
     return config.server?.loader ?? config.loader;
   }
 
-  // --- runtime: server ---
+  // ------------------------------------------------
+  // runtime: server
+  // ------------------------------------------------
   return config.server?.loader ?? config.loader;
 };

@@ -18,7 +18,7 @@ const createBaseConfig = (): IntorResolvedConfig =>
     cache: {},
     logger: {},
     loader: {
-      type: "remote",
+      mode: "remote",
       remoteUrl: "https://example.com",
       namespaces: [],
       rootDir: "",
@@ -50,7 +50,7 @@ describe("createRefetchMessages", () => {
   it("does nothing when loader is not remote", async () => {
     const config = {
       ...createBaseConfig(),
-      loader: { type: "local" },
+      loader: { mode: "local" },
     } as IntorResolvedConfig;
 
     const refetch = createRefetchMessages({

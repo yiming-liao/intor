@@ -10,8 +10,8 @@ function mockClientLoader() {
   };
 }
 
-function mockServerLoader(type: "local" | "remote"): LoaderOptions {
-  return { type } as LoaderOptions;
+function mockServerLoader(mode: "local" | "remote"): LoaderOptions {
+  return { mode } as LoaderOptions;
 }
 
 function mockConfig(partial: Partial<IntorResolvedConfig>) {
@@ -52,7 +52,7 @@ describe("resolveLoaderOptions – client runtime", () => {
     });
     const resolved = resolveLoaderOptions(config, "client");
     expect(resolved).toEqual({
-      type: "remote",
+      mode: "remote",
       ...clientLoader,
     });
   });

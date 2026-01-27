@@ -35,7 +35,7 @@ const mockConfig: IntorResolvedConfig = {
   supportedLocales: ["en-US", "zh-TW"],
   fallbackLocales: {},
   messages: mockMessages,
-  loader: { type: "remote", url: "" },
+  loader: { mode: "remote", url: "" },
   cookie: DEFAULT_COOKIE_OPTIONS,
   routing: DEFAULT_ROUTING_OPTIONS,
   logger: { id: "test" },

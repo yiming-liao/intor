@@ -11,7 +11,7 @@ export interface RemoteHeaders {
 /** Local message loader options. */
 interface LocalLoader {
   /** Use local filesystem-based message loading. */
-  type: "local";
+  mode: "local";
   /** Namespaces to load for all routes. */
   namespaces?: string[];
   /** Maximum number of concurrent loading tasks. */
@@ -23,7 +23,7 @@ interface LocalLoader {
 /** Remote message loader options. */
 export interface RemoteLoader {
   /** Use remote API-based message loading. */
-  type: "remote";
+  mode: "remote";
   /** Namespaces to load for all routes. */
   namespaces?: string[];
   /** Maximum number of concurrent loading tasks. */
@@ -38,4 +38,4 @@ export interface RemoteLoader {
 export type LoaderOptions = LocalLoader | RemoteLoader;
 
 export type ServerLoaderOptions = LoaderOptions;
-export type ClientLoaderOptions = Omit<RemoteLoader, "type">;
+export type ClientLoaderOptions = Omit<RemoteLoader, "mode">;
