@@ -3,12 +3,14 @@ import type { IntorResolvedConfig } from "@/config";
 import type { GenConfigKeys } from "@/core";
 import type { LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
 export function useIntor<CK extends GenConfigKeys = "__default__">(
   config: IntorResolvedConfig,
-  loader: (locale: string) => Promise<LocaleMessages>,
+  loader: (
+    config: IntorResolvedConfig,
+    locale: string,
+  ) => Promise<LocaleMessages>,
 ): Omit<IntorValue<CK>, "handlers" | "plugins"> {
   // ---------------------------------------------------------------------------
   // Initial locale
@@ -30,17 +32,15 @@ export function useIntor<CK extends GenConfigKeys = "__default__">(
       activeLocaleRef.current = newLocale;
       setIsLoading(true);
 
-      const loaded = await loader(newLocale);
+      const loaded = await loader(config, newLocale);
 
       // Ignore outdated results when locale changes again.
       if (activeLocaleRef.current !== newLocale) return;
 
-      setMessages(
-        mergeMessages(config.messages, loaded, { config, locale: newLocale }),
-      );
+      setMessages(loaded);
       setIsLoading(false);
     },
-    [loader, config],
+    [config, loader],
   );
 
   // ---------------------------------------------------------------------------

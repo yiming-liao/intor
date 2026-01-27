@@ -2,12 +2,14 @@ import type { IntorValue } from "../provider";
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale, LocaleMessages } from "intor-translator";
 import { ref, onMounted } from "vue";
-import { mergeMessages } from "@/core";
 import { getClientLocale } from "../../shared/helpers";
 
 export function useIntor(
   config: IntorResolvedConfig,
-  loader: (locale: Locale) => Promise<LocaleMessages>,
+  loader: (
+    config: IntorResolvedConfig,
+    locale: string,
+  ) => Promise<LocaleMessages>,
 ): Omit<IntorValue, "handlers" | "plugins"> {
   // ---------------------------------------------------------------------------
   // Initial locale
@@ -28,15 +30,12 @@ export function useIntor(
     activeLocale = newLocale;
     isLoading.value = true;
 
-    const loaded = await loader(newLocale);
+    const loaded = await loader(config, newLocale);
 
     // Ignore outdated results when locale changes again.
     if (activeLocale !== newLocale) return;
 
-    messages.value = mergeMessages(config.messages, loaded, {
-      config,
-      locale: newLocale,
-    });
+    messages.value = loaded;
     isLoading.value = false;
   };
 
