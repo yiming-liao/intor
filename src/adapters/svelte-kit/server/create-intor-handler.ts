@@ -8,6 +8,7 @@ import {
   getLocaleFromAcceptLanguage,
   resolveInbound,
   type InboundContext,
+  type InboundResult,
 } from "@/routing";
 
 /**
@@ -21,6 +22,8 @@ import {
  */
 export function createIntorHandler(config: IntorResolvedConfig): Handle {
   return async ({ event, resolve }) => {
+    const { host, searchParams, pathname: rawPathname } = event.url;
+
     // Locale from Accept-Language header
     const acceptLanguage = event.request.headers.get("accept-language");
     const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
@@ -31,25 +34,23 @@ export function createIntorHandler(config: IntorResolvedConfig): Handle {
     // ----------------------------------------------------------
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
-    let inbound;
+    let inboundResult: InboundResult;
     if (isSvelteKitSSG(event)) {
-      inbound = {
+      inboundResult = {
         locale: event.params?.locale,
         localeSource: "path" as const,
-        pathname: event.url.pathname,
+        pathname: rawPathname,
         shouldRedirect: false,
       };
     } else {
-      inbound = await resolveInbound(config, event.url.pathname, false, {
-        host: event.url.host,
-        query: normalizeQuery(
-          Object.fromEntries(event.url.searchParams.entries()),
-        ),
+      inboundResult = await resolveInbound(config, rawPathname, {
+        host,
+        query: normalizeQuery(Object.fromEntries(searchParams.entries())),
         cookie: event.cookies.get(config.cookie.name),
         detected: localeFromAcceptLanguage || config.defaultLocale,
       });
     }
-    const { locale, localeSource, pathname, shouldRedirect } = inbound;
+    const { locale, localeSource, pathname, shouldRedirect } = inboundResult;
 
     // ----------------------------------------------------------
     // Redirect if needed

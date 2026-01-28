@@ -40,7 +40,6 @@ export function createIntorHandler(
     const { locale, localeSource, pathname } = await resolveInbound(
       config,
       req.path,
-      false,
       {
         host: req.hostname,
         query: normalizeQuery(req.query),

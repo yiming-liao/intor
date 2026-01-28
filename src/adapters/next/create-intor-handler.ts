@@ -17,6 +17,8 @@ export const createIntorHandler = async (
   config: IntorResolvedConfig,
   request: NextRequest,
 ): Promise<Response> => {
+  const { host, searchParams, pathname: rawPathname } = request.nextUrl;
+
   // Locale from Accept-Language header
   const acceptLanguageHeader = request.headers.get("accept-language");
   const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
@@ -25,8 +27,7 @@ export const createIntorHandler = async (
   );
 
   // Check whether this navigation flow has already redirected
-  const hasRedirectedForLocale =
-    request.headers.get(INTOR_HEADERS.REDIRECTED) === "1";
+  const hasRedirected = request.headers.get(INTOR_HEADERS.REDIRECTED) === "1";
 
   // ----------------------------------------------------------
   // Resolve inbound routing decision (pure computation)
@@ -34,16 +35,14 @@ export const createIntorHandler = async (
   const { locale, localeSource, pathname, shouldRedirect } =
     await resolveInbound(
       config,
-      request.nextUrl.pathname,
-      hasRedirectedForLocale,
+      rawPathname,
       {
-        host: request.nextUrl.host,
-        query: normalizeQuery(
-          Object.fromEntries(request.nextUrl.searchParams.entries()),
-        ),
+        host,
+        query: normalizeQuery(Object.fromEntries(searchParams.entries())),
         cookie: request.cookies.get(config.cookie.name)?.value,
         detected: localeFromAcceptLanguage || config.defaultLocale,
       },
+      { hasRedirected },
     );
 
   // ----------------------------------------------------------
