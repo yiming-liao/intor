@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { NavigationResult } from "@/routing";
+import type { OutboundResult } from "@/routing";
 import type { Locale } from "intor-translator";
 import { shouldSyncLocale } from "@/policies";
 import { setLocaleCookie } from "../utils";
@@ -11,21 +11,21 @@ interface NavigationExecutionContext {
 }
 
 /**
- * Executes a resolved navigation result.
+ * Executes a resolved outbound routing result.
  *
- * Applies all imperative side effects required to complete navigation,
- * including locale synchronization, cookie persistence, and full reloads.
+ * Applies all imperative side effects required to realize the outbound decision,
+ * including locale synchronization, cookie persistence, and full page reloads.
  *
- * This function must be called after `resolveNavigation`.
+ * This function must be called after `resolveOutbound`.
  */
 export function executeNavigation(
-  navigationResult: NavigationResult,
+  outboundResult: OutboundResult,
   context: NavigationExecutionContext,
   e?: { preventDefault(): void },
 ) {
   const { config, currentLocale, setLocale } = context;
   const { cookie } = config;
-  const { destination, kind, locale } = navigationResult;
+  const { destination, kind, locale } = outboundResult;
 
   // ------------------------------------------------------
   // External navigation: let browser handle it

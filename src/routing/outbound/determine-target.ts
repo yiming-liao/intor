@@ -6,24 +6,21 @@ import { deriveHostDestination } from "./utils/derive-host-destination";
 import { deriveQueryDestination } from "./utils/derive-query-destination";
 import { isExternalDestination } from "./utils/is-external-destination";
 
-export interface NavigationTarget {
+export interface OutboundTarget {
   locale: Locale;
   destination: string;
   isExternal: boolean;
 }
 
 /**
- * Derives a navigation target for a single navigation attempt.
- *
- * This function computes the final destination URL and execution flags
- * based on the current routing configuration and locale context.
+ * Determines the outbound routing target.
  */
-export function deriveTarget(
+export function determineTarget(
   config: IntorResolvedConfig,
   currentLocale: Locale,
   currentPathname: string,
   intent?: { destination?: string; locale?: Locale },
-): NavigationTarget {
+): OutboundTarget {
   const { supportedLocales, routing } = config;
 
   // ----------------------------------------------------------------
