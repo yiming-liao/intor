@@ -1,7 +1,6 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Request, Response, NextFunction } from "express";
-import type { LocaleMessages, Replacement } from "intor-translator";
-import { normalizeQuery, type TranslatorInstance } from "@/core";
+import { normalizeQuery } from "@/core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
 import {
   parseCookieHeader,
@@ -19,11 +18,11 @@ import {
  *
  * @platform Express
  */
-export function createIntorMiddleware(
+export function createIntorHandler(
   config: IntorResolvedConfig,
   options?: Omit<GetTranslatorParams, "locale">,
 ) {
-  return async function intorMiddleware(
+  return async function intorHandler(
     req: Request,
     _res: Response,
     next: NextFunction,
@@ -55,18 +54,19 @@ export function createIntorMiddleware(
     // --------------------------------------------------
     req.intor = { locale, localeSource, pathname };
 
-    const { hasKey, t } = (await getTranslator(config, {
+    const { hasKey, t, tRich } = await getTranslator(config, {
       locale,
       handlers: options?.handlers,
       plugins: options?.plugins,
       readers: options?.readers,
       allowCacheWrite: true,
-    })) as TranslatorInstance<LocaleMessages, Replacement, "string">;
+    });
 
     // DX shortcuts (optional)
     req.locale = locale;
     req.hasKey = hasKey;
     req.t = t;
+    req.tRich = tRich;
 
     return next();
   };

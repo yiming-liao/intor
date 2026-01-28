@@ -1,3 +1,3 @@
 // intor / express
 
-export { createIntorMiddleware, getTranslator } from "@/adapters/express";
+export { createIntorHandler, getTranslator } from "@/adapters/express";

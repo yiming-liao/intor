@@ -1,4 +1,4 @@
-export { createIntorMiddleware } from "./middleware";
-export { getTranslator } from "./helpers";
+export { createIntorHandler } from "./create-intor-handler";
+export { getTranslator } from "./get-translator";
 
 export * from "./global";

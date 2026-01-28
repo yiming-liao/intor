@@ -19,7 +19,7 @@ import {
  *
  * @platform SvelteKit
  */
-export function createIntorHandle(config: IntorResolvedConfig): Handle {
+export function createIntorHandler(config: IntorResolvedConfig): Handle {
   return async ({ event, resolve }) => {
     // Locale from Accept-Language header
     const acceptLanguage = event.request.headers.get("accept-language");
