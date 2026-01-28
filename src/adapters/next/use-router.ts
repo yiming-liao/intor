@@ -6,7 +6,7 @@ import type {
 import { useRouter as useNextRouter, usePathname } from "next/navigation";
 import { executeNavigation } from "@/client";
 import { useIntorContext } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
-import { resolveNavigation } from "@/routing";
+import { resolveOutbound } from "@/routing";
 
 /**
  * Locale-aware router hook for the current execution context.
@@ -33,14 +33,14 @@ export const useRouter = () => {
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const navigationResult = resolveNavigation(
+    const outboundResult = resolveOutbound(
       config,
       currentLocale,
       currentPathname,
       { destination: href, locale: options?.locale },
     );
-    executeNavigation(navigationResult, { config, currentLocale, setLocale });
-    nextRouterPush(navigationResult.destination, options);
+    executeNavigation(outboundResult, { config, currentLocale, setLocale });
+    nextRouterPush(outboundResult.destination, options);
   };
 
   // --------------------------------------------------
@@ -50,14 +50,14 @@ export const useRouter = () => {
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
-    const navigationResult = resolveNavigation(
+    const outboundResult = resolveOutbound(
       config,
       currentLocale,
       currentPathname,
       { destination: href, locale: options?.locale },
     );
-    executeNavigation(navigationResult, { config, currentLocale, setLocale });
-    nextRouterReplace(navigationResult.destination, options);
+    executeNavigation(outboundResult, { config, currentLocale, setLocale });
+    nextRouterReplace(outboundResult.destination, options);
   };
 
   // --------------------------------------------------
@@ -67,7 +67,7 @@ export const useRouter = () => {
     href: string,
     options?: PrefetchOptions & { locale?: GenLocale<CK> },
   ) => {
-    const { kind, destination } = resolveNavigation(
+    const { kind, destination } = resolveOutbound(
       config,
       currentLocale,
       currentPathname,

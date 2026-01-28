@@ -61,10 +61,6 @@
       "import": "./dist/next/export/next/index.js",
       "types": "./dist/types/export/next/index.d.ts"
     },
-    "./next/proxy": {
-      "import": "./dist/next/export/next/proxy/index.js",
-      "types": "./dist/types/export/next/proxy/index.d.ts"
-    },
     "./next/server": {
       "import": "./dist/next/export/next/server/index.js",
       "types": "./dist/types/export/next/server/index.d.ts"

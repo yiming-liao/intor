@@ -13,7 +13,7 @@ import { getLocaleFromAcceptLanguage, resolveInbound } from "@/routing";
  *
  * @platform Next.js
  */
-export const intorProxy = async (
+export const createIntorHandler = async (
   config: IntorResolvedConfig,
   request: NextRequest,
 ): Promise<Response> => {
@@ -26,7 +26,7 @@ export const intorProxy = async (
 
   // Check whether this navigation flow has already redirected
   const hasRedirectedForLocale =
-    request.headers.get("x-intor-redirected") === "1";
+    request.headers.get(INTOR_HEADERS.REDIRECTED) === "1";
 
   // ----------------------------------------------------------
   // Resolve inbound routing decision (pure computation)

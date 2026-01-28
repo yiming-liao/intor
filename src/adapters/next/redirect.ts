@@ -2,8 +2,8 @@ import type { IntorResolvedConfig } from "@/config";
 import type { GenConfigKeys, GenLocale } from "@/core";
 import type { RedirectType } from "next/navigation";
 import { redirect as nextRedirect } from "next/navigation";
-import { resolveNavigation } from "@/routing";
-import { getLocale } from "../server/get-locale"; // NOTE: Import the concrete server module directly to avoid pulling in the full server barrel (Node-only deps).
+import { resolveOutbound } from "@/routing";
+import { getLocale } from "./server/get-locale"; // NOTE: Import the concrete server module directly to avoid pulling in the full server barrel (Node-only deps).
 
 /**
  * Redirect to a locale-aware destination for the current execution context.
@@ -20,7 +20,7 @@ export const redirect = async <CK extends GenConfigKeys = "__default__">(
 ) => {
   const currentLocale = await getLocale(config);
 
-  const { destination, kind } = resolveNavigation(config, currentLocale, url, {
+  const { destination, kind } = resolveOutbound(config, currentLocale, url, {
     locale,
   });
 

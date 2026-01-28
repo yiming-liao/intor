@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { intorProxy } from "@/adapters/next/proxy/intor-proxy";
+import { createIntorHandler } from "@/adapters/next/create-intor-handler";
 import { INTOR_HEADERS } from "@/core";
 import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 
@@ -62,7 +62,7 @@ describe("intorProxy (Next.js adapter)", () => {
       shouldRedirect: true,
     });
     const request = createRequest("https://example.com/about");
-    const response = await intorProxy(config, request);
+    const response = await createIntorHandler(config, request);
     expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBe("/zh-TW/about");
     expect(response.headers.get("x-intor-redirected")).toBe("1");
@@ -76,7 +76,7 @@ describe("intorProxy (Next.js adapter)", () => {
       shouldRedirect: false,
     });
     const request = createRequest("https://example.com/about");
-    const response = await intorProxy(config, request);
+    const response = await createIntorHandler(config, request);
     expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBeNull();
     expect(response.headers.get("x-intor-redirected")).toBeNull();
@@ -90,7 +90,7 @@ describe("intorProxy (Next.js adapter)", () => {
       shouldRedirect: false,
     });
     const request = createRequest("https://example.com/zh-TW/about");
-    const response = await intorProxy(config, request);
+    const response = await createIntorHandler(config, request);
     expect(response.headers.get(INTOR_HEADERS.LOCALE)).toBe("zh-TW");
     expect(response.headers.get(INTOR_HEADERS.LOCALE_SOURCE)).toBe("path");
     expect(response.headers.get(INTOR_HEADERS.PATHNAME)).toBe("/zh-TW/about");
@@ -104,7 +104,7 @@ describe("intorProxy (Next.js adapter)", () => {
       shouldRedirect: false,
     });
     const request = createRequest("https://example.com/");
-    await intorProxy(config, request);
+    await createIntorHandler(config, request);
     expect(request.cookies.get).toHaveBeenCalled();
   });
 });

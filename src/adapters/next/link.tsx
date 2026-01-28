@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import * as React from "react";
 import { executeNavigation } from "@/client";
 import { useIntorContext } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
-import { resolveNavigation } from "@/routing";
+import { resolveOutbound } from "@/routing";
 
 interface LinkProps<CK extends GenConfigKeys = "__default__">
   extends Omit<NextLinkProps, "href">,
@@ -47,7 +47,7 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
     typeof href === "string" ? href : href ? formatUrl(href) : undefined;
 
   // Resolve navigation result for this link
-  const navigationResult = resolveNavigation(
+  const outboundResult = resolveOutbound(
     config,
     currentLocale,
     currentPathname,
@@ -60,16 +60,12 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
-    executeNavigation(
-      navigationResult,
-      { config, currentLocale, setLocale },
-      e,
-    );
+    executeNavigation(outboundResult, { config, currentLocale, setLocale }, e);
   };
 
   return (
     <NextLink
-      href={navigationResult.destination}
+      href={outboundResult.destination}
       onClick={handleClick}
       {...props}
     >
