@@ -11,7 +11,7 @@ export const IntorContext = React.createContext<IntorContextValue | undefined>(
   undefined,
 );
 
-export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
+export function IntorProvider<CK extends GenConfigKeys = "__default__">({
   value: {
     config,
     locale: initialLocale,
@@ -22,7 +22,7 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
     isLoading: externalIsLoading,
   },
   children,
-}: IntorProviderProps<CK>) => {
+}: IntorProviderProps<CK>) {
   // -----------------------------------------------------------------------------
   // Internal state
   // -----------------------------------------------------------------------------
@@ -90,4 +90,4 @@ export const IntorProvider = <CK extends GenConfigKeys = "__default__">({
       {children}
     </IntorContext.Provider>
   );
-};
+}
