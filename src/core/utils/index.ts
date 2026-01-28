@@ -11,4 +11,5 @@ export {
   normalizeLocale,
   normalizePathname,
   normalizeQuery,
+  type NormalizedQuery,
 } from "./normalizers";

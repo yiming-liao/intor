@@ -1,7 +1,7 @@
 import type { RoutingLocaleSource } from "@/core";
 import type { Locale } from "intor-translator";
 
-export interface ResolveInboundResult {
+export interface InboundResult {
   /** Resolved locale */
   locale: Locale;
   /** Locale source used for resolution */
@@ -13,6 +13,6 @@ export interface ResolveInboundResult {
 }
 
 export type InboundContext = Pick<
-  ResolveInboundResult,
+  InboundResult,
   "locale" | "pathname" | "localeSource"
 >;

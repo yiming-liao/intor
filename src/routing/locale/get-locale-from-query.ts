@@ -1,3 +1,5 @@
+import type { NormalizedQuery } from "@/core";
+
 /**
  * Get locale candidate from URL query parameters.
  *
@@ -11,21 +13,12 @@
  *
  * getLocaleFromQuery({}, "locale")
  * // => undefined
- *
- * getLocaleFromQuery({ locale: ["zh-TW"] }, "locale")
- * // => "zh-TW"
- * ```
  */
 export function getLocaleFromQuery(
-  query: Record<string, string | string[] | undefined> | undefined,
+  query: NormalizedQuery | undefined,
   queryKey: string,
 ): string | undefined {
   if (!query) return;
 
-  const raw = query[queryKey];
-  if (!raw) return;
-
-  const value = Array.isArray(raw) ? raw[0] : raw;
-
-  return value;
+  return query[queryKey];
 }

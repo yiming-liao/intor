@@ -15,6 +15,7 @@ export {
   normalizeCacheKey,
   normalizeLocale,
   normalizeQuery,
+  type NormalizedQuery,
 } from "./utils";
 
 // logger

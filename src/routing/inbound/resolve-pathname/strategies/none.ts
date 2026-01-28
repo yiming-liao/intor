@@ -1,4 +1,5 @@
 import type { PathnameDirective } from "../types";
+
 /**
  * Resolve pathname decision for routing prefix strategy: "none".
  */

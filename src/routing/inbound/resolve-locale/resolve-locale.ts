@@ -5,9 +5,9 @@ import { normalizeLocale } from "@/core";
 /**
  * Resolve the active locale from inbound routing configuration.
  *
- * Iterates through configured locale sources and returns the first
- * normalized, supported locale. Falls back to the detected locale
- * or the default locale if none match.
+ * Iterates through configured locale sources and returns the first normalized, supported locale.
+ *
+ * Falls back to the detected locale or the default locale if none match.
  */
 export function resolveLocale(
   config: IntorResolvedConfig,
@@ -28,10 +28,12 @@ export function resolveLocale(
   }
 
   // Fallback: detected is always available
+  const fallback =
+    normalizeLocale(context.detected.locale, config.supportedLocales) ||
+    config.defaultLocale;
+
   return {
-    locale:
-      normalizeLocale(context.detected.locale, config.supportedLocales) ||
-      config.defaultLocale,
+    locale: fallback,
     localeSource: "detected",
   };
 }

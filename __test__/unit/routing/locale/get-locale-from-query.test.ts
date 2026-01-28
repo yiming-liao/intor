@@ -17,11 +17,6 @@ describe("getLocaleFromQuery", () => {
     expect(result).toBe("en");
   });
 
-  it("returns the first value when query parameter is an array", () => {
-    const result = getLocaleFromQuery({ locale: ["zh-TW", "en"] }, "locale");
-    expect(result).toBe("zh-TW");
-  });
-
   it("returns raw value without normalization", () => {
     const result = getLocaleFromQuery({ locale: "EN-us" }, "locale");
     expect(result).toBe("EN-us");

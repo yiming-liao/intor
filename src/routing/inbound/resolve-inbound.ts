@@ -1,5 +1,6 @@
-import type { ResolveInboundResult } from "./types";
+import type { InboundResult } from "./types";
 import type { IntorResolvedConfig } from "@/config";
+import type { NormalizedQuery } from "@/core";
 import {
   getLocaleFromPathname,
   getLocaleFromHost,
@@ -7,6 +8,13 @@ import {
 } from "../locale";
 import { resolveLocale } from "./resolve-locale";
 import { resolvePathname } from "./resolve-pathname";
+
+interface LocaleInputs {
+  host?: string;
+  query?: NormalizedQuery;
+  cookie?: string;
+  detected: string;
+}
 
 /**
  * Resolves inbound routing state.
@@ -20,14 +28,10 @@ import { resolvePathname } from "./resolve-pathname";
 export async function resolveInbound(
   config: IntorResolvedConfig,
   rawPathname: string,
-  hasRedirected: boolean,
-  localeInputs: {
-    host?: string;
-    query?: Record<string, string | string[] | undefined>;
-    cookie?: string;
-    detected: string;
-  },
-): Promise<ResolveInboundResult> {
+  localeInputs: LocaleInputs,
+  options?: { hasRedirected: boolean },
+): Promise<InboundResult> {
+  const { queryKey } = config.routing.inbound;
   const { host, query, cookie, detected } = localeInputs;
 
   // ------------------------------------------------------
@@ -38,9 +42,7 @@ export async function resolveInbound(
   const { locale, localeSource } = resolveLocale(config, {
     path: { locale: pathLocale },
     host: { locale: getLocaleFromHost(host) },
-    query: {
-      locale: getLocaleFromQuery(query, config.routing.inbound.queryKey),
-    },
+    query: { locale: getLocaleFromQuery(query, queryKey) },
     cookie: { locale: cookie },
     detected: { locale: detected },
   });
@@ -52,7 +54,7 @@ export async function resolveInbound(
     locale,
     hasPathLocale: !!pathLocale,
     hasPersisted: !!cookie,
-    hasRedirected,
+    hasRedirected: !!options?.hasRedirected,
   });
 
   return {

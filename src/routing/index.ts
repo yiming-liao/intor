@@ -1,5 +1,9 @@
 // inbound
-export { resolveInbound, type InboundContext } from "./inbound";
+export {
+  resolveInbound,
+  type InboundResult,
+  type InboundContext,
+} from "./inbound";
 
 // pathname
 export { localizePathname, type LocalizedPathname } from "./pathname";
@@ -12,4 +16,4 @@ export {
   getLocaleFromQuery,
 } from "./locale";
 
-export { resolveNavigation, type NavigationResult } from "./navigation";
+export { resolveOutbound, type OutboundResult } from "./outbound";

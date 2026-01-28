@@ -1,3 +1,5 @@
+export type NormalizedQuery = Record<string, string | undefined>;
+
 /**
  * Normalize a raw query object into a string-only map.
  *
@@ -14,8 +16,8 @@
  */
 export function normalizeQuery(
   query: Record<string, unknown>,
-): Record<string, string | undefined> {
-  const normalized: Record<string, string | undefined> = {};
+): NormalizedQuery {
+  const normalized: NormalizedQuery = {};
 
   for (const [key, value] of Object.entries(query)) {
     if (typeof value === "string") {

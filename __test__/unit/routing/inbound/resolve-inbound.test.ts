@@ -40,13 +40,13 @@ describe("resolveInbound", () => {
     const result = await resolveInbound(
       config,
       "/about",
-      false, // hasRedirected
       {
         host: "zh-TW.example.com",
         query: {},
         cookie: undefined,
         detected: "en",
       },
+      { hasRedirected: false }, // hasRedirected
     );
     expect(resolveLocale).toHaveBeenCalledWith(
       config,
@@ -82,10 +82,15 @@ describe("resolveInbound", () => {
       pathname: "/about",
       shouldRedirect: false,
     });
-    const result = await resolveInbound(config, "/about", false, {
-      cookie: "en",
-      detected: "en",
-    });
+    const result = await resolveInbound(
+      config,
+      "/about",
+      {
+        cookie: "en",
+        detected: "en",
+      },
+      { hasRedirected: false },
+    );
     expect(resolvePathname).toHaveBeenCalledWith(
       config,
       "/about",
