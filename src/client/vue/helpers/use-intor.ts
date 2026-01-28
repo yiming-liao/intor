@@ -8,7 +8,7 @@ export function useIntor(
   config: IntorResolvedConfig,
   loader: (
     config: IntorResolvedConfig,
-    locale: string,
+    locale: Locale,
   ) => Promise<LocaleMessages>,
 ): Omit<IntorValue, "handlers" | "plugins"> {
   // ---------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+import type { Locale } from "intor-translator";
+
 /**
  * Context for pathname processing.
  *
@@ -5,7 +7,7 @@
  */
 export interface PathnameContext {
   /** Final resolved locale used for pathname decisions */
-  locale: string;
+  locale: Locale;
   /** Whether the current URL already contains a locale prefix */
   hasPathLocale: boolean;
   /** Whether a locale has been persisted from a previous visit */

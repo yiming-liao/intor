@@ -4,7 +4,7 @@ import type {
   IntorContextValue,
   IntorValue,
 } from "./types";
-import type { LocaleMessages } from "intor-translator";
+import type { Locale, LocaleMessages } from "intor-translator";
 import { Translator } from "intor-translator";
 import {
   defineComponent,
@@ -38,7 +38,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // ---------------------------------------------------------------------------
     // Internal state
     // ---------------------------------------------------------------------------
-    const locale = ref<string>(initialLocale);
+    const locale = ref<Locale>(initialLocale);
     const runtimeMessages = ref<LocaleMessages | null>(null);
     const internalIsLoading = ref<boolean>(false);
 
@@ -46,11 +46,10 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // Locale transition
     // ---------------------------------------------------------------------------
     /** Request a locale change. */
-    const setLocale = async (newLocale: string) => {
+    const setLocale = async (newLocale: Locale) => {
       if (newLocale === locale.value) return;
       locale.value = newLocale;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onLocaleChange?.(newLocale as any); // Notify external listener (fire-and-forget)
+      onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
     };
 
     // ---------------------------------------------------------------------------

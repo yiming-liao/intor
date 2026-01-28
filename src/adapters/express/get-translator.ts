@@ -51,9 +51,5 @@ export async function getTranslator(
     plugins,
     readers,
     allowCacheWrite,
-    // NOTE:
-    // The runtime implementation is intentionally erased.
-    // Type safety is guaranteed by public type contracts.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }) as any;
+  });
 }

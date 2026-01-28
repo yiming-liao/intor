@@ -1,8 +1,9 @@
 import type { RoutingLocaleSource } from "@/core";
+import type { Locale } from "intor-translator";
 
 export interface ResolveInboundResult {
   /** Resolved locale */
-  locale: string;
+  locale: Locale;
   /** Locale source used for resolution */
   localeSource: RoutingLocaleSource;
   /** Localized pathname */

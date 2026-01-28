@@ -1,3 +1,5 @@
+import type { Locale } from "intor-translator";
+
 const toCanonical = (input: string): string | undefined => {
   try {
     return Intl.getCanonicalLocales(input)[0];
@@ -27,8 +29,8 @@ const toCanonical = (input: string): string | undefined => {
  * - Always returns an original entry from `supportedLocales`.
  * - Requires `Intl` locale support in the runtime.
  */
-export const normalizeLocale = <Locale extends string>(
-  locale: string | undefined,
+export const normalizeLocale = (
+  locale: Locale | undefined,
   supportedLocales: readonly Locale[] = [],
 ): Locale | undefined => {
   if (!locale || supportedLocales.length === 0) return;

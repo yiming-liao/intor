@@ -1,6 +1,7 @@
 import type { TranslatorInstanceServer } from "../translator/translator-instance";
 import type { IntorResolvedConfig } from "@/config";
 import type {
+  Locale,
   LocalizedPreKey,
   TranslateHandlers,
   TranslateHook,
@@ -18,7 +19,7 @@ import {
 import { initTranslator } from "@/server/translator";
 
 export interface GetTranslatorParams {
-  locale: string;
+  locale: Locale;
   readers?: MessagesReaders;
   allowCacheWrite?: boolean;
   fetch?: RuntimeFetch;

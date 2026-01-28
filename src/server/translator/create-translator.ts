@@ -1,5 +1,6 @@
 import type { IntorResolvedConfig } from "@/config";
 import type {
+  Locale,
   LocaleMessages,
   TranslateHandlers,
   TranslateHook,
@@ -10,7 +11,7 @@ import { mergeMessages } from "@/core/messages/merge-messages";
 
 export interface CreateTranslatorParams {
   config: IntorResolvedConfig;
-  locale: string;
+  locale: Locale;
   messages: LocaleMessages;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];

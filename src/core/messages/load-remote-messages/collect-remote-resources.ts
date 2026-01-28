@@ -1,5 +1,7 @@
+import type { Locale } from "intor-translator";
+
 interface CollectRemoteResourcesParams {
-  locale: string;
+  locale: Locale;
   baseUrl: string;
   namespaces?: string[];
 }

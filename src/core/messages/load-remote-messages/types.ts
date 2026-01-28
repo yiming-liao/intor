@@ -1,10 +1,11 @@
 import type { RuntimeFetch } from "../../types";
 import type { RemoteHeaders, LoggerOptions } from "@/config";
+import type { Locale } from "intor-translator";
 
 export interface LoadRemoteMessagesParams {
   // --- Messages Scope ---
-  locale: string;
-  fallbackLocales?: string[];
+  locale: Locale;
+  fallbackLocales?: Locale[];
   namespaces?: string[];
 
   // --- Execution ---

@@ -1,12 +1,13 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { NavigationResult } from "@/routing";
+import type { Locale } from "intor-translator";
 import { shouldSyncLocale } from "@/policies";
 import { setLocaleCookie } from "../utils";
 
 interface NavigationExecutionContext {
   config: IntorResolvedConfig;
-  currentLocale: string;
-  setLocale(locale: string): void;
+  currentLocale: Locale;
+  setLocale(locale: Locale): void;
 }
 
 /**

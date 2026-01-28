@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { LocaleMessages } from "intor-translator";
+import type { Locale, LocaleMessages } from "intor-translator";
 import { loadRemoteMessages, resolveLoaderOptions } from "@/core";
 import { mergeMessages } from "@/core";
 
@@ -10,7 +10,7 @@ interface CreateRefetchMessagesParams {
   onMessages?: (messages: LocaleMessages) => void;
 }
 
-export type RefetchMessagesFn = (newLocale: string) => Promise<void>;
+export type RefetchMessagesFn = (newLocale: Locale) => Promise<void>;
 
 /**
  * Creates a framework-agnostic message refetcher.
@@ -28,7 +28,7 @@ export const createRefetchMessages = ({
   // Tracks the currently active remote request for this refetcher instance
   let controller: AbortController | null = null;
 
-  return async function refetchMessages(newLocale: string) {
+  return async function refetchMessages(newLocale: Locale) {
     // No-op when remote loading is not enabled
     const loader = resolveLoaderOptions(config, "client");
     if (!loader || loader.mode !== "remote") return;

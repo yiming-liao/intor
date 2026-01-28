@@ -52,8 +52,8 @@ export type IntorResolvedConfig = {
 
   // --- Locale & Messages ---
   readonly messages?: LocaleMessages;
-  readonly defaultLocale: string;
-  readonly supportedLocales: readonly string[];
+  readonly defaultLocale: Locale;
+  readonly supportedLocales: readonly Locale[];
   readonly fallbackLocales: FallbackLocalesMap;
 
   // --- Translator ---

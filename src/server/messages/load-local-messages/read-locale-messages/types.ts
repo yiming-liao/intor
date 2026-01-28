@@ -1,5 +1,6 @@
 import type { LoggerOptions } from "@/config";
 import type { MessagesReaders } from "@/core";
+import type { Locale } from "intor-translator";
 import type { LimitFunction } from "p-limit";
 
 export interface FileEntry {
@@ -11,7 +12,7 @@ export interface FileEntry {
 }
 
 export interface ReadLocaleMessagesParams {
-  locale: string;
+  locale: Locale;
   namespaces?: string[];
   rootDir?: string;
   limit: LimitFunction;

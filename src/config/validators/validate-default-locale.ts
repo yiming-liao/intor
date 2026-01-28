@@ -1,3 +1,4 @@
+import type { Locale } from "intor-translator";
 import { IntorError, IntorErrorCode } from "@/core";
 
 /**
@@ -7,9 +8,9 @@ import { IntorError, IntorErrorCode } from "@/core";
  */
 export const validateDefaultLocale = (
   id: string,
-  defaultLocale: string,
-  supportedSet: ReadonlySet<string>,
-): string => {
+  defaultLocale: Locale,
+  supportedSet: ReadonlySet<Locale>,
+): Locale => {
   if (!supportedSet.has(defaultLocale)) {
     throw new IntorError({
       id,

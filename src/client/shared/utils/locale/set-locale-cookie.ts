@@ -1,4 +1,5 @@
 import type { CookieResolvedOptions } from "@/config";
+import type { Locale } from "intor-translator";
 import { buildCookieString } from "../build-cookie-string";
 
 /**
@@ -8,7 +9,7 @@ import { buildCookieString } from "../build-cookie-string";
  */
 export const setLocaleCookie = (
   cookieOptions: CookieResolvedOptions,
-  locale: string,
+  locale: Locale,
 ): void => {
   if (typeof document === "undefined") return;
 
