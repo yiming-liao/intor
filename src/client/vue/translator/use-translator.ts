@@ -50,9 +50,11 @@ export function useTranslator<CK extends GenConfigKeys = "__default__">(
     locale: computed(() => translator.value.locale as GenLocale<CK>),
     isLoading: computed(() => translator.value.isLoading),
     setLocale: intor.value.setLocale,
-    hasKey: computed(() => scoped.value.hasKey),
-    t: computed(() => scoped.value.t),
-    tRich: computed(() => createTRich(scoped.value.t)),
+    hasKey: (...args: Parameters<typeof scoped.value.hasKey>) =>
+      scoped.value.hasKey(...args),
+    t: (...args: Parameters<typeof scoped.value.t>) => scoped.value.t(...args),
+    tRich: (...args: Parameters<ReturnType<typeof createTRich>>) =>
+      createTRich(scoped.value.t)(...args),
     // NOTE:
     // The runtime implementation is intentionally erased.
     // Type safety is guaranteed by public type contracts.

@@ -22,19 +22,10 @@ type TransProps<
   /** The message key to translate. */
   i18nKey: K | (string & {});
 
-  /**
-   * Optional React renderers for semantic tags in rich messages.
-   *
-   * Maps a tag name to either a React node or a render function,
-   * allowing customization of rich tag rendering.
-   */
-  components?: ReactTagRenderers<RI>;
+  /** Optional React renderers for semantic tags. */
+  components?: ReactTagRenderers<RI> | ReactTagRenderers;
 
-  /**
-   * Optional replacement values for message interpolation.
-   *
-   * These values are passed to the underlying translator.
-   */
+  /** Optional replacement values for interpolation. */
   values?: RE | Replacement;
 };
 
@@ -47,6 +38,6 @@ export function Trans<CK extends GenConfigKeys = "__default__">(
   props: TransProps<CK>,
 ) {
   const { i18nKey, components, values } = props;
-  const translator = useTranslator<CK>();
-  return <>{translator.tRich(i18nKey, components, values)}</>;
+  const { tRich } = useTranslator<CK>();
+  return <>{tRich(i18nKey, components, values)}</>;
 }
