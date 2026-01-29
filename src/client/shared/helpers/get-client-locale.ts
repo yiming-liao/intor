@@ -1,17 +1,13 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizeLocale } from "@/core";
+import { normalizeLocale, type GenConfigKeys, type GenLocale } from "@/core";
 import { detectBrowserLocale, getLocaleFromCookie } from "../utils";
 
 /**
- * Resolve the locale in a client-only environment.
- *
- * This helper is intended for pure CSR setups (e.g. Vite).
- *
- * For framework-based apps, prefer `useTranslator()`.
- *
- * - Client-side only
+ * Resolve the active locale in a pure client-side environment.
  */
-export function getClientLocale(config: IntorResolvedConfig): string {
+export function getClientLocale<CK extends GenConfigKeys = "__default__">(
+  config: IntorResolvedConfig,
+): GenLocale<CK> {
   const { defaultLocale, supportedLocales, cookie } = config;
 
   // Locale from browser cookie
