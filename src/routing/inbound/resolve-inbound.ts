@@ -7,7 +7,7 @@ import {
   getLocaleFromQuery,
 } from "../locale";
 import { resolveLocale } from "./resolve-locale";
-import { resolvePathname } from "./resolve-pathname";
+import { resolvePathname } from "./resolve-path";
 
 interface LocaleInputs {
   host?: string;

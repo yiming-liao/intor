@@ -1,8 +1,4 @@
-import type {
-  PathnameContext,
-  PathnameDirective,
-  ResolvedPathname,
-} from "./types";
+import type { PathContext, PathDirective, ResolvedPath } from "./types";
 import type { IntorResolvedConfig } from "@/config";
 import { localizePathname } from "../../pathname";
 import { all, exceptDefault, none } from "./strategies";
@@ -17,14 +13,14 @@ const assertNever = (x: never): never => {
  * The resolved pathname represents the final, normalized form
  * used for routing and navigation.
  */
-export const resolvePathname = (
+export const resolvePath = (
   config: IntorResolvedConfig,
   rawPathname: string,
-  context: PathnameContext,
-): ResolvedPathname => {
+  context: PathContext,
+): ResolvedPath => {
   const { localePrefix } = config.routing;
 
-  let directive: PathnameDirective;
+  let directive: PathDirective;
   switch (localePrefix) {
     case "all": {
       directive = all(config, context);

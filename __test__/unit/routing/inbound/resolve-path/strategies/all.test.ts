@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
+import type { PathContext } from "@/routing/inbound/resolve-path/types";
 import { describe, it, expect } from "vitest";
-import { all } from "@/routing/inbound/resolve-pathname/strategies";
+import { all } from "@/routing/inbound/resolve-path/strategies";
 
 function createConfig(redirect?: boolean): IntorResolvedConfig {
   return {
@@ -10,7 +10,7 @@ function createConfig(redirect?: boolean): IntorResolvedConfig {
   } as IntorResolvedConfig;
 }
 
-function createContext(overrides?: Partial<PathnameContext>): PathnameContext {
+function createContext(overrides?: Partial<PathContext>): PathContext {
   return {
     locale: "zh-TW",
     hasPathLocale: false,

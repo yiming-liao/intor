@@ -3,13 +3,13 @@ import type { IntorResolvedConfig } from "@/config";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { resolveInbound } from "@/routing/inbound/resolve-inbound";
 import { resolveLocale } from "@/routing/inbound/resolve-locale";
-import { resolvePathname } from "@/routing/inbound/resolve-pathname";
+import { resolvePathname } from "@/routing/inbound/resolve-path";
 
 vi.mock("@/routing/inbound/resolve-locale", () => ({
   resolveLocale: vi.fn(),
 }));
 
-vi.mock("@/routing/inbound/resolve-pathname", () => ({
+vi.mock("@/routing/inbound/resolve-path", () => ({
   resolvePathname: vi.fn(),
 }));
 
@@ -28,7 +28,7 @@ describe("resolveInbound", () => {
     vi.clearAllMocks();
   });
 
-  it("resolves locale and pathname as a single inbound decision", async () => {
+  it("resolves locale and path as a single inbound decision", async () => {
     (resolveLocale as any).mockReturnValue({
       locale: "zh-TW",
       localeSource: "path",

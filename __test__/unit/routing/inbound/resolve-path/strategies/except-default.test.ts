@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { PathnameContext } from "@/routing/inbound/resolve-pathname/types";
+import type { PathContext } from "@/routing/inbound/resolve-path/types";
 import { describe, it, expect } from "vitest";
-import { exceptDefault } from "@/routing/inbound/resolve-pathname/strategies";
+import { exceptDefault } from "@/routing/inbound/resolve-path/strategies";
 
 function createConfig(
   defaultLocale = "en-US",
@@ -13,7 +13,7 @@ function createConfig(
   } as IntorResolvedConfig;
 }
 
-function createContext(overrides: Partial<PathnameContext>): PathnameContext {
+function createContext(overrides: Partial<PathContext>): PathContext {
   return {
     locale: "zh-TW",
     hasPathLocale: false,

@@ -1,11 +1,11 @@
 import type { Locale } from "intor-translator";
 
 /**
- * Context for pathname processing.
+ * Context for path processing.
  *
  * - Assumes the locale has already been resolved.
  */
-export interface PathnameContext {
+export interface PathContext {
   /** Final resolved locale used for pathname decisions */
   locale: Locale;
   /** Whether the current URL already contains a locale prefix */
@@ -19,15 +19,15 @@ export interface PathnameContext {
 /**
  * Directive describing how the pathname should be handled.
  */
-export interface PathnameDirective {
+export interface PathDirective {
   /** Indicates whether a redirect is required */
   type: "pass" | "redirect";
 }
 
 /**
- * Final resolved pathname result.
+ * Final resolved path result.
  */
-export interface ResolvedPathname {
+export interface ResolvedPath {
   /** Normalized pathname after applying routing rules */
   pathname: string;
   /** Whether a redirect should occur */

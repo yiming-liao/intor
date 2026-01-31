@@ -1,17 +1,16 @@
-import type { PathnameContext, PathnameDirective } from "../types";
+import type { PathContext, PathDirective } from "../types";
 import type { IntorResolvedConfig } from "@/config";
 
 /**
- * Resolve pathname decision for routing prefix strategy: "except-default".
+ * Resolve pathname decision for routing prefix strategy: "all".
  */
-export function exceptDefault(
+export function all(
   config: IntorResolvedConfig,
-  context: PathnameContext,
-): PathnameDirective {
+  context: PathContext,
+): PathDirective {
   const { hasPathLocale, hasPersisted, hasRedirected } = context;
   const { redirect } = config.routing.inbound.firstVisit;
   const isFirstVisit = !hasPersisted;
-  const isDefaultLocale = context.locale === config.defaultLocale;
 
   // ----------------------------------------------------------
   // URL already canonical
@@ -32,11 +31,11 @@ export function exceptDefault(
   // ----------------------------------------------------------
   if (isFirstVisit) {
     if (!redirect) return { type: "pass" };
-    return isDefaultLocale ? { type: "pass" } : { type: "redirect" };
+    return { type: "redirect" };
   }
 
   // ----------------------------------------------------------
-  // Redirect non-default locale to the locale-prefixed URL
+  // Redirect to the locale-prefixed URL
   // ----------------------------------------------------------
-  return isDefaultLocale ? { type: "pass" } : { type: "redirect" };
+  return { type: "redirect" };
 }
