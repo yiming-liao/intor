@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseCookieHeader } from "@/server";
+import { parseCookieHeader } from "@/core";
 
 describe("parseCookieHeader", () => {
   it("returns empty object when header is undefined", () => {

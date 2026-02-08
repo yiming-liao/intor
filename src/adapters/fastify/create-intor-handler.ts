@@ -1,19 +1,13 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { FastifyRequest } from "fastify";
-import { normalizeQuery } from "@/core";
+import { normalizeQuery, parseCookieHeader } from "@/core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
-import {
-  parseCookieHeader,
-  getTranslator,
-  type GetTranslatorParams,
-} from "@/server";
+import { getTranslator, type GetTranslatorParams } from "@/server";
 
 /**
  * Resolves locale-aware routing for the current execution context.
  *
- * The resolved routing state is exposed via response headers.
- *
- * - Permits cache writes during server execution.
+ * - Binds resolved routing state to the request.
  * - Convenience routing shortcuts are also bound to the request for downstream consumption.
  *
  * @platform Fastify

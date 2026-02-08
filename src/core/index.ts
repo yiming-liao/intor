@@ -10,6 +10,7 @@ export {
   type PlainObject,
   type DeepMergeOverrideEvent,
   resolveLoaderOptions,
+  parseCookieHeader,
   // normalizers
   normalizePathname,
   normalizeCacheKey,

@@ -14,8 +14,6 @@ import {
 /**
  * Resolves locale-aware routing for the current execution context.
  *
- * The resolved routing state is exposed via response headers.
- *
  * - Acts as the canonical routing authority within the SvelteKit request lifecycle.
  *
  * @platform SvelteKit
