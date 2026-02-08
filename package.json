@@ -84,6 +84,10 @@
       "types": "./dist/types/export/fastify/index.d.ts",
       "require": "./dist/fastify/export/fastify/index.js",
       "default": "./dist/fastify/export/fastify/index.js"
+    },
+    "./hono": {
+      "import": "./dist/hono/export/hono/index.js",
+      "types": "./dist/types/export/hono/index.d.ts"
     }
   },
   "main": "./dist/core/export/index.js",
@@ -140,6 +144,7 @@
     "eslint-plugin-unused-imports": "4.1.4",
     "fastify": "^5.7.4",
     "fastify-plugin": "^5.1.0",
+    "hono": "^4.11.8",
     "jsdom": "27.3.0",
     "knip": "5.69.1",
     "magic-string": "0.30.21",
