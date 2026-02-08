@@ -5,7 +5,7 @@ import type { FastifyInstance } from "fastify";
 import { createIntorHandler } from "./create-intor-handler";
 
 interface IntorFastifyPluginOptions
-  extends Omit<GetTranslatorParams, "locale"> {
+  extends Pick<GetTranslatorParams, "handlers" | "plugins" | "readers"> {
   config: IntorResolvedConfig;
   /**
    * Bind DX shortcuts to request:
