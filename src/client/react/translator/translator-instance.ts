@@ -17,13 +17,7 @@ export type TranslatorInstanceReact<
   ReplacementSchema = Replacement,
   RichSchema = Rich,
   PK extends string | undefined = undefined,
-> = TranslatorInstance<M, ReplacementSchema, PK> & {
-  /** `messages`: The message object containing all translations. */
-  messages: M;
-
-  /** Current locale in use. */
-  locale: Locale<M>;
-
+> = Omit<TranslatorInstance<M, ReplacementSchema, RichSchema, PK>, "tRich"> & {
   /** Indicates whether translations are currently loading. */
   isLoading: boolean;
 

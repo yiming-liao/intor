@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { TranslateHandlers, TranslateHook } from "intor-translator";
 import { describe, it, expect } from "vitest";
-import { createTranslator } from "@/server/translator/create-translator";
+import { createTranslator } from "@/core/translator/create-translator";
 
 describe("createTranslator()", () => {
   it("merges locale-scoped config messages with locale-scoped runtime messages", () => {

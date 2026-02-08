@@ -1,8 +1,7 @@
-import type { TranslatorInstanceVue } from "./translator-instance";
+import type { TranslatorInstanceVue } from "@/client/vue/translator/translator-instance";
 import type {
   GenConfigKeys,
   GenMessages,
-  GenLocale,
   GenReplacements,
   GenRich,
 } from "@/core";
@@ -12,42 +11,25 @@ import { injectIntor } from "..//provider";
 import { createTRich } from "./create-t-rich";
 
 /**
- * Vue composable to access the active translator instance.
+ * Vue composable for accessing the active, scope-aware translator instance.
+ *
+ * @platform Vue
  */
-
-// Without preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
   RichSchema = GenRich<CK>,
->(): TranslatorInstanceVue<
-  GenMessages<CK>,
-  ReplacementSchema,
-  RichSchema,
-  undefined
->;
-
-// With preKey
-export function useTranslator<
-  CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
-  PK extends string = LocalizedPreKey<GenMessages<CK>>,
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): TranslatorInstanceVue<GenMessages<CK>, ReplacementSchema, RichSchema, PK>;
-
-// Implementation
-export function useTranslator<CK extends GenConfigKeys = "__default__">(
-  preKey?: string,
-) {
+): TranslatorInstanceVue<GenMessages<CK>, ReplacementSchema, RichSchema, PK> {
   const intor = injectIntor();
   const translator = intor.value.translator;
   const scoped = computed(() => translator.value.scoped(preKey));
 
   return {
-    messages: computed(() => translator.value.messages as GenMessages<CK>),
-    locale: computed(() => translator.value.locale as GenLocale<CK>),
+    messages: computed(() => translator.value.messages),
+    locale: computed(() => translator.value.locale),
     isLoading: computed(() => translator.value.isLoading),
     setLocale: intor.value.setLocale,
     hasKey: (...args: Parameters<typeof scoped.value.hasKey>) =>
@@ -55,9 +37,10 @@ export function useTranslator<CK extends GenConfigKeys = "__default__">(
     t: (...args: Parameters<typeof scoped.value.t>) => scoped.value.t(...args),
     tRich: (...args: Parameters<ReturnType<typeof createTRich>>) =>
       createTRich(scoped.value.t)(...args),
-    // NOTE:
-    // The runtime implementation is intentionally erased.
-    // Type safety is guaranteed by public type contracts.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any;
+  } as unknown as TranslatorInstanceVue<
+    GenMessages<CK>,
+    ReplacementSchema,
+    RichSchema,
+    PK
+  >;
 }

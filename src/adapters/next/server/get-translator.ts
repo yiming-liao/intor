@@ -1,11 +1,20 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenMessages, GenReplacements } from "@/core";
-import type { GetTranslatorParams, TranslatorInstanceServer } from "@/server";
+import type {
+  GenConfigKeys,
+  GenMessages,
+  GenReplacements,
+  GenRich,
+  TranslatorInstance,
+} from "@/core";
+import type { GetTranslatorParams } from "@/server";
 import type { LocalizedPreKey } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "@/server";
 import { getLocale } from "./get-locale";
 
-type GetTranslatorNextParams = Omit<GetTranslatorParams, "locale">;
+type GetTranslatorNextParams<CK extends GenConfigKeys = "__default__"> = Omit<
+  GetTranslatorParams<CK>,
+  "locale"
+>;
 
 /**
  * Get a server-side translator for the current execution context.
@@ -14,31 +23,17 @@ type GetTranslatorNextParams = Omit<GetTranslatorParams, "locale">;
  *
  * @platform Next.js
  */
-
-// Signature: Without preKey
-export function getTranslator<
+export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
+  RichSchema = GenRich<CK>,
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorResolvedConfig,
-  params?: GetTranslatorNextParams,
-): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema>>;
-
-// Signature: With preKey
-export function getTranslator<
-  CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  PK extends string = LocalizedPreKey<GenMessages<CK>>,
->(
-  config: IntorResolvedConfig,
-  params?: GetTranslatorNextParams & { preKey?: PK },
-): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, PK>>;
-
-// Implementation
-export async function getTranslator(
-  config: IntorResolvedConfig,
-  params?: GetTranslatorNextParams & { preKey?: string },
-) {
+  params: GetTranslatorNextParams<CK> & { preKey?: PK },
+): Promise<
+  TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
+> {
   const { preKey, handlers, plugins, readers, allowCacheWrite } = params || {};
   return getTranslatorCore(config, {
     locale: await getLocale(config),

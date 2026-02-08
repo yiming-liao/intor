@@ -1,7 +1,5 @@
-import type { TranslatorInstanceServer } from "../translator/translator-instance";
 import type { IntorResolvedConfig } from "@/config";
 import type {
-  Locale,
   LocalizedPreKey,
   TranslateHandlers,
   TranslateHook,
@@ -10,16 +8,18 @@ import type {
 import {
   createTRich,
   type GenConfigKeys,
+  type GenLocale,
   type GenMessages,
   type GenReplacements,
   type GenRich,
   type MessagesReaders,
   type RuntimeFetch,
+  type TranslatorInstance,
 } from "@/core";
-import { initTranslator } from "@/server/translator";
+import { initTranslator } from "../translator";
 
-export interface GetTranslatorParams {
-  locale: Locale;
+export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
+  locale: GenLocale<CK> | (string & {});
   readers?: MessagesReaders;
   allowCacheWrite?: boolean;
   fetch?: RuntimeFetch;
@@ -30,42 +30,17 @@ export interface GetTranslatorParams {
 /**
  * Get a server-side translator for the current execution context.
  */
-
-// Signature: Without preKey
-export function getTranslator<
+export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
   RichSchema = GenRich<CK>,
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorResolvedConfig,
-  params: GetTranslatorParams,
+  params: GetTranslatorParams<CK> & { preKey?: PK },
 ): Promise<
-  TranslatorInstanceServer<
-    GenMessages<CK>,
-    ReplacementSchema,
-    RichSchema,
-    undefined
-  >
->;
-
-// Signature: With preKey
-export function getTranslator<
-  CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
-  PK extends string = LocalizedPreKey<GenMessages<CK>>,
->(
-  config: IntorResolvedConfig,
-  params: GetTranslatorParams & { preKey?: PK },
-): Promise<
-  TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
->;
-
-// Implementation
-export async function getTranslator(
-  config: IntorResolvedConfig,
-  params: GetTranslatorParams & { preKey?: string },
-) {
+  TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
+> {
   const { locale, readers, allowCacheWrite, fetch, preKey, handlers, plugins } =
     params;
 
@@ -85,9 +60,5 @@ export async function getTranslator(
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-    // NOTE:
-    // The runtime implementation is intentionally erased.
-    // Type safety is guaranteed by public type contracts.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any;
+  } as TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>;
 }

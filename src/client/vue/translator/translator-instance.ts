@@ -17,7 +17,10 @@ export type TranslatorInstanceVue<
   ReplacementSchema = Replacement,
   RichSchema = Rich,
   PK extends string | undefined = undefined,
-> = TranslatorInstance<M, ReplacementSchema, PK> & {
+> = Omit<
+  TranslatorInstance<M, ReplacementSchema, RichSchema, PK>,
+  "tRich" | "messages" | "locale"
+> & {
   /** `messages`: The message object containing all translations. */
   messages: ComputedRef<M>;
 
@@ -30,7 +33,7 @@ export type TranslatorInstanceVue<
   /** Update the active locale. */
   setLocale: (locale: Locale<M>) => void;
 
-  /** Translate a key into React nodes using semantic tags */
+  /** Translate a key into VNodes using semantic tags */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = LocalizedRich<RichSchema, K>,

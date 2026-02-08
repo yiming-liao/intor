@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/require-module-specifiers */
 /* eslint-disable @typescript-eslint/no-namespace */
+import type { TranslatorInstance } from "@/core";
 import type { InboundContext } from "@/routing";
-import type { TranslatorInstanceServer } from "@/server";
 import type { Locale, LocaleMessages } from "intor-translator";
 
 /**
@@ -12,9 +12,9 @@ declare global {
     interface Request {
       intor: InboundContext;
       locale: Locale;
-      hasKey: TranslatorInstanceServer<LocaleMessages>["hasKey"];
-      t: TranslatorInstanceServer<LocaleMessages>["t"];
-      tRich: TranslatorInstanceServer<LocaleMessages>["tRich"];
+      hasKey: TranslatorInstance<LocaleMessages>["hasKey"];
+      t: TranslatorInstance<LocaleMessages>["t"];
+      tRich: TranslatorInstance<LocaleMessages>["tRich"];
     }
   }
 }

@@ -1,13 +1,9 @@
-import type { HtmlTagRenderers, TranslatorInstance } from "@/core";
+import type { TranslatorInstance } from "@/core";
 import {
   type Locale,
   type LocaleMessages,
-  type LocalizedKey,
-  type LocalizedReplacement,
-  type LocalizedRich,
   type Replacement,
   type Rich,
-  type ScopedKey,
 } from "intor-translator";
 import { type Readable, type Writable } from "svelte/store";
 
@@ -18,10 +14,14 @@ export type TranslatorInstanceSvelte<
   PK extends string | undefined = undefined,
 > = {
   /** `messages`: The message object containing all translations. */
-  messages: Readable<M>;
+  messages: Readable<
+    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["messages"]
+  >;
 
   /** Current locale in use. */
-  locale: Writable<Locale<M>>;
+  locale: Writable<
+    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["locale"]
+  >;
 
   /** Indicates whether translations are currently loading. */
   isLoading: Readable<boolean>;
@@ -30,21 +30,15 @@ export type TranslatorInstanceSvelte<
   setLocale: (locale: Locale<M>) => void;
 
   /** Check if a given key exists in the messages. */
-  hasKey: Readable<TranslatorInstance<M, ReplacementSchema, PK>["hasKey"]>;
+  hasKey: Readable<
+    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["hasKey"]
+  >;
 
   /** Translate a given key into its string representation. */
-  t: Readable<TranslatorInstance<M, ReplacementSchema, PK>["t"]>;
+  t: Readable<TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["t"]>;
 
   /** Translate a key into an HTML string using semantic rich tags. */
   tRich: Readable<
-    <
-      K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
-      RI = LocalizedRich<RichSchema, K>,
-      RE = LocalizedReplacement<ReplacementSchema, K>,
-    >(
-      key?: K | (string & {}),
-      tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers,
-      replacements?: RE | Replacement,
-    ) => string
+    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["tRich"]
   >;
 };

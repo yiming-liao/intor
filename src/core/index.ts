@@ -49,7 +49,11 @@ export {
 } from "./render";
 
 // translator
-export { createTRich } from "./translator";
+export {
+  createTranslator,
+  type CreateTranslatorParams,
+  createTRich,
+} from "./translator";
 
 // types
 export type {

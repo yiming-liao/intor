@@ -1,4 +1,4 @@
-import type { TranslatorInstanceSvelte } from "./translator-instance";
+import type { TranslatorInstanceSvelte } from "@/client/svelte/translator/translator-instance";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -11,33 +11,23 @@ import { createTRich } from "@/core";
 import { useIntorContext } from "../provider";
 
 /**
- * Svelte utility for accessing the active Intor translator instance.
+ * Svelte utility for accessing the active, scope-aware translator instance.
+ *
+ * @platform Svelte
  */
-
-// Signature: Without preKey
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
   RichSchema = GenRich<CK>,
->(): TranslatorInstanceSvelte<
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
+>(
+  preKey?: PK,
+): TranslatorInstanceSvelte<
   GenMessages<CK>,
   ReplacementSchema,
   RichSchema,
-  undefined
->;
-
-// Signature: With preKey
-export function useTranslator<
-  CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
-  PK extends string = LocalizedPreKey<GenMessages<CK>>,
->(
-  preKey?: PK,
-): TranslatorInstanceSvelte<GenMessages<CK>, ReplacementSchema, RichSchema, PK>;
-
-// Implementation
-export function useTranslator(preKey?: string) {
+  PK
+> {
   const { translator, locale, setLocale } = useIntorContext();
   const scoped = derived(translator, ($t) => $t.scoped(preKey));
 
@@ -49,9 +39,10 @@ export function useTranslator(preKey?: string) {
     hasKey: derived(scoped, ($t) => $t.hasKey),
     t: derived(scoped, ($t) => $t.t),
     tRich: derived(scoped, ($t) => createTRich($t.t)),
-    // NOTE:
-    // The runtime implementation is intentionally erased.
-    // Type safety is guaranteed by public type contracts.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any;
+  } as unknown as TranslatorInstanceSvelte<
+    GenMessages<CK>,
+    ReplacementSchema,
+    RichSchema,
+    PK
+  >;
 }

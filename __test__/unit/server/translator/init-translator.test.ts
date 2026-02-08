@@ -5,14 +5,11 @@ import { initTranslator } from "@/server/translator";
 
 vi.mock("@/core", () => ({
   resolveLoaderOptions: vi.fn(),
+  createTranslator: vi.fn(),
 }));
 
 vi.mock("@/server/messages", () => ({
   loadMessages: vi.fn(),
-}));
-
-vi.mock("@/server/translator/create-translator", () => ({
-  createTranslator: vi.fn(),
 }));
 
 const mockConfig = {
@@ -34,9 +31,7 @@ describe("initTranslator", () => {
   it("loads messages and creates translator snapshot when loader is enabled", async () => {
     const { resolveLoaderOptions } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
-    const { createTranslator } = await import(
-      "@/server/translator/create-translator"
-    );
+    const { createTranslator } = await import("@/core");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue({ en: { hello: "world" } });
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
@@ -64,9 +59,7 @@ describe("initTranslator", () => {
   it("skips message loading when no loader is configured", async () => {
     const { resolveLoaderOptions } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
-    const { createTranslator } = await import(
-      "@/server/translator/create-translator"
-    );
+    const { createTranslator } = await import("@/core");
     vi.mocked(resolveLoaderOptions).mockReturnValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
     await initTranslator(mockConfig, "en", {} as any);
@@ -81,9 +74,7 @@ describe("initTranslator", () => {
   it("normalizes undefined messages to empty object", async () => {
     const { resolveLoaderOptions } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
-    const { createTranslator } = await import(
-      "@/server/translator/create-translator"
-    );
+    const { createTranslator } = await import("@/core");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
