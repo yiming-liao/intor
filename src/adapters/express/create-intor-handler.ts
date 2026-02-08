@@ -20,7 +20,7 @@ import {
  */
 export function createIntorHandler(
   config: IntorResolvedConfig,
-  options?: Omit<GetTranslatorParams, "locale">,
+  options?: Omit<GetTranslatorParams, "locale" | "fetch" | "allowCacheWrite">,
 ) {
   return async function intorHandler(
     req: Request,

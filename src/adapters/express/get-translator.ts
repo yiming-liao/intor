@@ -1,5 +1,10 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenMessages, GenReplacements } from "@/core";
+import type {
+  GenConfigKeys,
+  GenMessages,
+  GenReplacements,
+  GenRich,
+} from "@/core";
 import type { GetTranslatorParams, TranslatorInstanceServer } from "@/server";
 import type { Request } from "express";
 import type { LocalizedPreKey } from "intor-translator";
@@ -19,22 +24,33 @@ type GetTranslatorExpressParams = Omit<GetTranslatorParams, "locale">;
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
+  RichSchema = GenRich<CK>,
 >(
   config: IntorResolvedConfig,
   req: Request,
   params?: GetTranslatorExpressParams,
-): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema>>;
+): Promise<
+  TranslatorInstanceServer<
+    GenMessages<CK>,
+    ReplacementSchema,
+    RichSchema,
+    undefined
+  >
+>;
 
 // Signature: With preKey
 export function getTranslator<
   CK extends GenConfigKeys = "__default__",
   ReplacementSchema = GenReplacements<CK>,
+  RichSchema = GenRich<CK>,
   PK extends string = LocalizedPreKey<GenMessages<CK>>,
 >(
   config: IntorResolvedConfig,
   req: Request,
   params?: GetTranslatorExpressParams & { preKey?: PK },
-): Promise<TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, PK>>;
+): Promise<
+  TranslatorInstanceServer<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
+>;
 
 // Implementation
 export async function getTranslator(
