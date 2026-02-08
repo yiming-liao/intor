@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.3.33",
+  "version": "2.3.35",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor#readme",
@@ -78,6 +78,12 @@
       "types": "./dist/types/export/express/index.d.ts",
       "require": "./dist/express/export/express/index.js",
       "default": "./dist/express/export/express/index.js"
+    },
+    "./fastify": {
+      "import": "./dist/fastify/export/fastify/index.js",
+      "types": "./dist/types/export/fastify/index.d.ts",
+      "require": "./dist/fastify/export/fastify/index.js",
+      "default": "./dist/fastify/export/fastify/index.js"
     }
   },
   "main": "./dist/core/export/index.js",
@@ -132,6 +138,8 @@
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-unicorn": "62.0.0",
     "eslint-plugin-unused-imports": "4.1.4",
+    "fastify": "^5.7.4",
+    "fastify-plugin": "^5.1.0",
     "jsdom": "27.3.0",
     "knip": "5.69.1",
     "magic-string": "0.30.21",
