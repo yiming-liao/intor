@@ -3,6 +3,7 @@ export {
   resolveInbound,
   type InboundResult,
   type InboundContext,
+  resolveInboundFromRequest,
 } from "./inbound";
 
 // pathname

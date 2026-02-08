@@ -42,6 +42,10 @@
       "require": "./dist/core/export/server/index.js",
       "default": "./dist/core/export/server/index.js"
     },
+    "./edge": {
+      "import": "./dist/core/export/edge/index.js",
+      "types": "./dist/types/export/edge/index.d.ts"
+    },
     "./internal": {
       "types": "./dist/types/export/internal/index.d.ts"
     },

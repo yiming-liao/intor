@@ -11,6 +11,7 @@ export default [
     input: {
       "export/index": "export/index.ts",
       "export/server/index": "export/server/index.ts",
+      "export/edge/index": "export/edge/index.ts",
     },
     output: {
       dir: "dist/core",
