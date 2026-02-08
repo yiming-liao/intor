@@ -19,7 +19,7 @@ import {
  * @platform SvelteKit
  */
 export function createIntorHandler(config: IntorResolvedConfig): Handle {
-  return async ({ event, resolve }) => {
+  return async function intorHandler({ event, resolve }) {
     const { host, searchParams, pathname: rawPathname } = event.url;
 
     // Locale from Accept-Language header

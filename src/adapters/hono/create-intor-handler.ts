@@ -11,7 +11,7 @@ import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
  * @platform Hono
  */
 export function createIntorHandler(config: IntorResolvedConfig) {
-  return async function intorMiddleware(c: Context, next: Next) {
+  return async function intorHandler(c: Context, next: Next) {
     // Locale from Accept-Language header
     const acceptLanguage = c.req.header("accept-language");
     const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
