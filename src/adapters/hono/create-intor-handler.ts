@@ -1,6 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Context, Next } from "hono";
 import { normalizeQuery, parseCookieHeader } from "@/core";
+import { getTranslator, type GetTranslatorParams } from "@/edge";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
 
 /**
@@ -10,7 +11,12 @@ import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
  *
  * @platform Hono
  */
-export function createIntorHandler(config: IntorResolvedConfig) {
+export function createIntorHandler(
+  config: IntorResolvedConfig,
+  options?: Omit<GetTranslatorParams, "locale" | "fetch"> & {
+    shortcuts?: boolean;
+  },
+) {
   return async function intorHandler(c: Context, next: Next) {
     // Locale from Accept-Language header
     const acceptLanguage = c.req.header("accept-language");
@@ -39,6 +45,20 @@ export function createIntorHandler(config: IntorResolvedConfig) {
     // Bind inbound routing context
     // --------------------------------------------------
     c.set("intor", { locale, localeSource, pathname });
+
+    const { hasKey, t, tRich } = await getTranslator(config, {
+      locale,
+      handlers: options?.handlers,
+      plugins: options?.plugins,
+    });
+
+    // DX shortcuts (enabled by default)
+    if (options?.shortcuts !== false) {
+      c.set("locale", locale);
+      c.set("hasKey", hasKey);
+      c.set("t", t);
+      c.set("tRich", tRich);
+    }
 
     await next();
   };

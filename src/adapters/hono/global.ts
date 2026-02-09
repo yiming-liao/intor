@@ -10,7 +10,6 @@ import type { LocaleMessages } from "intor-translator";
 declare module "hono" {
   interface ContextVariableMap {
     intor: InboundContext;
-
     locale: TranslatorInstance<LocaleMessages>["locale"];
     hasKey: TranslatorInstance<LocaleMessages>["hasKey"];
     t: TranslatorInstance<LocaleMessages>["t"];

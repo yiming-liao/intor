@@ -14,7 +14,10 @@ import { getTranslator, type GetTranslatorParams } from "@/server";
  */
 export function createIntorHandler(
   config: IntorResolvedConfig,
-  options?: Omit<GetTranslatorParams, "locale" | "fetch" | "allowCacheWrite">,
+  options?: Omit<
+    GetTranslatorParams,
+    "locale" | "fetch" | "allowCacheWrite"
+  > & { shortcuts?: boolean },
 ) {
   return async function intorHandler(request: FastifyRequest) {
     // Locale from Accept-Language header
@@ -51,10 +54,12 @@ export function createIntorHandler(
       allowCacheWrite: true,
     });
 
-    // DX shortcuts (optional)
-    request.locale = locale;
-    request.hasKey = hasKey;
-    request.t = t;
-    request.tRich = tRich;
+    // DX shortcuts (enabled by default)
+    if (options?.shortcuts !== false) {
+      request.locale = locale;
+      request.hasKey = hasKey;
+      request.t = t;
+      request.tRich = tRich;
+    }
   };
 }

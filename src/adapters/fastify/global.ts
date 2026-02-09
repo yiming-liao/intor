@@ -2,7 +2,7 @@
 import "fastify";
 import type { TranslatorInstance } from "@/core";
 import type { InboundContext } from "@/routing";
-import type { Locale, LocaleMessages } from "intor-translator";
+import type { LocaleMessages } from "intor-translator";
 
 /**
  * Global type augmentations for Fastify request
@@ -10,7 +10,7 @@ import type { Locale, LocaleMessages } from "intor-translator";
 declare module "fastify" {
   interface FastifyRequest {
     intor: InboundContext;
-    locale: Locale;
+    locale: TranslatorInstance<LocaleMessages>["locale"];
     hasKey: TranslatorInstance<LocaleMessages>["hasKey"];
     t: TranslatorInstance<LocaleMessages>["t"];
     tRich: TranslatorInstance<LocaleMessages>["tRich"];

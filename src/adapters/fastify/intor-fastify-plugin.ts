@@ -45,7 +45,7 @@ export function intorFastifyPlugin(
   // --------------------------------------------------
   fastify.addHook(
     "onRequest",
-    createIntorHandler(config, { handlers, plugins, readers }),
+    createIntorHandler(config, { handlers, plugins, readers, shortcuts }),
   );
 }
 
