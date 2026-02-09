@@ -1,10 +1,6 @@
 <script lang="ts">
-  import type { IntorProviderProps } from "./types";
   import { createIntorStore } from "./create-intor-store";
-  const { value, children } = $props<{
-    value: IntorProviderProps["value"];
-    children: IntorProviderProps["children"];
-  }>();
+  const { value, children } = $props();
   // svelte-ignore state_referenced_locally
   createIntorStore(value);
 </script>

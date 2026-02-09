@@ -1,7 +1,6 @@
 // provider
 export {
   createIntorStore,
-  IntorProvider,
   type IntorProviderProps,
   useIntorContext,
 } from "./provider";

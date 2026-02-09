@@ -29,6 +29,10 @@ export default [
             src: "src/client/svelte/provider/intor-provider.svelte",
             dest: "dist/svelte/src/client/svelte/provider",
           },
+          {
+            src: "src/client/svelte/provider/intor-provider.d.ts",
+            dest: "dist/types/src/client/svelte/provider",
+          },
         ],
       }),
       fileSizeSummary(),
