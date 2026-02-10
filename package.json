@@ -73,10 +73,6 @@
       "import": "./dist/svelte-kit/export/svelte-kit/index.js",
       "types": "./dist/types/export/svelte-kit/index.d.ts"
     },
-    "./svelte-kit/server": {
-      "import": "./dist/svelte-kit/export/svelte-kit/server/index.js",
-      "types": "./dist/types/export/svelte-kit/server/index.d.ts"
-    },
     "./express": {
       "import": "./dist/express/export/express/index.js",
       "types": "./dist/types/export/express/index.d.ts",

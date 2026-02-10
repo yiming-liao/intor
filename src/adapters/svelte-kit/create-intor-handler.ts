@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { Handle } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
-import { isSvelteKitSSG } from "@/adapters/svelte-kit/server/utils/is-svelte-kit-ssg";
+import { isSvelteKitSSG } from "@/adapters/svelte-kit/utils/is-svelte-kit-ssg";
 import { normalizeQuery } from "@/core";
 import {
   getLocaleFromAcceptLanguage,

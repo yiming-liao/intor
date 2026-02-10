@@ -20,7 +20,6 @@ export default [
     input: {
       // svelte-kit
       "export/svelte-kit/index": "export/svelte-kit/index.ts",
-      "export/svelte-kit/server/index": "export/svelte-kit/server/index.ts",
     },
     output: {
       dir: "dist/svelte-kit",

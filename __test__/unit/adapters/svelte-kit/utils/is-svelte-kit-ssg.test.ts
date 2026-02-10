@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
-import { isSvelteKitSSG } from "@/adapters/svelte-kit/server/utils/is-svelte-kit-ssg";
+import { isSvelteKitSSG } from "@/adapters/svelte-kit/utils/is-svelte-kit-ssg";
 
 function createEvent(headers?: Record<string, string>) {
   return {
