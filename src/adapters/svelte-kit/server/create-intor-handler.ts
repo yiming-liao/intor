@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-ternary */
 import type { IntorResolvedConfig } from "@/config";
 import type { Handle } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
@@ -20,8 +19,6 @@ import {
  */
 export function createIntorHandler(config: IntorResolvedConfig): Handle {
   return async function intorHandler({ event, resolve }) {
-    const { host, searchParams, pathname: rawPathname } = event.url;
-
     // Locale from Accept-Language header
     const acceptLanguage = event.request.headers.get("accept-language");
     const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
@@ -37,10 +34,11 @@ export function createIntorHandler(config: IntorResolvedConfig): Handle {
       inboundResult = {
         locale: event.params?.locale,
         localeSource: "path" as const,
-        pathname: rawPathname,
+        pathname: event.url.pathname,
         shouldRedirect: false,
       };
     } else {
+      const { host, searchParams, pathname: rawPathname } = event.url;
       inboundResult = await resolveInbound(config, rawPathname, {
         host,
         query: normalizeQuery(Object.fromEntries(searchParams.entries())),
