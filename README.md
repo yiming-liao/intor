@@ -20,6 +20,7 @@ The i18n library for modern JavaScript
 
 </div>
 
+> [!NOTE]  
 > Intor began as an internal i18n tool.
 >
 > After multiple private iterations, it evolved into a minimal,
