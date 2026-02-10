@@ -34,7 +34,7 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
     readers: options?.readers,
-    allowCacheWrite: options?.allowCacheWrite,
+    allowCacheWrite: options?.allowCacheWrite ?? true,
     fetch: options?.fetch || globalThis.fetch,
   });
 
