@@ -6,6 +6,9 @@ export {
   resolveInboundFromRequest,
 } from "./inbound";
 
+// outbound
+export { resolveOutbound, type OutboundResult } from "./outbound";
+
 // pathname
 export { localizePathname, type LocalizedPathname } from "./pathname";
 
@@ -16,5 +19,3 @@ export {
   getLocaleFromHost,
   getLocaleFromQuery,
 } from "./locale";
-
-export { resolveOutbound, type OutboundResult } from "./outbound";

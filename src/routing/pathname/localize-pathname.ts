@@ -42,7 +42,7 @@ export interface LocalizedPathname {
  * // config.supportedLocales: ["en-US"]
  * // config.routing.basePath: "/app"
  * // config.routing.prefix: "all"
- * localizePathname(config, "/app/en-US/about", "en-US");
+ * localizePathname("/app/en-US/about", config, "en-US");
  * // => {
  * //   pathname: '/app/en-US/about'
  * //   unprefixedPathname: '/about',
