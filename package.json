@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.4.3",
+  "version": "2.4.5",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor#readme",
@@ -60,10 +60,6 @@
     "./svelte": {
       "import": "./dist/svelte/export/svelte/index.js",
       "types": "./dist/types/export/svelte/index.d.ts"
-    },
-    "./svelte/provider": {
-      "import": "./dist/svelte/src/client/svelte/provider/intor-provider.svelte",
-      "types": "./dist/types/src/client/svelte/provider/intor-provider.d.ts"
     },
     "./next": {
       "import": "./dist/next/export/next/index.js",
