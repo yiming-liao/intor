@@ -30,7 +30,7 @@ export async function getTranslator<
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorResolvedConfig,
-  params: GetTranslatorNextParams<CK> & { preKey?: PK },
+  params?: GetTranslatorNextParams<CK> & { preKey?: PK },
 ): Promise<
   TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
 > {
