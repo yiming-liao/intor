@@ -34,13 +34,16 @@ export async function getTranslator<
 ): Promise<
   TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
 > {
-  const { preKey, handlers, plugins, readers, allowCacheWrite } = params || {};
+  const { loader, readers, allowCacheWrite, handlers, plugins, preKey } =
+    params || {};
+
   return getTranslatorCore(config, {
     locale: await getLocale(config),
-    preKey,
-    handlers,
-    plugins,
+    loader,
     readers,
     allowCacheWrite,
+    handlers,
+    plugins,
+    preKey,
   });
 }

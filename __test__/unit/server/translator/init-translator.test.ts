@@ -28,10 +28,9 @@ beforeEach(() => {
 });
 
 describe("initTranslator", () => {
-  it("loads messages and creates translator snapshot when loader is enabled", async () => {
-    const { resolveLoaderOptions } = await import("@/core");
+  it("loads messages via built-in loader when loaderOptions are enabled", async () => {
+    const { resolveLoaderOptions, createTranslator } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
-    const { createTranslator } = await import("@/core");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue({ en: { hello: "world" } });
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
@@ -56,10 +55,29 @@ describe("initTranslator", () => {
     expect(result).toBe(mockTranslator);
   });
 
-  it("skips message loading when no loader is configured", async () => {
-    const { resolveLoaderOptions } = await import("@/core");
+  it("uses custom loader when provided and skips built-in loadMessages", async () => {
+    const { resolveLoaderOptions, createTranslator } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
-    const { createTranslator } = await import("@/core");
+    const customLoader = vi.fn().mockResolvedValue({
+      en: { hello: "from-loader" },
+    });
+    vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
+    vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
+    await initTranslator(mockConfig, "en", {
+      loader: customLoader,
+    } as any);
+    expect(customLoader).toHaveBeenCalledWith(mockConfig, "en");
+    expect(loadMessages).not.toHaveBeenCalled();
+    expect(createTranslator).toHaveBeenCalledWith(
+      expect.objectContaining({
+        messages: { en: { hello: "from-loader" } },
+      }),
+    );
+  });
+
+  it("does not load messages when loaderOptions are disabled", async () => {
+    const { resolveLoaderOptions, createTranslator } = await import("@/core");
+    const { loadMessages } = await import("@/server/messages");
     vi.mocked(resolveLoaderOptions).mockReturnValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
     await initTranslator(mockConfig, "en", {} as any);
@@ -71,10 +89,9 @@ describe("initTranslator", () => {
     );
   });
 
-  it("normalizes undefined messages to empty object", async () => {
-    const { resolveLoaderOptions } = await import("@/core");
+  it("normalizes undefined messages from built-in loader to empty object", async () => {
+    const { resolveLoaderOptions, createTranslator } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
-    const { createTranslator } = await import("@/core");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
@@ -86,7 +103,7 @@ describe("initTranslator", () => {
     );
   });
 
-  it("defaults allowCacheWrite to false when not provided", async () => {
+  it("defaults allowCacheWrite to false", async () => {
     const { resolveLoaderOptions } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
@@ -99,7 +116,7 @@ describe("initTranslator", () => {
     );
   });
 
-  it("passes fetch through when provided", async () => {
+  it("passes fetch through to built-in loader when provided", async () => {
     const { resolveLoaderOptions } = await import("@/core");
     const { loadMessages } = await import("@/server/messages");
     const mockFetch = vi.fn();
@@ -107,7 +124,7 @@ describe("initTranslator", () => {
     vi.mocked(loadMessages).mockResolvedValue({});
     await initTranslator(mockConfig, "en", {
       fetch: mockFetch,
-    });
+    } as any);
     expect(loadMessages).toHaveBeenCalledWith(
       expect.objectContaining({
         fetch: mockFetch,

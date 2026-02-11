@@ -16,10 +16,11 @@ import {
   type RuntimeFetch,
   type TranslatorInstance,
 } from "@/core";
-import { initTranslator } from "../translator";
+import { initTranslator, type MessagesLoader } from "../translator";
 
 export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
   locale: GenLocale<CK> | (string & {});
+  loader?: MessagesLoader;
   readers?: MessagesReaders;
   allowCacheWrite?: boolean;
   fetch?: RuntimeFetch;
@@ -41,16 +42,25 @@ export async function getTranslator<
 ): Promise<
   TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
 > {
-  const { locale, readers, allowCacheWrite, fetch, preKey, handlers, plugins } =
-    params;
+  const {
+    locale,
+    loader,
+    readers,
+    allowCacheWrite = false,
+    fetch,
+    handlers,
+    plugins,
+    preKey,
+  } = params;
 
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
+    loader,
     readers,
     allowCacheWrite,
     fetch: fetch || globalThis.fetch,
-    plugins,
     handlers,
+    plugins,
   });
   const scoped = translator.scoped(preKey);
 

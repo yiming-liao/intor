@@ -6,9 +6,11 @@ export {
   type IntorValue,
 
   // messages
-  loadMessages,
   clearMessagesPool,
 
-  // translator
+  // helpers
   getTranslator,
+
+  // translator
+  type MessagesLoader,
 } from "@/server";

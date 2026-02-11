@@ -1,3 +1,4 @@
+import type { MessagesLoader } from "./types";
 import type { IntorResolvedConfig } from "@/config";
 import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import {
@@ -9,7 +10,9 @@ import { loadMessages, type LoadMessagesParams } from "../messages";
 
 interface InitTranslatorOptions
   extends Pick<LoadMessagesParams, "readers" | "allowCacheWrite" | "fetch">,
-    Pick<CreateTranslatorParams, "handlers" | "plugins"> {}
+    Pick<CreateTranslatorParams, "handlers" | "plugins"> {
+  loader?: MessagesLoader;
+}
 
 /**
  * Initialize a locale-bound Translator snapshot.
@@ -23,6 +26,7 @@ export async function initTranslator(
   options: InitTranslatorOptions,
 ): Promise<Translator<unknown>> {
   const {
+    loader,
     readers,
     allowCacheWrite = false,
     fetch,
@@ -30,11 +34,11 @@ export async function initTranslator(
     plugins,
   } = options;
 
-  const loader = resolveLoaderOptions(config, "server");
+  const loaderOptions = resolveLoaderOptions(config, "server");
 
   // Load messages
   let messages: LocaleMessages = {};
-  if (loader) {
+  if (loaderOptions && !loader) {
     const loaded = await loadMessages({
       config,
       locale,
@@ -43,6 +47,9 @@ export async function initTranslator(
       fetch,
     });
     messages = loaded || {};
+  }
+  if (loader) {
+    messages = await loader(config, locale);
   }
 
   // Create immutable translator snapshot
