@@ -1,8 +1,7 @@
 "use client";
 
 import type { IntorContextValue, IntorProviderProps } from "./types";
-import type { GenConfigKeys, GenLocale } from "@/core";
-import { Translator, type LocaleMessages } from "intor-translator";
+import { Translator, type Locale, type LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { useLocaleEffects } from "@/client/react/provider/effects/use-locale-effects";
 import { useMessagesEffects } from "@/client/react/provider/effects/use-messages-effects";
@@ -11,7 +10,7 @@ export const IntorContext = React.createContext<IntorContextValue | undefined>(
   undefined,
 );
 
-export function IntorProvider<CK extends GenConfigKeys = "__default__">({
+export function IntorProvider({
   value: {
     config,
     locale: initialLocale,
@@ -22,7 +21,7 @@ export function IntorProvider<CK extends GenConfigKeys = "__default__">({
     isLoading: externalIsLoading,
   },
   children,
-}: IntorProviderProps<CK>) {
+}: IntorProviderProps) {
   // -----------------------------------------------------------------------------
   // Internal state
   // -----------------------------------------------------------------------------
@@ -37,7 +36,7 @@ export function IntorProvider<CK extends GenConfigKeys = "__default__">({
   // -----------------------------------------------------------------------------
   /** Request a locale change. */
   const setLocale = React.useCallback(
-    async (newLocale: GenLocale<CK>) => {
+    async (newLocale: Locale) => {
       if (newLocale === locale) return;
       setLocaleState(newLocale);
       onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)

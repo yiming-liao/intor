@@ -1,6 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenLocale, GenMessages } from "@/core";
 import type {
+  Locale,
+  LocaleMessages,
   TranslateHandlers,
   TranslateHook,
   TranslatorPlugin,
@@ -8,24 +9,24 @@ import type {
 import type { Translator } from "intor-translator";
 import type * as React from "react";
 
-export interface IntorValue<CK extends GenConfigKeys = "__default__"> {
+export interface IntorValue {
   config: IntorResolvedConfig;
-  locale: GenLocale<CK>;
-  messages?: Readonly<GenMessages<CK>>;
+  locale: Locale;
+  messages?: Readonly<LocaleMessages>;
   isLoading?: boolean;
-  onLocaleChange?: (newLocale: GenLocale<CK>) => Promise<void> | void;
+  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
 }
 
-export interface IntorProviderProps<CK extends GenConfigKeys = "__default__"> {
-  value: IntorValue<CK>;
+export interface IntorProviderProps {
+  value: IntorValue;
   children: React.ReactNode;
 }
 
-export type IntorContextValue<CK extends GenConfigKeys = "__default__"> = {
+export type IntorContextValue = {
   config: IntorResolvedConfig;
-  locale: GenLocale<CK>;
-  setLocale: (locale: GenLocale<CK>) => void;
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
   translator: Translator<unknown>;
 };

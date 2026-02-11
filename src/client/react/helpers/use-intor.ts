@@ -1,17 +1,16 @@
 import type { IntorValue } from "../provider";
 import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys } from "@/core";
 import type { Locale, LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { getClientLocale } from "../../shared/helpers";
 
-export function useIntor<CK extends GenConfigKeys = "__default__">(
+export function useIntor(
   config: IntorResolvedConfig,
   loader: (
     config: IntorResolvedConfig,
     locale: Locale,
   ) => Promise<LocaleMessages>,
-): Omit<IntorValue<CK>, "handlers" | "plugins"> {
+): Omit<IntorValue, "handlers" | "plugins"> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------

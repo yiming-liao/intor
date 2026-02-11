@@ -33,7 +33,7 @@ export function useTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-  } as unknown as TranslatorInstanceReact<
+  } as TranslatorInstanceReact<
     GenMessages<CK>,
     ReplacementSchema,
     RichSchema,
