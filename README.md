@@ -21,11 +21,6 @@ The i18n library for modern JavaScript
 </div>
 
 > [!NOTE]  
-> Intor began as an internal i18n tool.
->
-> After multiple private iterations, it evolved into a minimal,
-> framework-agnostic translation system.
->
-> **v3 marks its first intentional public release.**
->
-> _Currently available as v2.x. v3 is in active development._
+> Intor is evolving toward long-term stability.  
+> **v3 will be the first fully stable release.**  
+> _Current: v2.x · v3 in development._
