@@ -60,7 +60,6 @@ export {
 export type {
   // generated
   INTOR_GENERATED_KEY,
-  IfGen,
   GenConfigKeys,
   GenConfig,
   GenMessages,
