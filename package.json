@@ -1,9 +1,9 @@
 {
   "name": "intor",
-  "version": "2.4.7",
+  "version": "2.4.9",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
-  "homepage": "https://github.com/yiming-liao/intor#readme",
+  "homepage": "https://intor.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/yiming-liao/intor"
@@ -18,14 +18,14 @@
   "keywords": [
     "i18n",
     "internationalization",
-    "translation",
     "typescript",
+    "type-safe",
+    "i18n-cli",
+    "framework-agnostic",
+    "ssr",
+    "runtime",
     "node",
-    "nextjs",
-    "react",
-    "translator",
-    "i18n core",
-    "custom messages"
+    "edge"
   ],
   "license": "MIT",
   "type": "module",
