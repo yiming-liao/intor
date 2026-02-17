@@ -13,55 +13,54 @@ import { getLocaleFromAcceptLanguage, resolveInbound } from "@/routing";
  *
  * @platform Next.js
  */
-export const createIntorHandler = async (
-  config: IntorResolvedConfig,
-  request: NextRequest,
-): Promise<Response> => {
-  const { host, searchParams, pathname: rawPathname } = request.nextUrl;
+export function createIntorHandler(config: IntorResolvedConfig) {
+  return async function intorHandler(request: NextRequest) {
+    const { host, searchParams, pathname: rawPathname } = request.nextUrl;
 
-  // Locale from Accept-Language header
-  const acceptLanguageHeader = request.headers.get("accept-language");
-  const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
-    acceptLanguageHeader,
-    config.supportedLocales,
-  );
-
-  // Check whether this navigation flow has already redirected
-  const hasRedirected = request.headers.get(INTOR_HEADERS.REDIRECTED) === "1";
-
-  // ----------------------------------------------------------
-  // Resolve inbound routing decision (pure computation)
-  // ----------------------------------------------------------
-  const { locale, localeSource, pathname, shouldRedirect } =
-    await resolveInbound(
-      config,
-      rawPathname,
-      {
-        host,
-        query: normalizeQuery(Object.fromEntries(searchParams.entries())),
-        cookie: request.cookies.get(config.cookie.name)?.value,
-        detected: localeFromAcceptLanguage || config.defaultLocale,
-      },
-      { hasRedirected },
+    // Locale from Accept-Language header
+    const acceptLanguageHeader = request.headers.get("accept-language");
+    const localeFromAcceptLanguage = getLocaleFromAcceptLanguage(
+      acceptLanguageHeader,
+      config.supportedLocales,
     );
 
-  // ----------------------------------------------------------
-  // Prepare Next.js response (redirect or pass-through)
-  // ----------------------------------------------------------
-  const url = request.nextUrl.clone();
-  url.pathname = pathname;
-  const response = shouldRedirect
-    ? NextResponse.redirect(url)
-    : NextResponse.next();
+    // Check whether this navigation flow has already redirected
+    const hasRedirected = request.headers.get(INTOR_HEADERS.REDIRECTED) === "1";
 
-  // ----------------------------------------------------------
-  // Attach routing metadata to response headers
-  // ----------------------------------------------------------
-  response.headers.set(INTOR_HEADERS.LOCALE, locale);
-  response.headers.set(INTOR_HEADERS.LOCALE_SOURCE, localeSource);
-  response.headers.set(INTOR_HEADERS.PATHNAME, pathname);
-  // Mark redirect to prevent infinite loops in this flow
-  if (shouldRedirect) response.headers.set(INTOR_HEADERS.REDIRECTED, "1");
+    // ----------------------------------------------------------
+    // Resolve inbound routing decision (pure computation)
+    // ----------------------------------------------------------
+    const { locale, localeSource, pathname, shouldRedirect } =
+      await resolveInbound(
+        config,
+        rawPathname,
+        {
+          host,
+          query: normalizeQuery(Object.fromEntries(searchParams.entries())),
+          cookie: request.cookies.get(config.cookie.name)?.value,
+          detected: localeFromAcceptLanguage || config.defaultLocale,
+        },
+        { hasRedirected },
+      );
 
-  return response;
-};
+    // ----------------------------------------------------------
+    // Prepare Next.js response (redirect or pass-through)
+    // ----------------------------------------------------------
+    const url = request.nextUrl.clone();
+    url.pathname = pathname;
+    const response = shouldRedirect
+      ? NextResponse.redirect(url)
+      : NextResponse.next();
+
+    // ----------------------------------------------------------
+    // Attach routing metadata to response headers
+    // ----------------------------------------------------------
+    response.headers.set(INTOR_HEADERS.LOCALE, locale);
+    response.headers.set(INTOR_HEADERS.LOCALE_SOURCE, localeSource);
+    response.headers.set(INTOR_HEADERS.PATHNAME, pathname);
+    // Mark redirect to prevent infinite loops in this flow
+    if (shouldRedirect) response.headers.set(INTOR_HEADERS.REDIRECTED, "1");
+
+    return response;
+  };
+}

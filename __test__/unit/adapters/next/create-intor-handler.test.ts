@@ -61,8 +61,9 @@ describe("intorProxy (Next.js adapter)", () => {
       pathname: "/zh-TW/about",
       shouldRedirect: true,
     });
+    const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/about");
-    const response = await createIntorHandler(config, request);
+    const response = await handler(request);
     expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBe("/zh-TW/about");
     expect(response.headers.get("x-intor-redirected")).toBe("1");
@@ -75,8 +76,9 @@ describe("intorProxy (Next.js adapter)", () => {
       pathname: "/about",
       shouldRedirect: false,
     });
+    const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/about");
-    const response = await createIntorHandler(config, request);
+    const response = await handler(request);
     expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBeNull();
     expect(response.headers.get("x-intor-redirected")).toBeNull();
@@ -89,8 +91,9 @@ describe("intorProxy (Next.js adapter)", () => {
       pathname: "/zh-TW/about",
       shouldRedirect: false,
     });
+    const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/zh-TW/about");
-    const response = await createIntorHandler(config, request);
+    const response = await handler(request);
     expect(response.headers.get(INTOR_HEADERS.LOCALE)).toBe("zh-TW");
     expect(response.headers.get(INTOR_HEADERS.LOCALE_SOURCE)).toBe("path");
     expect(response.headers.get(INTOR_HEADERS.PATHNAME)).toBe("/zh-TW/about");
@@ -103,8 +106,9 @@ describe("intorProxy (Next.js adapter)", () => {
       pathname: "/",
       shouldRedirect: false,
     });
+    const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/");
-    await createIntorHandler(config, request);
+    await handler(request);
     expect(request.cookies.get).toHaveBeenCalled();
   });
 });
