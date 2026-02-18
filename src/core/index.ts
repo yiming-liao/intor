@@ -1,5 +1,5 @@
 // constants
-export { PREFIX_PLACEHOLDER, INTOR_HEADERS } from "./constants";
+export { LOCALE_PLACEHOLDER, INTOR_HEADERS } from "./constants";
 
 // error
 export { IntorError, IntorErrorCode } from "./error";

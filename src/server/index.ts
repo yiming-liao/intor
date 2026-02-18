@@ -2,7 +2,7 @@
 export { intor, type IntorValue } from "./intor";
 
 // messages
-export { clearMessagesPool } from "./messages";
+export { loadMessages, clearMessagesPool } from "./messages";
 
 // helpers
 export { getTranslator, type GetTranslatorParams } from "./helpers";

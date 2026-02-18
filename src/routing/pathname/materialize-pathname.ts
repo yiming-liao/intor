@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizePathname, PREFIX_PLACEHOLDER } from "@/core";
+import { normalizePathname, LOCALE_PLACEHOLDER } from "@/core";
 
 /**
  * Materializes a standardized pathname by applying
@@ -32,7 +32,7 @@ export const materializePathname = (
   // localePrefix: "all"
   if (localePrefix === "all") {
     return normalizePathname(
-      standardizedPathname.replaceAll(PREFIX_PLACEHOLDER, locale!),
+      standardizedPathname.replaceAll(LOCALE_PLACEHOLDER, locale!),
     );
   }
 
@@ -40,15 +40,15 @@ export const materializePathname = (
   if (localePrefix === "except-default") {
     return locale === config.defaultLocale
       ? normalizePathname(
-          standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
+          standardizedPathname.replaceAll(`/${LOCALE_PLACEHOLDER}`, ""),
         )
       : normalizePathname(
-          standardizedPathname.replaceAll(PREFIX_PLACEHOLDER, locale!),
+          standardizedPathname.replaceAll(LOCALE_PLACEHOLDER, locale!),
         );
   }
 
   // localePrefix: "none"
   return normalizePathname(
-    standardizedPathname.replaceAll(`/${PREFIX_PLACEHOLDER}`, ""),
+    standardizedPathname.replaceAll(`/${LOCALE_PLACEHOLDER}`, ""),
   );
 };

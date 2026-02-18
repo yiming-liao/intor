@@ -1,2 +1,2 @@
-export { PREFIX_PLACEHOLDER } from "./prefix-placeholder";
+export { LOCALE_PLACEHOLDER } from "./locale-placeholder";
 export { INTOR_HEADERS } from "./headers";

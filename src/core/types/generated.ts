@@ -1,4 +1,4 @@
-import type { PREFIX_PLACEHOLDER } from "../constants";
+import type { LOCALE_PLACEHOLDER } from "../constants";
 import type {
   Locale,
   LocaleMessages,
@@ -59,7 +59,7 @@ type FallbackConfig = {
  */
 type ExtractGeneratedConfig<T> = T extends {
   Locales: infer L extends string;
-  Messages: Record<typeof PREFIX_PLACEHOLDER, infer M>;
+  Messages: Record<typeof LOCALE_PLACEHOLDER, infer M>;
   Replacements: infer RE;
   Rich: infer RI;
 }

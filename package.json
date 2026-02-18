@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.4.9",
+  "version": "2.4.12",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://intor.dev",
@@ -32,22 +32,19 @@
   "exports": {
     ".": {
       "import": "./dist/core/export/index.js",
-      "types": "./dist/types/export/index.d.ts",
-      "require": "./dist/core/export/index.js",
-      "default": "./dist/core/export/index.js"
+      "types": "./dist/types/export/index.d.ts"
+    },
+    "./internal": {
+      "import": "./dist/core/export/internal/index.js",
+      "types": "./dist/types/export/internal/index.d.ts"
     },
     "./server": {
       "import": "./dist/core/export/server/index.js",
-      "types": "./dist/types/export/server/index.d.ts",
-      "require": "./dist/core/export/server/index.js",
-      "default": "./dist/core/export/server/index.js"
+      "types": "./dist/types/export/server/index.d.ts"
     },
     "./edge": {
       "import": "./dist/core/export/edge/index.js",
       "types": "./dist/types/export/edge/index.d.ts"
-    },
-    "./internal": {
-      "types": "./dist/types/export/internal/index.d.ts"
     },
     "./react": {
       "import": "./dist/react/export/react/index.js",
@@ -75,15 +72,11 @@
     },
     "./express": {
       "import": "./dist/express/export/express/index.js",
-      "types": "./dist/types/export/express/index.d.ts",
-      "require": "./dist/express/export/express/index.js",
-      "default": "./dist/express/export/express/index.js"
+      "types": "./dist/types/export/express/index.d.ts"
     },
     "./fastify": {
       "import": "./dist/fastify/export/fastify/index.js",
-      "types": "./dist/types/export/fastify/index.d.ts",
-      "require": "./dist/fastify/export/fastify/index.js",
-      "default": "./dist/fastify/export/fastify/index.js"
+      "types": "./dist/types/export/fastify/index.d.ts"
     },
     "./hono": {
       "import": "./dist/hono/export/hono/index.js",

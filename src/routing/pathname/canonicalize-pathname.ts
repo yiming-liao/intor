@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizePathname, PREFIX_PLACEHOLDER } from "@/core";
+import { normalizePathname, LOCALE_PLACEHOLDER } from "@/core";
 
 /**
  * Returns a canonical, locale-agnostic pathname.
@@ -34,8 +34,8 @@ export function canonicalizePathname(
   // Detect locale segment
   const firstSegment = prefixedPathname.split("/").find(Boolean);
   const locale =
-    firstSegment === PREFIX_PLACEHOLDER
-      ? PREFIX_PLACEHOLDER
+    firstSegment === LOCALE_PLACEHOLDER
+      ? LOCALE_PLACEHOLDER
       : firstSegment && supportedLocales.includes(firstSegment)
         ? firstSegment
         : undefined;

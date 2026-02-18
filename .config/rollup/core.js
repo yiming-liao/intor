@@ -10,6 +10,7 @@ export default [
   {
     input: {
       "export/index": "export/index.ts",
+      "export/internal/index": "export/internal/index.ts",
       "export/server/index": "export/server/index.ts",
       "export/edge/index": "export/edge/index.ts",
     },

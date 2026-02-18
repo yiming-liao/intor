@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizePathname, PREFIX_PLACEHOLDER } from "@/core";
+import { normalizePathname, LOCALE_PLACEHOLDER } from "@/core";
 
 /**
  * Standardizes a canonical pathname into an internal routing template
@@ -22,7 +22,7 @@ export const standardizePathname = (
   // Normalize each segment before join to avoid redundant slashes
   const parts = [
     normalizePathname(basePath),
-    PREFIX_PLACEHOLDER,
+    LOCALE_PLACEHOLDER,
     normalizePathname(canonicalizedPathname),
   ];
 
