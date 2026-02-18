@@ -39,7 +39,18 @@ export function useNavigation<CK extends GenConfigKeys = "__default__">() {
     return svelteGoto(outboundResult.destination, rest);
   }
 
+  function href(url: string) {
+    const { destination } = resolveOutbound(
+      config,
+      get(currentLocale),
+      page.url.pathname,
+      { destination: url },
+    );
+    return destination;
+  }
+
   return {
     goto,
+    href,
   };
 }
