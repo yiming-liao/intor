@@ -17,6 +17,8 @@ export {
   isValidMessages,
   type MessagesReader,
   type MessagesReaders,
+  // Gen types
+  type GenLocale as Locale,
   // internal-metadata
   INTOR_PREFIX,
   INTOR_MESSAGES_KIND_KEY,
