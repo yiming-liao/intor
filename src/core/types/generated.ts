@@ -6,42 +6,44 @@ import type {
   Rich,
 } from "intor-translator";
 
-/**
- * =================================================
- * Generated-aware type system for Intor
- * =================================================
- */
+/* ============================================================
+ * Generated-aware type system (Stable vFinal)
+ * ============================================================ */
 
 /**
  * Sentinel key injected by CLI when generated types exist.
- * Used purely for type-level generation detection.
  */
 export type INTOR_GENERATED_KEY = "__intor_generated__";
 
 /**
- * Detect whether generated types are present.
+ * Detect generation mode.
+ *
+ * This works in both source and declaration emit environments.
  */
-type HasGenerated = IntorGeneratedTypes extends {
-  [K in INTOR_GENERATED_KEY]: true;
-}
+type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes
   ? true
   : false;
 
 /**
- * Extract valid configuration keys from generated types.
- * (Excludes sentinel key.)
+ * Extract concrete generated config keys safely.
+ *
+ * - Works even if IntorGeneratedTypes is empty.
+ * - Prevents keyof widening issues.
  */
-type GeneratedConfigKeys = Exclude<
-  keyof IntorGeneratedTypes,
-  INTOR_GENERATED_KEY
->;
+type GeneratedConfigKeys = HasGen extends true
+  ? Exclude<keyof IntorGeneratedTypes & string, INTOR_GENERATED_KEY>
+  : never;
 
 /**
- * Public configuration key union.
- * Falls back to `string` in non-generated mode.
+ * Public config key union.
+ *
+ * - Never resolves to `never`.
+ * - Falls back to `string` safely.
  */
-export type GenConfigKeys = HasGenerated extends true
-  ? GeneratedConfigKeys
+export type GenConfigKeys = HasGen extends true
+  ? [GeneratedConfigKeys] extends [never]
+    ? string
+    : GeneratedConfigKeys
   : string;
 
 /**
@@ -55,11 +57,17 @@ type FallbackConfig = {
 };
 
 /**
- * Extract generated configuration shape safely.
+ * Safely extract generated config structure.
+ *
+ * - Never leaks `never` to public API.
+ * - Handles malformed generated types defensively.
  */
-type ExtractGeneratedConfig<T> = T extends {
+type SafeExtract<T> = T extends {
   Locales: infer L extends string;
-  Messages: Record<typeof LOCALE_PLACEHOLDER, infer M>;
+  Messages: Record<
+    typeof LOCALE_PLACEHOLDER,
+    infer M extends LocaleMessages[string]
+  >;
   Replacements: infer RE;
   Rich: infer RI;
 }
@@ -69,23 +77,24 @@ type ExtractGeneratedConfig<T> = T extends {
       Replacements: RE;
       Rich: RI;
     }
-  : never;
-
-/**
- * Configuration shape resolver.
- *
- * - Uses generated types when available.
- * - Falls back to default shape otherwise.
- */
-export type GenConfig<CK extends GenConfigKeys> = HasGenerated extends true
-  ? CK extends GeneratedConfigKeys
-    ? ExtractGeneratedConfig<IntorGeneratedTypes[CK]>
-    : never
   : FallbackConfig;
 
 /**
- * Derived helpers
+ * Main configuration resolver.
+ *
+ * - Never returns `never`.
+ * - Fully declaration-safe.
+ * - Stable under generic distribution.
  */
+export type GenConfig<CK extends GenConfigKeys> = HasGen extends true
+  ? CK extends GeneratedConfigKeys
+    ? SafeExtract<IntorGeneratedTypes[CK]>
+    : FallbackConfig
+  : FallbackConfig;
+
+/* ============================================================
+ * Derived helpers
+ * ============================================================ */
 
 export type GenMessages<CK extends GenConfigKeys> = GenConfig<CK>["Messages"];
 
