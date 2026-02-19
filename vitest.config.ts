@@ -7,8 +7,15 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
     include: ["**/*.test.{ts,tsx}"],
-    environment: "jsdom",
-    coverage: { reporter: ["lcov", "text"] },
+    coverage: {
+      reporter: ["lcov", "text"],
+      thresholds: {
+        statements: 85,
+        branches: 85,
+        functions: 85,
+        lines: 85,
+      },
+    },
     setupFiles: ["./vitest-setup.ts"],
   },
   resolve: {
