@@ -92,7 +92,7 @@
   ],
   "sideEffects": false,
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20"
   },
   "scripts": {
     "type": "tsc --noEmit",
