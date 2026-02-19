@@ -15,6 +15,7 @@
     "examples",
     "vitest.config.ts",
     "vitest-setup.ts",
-    "scripts"
+    "scripts",
+    "bench"
   ]
 }
