@@ -1,0 +1,21 @@
+{
+  "name": "vite-react",
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build",
+    "measure": "tsx measure.ts",
+    "bench": "yarn build && yarn measure"
+  },
+  "dependencies": {
+    "intor": "^2.4.12",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  },
+  "private": true
+}
