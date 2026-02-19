@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
     "examples",
     "**/*.d.ts",
     "**/*.test-d.ts",
+    "bench",
   ]),
 
   // JS
