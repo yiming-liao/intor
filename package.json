@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.4.12",
+  "version": "2.4.13",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://intor.dev",
@@ -106,7 +106,7 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "intor-translator": "1.4.13",
+    "intor-translator": "^1.4.14",
     "logry": "2.1.6",
     "p-limit": "7.2.0"
   },
