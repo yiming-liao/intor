@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.4.13",
+  "version": "2.4.14",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://intor.dev",
@@ -32,6 +32,7 @@
   "exports": {
     ".": {
       "import": "./dist/core/export/index.js",
+      "require": "./dist/core/export/index.js",
       "types": "./dist/types/export/index.d.ts"
     },
     "./internal": {
