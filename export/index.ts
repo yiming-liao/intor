@@ -35,3 +35,22 @@ export {
 
 // routing
 export { localizePathname, type InboundContext } from "@/routing";
+
+// intor-translator
+export {
+  Translator,
+  // plugin
+  type TranslatorPlugin,
+  // translation pipeline
+  type TranslateContext,
+  type TranslateHook,
+  type TranslateHandlers,
+  type HandlerContext,
+  type FormatHandler,
+  type LoadingHandler,
+  type MissingHandler,
+  // types
+  type LocaleMessages,
+  type MessageObject,
+  type MessageValue,
+} from "intor-translator";
