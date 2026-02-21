@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "@/config";
-import { normalizeLocale, type GenConfigKeys, type GenLocale } from "@/core";
+import { matchLocale, type GenConfigKeys, type GenLocale } from "@/core";
 import { detectBrowserLocale, getLocaleFromCookie } from "../utils";
 
 /**
@@ -18,5 +18,5 @@ export function getClientLocale<CK extends GenConfigKeys = "__default__">(
 
   const localeCandidate = cookieLocale || browserLocale;
 
-  return normalizeLocale(localeCandidate, supportedLocales) || defaultLocale;
+  return matchLocale(localeCandidate, supportedLocales) || defaultLocale;
 }

@@ -9,7 +9,6 @@ export { parseCookieHeader } from "./parse-cookie-header";
 // normalizers
 export {
   normalizeCacheKey,
-  normalizeLocale,
   normalizePathname,
   normalizeQuery,
   type NormalizedQuery,

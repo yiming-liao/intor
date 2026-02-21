@@ -9,6 +9,9 @@ export {
   IntorError,
   IntorErrorCode,
 
+  // locale,
+  matchLocale,
+
   // logger
   clearLoggerPool,
 

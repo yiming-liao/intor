@@ -1,6 +1,6 @@
 import type { LocaleContext, ResolvedLocale } from "./types";
 import type { IntorResolvedConfig } from "@/config";
-import { normalizeLocale } from "@/core";
+import { matchLocale } from "@/core";
 
 /**
  * Resolve the active locale from inbound routing configuration.
@@ -18,7 +18,7 @@ export function resolveLocale(
   for (const source of localeSources) {
     const locale = context[source]?.locale;
 
-    const normalized = normalizeLocale(locale, config.supportedLocales);
+    const normalized = matchLocale(locale, config.supportedLocales);
     if (!normalized) continue;
 
     return {
@@ -29,7 +29,7 @@ export function resolveLocale(
 
   // Fallback: detected is always available
   const fallback =
-    normalizeLocale(context.detected.locale, config.supportedLocales) ||
+    matchLocale(context.detected.locale, config.supportedLocales) ||
     config.defaultLocale;
 
   return {

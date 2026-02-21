@@ -1,6 +1,6 @@
 {
   "name": "intor",
-  "version": "2.4.14",
+  "version": "2.4.15",
   "description": "The i18n library for modern JavaScript",
   "author": "Yiming Liao",
   "homepage": "https://intor.dev",
@@ -31,57 +31,57 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/types/export/index.d.ts",
       "import": "./dist/core/export/index.js",
-      "require": "./dist/core/export/index.js",
-      "types": "./dist/types/export/index.d.ts"
+      "require": "./dist/core/export/index.js"
     },
     "./internal": {
-      "import": "./dist/core/export/internal/index.js",
-      "types": "./dist/types/export/internal/index.d.ts"
+      "types": "./dist/types/export/internal/index.d.ts",
+      "import": "./dist/core/export/internal/index.js"
     },
     "./server": {
-      "import": "./dist/core/export/server/index.js",
-      "types": "./dist/types/export/server/index.d.ts"
+      "types": "./dist/types/export/server/index.d.ts",
+      "import": "./dist/core/export/server/index.js"
     },
     "./edge": {
-      "import": "./dist/core/export/edge/index.js",
-      "types": "./dist/types/export/edge/index.d.ts"
+      "types": "./dist/types/export/edge/index.d.ts",
+      "import": "./dist/core/export/edge/index.js"
     },
     "./react": {
-      "import": "./dist/react/export/react/index.js",
-      "types": "./dist/types/export/react/index.d.ts"
+      "types": "./dist/types/export/react/index.d.ts",
+      "import": "./dist/react/export/react/index.js"
     },
     "./vue": {
-      "import": "./dist/vue/export/vue/index.js",
-      "types": "./dist/types/export/vue/index.d.ts"
+      "types": "./dist/types/export/vue/index.d.ts",
+      "import": "./dist/vue/export/vue/index.js"
     },
     "./svelte": {
-      "import": "./dist/svelte/export/svelte/index.js",
-      "types": "./dist/types/export/svelte/index.d.ts"
+      "types": "./dist/types/export/svelte/index.d.ts",
+      "import": "./dist/svelte/export/svelte/index.js"
     },
     "./next": {
-      "import": "./dist/next/export/next/index.js",
-      "types": "./dist/types/export/next/index.d.ts"
+      "types": "./dist/types/export/next/index.d.ts",
+      "import": "./dist/next/export/next/index.js"
     },
     "./next/server": {
-      "import": "./dist/next/export/next/server/index.js",
-      "types": "./dist/types/export/next/server/index.d.ts"
+      "types": "./dist/types/export/next/server/index.d.ts",
+      "import": "./dist/next/export/next/server/index.js"
     },
     "./svelte-kit": {
-      "import": "./dist/svelte-kit/export/svelte-kit/index.js",
-      "types": "./dist/types/export/svelte-kit/index.d.ts"
+      "types": "./dist/types/export/svelte-kit/index.d.ts",
+      "import": "./dist/svelte-kit/export/svelte-kit/index.js"
     },
     "./express": {
-      "import": "./dist/express/export/express/index.js",
-      "types": "./dist/types/export/express/index.d.ts"
+      "types": "./dist/types/export/express/index.d.ts",
+      "import": "./dist/express/export/express/index.js"
     },
     "./fastify": {
-      "import": "./dist/fastify/export/fastify/index.js",
-      "types": "./dist/types/export/fastify/index.d.ts"
+      "types": "./dist/types/export/fastify/index.d.ts",
+      "import": "./dist/fastify/export/fastify/index.js"
     },
     "./hono": {
-      "import": "./dist/hono/export/hono/index.js",
-      "types": "./dist/types/export/hono/index.d.ts"
+      "types": "./dist/types/export/hono/index.d.ts",
+      "import": "./dist/hono/export/hono/index.js"
     }
   },
   "main": "./dist/core/export/index.js",

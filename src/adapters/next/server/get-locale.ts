@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "@/config";
 import type { GenConfigKeys, GenLocale } from "@/core";
 import { cookies, headers } from "next/headers";
-import { INTOR_HEADERS, normalizeLocale } from "@/core";
+import { INTOR_HEADERS, matchLocale } from "@/core";
 
 /**
  * Get the locale for the current execution context.
@@ -24,8 +24,8 @@ export const getLocale = async <CK extends GenConfigKeys = "__default__">(
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get(config.cookie.name)?.value;
   if (cookieLocale) {
-    const resolved = normalizeLocale(cookieLocale, config.supportedLocales);
-    if (resolved) return resolved as GenLocale<CK>;
+    const matched = matchLocale(cookieLocale, config.supportedLocales);
+    if (matched) return matched as GenLocale<CK>;
   }
 
   // Explicit default

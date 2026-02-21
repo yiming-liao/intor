@@ -14,10 +14,12 @@ export {
   // normalizers
   normalizePathname,
   normalizeCacheKey,
-  normalizeLocale,
   normalizeQuery,
   type NormalizedQuery,
 } from "./utils";
+
+// locale
+export { matchLocale } from "./locale";
 
 // logger
 export { getLogger, clearLoggerPool } from "./logger";
