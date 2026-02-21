@@ -10,6 +10,8 @@ import {
   type LocalizedReplacement,
   type LocalizedRich,
   type Rich,
+  type ScopedRich,
+  type ScopedReplacement,
 } from "intor-translator";
 
 type FallbackIfNever<T, Fallback> = [T] extends [never] ? Fallback : T;
@@ -54,8 +56,12 @@ export type TranslatorInstance<
   /** Translate a key into an HTML string using semantic rich tags. */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
-    RI = LocalizedRich<RichSchema, K>,
-    RE = LocalizedReplacement<ReplacementSchema, K>,
+    RI = PK extends string
+      ? ScopedRich<RichSchema, PK, K>
+      : LocalizedRich<RichSchema, K>,
+    RE = PK extends string
+      ? ScopedReplacement<ReplacementSchema, PK, K>
+      : LocalizedReplacement<ReplacementSchema, K>,
   >(
     key?: K | (string & {}),
     tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers,

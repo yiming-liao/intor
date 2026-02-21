@@ -1,6 +1,7 @@
 import type { VueTagRenderers } from "@/client/vue/render";
 import {
   renderRichMessage,
+  type LocaleMessages,
   type Replacement,
   type TranslatorMethods,
 } from "intor-translator";
@@ -18,7 +19,7 @@ import { createVueRenderer } from "../render";
  *
  * Intended for Vue client usage only.
  */
-export const createTRich = (t: TranslatorMethods["t"]) => {
+export const createTRich = (t: TranslatorMethods<LocaleMessages>["t"]) => {
   return (
     key: string,
     tagRenderers?: VueTagRenderers,

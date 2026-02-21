@@ -3707,10 +3707,10 @@ internal-slot@^1.1.0:
     hasown "^2.0.2"
     side-channel "^1.1.0"
 
-intor-translator@^1.4.14:
-  version "1.4.14"
-  resolved "https://registry.yarnpkg.com/intor-translator/-/intor-translator-1.4.14.tgz#55026c9980837db896bd78adf5be21ea64ae6f52"
-  integrity sha512-Z6mEthN+y5exCTJPx8mKGfZHSvY+BmuO6fF5KY/xn4E4FKBSGjpeo1sQ48g4CGiij9Zhky53dpkfL/kvz6JOvw==
+intor-translator@^1.4.15:
+  version "1.4.15"
+  resolved "https://registry.yarnpkg.com/intor-translator/-/intor-translator-1.4.15.tgz#1c49a58652067e77a4b544cd78f60fdaf4b889ac"
+  integrity sha512-dw4Fl7A6sKDvSqD5aH7XQlPlhld2TC+0BFVQWmboiBnYZod48FvDCe2R9Jh+JSbwr9zM91+lRqfZj3JHKzZqSw==
   dependencies:
     rura "^1.0.8"
 

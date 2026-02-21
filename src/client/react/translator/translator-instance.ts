@@ -10,6 +10,8 @@ import {
   type Replacement,
   type Rich,
   type ScopedKey,
+  type ScopedReplacement,
+  type ScopedRich,
 } from "intor-translator";
 
 export type TranslatorInstanceReact<
@@ -27,8 +29,12 @@ export type TranslatorInstanceReact<
   /** Translate a key into React nodes using semantic tags */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
-    RI = LocalizedRich<RichSchema, K>,
-    RE = LocalizedReplacement<ReplacementSchema, K>,
+    RI = PK extends string
+      ? ScopedRich<RichSchema, PK, K>
+      : LocalizedRich<RichSchema, K>,
+    RE = PK extends string
+      ? ScopedReplacement<ReplacementSchema, PK, K>
+      : LocalizedReplacement<ReplacementSchema, K>,
   >(
     key?: K | (string & {}),
     tagRenderers?: ReactTagRenderers<RI> | ReactTagRenderers,

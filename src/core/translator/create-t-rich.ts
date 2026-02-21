@@ -1,5 +1,6 @@
 import {
   renderRichMessage,
+  type LocaleMessages,
   type Replacement,
   type TranslatorMethods,
 } from "intor-translator";
@@ -14,7 +15,7 @@ import { createHtmlRenderer, type TagRenderers } from "../render";
  *
  * Can be used in any HTML-based environment (Astro, Svelte, SSR, etc.).
  */
-export const createTRich = (t: TranslatorMethods["t"]) => {
+export const createTRich = (t: TranslatorMethods<LocaleMessages>["t"]) => {
   return (
     key: string,
     tagRenderers?: TagRenderers,

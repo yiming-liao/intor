@@ -1,6 +1,7 @@
 import type { ReactTagRenderers } from "../render";
 import {
   renderRichMessage,
+  type LocaleMessages,
   type Replacement,
   type TranslatorMethods,
 } from "intor-translator";
@@ -19,7 +20,7 @@ import { createReactRenderer } from "../render";
  *
  * Intended for React client usage only.
  */
-export const createTRich = (t: TranslatorMethods["t"]) => {
+export const createTRich = (t: TranslatorMethods<LocaleMessages>["t"]) => {
   return (
     key: string,
     tagRenderers?: ReactTagRenderers,
