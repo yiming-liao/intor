@@ -13,6 +13,7 @@ import {
   type ComputedRef,
   type InjectionKey,
   provide,
+  watch,
 } from "vue";
 import { useLocaleEffects } from "@/client/vue/provider/effects/use-locale-effects";
 import { useMessagesEffects } from "@/client/vue/provider/effects/use-messages-effects";
@@ -25,20 +26,10 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
   props: { value: { type: Object as () => IntorValue, required: true } },
 
   setup(props, { slots }) {
-    const {
-      config,
-      locale: initialLocale,
-      messages,
-      handlers,
-      plugins,
-      onLocaleChange,
-      isLoading: externalIsLoading,
-    } = props.value;
-
     // ---------------------------------------------------------------------------
     // Internal state
     // ---------------------------------------------------------------------------
-    const locale = ref<Locale>(initialLocale);
+    const locale = ref<Locale>(props.value.locale);
     const runtimeMessages = ref<LocaleMessages | null>(null);
     const internalIsLoading = ref<boolean>(false);
 
@@ -49,7 +40,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     const setLocale = async (newLocale: Locale) => {
       if (newLocale === locale.value) return;
       locale.value = newLocale;
-      onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
+      props.value.onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
     };
 
     // ---------------------------------------------------------------------------
@@ -57,11 +48,15 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // ---------------------------------------------------------------------------
     // external > internal
     const effectiveIsLoading = computed(
-      () => !!externalIsLoading?.value || internalIsLoading.value,
+      () => !!props.value.isLoading?.value || internalIsLoading.value,
     );
     // runtime (client refetch) > initial > config (static)
     const effectiveMessages = computed(
-      () => runtimeMessages.value || messages?.value || config.messages || {},
+      () =>
+        runtimeMessages.value ||
+        props.value.messages?.value ||
+        props.value.config.messages ||
+        {},
     );
 
     // ---------------------------------------------------------------------------
@@ -72,22 +67,35 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
         messages: effectiveMessages.value,
         locale: locale.value,
         isLoading: effectiveIsLoading.value,
-        fallbackLocales: config.fallbackLocales,
-        loadingMessage: config.translator?.loadingMessage,
-        missingMessage: config.translator?.missingMessage,
-        handlers: handlers,
-        plugins: plugins,
+        fallbackLocales: props.value.config.fallbackLocales,
+        loadingMessage: props.value.config.translator?.loadingMessage,
+        missingMessage: props.value.config.translator?.missingMessage,
+        handlers: props.value.handlers,
+        plugins: props.value.plugins,
       });
     });
 
     // -------------------------------------------------------------------------
     // Side effects
     // -------------------------------------------------------------------------
-    useLocaleEffects(config, locale);
-    useMessagesEffects(config, locale, runtimeMessages, internalIsLoading);
+    useLocaleEffects(props.value.config, locale);
+    useMessagesEffects(
+      props.value.config,
+      locale,
+      runtimeMessages,
+      internalIsLoading,
+    );
+
+    // Sync internal locale with external prop
+    watch(
+      () => props.value.locale,
+      (newLocale) => {
+        if (newLocale !== locale.value) locale.value = newLocale;
+      },
+    );
 
     const contextValue = computed(() => ({
-      config,
+      config: props.value.config,
       locale,
       setLocale,
       translator,

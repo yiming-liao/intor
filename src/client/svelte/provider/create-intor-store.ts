@@ -37,7 +37,10 @@ export function createIntorStore({
   // ---------------------------------------------------------------------------
   // Effective state
   // ---------------------------------------------------------------------------
-  const externalIsLoadingStore = readable(!!externalIsLoading);
+  const externalIsLoadingStore =
+    typeof externalIsLoading === "object" && "subscribe" in externalIsLoading
+      ? externalIsLoading
+      : readable(!!externalIsLoading);
   // external > internal
   const effectiveIsLoading = derived(
     [externalIsLoadingStore, internalIsLoading],

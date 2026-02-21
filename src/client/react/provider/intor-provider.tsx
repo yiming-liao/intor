@@ -84,6 +84,12 @@ export function IntorProvider({
   useLocaleEffects(config, locale);
   useMessagesEffects(config, locale, setRuntimeMessages, setInternalIsLoading);
 
+  // Sync internal locale with external prop
+  React.useEffect(() => {
+    if (initialLocale !== locale) setLocaleState(initialLocale);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLocale]);
+
   return (
     <IntorContext.Provider value={{ config, locale, setLocale, translator }}>
       {children}
