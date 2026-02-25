@@ -5,6 +5,7 @@ export const importConfig = [
     plugins: { import: importPlugin },
     rules: {
       "import/no-unresolved": ["error", { caseSensitive: true }],
+      "import/no-cycle": "warn",
       "import/newline-after-import": "warn",
       "import/order": [
         "warn",

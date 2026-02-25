@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/no-array-sort */
-/* eslint-disable unicorn/prefer-at */
 import type { LoadLocalMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";

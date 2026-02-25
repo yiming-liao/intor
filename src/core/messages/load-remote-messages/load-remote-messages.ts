@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-at */
 import type { LoadRemoteMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import pLimit from "p-limit";

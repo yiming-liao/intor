@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-/* eslint-disable unicorn/require-module-specifiers */
 export {};
 
 declare global {

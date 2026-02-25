@@ -11,13 +11,15 @@ const eslintConfig = defineConfig([
   globalIgnores([
     ".yarn/**",
     ".config/**",
-    "eslint.config.mjs",
+    ".rollup.cache/**",
     "dist",
+    "scripts",
     "coverage",
     "examples",
-    "**/*.d.ts",
-    "**/*.test-d.ts",
     "bench",
+    "__test__/types/**/*.ts",
+    "vitest*.ts",
+    "eslint.config.mjs",
   ]),
 
   // JS
@@ -31,7 +33,10 @@ const eslintConfig = defineConfig([
   {
     settings: {
       "import/resolver": {
-        typescript: { project: "./tsconfig.json" },
+        typescript: {
+          project: ["./tsconfig.json"],
+          noWarnOnMultipleProjects: true,
+        },
       },
     },
   },

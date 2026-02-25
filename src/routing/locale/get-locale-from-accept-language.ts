@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-array-sort */
 import type { IntorResolvedConfig } from "../../config";
 
 /**

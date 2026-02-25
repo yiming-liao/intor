@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/require-module-specifiers */
 import "fastify";
 import type { TranslatorInstance } from "../../core";
 import type { InboundContext } from "../../routing";
