@@ -30,7 +30,7 @@ expectType<Replacement | undefined>(
   null as unknown as Parameters<TranslatorInstance<LocaleMessages>["t"]>[1],
 );
 
-// TranslatorInstanceReact<MessageSchema, ReplacementSchema, RichSchema>
+// TranslatorInstanceReact<MessageSchema, ReplacementShape, RichShape>
 {
   type M = { "{locale}": { hello: 'Hello <a href="/">{name}</a>' } };
   type RE = { "{locale}": { hello: { name: string } } };

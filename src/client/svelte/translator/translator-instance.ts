@@ -9,18 +9,18 @@ import { type Readable, type Writable } from "svelte/store";
 
 export type TranslatorInstanceSvelte<
   M extends LocaleMessages,
-  ReplacementSchema = Replacement,
-  RichSchema = Rich,
+  ReplacementShape = Replacement,
+  RichShape = Rich,
   PK extends string | undefined = undefined,
 > = {
   /** Localized message map. */
   messages: Readable<
-    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["messages"]
+    TranslatorInstance<M, ReplacementShape, RichShape, PK>["messages"]
   >;
 
   /** Active locale. */
   locale: Writable<
-    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["locale"]
+    TranslatorInstance<M, ReplacementShape, RichShape, PK>["locale"]
   >;
 
   /** Whether translations are loading. */
@@ -31,14 +31,14 @@ export type TranslatorInstanceSvelte<
 
   /** Check if a given key exists in the messages. */
   hasKey: Readable<
-    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["hasKey"]
+    TranslatorInstance<M, ReplacementShape, RichShape, PK>["hasKey"]
   >;
 
   /** Resolve a localized value for the given key. */
-  t: Readable<TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["t"]>;
+  t: Readable<TranslatorInstance<M, ReplacementShape, RichShape, PK>["t"]>;
 
   /** Resolve a localized value and apply rich tag renderers. */
   tRich: Readable<
-    TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["tRich"]
+    TranslatorInstance<M, ReplacementShape, RichShape, PK>["tRich"]
   >;
 };

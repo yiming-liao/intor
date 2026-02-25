@@ -17,17 +17,12 @@ import { useIntorContext } from "../provider";
  */
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): TranslatorInstanceSvelte<
-  GenMessages<CK>,
-  ReplacementSchema,
-  RichSchema,
-  PK
-> {
+): TranslatorInstanceSvelte<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const { translator, locale, setLocale } = useIntorContext();
   const scoped = derived(translator, ($t) => $t.scoped(preKey));
 
@@ -41,8 +36,8 @@ export function useTranslator<
     tRich: derived(scoped, ($t) => createTRich($t.t)),
   } as unknown as TranslatorInstanceSvelte<
     GenMessages<CK>,
-    ReplacementSchema,
-    RichSchema,
+    ReplacementShape,
+    RichShape,
     PK
   >;
 }

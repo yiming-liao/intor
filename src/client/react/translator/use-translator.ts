@@ -16,12 +16,12 @@ import { createTRich } from "./create-t-rich";
  */
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): TranslatorInstanceReact<GenMessages<CK>, ReplacementSchema, RichSchema, PK> {
+): TranslatorInstanceReact<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const { translator, setLocale } = useIntorContext();
   const scoped = translator.scoped(preKey);
 
@@ -35,8 +35,8 @@ export function useTranslator<
     tRich: createTRich(scoped.t),
   } as TranslatorInstanceReact<
     GenMessages<CK>,
-    ReplacementSchema,
-    RichSchema,
+    ReplacementShape,
+    RichShape,
     PK
   >;
 }

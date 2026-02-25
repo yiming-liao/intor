@@ -4,12 +4,12 @@ import type { Rich } from "intor-translator";
 type TagRenderer<Output = string> = ((children: Output[]) => Output) | Output;
 
 /** Core mapping of semantic rich tags to renderers. */
-export type TagRenderers<Output = string, RichSchema = Rich> = {
-  [K in keyof RichSchema]: TagRenderer<Output>;
+export type TagRenderers<Output = string, RichShape = Rich> = {
+  [K in keyof RichShape]: TagRenderer<Output>;
 } & Record<string, TagRenderer<Output>>;
 
 /** Mapping of semantic rich tags to HTML string renderers. */
-export type HtmlTagRenderers<RichSchema = Rich> = TagRenderers<
+export type HtmlTagRenderers<RichShape = Rich> = TagRenderers<
   string,
-  RichSchema
+  RichShape
 >;

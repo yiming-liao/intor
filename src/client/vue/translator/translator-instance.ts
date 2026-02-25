@@ -16,11 +16,11 @@ import {
 
 export type TranslatorInstanceVue<
   M extends LocaleMessages,
-  ReplacementSchema = Replacement,
-  RichSchema = Rich,
+  ReplacementShape = Replacement,
+  RichShape = Rich,
   PK extends string | undefined = undefined,
 > = Omit<
-  TranslatorInstance<M, ReplacementSchema, RichSchema, PK>,
+  TranslatorInstance<M, ReplacementShape, RichShape, PK>,
   "tRich" | "messages" | "locale"
 > & {
   /** Localized message map. */
@@ -39,11 +39,11 @@ export type TranslatorInstanceVue<
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
-      ? ScopedRich<RichSchema, PK, K>
-      : LocalizedRich<RichSchema, K>,
+      ? ScopedRich<RichShape, PK, K>
+      : LocalizedRich<RichShape, K>,
     RE = PK extends string
-      ? ScopedReplacement<ReplacementSchema, PK, K>
-      : LocalizedReplacement<ReplacementSchema, K>,
+      ? ScopedReplacement<ReplacementShape, PK, K>
+      : LocalizedReplacement<ReplacementShape, K>,
   >(
     key?: K | (string & {}),
     tagRenderers?: VueTagRenderers<RI> | VueTagRenderers,

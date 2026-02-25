@@ -23,8 +23,8 @@ type FallbackIfNever<T, Fallback> = [T] extends [never] ? Fallback : T;
  */
 export type TranslatorInstance<
   M extends LocaleMessages,
-  ReplacementSchema = Replacement,
-  RichSchema = Rich,
+  ReplacementShape = Replacement,
+  RichShape = Rich,
   PK extends string | undefined = undefined,
 > = {
   /** Localized message map. */
@@ -44,7 +44,7 @@ export type TranslatorInstance<
   /** Resolve a localized value for the given key. */
   t: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
-    R extends Replacement = LocalizedReplacement<ReplacementSchema, K>,
+    R extends Replacement = LocalizedReplacement<ReplacementShape, K>,
   >(
     key?: K | (string & {}),
     replacements?: R | Replacement,
@@ -57,11 +57,11 @@ export type TranslatorInstance<
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
-      ? ScopedRich<RichSchema, PK, K>
-      : LocalizedRich<RichSchema, K>,
+      ? ScopedRich<RichShape, PK, K>
+      : LocalizedRich<RichShape, K>,
     RE = PK extends string
-      ? ScopedReplacement<ReplacementSchema, PK, K>
-      : LocalizedReplacement<ReplacementSchema, K>,
+      ? ScopedReplacement<ReplacementShape, PK, K>
+      : LocalizedReplacement<ReplacementShape, K>,
   >(
     key?: K | (string & {}),
     tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers,

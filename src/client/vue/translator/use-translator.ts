@@ -17,12 +17,12 @@ import { createTRich } from "./create-t-rich";
  */
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): TranslatorInstanceVue<GenMessages<CK>, ReplacementSchema, RichSchema, PK> {
+): TranslatorInstanceVue<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const intor = injectIntor();
   const translator = intor.value.translator;
   const scoped = computed(() => translator.value.scoped(preKey));
@@ -39,8 +39,8 @@ export function useTranslator<
       createTRich(scoped.value.t)(...args),
   } as unknown as TranslatorInstanceVue<
     GenMessages<CK>,
-    ReplacementSchema,
-    RichSchema,
+    ReplacementShape,
+    RichShape,
     PK
   >;
 }

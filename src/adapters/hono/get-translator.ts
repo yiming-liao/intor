@@ -25,15 +25,15 @@ type GetTranslatorHonoParams<CK extends GenConfigKeys = "__default__"> = Omit<
  */
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorResolvedConfig,
   c: Context,
   params?: GetTranslatorHonoParams<CK> & { preKey?: PK },
 ): Promise<
-  TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
+  TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>
 > {
   const { preKey, handlers, plugins } = params || {};
 

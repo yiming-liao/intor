@@ -23,15 +23,15 @@ type GetTranslatorFastifyParams<CK extends GenConfigKeys = "__default__"> =
  */
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorResolvedConfig,
   request: FastifyRequest,
   params?: GetTranslatorFastifyParams<CK> & { preKey?: PK },
 ): Promise<
-  TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
+  TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>
 > {
   const { loader, readers, allowCacheWrite, handlers, plugins, preKey } =
     params || {};

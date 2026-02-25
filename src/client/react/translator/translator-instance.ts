@@ -16,10 +16,10 @@ import {
 
 export type TranslatorInstanceReact<
   M extends LocaleMessages,
-  ReplacementSchema = Replacement,
-  RichSchema = Rich,
+  ReplacementShape = Replacement,
+  RichShape = Rich,
   PK extends string | undefined = undefined,
-> = Omit<TranslatorInstance<M, ReplacementSchema, RichSchema, PK>, "tRich"> & {
+> = Omit<TranslatorInstance<M, ReplacementShape, RichShape, PK>, "tRich"> & {
   /** Whether translations are loading. */
   isLoading: boolean;
 
@@ -30,11 +30,11 @@ export type TranslatorInstanceReact<
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
-      ? ScopedRich<RichSchema, PK, K>
-      : LocalizedRich<RichSchema, K>,
+      ? ScopedRich<RichShape, PK, K>
+      : LocalizedRich<RichShape, K>,
     RE = PK extends string
-      ? ScopedReplacement<ReplacementSchema, PK, K>
-      : LocalizedReplacement<ReplacementSchema, K>,
+      ? ScopedReplacement<ReplacementShape, PK, K>
+      : LocalizedReplacement<ReplacementShape, K>,
   >(
     key?: K | (string & {}),
     tagRenderers?: ReactTagRenderers<RI> | ReactTagRenderers,

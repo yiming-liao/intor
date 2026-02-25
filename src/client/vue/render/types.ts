@@ -3,7 +3,7 @@ import type { Rich } from "intor-translator";
 import type { VNodeChild } from "vue";
 
 /** Mapping of semantic rich tags to Vue renderers. */
-export type VueTagRenderers<RichSchema = Rich> = TagRenderers<
+export type VueTagRenderers<RichShape = Rich> = TagRenderers<
   VNodeChild,
-  RichSchema
+  RichShape
 >;

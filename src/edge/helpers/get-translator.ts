@@ -29,14 +29,14 @@ export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
  */
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementSchema = GenReplacements<CK>,
-  RichSchema = GenRich<CK>,
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorResolvedConfig,
   params: GetTranslatorParams<CK> & { preKey?: PK },
 ): Promise<
-  TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>
+  TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>
 > {
   const { locale, fetch, preKey, handlers, plugins } = params;
 
@@ -54,5 +54,5 @@ export async function getTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-  } as TranslatorInstance<GenMessages<CK>, ReplacementSchema, RichSchema, PK>;
+  } as TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }
