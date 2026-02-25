@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/require-module-specifiers */
 import "hono";
-import type { TranslatorInstance } from "@/core";
-import type { InboundContext } from "@/routing";
+import type { TranslatorInstance } from "../../core";
+import type { InboundContext } from "../../routing";
 import type { LocaleMessages } from "intor-translator";
 
 /**

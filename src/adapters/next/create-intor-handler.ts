@@ -1,8 +1,8 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { INTOR_HEADERS, normalizeQuery } from "@/core";
-import { getLocaleFromAcceptLanguage, resolveInbound } from "@/routing";
+import { INTOR_HEADERS, normalizeQuery } from "../../core";
+import { getLocaleFromAcceptLanguage, resolveInbound } from "../../routing";
 
 /**
  * Resolves locale-aware routing for the current execution context.
@@ -30,6 +30,7 @@ export function createIntorHandler(config: IntorResolvedConfig) {
     // ----------------------------------------------------------
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
+    const cookie = request.cookies.get(config.cookie.name)?.value;
     const { locale, localeSource, pathname, shouldRedirect } =
       await resolveInbound(
         config,
@@ -37,7 +38,7 @@ export function createIntorHandler(config: IntorResolvedConfig) {
         {
           host,
           query: normalizeQuery(Object.fromEntries(searchParams.entries())),
-          cookie: request.cookies.get(config.cookie.name)?.value,
+          ...(cookie !== undefined ? { cookie } : {}),
           detected: localeFromAcceptLanguage || config.defaultLocale,
         },
         { hasRedirected },

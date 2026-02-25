@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../config";
 import type { LocaleMessages } from "intor-translator";
 import { watch, type Ref } from "vue";
 import { createRefetchMessages } from "../../../shared/messages";

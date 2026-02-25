@@ -32,7 +32,7 @@ export default [
     },
     plugins: [
       alias({
-        entries: [{ find: "@/client/svelte", replacement: "intor/svelte" }],
+        entries: [{ find: "../../client/svelte", replacement: "intor/svelte" }],
       }),
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       fileSizeSummary(),

@@ -11,4 +11,4 @@ export {
   // helpers
   useIntor,
   getClientLocale,
-} from "@/client/vue";
+} from "../../src/client/vue";

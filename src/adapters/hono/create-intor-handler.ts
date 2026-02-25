@@ -1,8 +1,8 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Context, Next } from "hono";
-import { normalizeQuery, parseCookieHeader } from "@/core";
-import { getTranslator, type GetTranslatorParams } from "@/edge";
-import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
+import { normalizeQuery, parseCookieHeader } from "../../core";
+import { getTranslator, type GetTranslatorParams } from "../../edge";
+import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
 
 /**
  * Resolves locale-aware routing for the current execution context.
@@ -29,14 +29,16 @@ export function createIntorHandler(
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
     const url = new URL(c.req.url);
-
+    const cookie = parseCookieHeader(c.req.header("cookie"))[
+      config.cookie.name
+    ];
     const { locale, localeSource, pathname } = await resolveInbound(
       config,
       url.pathname,
       {
         host: url.hostname,
         query: normalizeQuery(Object.fromEntries(url.searchParams)),
-        cookie: parseCookieHeader(c.req.header("cookie"))[config.cookie.name],
+        ...(cookie !== undefined ? { cookie } : {}),
         detected: localeFromAcceptLanguage || config.defaultLocale,
       },
     );
@@ -46,10 +48,11 @@ export function createIntorHandler(
     // --------------------------------------------------
     c.set("intor", { locale, localeSource, pathname });
 
+    const { handlers, plugins } = options ?? {};
     const { hasKey, t, tRich } = await getTranslator(config, {
       locale,
-      handlers: options?.handlers,
-      plugins: options?.plugins,
+      ...(handlers !== undefined ? { handlers } : {}),
+      ...(plugins !== undefined ? { plugins } : {}),
     });
 
     // DX shortcuts (enabled by default)

@@ -26,7 +26,7 @@ export const readLocaleMessages = async ({
   // Collect message file entries for the locale
   // ---------------------------------------------------------------------------
   const fileEntries = await collectFileEntries({
-    namespaces,
+    ...(namespaces !== undefined ? { namespaces } : {}),
     rootDir: path.resolve(rootDir, locale),
     limit,
     exts: Object.keys(readers || {}),
@@ -39,7 +39,7 @@ export const readLocaleMessages = async ({
   const messages = await parseFileEntries({
     fileEntries,
     limit,
-    readers,
+    readers: readers ?? {},
     loggerOptions,
   });
 

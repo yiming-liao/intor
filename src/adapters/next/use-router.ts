@@ -1,12 +1,12 @@
-import type { GenConfigKeys, GenLocale } from "@/core";
+import type { GenConfigKeys, GenLocale } from "../../core";
 import type {
   NavigateOptions,
   PrefetchOptions,
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter, usePathname } from "next/navigation";
-import { executeNavigation } from "@/client";
-import { useIntorContext } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
-import { resolveOutbound } from "@/routing";
+import { executeNavigation } from "../../client";
+import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { resolveOutbound } from "../../routing";
 
 /**
  * Locale-aware router hook for the current execution context.
@@ -33,11 +33,12 @@ export const useRouter = () => {
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
+    const { locale } = options ?? {};
     const outboundResult = resolveOutbound(
       config,
       currentLocale,
       currentPathname,
-      { destination: href, locale: options?.locale },
+      { destination: href, ...(locale !== undefined ? { locale } : {}) },
     );
     executeNavigation(outboundResult, { config, currentLocale, setLocale });
     nextRouterPush(outboundResult.destination, options);
@@ -50,11 +51,12 @@ export const useRouter = () => {
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
   ) => {
+    const { locale } = options ?? {};
     const outboundResult = resolveOutbound(
       config,
       currentLocale,
       currentPathname,
-      { destination: href, locale: options?.locale },
+      { destination: href, ...(locale !== undefined ? { locale } : {}) },
     );
     executeNavigation(outboundResult, { config, currentLocale, setLocale });
     nextRouterReplace(outboundResult.destination, options);
@@ -67,11 +69,12 @@ export const useRouter = () => {
     href: string,
     options?: PrefetchOptions & { locale?: GenLocale<CK> },
   ) => {
+    const { locale } = options ?? {};
     const { kind, destination } = resolveOutbound(
       config,
       currentLocale,
       currentPathname,
-      { destination: href, locale: options?.locale },
+      { destination: href, ...(locale !== undefined ? { locale } : {}) },
     );
     if (kind !== "client") return; // Prefetch only makes sense for client-side navigation
     nextRouterPrefetch(destination, options);

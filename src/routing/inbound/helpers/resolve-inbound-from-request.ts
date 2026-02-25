@@ -1,6 +1,6 @@
+import type { IntorResolvedConfig } from "../../../config";
 import type { InboundResult } from "../types";
-import type { IntorResolvedConfig } from "@/config";
-import { normalizeQuery, parseCookieHeader } from "@/core";
+import { normalizeQuery, parseCookieHeader } from "../../../core";
 import { getLocaleFromAcceptLanguage } from "../../locale";
 import { resolveInbound } from "../resolve-inbound";
 
@@ -28,7 +28,7 @@ export async function resolveInboundFromRequest(
   return resolveInbound(config, url.pathname, {
     host: url.hostname,
     query: normalizedQuery,
-    cookie: cookieLocale,
+    ...(cookieLocale !== undefined ? { cookie: cookieLocale } : {}),
     detected: localeFromAcceptLanguage || config.defaultLocale,
   });
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../config";
 import type { Locale, LocaleMessages } from "intor-translator";
 import * as React from "react";
 import {

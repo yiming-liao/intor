@@ -1,4 +1,4 @@
-import type { TranslatorInstance } from "@/core";
+import type { TranslatorInstance } from "../../../core";
 import {
   type Locale,
   type LocaleMessages,

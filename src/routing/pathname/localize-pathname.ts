@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import { canonicalizePathname } from "./canonicalize-pathname";
 import { materializePathname } from "./materialize-pathname";
 import { standardizePathname } from "./standardize-pathname";

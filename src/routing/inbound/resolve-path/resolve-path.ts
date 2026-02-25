@@ -1,5 +1,5 @@
 import type { PathContext, PathDirective, ResolvedPath } from "./types";
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../config";
 import { localizePathname } from "../../pathname";
 import { all, exceptDefault, none } from "./strategies";
 

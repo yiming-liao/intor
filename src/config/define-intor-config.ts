@@ -1,10 +1,10 @@
-import type { IntorRawConfig, IntorResolvedConfig } from "@/config";
-import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";
-import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
-import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
-import { validateDefaultLocale } from "@/config/validators/validate-default-locale";
-import { validateId } from "@/config/validators/validate-id";
-import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
+import type { IntorRawConfig, IntorResolvedConfig } from "../config";
+import { resolveCookieOptions } from "../config/resolvers/resolve-cookie-options";
+import { resolveFallbackLocales } from "../config/resolvers/resolve-fallback-locales";
+import { resolveRoutingOptions } from "../config/resolvers/resolve-routing-options";
+import { validateDefaultLocale } from "../config/validators/validate-default-locale";
+import { validateId } from "../config/validators/validate-id";
+import { validateSupportedLocales } from "../config/validators/validate-supported-locales";
 
 /**
  * Defines the canonical Intor configuration.
@@ -43,16 +43,18 @@ export const defineIntorConfig = (
 
   return {
     id,
-    messages: config.messages,
-    loader: config.loader,
+    ...(config.messages !== undefined ? { messages: config.messages } : {}),
+    ...(config.loader !== undefined ? { loader: config.loader } : {}),
     defaultLocale,
     supportedLocales,
     fallbackLocales,
-    translator: config.translator,
+    ...(config.translator !== undefined
+      ? { translator: config.translator }
+      : {}),
     cookie,
     routing,
     logger: { id, ...config.logger },
-    client: config.client,
-    server: config.server,
+    ...(config.client !== undefined ? { client: config.client } : {}),
+    ...(config.server !== undefined ? { server: config.server } : {}),
   };
 };

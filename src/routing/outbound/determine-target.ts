@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Locale } from "intor-translator";
-import { canonicalizePathname } from "@/routing/pathname/canonicalize-pathname";
+import { canonicalizePathname } from "../../routing/pathname/canonicalize-pathname";
 import { localizePathname } from "../pathname";
 import { deriveHostDestination } from "./utils/derive-host-destination";
 import { deriveQueryDestination } from "./utils/derive-query-destination";

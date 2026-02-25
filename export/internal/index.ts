@@ -15,9 +15,9 @@ export {
   INTOR_MESSAGES_KIND,
   getMessagesKind,
   type IntorMessagesKind,
-} from "@/core";
+} from "../../src/core";
 
-export { loadMessages } from "@/server";
+export { loadMessages } from "../../src/server";
 
 export type {
   // generated
@@ -26,6 +26,6 @@ export type {
 
   // translator-instance
   TranslatorInstance,
-} from "@/core";
+} from "../../src/core";
 
-export type { TranslatorInstanceReact } from "@/client/react/translator/translator-instance";
+export type { TranslatorInstanceReact } from "../../src/client/react/translator/translator-instance";

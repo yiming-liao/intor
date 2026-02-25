@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../config";
 import type { Locale } from "intor-translator";
 import { watch, type Ref } from "vue";
-import { shouldPersistOnFirstVisit } from "@/policies";
+import { shouldPersistOnFirstVisit } from "../../../../policies";
 import {
   setLocaleCookie,
   setDocumentLocale,

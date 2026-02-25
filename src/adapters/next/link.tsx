@@ -1,28 +1,29 @@
 "use client";
 
-import type { GenConfigKeys, GenLocale } from "@/core";
+import type { GenConfigKeys, GenLocale } from "../../core";
 import type { Url } from "next/dist/shared/lib/router/router";
 import type { LinkProps as NextLinkProps } from "next/link";
 import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import { executeNavigation } from "@/client";
-import { useIntorContext } from "@/client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
-import { resolveOutbound } from "@/routing";
+import { executeNavigation } from "../../client";
+import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { resolveOutbound } from "../../routing";
 
-interface LinkProps<CK extends GenConfigKeys = "__default__">
-  extends Omit<NextLinkProps, "href">,
-    Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
-  href?: Url;
-
-  /**
-   * Optional locale override for this navigation.
-   *
-   * When omitted, the locale is resolved from the current execution context.
-   */
-  locale?: GenLocale<CK>;
-}
+type LinkProps<CK extends GenConfigKeys = "__default__"> =
+  React.PropsWithChildren<
+    Omit<NextLinkProps, "href"> &
+      Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+        href: Url;
+        /**
+         * Optional locale override for this navigation.
+         *
+         * When omitted, the locale is resolved from the current execution context.
+         */
+        locale?: GenLocale<CK>;
+      }
+  >;
 
 /**
  * Render a locale-aware link for the current execution context.
@@ -51,7 +52,10 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
     config,
     currentLocale,
     currentPathname,
-    { destination: rawDestination, locale },
+    {
+      ...(rawDestination !== undefined ? { destination: rawDestination } : {}),
+      ...(locale !== undefined ? { locale } : {}),
+    },
   );
 
   // --------------------------------------------------

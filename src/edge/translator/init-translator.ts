@@ -1,11 +1,11 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import {
   createTranslator,
   loadRemoteMessages,
   type CreateTranslatorParams,
   type RuntimeFetch,
-} from "@/core";
+} from "../../core";
 
 interface InitTranslatorOptions
   extends Pick<CreateTranslatorParams, "handlers" | "plugins"> {
@@ -29,19 +29,26 @@ export async function initTranslator(
   // Load messages
   let messages: LocaleMessages = {};
   if (loader && loader.mode === "remote") {
+    const { namespaces, concurrency, url, headers } = loader;
     const loaded = await loadRemoteMessages({
       locale,
       fallbackLocales: config.fallbackLocales[locale] || [],
-      namespaces: loader.namespaces,
-      concurrency: loader.concurrency,
+      ...(namespaces !== undefined ? { namespaces } : {}),
+      ...(concurrency !== undefined ? { concurrency } : {}),
       fetch,
-      url: loader.url,
-      headers: loader.headers,
+      url,
+      ...(headers !== undefined ? { headers: headers } : {}),
       loggerOptions: config.logger,
     });
     messages = loaded || {};
   }
 
   // Create immutable translator snapshot
-  return createTranslator({ config, locale, messages, handlers, plugins });
+  return createTranslator({
+    config,
+    locale,
+    messages,
+    ...(handlers !== undefined ? { handlers } : {}),
+    ...(plugins !== undefined ? { plugins } : {}),
+  });
 }

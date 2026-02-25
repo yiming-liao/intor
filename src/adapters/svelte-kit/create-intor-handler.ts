@@ -1,14 +1,14 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Handle } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
-import { isSvelteKitSSG } from "@/adapters/svelte-kit/utils/is-svelte-kit-ssg";
-import { normalizeQuery } from "@/core";
+import { normalizeQuery } from "../../core";
 import {
   getLocaleFromAcceptLanguage,
   resolveInbound,
   type InboundContext,
   type InboundResult,
-} from "@/routing";
+} from "../../routing";
+import { isSvelteKitSSG } from "./utils/is-svelte-kit-ssg";
 
 /**
  * Resolves locale-aware routing for the current execution context.
@@ -29,20 +29,24 @@ export function createIntorHandler(config: IntorResolvedConfig): Handle {
     // ----------------------------------------------------------
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
+
     let inboundResult: InboundResult;
     if (isSvelteKitSSG(event)) {
+      const locale = event.params?.["locale"];
+      if (!locale) throw new Error("Locale param is missing in SSG mode.");
       inboundResult = {
-        locale: event.params?.locale,
+        locale,
         localeSource: "path" as const,
         pathname: event.url.pathname,
         shouldRedirect: false,
       };
     } else {
+      const cookie = event.cookies.get(config.cookie.name);
       const { host, searchParams, pathname: rawPathname } = event.url;
       inboundResult = await resolveInbound(config, rawPathname, {
         host,
         query: normalizeQuery(Object.fromEntries(searchParams.entries())),
-        cookie: event.cookies.get(config.cookie.name),
+        ...(cookie !== undefined ? { cookie } : {}),
         detected: localeFromAcceptLanguage || config.defaultLocale,
       });
     }

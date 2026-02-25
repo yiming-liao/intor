@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../src/config";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { resolveInbound } from "@/routing/inbound/resolve-inbound";
-import { resolveLocale } from "@/routing/inbound/resolve-locale";
-import { resolvePathname } from "@/routing/inbound/resolve-path";
+import { resolveInbound } from "../../../../src/routing/inbound/resolve-inbound";
+import { resolveLocale } from "../../../../src/routing/inbound/resolve-locale";
+import { resolvePathname } from "../../../../src/routing/inbound/resolve-path";
 
-vi.mock("@/routing/inbound/resolve-locale", () => ({
+vi.mock("../../../../src/routing/inbound/resolve-locale", () => ({
   resolveLocale: vi.fn(),
 }));
 
-vi.mock("@/routing/inbound/resolve-path", () => ({
+vi.mock("../../../../src/routing/inbound/resolve-path", () => ({
   resolvePathname: vi.fn(),
 }));
 
@@ -51,7 +51,7 @@ describe("resolveInbound", () => {
     expect(resolveLocale).toHaveBeenCalledWith(
       config,
       expect.objectContaining({
-        path: expect.any(Object),
+        host: { locale: "zh-TW" },
         detected: { locale: "en" },
       }),
     );

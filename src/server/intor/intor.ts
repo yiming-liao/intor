@@ -1,5 +1,5 @@
 import type { IntorValue } from "./types";
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import {
   getLogger,
   type GenConfigKeys,
@@ -7,7 +7,7 @@ import {
   type GenMessages,
   type MessagesReaders,
   type RuntimeFetch,
-} from "@/core";
+} from "../../core";
 import { initTranslator } from "../translator";
 
 /**
@@ -32,9 +32,9 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
 
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
-    readers: options?.readers,
+    ...(options?.readers !== undefined ? { readers: options?.readers } : {}),
     allowCacheWrite: options?.allowCacheWrite ?? true,
-    fetch: options?.fetch || globalThis.fetch,
+    fetch: options?.fetch ?? globalThis.fetch,
   });
 
   logger.info("Intor initialized.");

@@ -1,8 +1,8 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { FastifyRequest } from "fastify";
-import { normalizeQuery, parseCookieHeader } from "@/core";
-import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
-import { getTranslator, type GetTranslatorParams } from "@/server";
+import { normalizeQuery, parseCookieHeader } from "../../core";
+import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
+import { getTranslator, type GetTranslatorParams } from "../../server";
 
 /**
  * Resolves locale-aware routing for the current execution context.
@@ -30,13 +30,19 @@ export function createIntorHandler(
     // ----------------------------------------------------------
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
+    const cookie = parseCookieHeader(request.headers.cookie)[
+      config.cookie.name
+    ];
+    const rawPathname = new URL(request.raw.url ?? "/", "http://localhost")
+      .pathname;
+
     const { locale, localeSource, pathname } = await resolveInbound(
       config,
-      request.raw.url?.split("?")[0] ?? "/",
+      rawPathname,
       {
         host: request.hostname,
         query: normalizeQuery(request.query as Record<string, unknown>),
-        cookie: parseCookieHeader(request.headers.cookie)[config.cookie.name],
+        ...(cookie !== undefined ? { cookie } : {}),
         detected: localeFromAcceptLanguage || config.defaultLocale,
       },
     );
@@ -46,12 +52,14 @@ export function createIntorHandler(
     // --------------------------------------------------
     request.intor = { locale, localeSource, pathname };
 
+    const { loader, handlers, plugins, readers } = options ?? {};
     const { hasKey, t, tRich } = await getTranslator(config, {
       locale,
-      handlers: options?.handlers,
-      plugins: options?.plugins,
-      readers: options?.readers,
+      ...(loader !== undefined ? { loader } : {}),
+      ...(readers !== undefined ? { readers } : {}),
       allowCacheWrite: true,
+      ...(handlers !== undefined ? { handlers } : {}),
+      ...(plugins !== undefined ? { plugins } : {}),
     });
 
     // DX shortcuts (enabled by default)

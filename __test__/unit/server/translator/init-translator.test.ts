@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../src/config";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { initTranslator } from "@/server/translator";
+import { initTranslator } from "../../../../src/server/translator";
 
-vi.mock("@/core", () => ({
+vi.mock("../../../../src/core", () => ({
   resolveLoaderOptions: vi.fn(),
   createTranslator: vi.fn(),
 }));
 
-vi.mock("@/server/messages", () => ({
+vi.mock("../../../../src/server/messages", () => ({
   loadMessages: vi.fn(),
 }));
 
@@ -29,8 +29,10 @@ beforeEach(() => {
 
 describe("initTranslator", () => {
   it("loads messages via built-in loader when loaderOptions are enabled", async () => {
-    const { resolveLoaderOptions, createTranslator } = await import("@/core");
-    const { loadMessages } = await import("@/server/messages");
+    const { resolveLoaderOptions, createTranslator } = await import(
+      "../../../../src/core"
+    );
+    const { loadMessages } = await import("../../../../src/server/messages");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue({ en: { hello: "world" } });
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
@@ -41,9 +43,7 @@ describe("initTranslator", () => {
       expect.objectContaining({
         config: mockConfig,
         locale: "en",
-        readers: undefined,
         allowCacheWrite: true,
-        fetch: undefined,
       }),
     );
     expect(createTranslator).toHaveBeenCalledWith(
@@ -56,8 +56,10 @@ describe("initTranslator", () => {
   });
 
   it("uses custom loader when provided and skips built-in loadMessages", async () => {
-    const { resolveLoaderOptions, createTranslator } = await import("@/core");
-    const { loadMessages } = await import("@/server/messages");
+    const { resolveLoaderOptions, createTranslator } = await import(
+      "../../../../src/core"
+    );
+    const { loadMessages } = await import("../../../../src/server/messages");
     const customLoader = vi.fn().mockResolvedValue({
       en: { hello: "from-loader" },
     });
@@ -76,8 +78,10 @@ describe("initTranslator", () => {
   });
 
   it("does not load messages when loaderOptions are disabled", async () => {
-    const { resolveLoaderOptions, createTranslator } = await import("@/core");
-    const { loadMessages } = await import("@/server/messages");
+    const { resolveLoaderOptions, createTranslator } = await import(
+      "../../../../src/core"
+    );
+    const { loadMessages } = await import("../../../../src/server/messages");
     vi.mocked(resolveLoaderOptions).mockReturnValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
     await initTranslator(mockConfig, "en", {} as any);
@@ -90,8 +94,10 @@ describe("initTranslator", () => {
   });
 
   it("normalizes undefined messages from built-in loader to empty object", async () => {
-    const { resolveLoaderOptions, createTranslator } = await import("@/core");
-    const { loadMessages } = await import("@/server/messages");
+    const { resolveLoaderOptions, createTranslator } = await import(
+      "../../../../src/core"
+    );
+    const { loadMessages } = await import("../../../../src/server/messages");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue(undefined);
     vi.mocked(createTranslator).mockReturnValue(mockTranslator as any);
@@ -104,8 +110,8 @@ describe("initTranslator", () => {
   });
 
   it("defaults allowCacheWrite to false", async () => {
-    const { resolveLoaderOptions } = await import("@/core");
-    const { loadMessages } = await import("@/server/messages");
+    const { resolveLoaderOptions } = await import("../../../../src/core");
+    const { loadMessages } = await import("../../../../src/server/messages");
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue({});
     await initTranslator(mockConfig, "en", {} as any);
@@ -117,8 +123,8 @@ describe("initTranslator", () => {
   });
 
   it("passes fetch through to built-in loader when provided", async () => {
-    const { resolveLoaderOptions } = await import("@/core");
-    const { loadMessages } = await import("@/server/messages");
+    const { resolveLoaderOptions } = await import("../../../../src/core");
+    const { loadMessages } = await import("../../../../src/server/messages");
     const mockFetch = vi.fn();
     vi.mocked(resolveLoaderOptions).mockReturnValue({ type: "local" } as any);
     vi.mocked(loadMessages).mockResolvedValue({});

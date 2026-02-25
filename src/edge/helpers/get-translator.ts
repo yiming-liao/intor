@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type {
   LocalizedPreKey,
   TranslateHandlers,
@@ -14,7 +14,7 @@ import {
   type GenRich,
   type RuntimeFetch,
   type TranslatorInstance,
-} from "@/core";
+} from "../../core";
 import { initTranslator } from "../translator";
 
 export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
@@ -42,9 +42,9 @@ export async function getTranslator<
 
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
-    fetch: fetch || globalThis.fetch,
-    plugins,
-    handlers,
+    fetch: fetch ?? globalThis.fetch,
+    ...(handlers !== undefined ? { handlers } : {}),
+    ...(plugins !== undefined ? { plugins } : {}),
   });
   const scoped = translator.scoped(preKey);
 

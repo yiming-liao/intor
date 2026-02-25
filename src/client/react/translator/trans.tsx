@@ -1,10 +1,10 @@
-import type { ReactTagRenderers } from "../render";
 import type {
   GenConfigKeys,
   GenMessages,
   GenReplacements,
   GenRich,
-} from "@/core";
+} from "../../../core";
+import type { ReactTagRenderers } from "../render";
 import type {
   LocalizedKey,
   LocalizedReplacement,

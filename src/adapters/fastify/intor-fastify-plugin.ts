@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "@/config";
-import type { GetTranslatorParams } from "@/server";
+import type { IntorResolvedConfig } from "../../config";
+import type { GetTranslatorParams } from "../../server";
 import type { FastifyInstance } from "fastify";
 import { createIntorHandler } from "./create-intor-handler";
 
 interface IntorFastifyPluginOptions
-  extends Pick<GetTranslatorParams, "handlers" | "plugins" | "readers"> {
+  extends Omit<GetTranslatorParams, "locale" | "fetch" | "allowCacheWrite"> {
   config: IntorResolvedConfig;
   /**
    * Bind DX shortcuts to request:
@@ -26,7 +26,14 @@ export function intorFastifyPlugin(
   fastify: FastifyInstance,
   options: IntorFastifyPluginOptions,
 ) {
-  const { config, shortcuts = true, handlers, plugins, readers } = options;
+  const {
+    config,
+    loader,
+    readers,
+    handlers,
+    plugins,
+    shortcuts = true,
+  } = options;
 
   // --------------------------------------------------
   // Declare request structure (once per instance)
@@ -45,7 +52,13 @@ export function intorFastifyPlugin(
   // --------------------------------------------------
   fastify.addHook(
     "onRequest",
-    createIntorHandler(config, { handlers, plugins, readers, shortcuts }),
+    createIntorHandler(config, {
+      ...(loader !== undefined ? { loader } : {}),
+      ...(readers !== undefined ? { readers } : {}),
+      ...(handlers !== undefined ? { handlers } : {}),
+      ...(plugins !== undefined ? { plugins } : {}),
+      shortcuts,
+    }),
   );
 }
 

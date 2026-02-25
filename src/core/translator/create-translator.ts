@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type {
   Locale,
   LocaleMessages,
@@ -7,7 +7,7 @@ import type {
   TranslatorPlugin,
 } from "intor-translator";
 import { Translator } from "intor-translator";
-import { mergeMessages } from "@/core/messages/merge-messages";
+import { mergeMessages } from "../../core/messages/merge-messages";
 
 export interface CreateTranslatorParams {
   config: IntorResolvedConfig;
@@ -35,14 +35,16 @@ export function createTranslator(
     locale,
   });
 
+  const { loadingMessage, missingMessage } = config.translator ?? {};
+
   const translator = new Translator<LocaleMessages>({
     locale,
     messages: finalMessages,
     fallbackLocales: config.fallbackLocales,
-    loadingMessage: config.translator?.loadingMessage,
-    missingMessage: config.translator?.missingMessage,
-    handlers,
-    plugins,
+    ...(loadingMessage !== undefined ? { loadingMessage } : {}),
+    ...(missingMessage !== undefined ? { missingMessage } : {}),
+    ...(handlers !== undefined ? { handlers } : {}),
+    ...(plugins !== undefined ? { plugins } : {}),
   });
 
   return translator;

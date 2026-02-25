@@ -1,4 +1,5 @@
-import type { IntorResolvedConfig } from "@/config";
+/* eslint-disable unicorn/no-array-sort */
+import type { IntorResolvedConfig } from "../../config";
 
 /**
  * Get locale candidate from the `Accept-Language` header.
@@ -27,9 +28,12 @@ export const getLocaleFromAcceptLanguage = (
 
   // 1. Parse Accept-Language header into language + priority pairs
   const parsedLanguages = acceptLanguageHeader.split(",").map((part) => {
-    const [rawLang, rawQ] = part.split(";");
+    const segments = part.split(";");
+    const rawLang = segments[0]!;
+    const rawQ = segments[1];
     const lang = rawLang.trim();
-    const q = rawQ ? Number.parseFloat(rawQ.split("=")[1]) : 1;
+    const q =
+      rawQ !== undefined ? Number.parseFloat(rawQ.split("=")[1] ?? "") : 1;
     return {
       lang,
       q: Number.isNaN(q) ? 0 : q, // Invalid q values have lowest priority
@@ -37,7 +41,7 @@ export const getLocaleFromAcceptLanguage = (
   });
 
   // 2. Sort by priority (highest first)
-  const sortedByPriority = parsedLanguages.toSorted((a, b) => b.q - a.q);
+  const sortedByPriority = parsedLanguages.sort((a, b) => b.q - a.q);
 
   // 3. Pick the first language explicitly supported
   const preferred = sortedByPriority.find(({ lang }) =>

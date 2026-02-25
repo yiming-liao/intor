@@ -1,10 +1,10 @@
-import type { TranslatorInstanceVue } from "@/client/vue/translator/translator-instance";
+import type { TranslatorInstanceVue } from "./translator-instance";
 import type {
   GenConfigKeys,
   GenMessages,
   GenReplacements,
   GenRich,
-} from "@/core";
+} from "../../../core";
 import type { LocalizedPreKey } from "intor-translator";
 import { computed } from "vue";
 import { injectIntor } from "..//provider";

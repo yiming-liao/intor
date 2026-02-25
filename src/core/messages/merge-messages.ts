@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Locale, LocaleMessages } from "intor-translator";
 import { getLogger } from "../logger";
 import { deepMerge, type DeepMergeOverrideEvent } from "../utils";

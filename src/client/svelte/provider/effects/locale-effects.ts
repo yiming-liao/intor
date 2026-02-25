@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../config";
 import type { Writable } from "svelte/store";
-import { shouldPersistOnFirstVisit } from "@/policies";
+import { shouldPersistOnFirstVisit } from "../../../../policies";
 import {
   getLocaleFromCookie,
   setDocumentLocale,

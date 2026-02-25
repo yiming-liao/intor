@@ -55,6 +55,8 @@ export function createIntorStore({
   // ---------------------------------------------------------------------------
   // Translator
   // ---------------------------------------------------------------------------
+  const { loadingMessage, missingMessage } = config.translator ?? {};
+
   const translator = derived(
     [effectiveMessages, locale, effectiveIsLoading],
     ([$messages, $locale, $isLoading]) =>
@@ -63,10 +65,10 @@ export function createIntorStore({
         locale: $locale,
         isLoading: $isLoading,
         fallbackLocales: config.fallbackLocales,
-        loadingMessage: config.translator?.loadingMessage,
-        missingMessage: config.translator?.missingMessage,
-        handlers,
-        plugins,
+        ...(loadingMessage !== undefined ? { loadingMessage } : {}),
+        ...(missingMessage !== undefined ? { missingMessage } : {}),
+        ...(handlers !== undefined ? { handlers } : {}),
+        ...(plugins !== undefined ? { plugins } : {}),
       }),
   );
 

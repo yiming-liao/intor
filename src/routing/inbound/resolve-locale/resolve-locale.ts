@@ -1,6 +1,6 @@
 import type { LocaleContext, ResolvedLocale } from "./types";
-import type { IntorResolvedConfig } from "@/config";
-import { matchLocale } from "@/core";
+import type { IntorResolvedConfig } from "../../../config";
+import { matchLocale } from "../../../core";
 
 /**
  * Resolve the active locale from inbound routing configuration.

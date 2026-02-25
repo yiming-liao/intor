@@ -1,6 +1,6 @@
 import type { IntorRawConfig } from "../types";
 import type { FallbackLocalesMap, Locale } from "intor-translator";
-import { getLogger } from "@/core";
+import { getLogger } from "../../core";
 
 /**
  * Resolves fallbackLocales into a runtime-safe mapping.

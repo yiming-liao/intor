@@ -7,16 +7,16 @@ import type {
 import type { Locale, LocaleMessages } from "intor-translator";
 import { Translator } from "intor-translator";
 import {
+  type InjectionKey,
+  type ComputedRef,
   defineComponent,
   computed,
   ref,
-  type ComputedRef,
-  type InjectionKey,
   provide,
   watch,
 } from "vue";
-import { useLocaleEffects } from "@/client/vue/provider/effects/use-locale-effects";
-import { useMessagesEffects } from "@/client/vue/provider/effects/use-messages-effects";
+import { useLocaleEffects } from "./effects/use-locale-effects";
+import { useMessagesEffects } from "./effects/use-messages-effects";
 
 export const IntorContextKey: InjectionKey<ComputedRef<IntorContextValue>> =
   Symbol("IntorContext");
@@ -62,16 +62,20 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // ---------------------------------------------------------------------------
     // Translator
     // ---------------------------------------------------------------------------
+    const { loadingMessage, missingMessage } =
+      props.value.config.translator ?? {};
+    const { handlers, plugins } = props.value;
+
     const translator = computed(() => {
       return new Translator<LocaleMessages>({
         messages: effectiveMessages.value,
         locale: locale.value,
         isLoading: effectiveIsLoading.value,
         fallbackLocales: props.value.config.fallbackLocales,
-        loadingMessage: props.value.config.translator?.loadingMessage,
-        missingMessage: props.value.config.translator?.missingMessage,
-        handlers: props.value.handlers,
-        plugins: props.value.plugins,
+        ...(loadingMessage !== undefined ? { loadingMessage } : {}),
+        ...(missingMessage !== undefined ? { missingMessage } : {}),
+        ...(handlers !== undefined ? { handlers } : {}),
+        ...(plugins !== undefined ? { plugins } : {}),
       });
     });
 
@@ -101,6 +105,6 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
       translator,
     }));
     provide(IntorContextKey, contextValue);
-    return () => slots.default?.();
+    return () => slots["default"]?.();
   },
 });

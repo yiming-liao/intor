@@ -13,4 +13,4 @@ export {
 
   // translator
   type MessagesLoader,
-} from "@/server";
+} from "../../src/server";

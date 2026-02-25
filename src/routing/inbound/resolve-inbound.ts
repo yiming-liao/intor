@@ -1,6 +1,6 @@
 import type { InboundResult } from "./types";
-import type { IntorResolvedConfig } from "@/config";
-import type { NormalizedQuery } from "@/core";
+import type { IntorResolvedConfig } from "../../config";
+import type { NormalizedQuery } from "../../core";
 import {
   getLocaleFromPathname,
   getLocaleFromHost,
@@ -38,12 +38,14 @@ export async function resolveInbound(
   // Resolve locale from inbound inputs
   // ------------------------------------------------------
   const pathLocale = getLocaleFromPathname(rawPathname, config);
+  const hostLocale = getLocaleFromHost(host);
+  const queryLocale = getLocaleFromQuery(query, queryKey);
 
   const { locale, localeSource } = resolveLocale(config, {
-    path: { locale: pathLocale },
-    host: { locale: getLocaleFromHost(host) },
-    query: { locale: getLocaleFromQuery(query, queryKey) },
-    cookie: { locale: cookie },
+    ...(pathLocale !== undefined && { path: { locale: pathLocale } }),
+    ...(hostLocale !== undefined && { host: { locale: hostLocale } }),
+    ...(queryLocale !== undefined && { query: { locale: queryLocale } }),
+    ...(cookie !== undefined && { cookie: { locale: cookie } }),
     detected: { locale: detected },
   });
 

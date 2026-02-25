@@ -18,8 +18,8 @@ export function parseLocale(tag: string): LocaleParts {
       const locale = new Intl.Locale(tag);
       return {
         language: locale.language,
-        script: locale.script,
-        region: locale.region,
+        ...(locale.script !== undefined ? { script: locale.script } : {}),
+        ...(locale.region !== undefined ? { region: locale.region } : {}),
       };
     }
   } catch {
@@ -27,5 +27,5 @@ export function parseLocale(tag: string): LocaleParts {
   }
 
   const parts = tag.split("-");
-  return { language: parts[0].toLowerCase() };
+  return { language: parts[0]!.toLowerCase() };
 }

@@ -1,5 +1,5 @@
-import type { IntorRawConfig } from "@/config";
-import { IntorError, IntorErrorCode } from "@/core";
+import type { IntorRawConfig } from "../../config";
+import { IntorError, IntorErrorCode } from "../../core";
 
 /**
  * Validates that supportedLocales is provided and non-empty.

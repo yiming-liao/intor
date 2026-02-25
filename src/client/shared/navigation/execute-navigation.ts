@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "@/config";
-import type { OutboundResult } from "@/routing";
+import type { IntorResolvedConfig } from "../../../config";
+import type { OutboundResult } from "../../../routing";
 import type { Locale } from "intor-translator";
-import { shouldSyncLocale } from "@/policies";
+import { shouldSyncLocale } from "../../../policies";
 import { setLocaleCookie } from "../utils";
 
 interface NavigationExecutionContext {

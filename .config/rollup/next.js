@@ -39,7 +39,7 @@ export default [
     },
     plugins: [
       alias({
-        entries: [{ find: "@/client/react", replacement: "intor/react" }],
+        entries: [{ find: "../../client/react", replacement: "intor/react" }],
       }),
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       preserveDirectives(),

@@ -1,21 +1,13 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
     "emitDeclarationOnly": true,
     "stripInternal": true,
-    "declaration": true,
-    "declarationDir": "dist/types"
+    "declarationDir": "dist/types",
+
+    "jsx": "react-jsx"
   },
-  "exclude": [
-    "node_modules",
-    "__test__",
-    "dist",
-    "coverage",
-    "examples",
-    "vitest.config.ts",
-    "vitest-setup.ts",
-    "scripts",
-    "bench"
-  ]
+  "include": ["export", "src/core/types/generated-registry.ts"]
 }

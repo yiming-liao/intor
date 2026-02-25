@@ -2,7 +2,7 @@ import type {
   RoutingLocaleSource,
   RoutingLocaleCarrier,
   LocalePathPrefix,
-} from "@/core";
+} from "../../core";
 
 // Structure routing options
 export type RoutingStructuredOptions = {

@@ -3,8 +3,8 @@
 import type { IntorContextValue, IntorProviderProps } from "./types";
 import { Translator, type Locale, type LocaleMessages } from "intor-translator";
 import * as React from "react";
-import { useLocaleEffects } from "@/client/react/provider/effects/use-locale-effects";
-import { useMessagesEffects } from "@/client/react/provider/effects/use-messages-effects";
+import { useLocaleEffects } from "./effects/use-locale-effects";
+import { useMessagesEffects } from "./effects/use-messages-effects";
 
 export const IntorContext = React.createContext<IntorContextValue | undefined>(
   undefined,
@@ -58,22 +58,26 @@ export function IntorProvider({
   // -----------------------------------------------------------------------------
   // Translator
   // -----------------------------------------------------------------------------
+  const { loadingMessage, missingMessage } = config.translator ?? {};
+
   const translator = React.useMemo(() => {
     return new Translator<LocaleMessages>({
       messages: effectiveMessages,
       locale,
       isLoading: effectiveIsLoading,
       fallbackLocales: config.fallbackLocales,
-      loadingMessage: config.translator?.loadingMessage,
-      missingMessage: config.translator?.missingMessage,
-      handlers,
-      plugins,
+      ...(loadingMessage !== undefined ? { loadingMessage } : {}),
+      ...(missingMessage !== undefined ? { missingMessage } : {}),
+      ...(handlers !== undefined ? { handlers } : {}),
+      ...(plugins !== undefined ? { plugins } : {}),
     });
   }, [
     effectiveMessages,
     locale,
     effectiveIsLoading,
-    config,
+    config.fallbackLocales,
+    loadingMessage,
+    missingMessage,
     handlers,
     plugins,
   ]);

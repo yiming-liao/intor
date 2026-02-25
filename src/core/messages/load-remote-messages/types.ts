@@ -1,5 +1,5 @@
+import type { RemoteHeaders, LoggerOptions } from "../../../config";
 import type { RuntimeFetch } from "../../types";
-import type { RemoteHeaders, LoggerOptions } from "@/config";
 import type { Locale } from "intor-translator";
 
 export interface LoadRemoteMessagesParams {

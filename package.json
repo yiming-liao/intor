@@ -96,7 +96,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "type": "tsc --noEmit",
+    "type": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint",
     "lint:debug": "eslint --debug",
     "test": "vitest",

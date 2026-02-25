@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../config";
 import type { LocaleMessages } from "intor-translator";
 import type { Writable } from "svelte/store";
 import { createRefetchMessages } from "../../../shared/messages";

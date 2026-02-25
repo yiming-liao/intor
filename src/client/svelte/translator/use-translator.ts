@@ -1,13 +1,13 @@
-import type { TranslatorInstanceSvelte } from "@/client/svelte/translator/translator-instance";
+import type { TranslatorInstanceSvelte } from "./translator-instance";
 import type {
   GenConfigKeys,
   GenMessages,
   GenReplacements,
   GenRich,
-} from "@/core";
+} from "../../../core";
 import type { LocalizedPreKey } from "intor-translator";
 import { derived } from "svelte/store";
-import { createTRich } from "@/core";
+import { createTRich } from "../../../core";
 import { useIntorContext } from "../provider";
 
 /**

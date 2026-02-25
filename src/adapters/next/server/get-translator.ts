@@ -1,14 +1,14 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../config";
 import type {
   GenConfigKeys,
   GenMessages,
   GenReplacements,
   GenRich,
   TranslatorInstance,
-} from "@/core";
-import type { GetTranslatorParams } from "@/server";
+} from "../../../core";
+import type { GetTranslatorParams } from "../../../server";
 import type { LocalizedPreKey } from "intor-translator";
-import { getTranslator as getTranslatorCore } from "@/server";
+import { getTranslator as getTranslatorCore } from "../../../server";
 import { getLocale } from "./get-locale";
 
 type GetTranslatorNextParams<CK extends GenConfigKeys = "__default__"> = Omit<
@@ -34,16 +34,8 @@ export async function getTranslator<
 ): Promise<
   TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>
 > {
-  const { loader, readers, allowCacheWrite, handlers, plugins, preKey } =
-    params || {};
+  const locale = await getLocale(config);
 
-  return getTranslatorCore(config, {
-    locale: await getLocale(config),
-    loader,
-    readers,
-    allowCacheWrite,
-    handlers,
-    plugins,
-    preKey,
-  });
+  if (!params) return getTranslatorCore(config, { locale });
+  return getTranslatorCore(config, { locale, ...params });
 }

@@ -1,4 +1,4 @@
-import type { VueTagRenderers } from "@/client/vue/render";
+import type { VueTagRenderers } from "../render";
 import {
   renderRichMessage,
   type LocaleMessages,

@@ -1,5 +1,5 @@
-import type { IntorResolvedConfig } from "@/config";
-import { matchLocale, type GenConfigKeys, type GenLocale } from "@/core";
+import type { IntorResolvedConfig } from "../../../config";
+import { matchLocale, type GenConfigKeys, type GenLocale } from "../../../core";
 import { detectBrowserLocale, getLocaleFromCookie } from "../utils";
 
 /**

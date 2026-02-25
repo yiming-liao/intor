@@ -4,7 +4,7 @@ import type {
   GenMessages,
   GenReplacements,
   GenRich,
-} from "@/core";
+} from "../../../core";
 import type { LocalizedPreKey } from "intor-translator";
 import { useIntorContext } from "../provider";
 import { createTRich } from "./create-t-rich";

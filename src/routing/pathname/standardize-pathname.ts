@@ -1,5 +1,5 @@
-import type { IntorResolvedConfig } from "@/config";
-import { normalizePathname, LOCALE_PLACEHOLDER } from "@/core";
+import type { IntorResolvedConfig } from "../../config";
+import { normalizePathname, LOCALE_PLACEHOLDER } from "../../core";
 
 /**
  * Standardizes a canonical pathname into an internal routing template

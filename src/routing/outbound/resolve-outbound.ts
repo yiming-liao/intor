@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Locale } from "intor-translator";
 import { decideStrategy, type OutboundStrategy } from "./decide-strategy";
 import { determineTarget, type OutboundTarget } from "./determine-target";

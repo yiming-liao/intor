@@ -1,11 +1,11 @@
 import type { MessagesLoader } from "./types";
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import {
   resolveLoaderOptions,
   createTranslator,
   type CreateTranslatorParams,
-} from "@/core";
+} from "../../core";
 import { loadMessages, type LoadMessagesParams } from "../messages";
 
 interface InitTranslatorOptions
@@ -42,7 +42,7 @@ export async function initTranslator(
     const loaded = await loadMessages({
       config,
       locale,
-      readers,
+      ...(readers !== undefined ? { readers } : {}),
       allowCacheWrite,
       fetch,
     });
@@ -53,5 +53,11 @@ export async function initTranslator(
   }
 
   // Create immutable translator snapshot
-  return createTranslator({ config, locale, messages, handlers, plugins });
+  return createTranslator({
+    config,
+    locale,
+    messages,
+    ...(handlers !== undefined ? { handlers } : {}),
+    ...(plugins !== undefined ? { plugins } : {}),
+  });
 }

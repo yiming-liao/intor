@@ -1,4 +1,4 @@
-import { IntorError, IntorErrorCode } from "@/core";
+import { IntorError, IntorErrorCode } from "../../core";
 
 /**
  * Validates that the given id is a non-empty string.

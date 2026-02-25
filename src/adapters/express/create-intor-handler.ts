@@ -1,8 +1,8 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../config";
 import type { Request, Response, NextFunction } from "express";
-import { normalizeQuery, parseCookieHeader } from "@/core";
-import { resolveInbound, getLocaleFromAcceptLanguage } from "@/routing";
-import { getTranslator, type GetTranslatorParams } from "@/server";
+import { normalizeQuery, parseCookieHeader } from "../../core";
+import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
+import { getTranslator, type GetTranslatorParams } from "../../server";
 
 /**
  * Resolves locale-aware routing for the current execution context.
@@ -34,13 +34,14 @@ export function createIntorHandler(
     // ----------------------------------------------------------
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
+    const cookie = parseCookieHeader(req.headers.cookie)[config.cookie.name];
     const { locale, localeSource, pathname } = await resolveInbound(
       config,
       req.path,
       {
         host: req.hostname,
         query: normalizeQuery(req.query),
-        cookie: parseCookieHeader(req.headers.cookie)[config.cookie.name],
+        ...(cookie !== undefined ? { cookie } : {}),
         detected: localeFromAcceptLanguage || config.defaultLocale,
       },
     );
@@ -50,12 +51,14 @@ export function createIntorHandler(
     // --------------------------------------------------
     req.intor = { locale, localeSource, pathname };
 
+    const { loader, handlers, plugins, readers } = options ?? {};
     const { hasKey, t, tRich } = await getTranslator(config, {
       locale,
-      handlers: options?.handlers,
-      plugins: options?.plugins,
-      readers: options?.readers,
+      ...(loader !== undefined ? { loader } : {}),
+      ...(readers !== undefined ? { readers } : {}),
       allowCacheWrite: true,
+      ...(handlers !== undefined ? { handlers } : {}),
+      ...(plugins !== undefined ? { plugins } : {}),
     });
 
     // DX shortcuts (enabled by default)

@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../config";
 import type { Locale, LocaleMessages } from "intor-translator";
-import { loadRemoteMessages, resolveLoaderOptions } from "@/core";
-import { mergeMessages } from "@/core";
+import { loadRemoteMessages, resolveLoaderOptions } from "../../../core";
+import { mergeMessages } from "../../../core";
 
 interface CreateRefetchMessagesParams {
   config: IntorResolvedConfig;
@@ -32,6 +32,7 @@ export const createRefetchMessages = ({
     // No-op when remote loading is not enabled
     const loader = resolveLoaderOptions(config, "client");
     if (!loader || loader.mode !== "remote") return;
+    const { namespaces, concurrency, url, headers } = loader;
 
     // Abort previous request
     controller?.abort();
@@ -45,11 +46,11 @@ export const createRefetchMessages = ({
       const loadedMessages = await loadRemoteMessages({
         locale: newLocale,
         fallbackLocales: config.fallbackLocales[newLocale] || [],
-        namespaces: loader.namespaces,
-        concurrency: loader.concurrency,
+        ...(namespaces !== undefined ? { namespaces } : {}),
+        ...(concurrency !== undefined ? { concurrency } : {}),
         fetch: globalThis.fetch,
-        url: loader.url,
-        headers: loader.headers,
+        url,
+        ...(headers !== undefined ? { headers: headers } : {}),
         signal: currentController.signal,
         loggerOptions: config.logger,
       });

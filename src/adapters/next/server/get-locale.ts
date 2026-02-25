@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "@/config";
-import type { GenConfigKeys, GenLocale } from "@/core";
+import type { IntorResolvedConfig } from "../../../config";
+import type { GenConfigKeys, GenLocale } from "../../../core";
 import { cookies, headers } from "next/headers";
-import { INTOR_HEADERS, matchLocale } from "@/core";
+import { INTOR_HEADERS, matchLocale } from "../../../core";
 
 /**
  * Get the locale for the current execution context.

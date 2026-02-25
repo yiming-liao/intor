@@ -1,6 +1,10 @@
 import type { LoadMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
-import { getLogger, loadRemoteMessages, resolveLoaderOptions } from "@/core";
+import {
+  getLogger,
+  loadRemoteMessages,
+  resolveLoaderOptions,
+} from "../../core";
 import { loadLocalMessages } from "./load-local-messages";
 
 /**
@@ -54,26 +58,28 @@ export const loadMessages = async ({
   // ---------------------------------------------------------------------------
   let loadedMessages: LocaleMessages | undefined;
   if (mode === "local") {
+    const { rootDir } = loader;
     loadedMessages = await loadLocalMessages({
       id: config.id,
       locale,
       fallbackLocales,
-      namespaces,
-      rootDir: loader.rootDir,
-      concurrency,
-      readers,
+      ...(namespaces !== undefined ? { namespaces } : {}),
+      ...(rootDir !== undefined ? { rootDir } : {}),
+      ...(concurrency !== undefined ? { concurrency } : {}),
+      readers: readers ?? {},
       allowCacheWrite,
       loggerOptions: config.logger,
     });
   } else if (mode === "remote") {
+    const { url, headers } = loader;
     loadedMessages = await loadRemoteMessages({
       locale,
       fallbackLocales,
-      namespaces,
-      concurrency,
+      ...(namespaces !== undefined ? { namespaces } : {}),
+      ...(concurrency !== undefined ? { concurrency } : {}),
       fetch,
-      url: loader.url,
-      headers: loader.headers,
+      url,
+      ...(headers !== undefined ? { headers } : {}),
       loggerOptions: config.logger,
     });
   }

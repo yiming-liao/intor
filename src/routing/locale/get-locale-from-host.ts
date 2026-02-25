@@ -24,7 +24,7 @@ export function getLocaleFromHost(
   if (!host) return;
 
   // Remove port (e.g. localhost:3000)
-  const hostname = host.split(":")[0];
+  const hostname = host.split(":")[0]!;
   const parts = hostname.split(".");
 
   if (parts.length < 2) return;

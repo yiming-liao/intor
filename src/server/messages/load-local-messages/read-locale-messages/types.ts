@@ -1,5 +1,5 @@
-import type { LoggerOptions } from "@/config";
-import type { MessagesReaders } from "@/core";
+import type { LoggerOptions } from "../../../../config";
+import type { MessagesReaders } from "../../../../core";
 import type { Locale } from "intor-translator";
 import type { LimitFunction } from "p-limit";
 

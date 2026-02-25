@@ -12,8 +12,8 @@ export class IntorError extends Error {
     const fullMessage = id ? `[${id}] ${message}` : message;
     super(fullMessage);
     this.name = "IntorError";
-    this.id = id;
-    this.code = code;
+    if (id) this.id = id;
+    if (code) this.code = code;
 
     Object.setPrototypeOf(this, new.target.prototype); // Fix prototype
   }

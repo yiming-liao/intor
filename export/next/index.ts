@@ -1,4 +1,9 @@
 // intor / next
 
 // navigation
-export { Link, useRouter, redirect, createIntorHandler } from "@/adapters/next";
+export {
+  Link,
+  useRouter,
+  redirect,
+  createIntorHandler,
+} from "../../src/adapters/next";

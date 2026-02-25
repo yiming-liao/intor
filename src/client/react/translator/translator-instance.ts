@@ -1,5 +1,5 @@
+import type { TranslatorInstance } from "../../../core";
 import type { ReactTagRenderers } from "../render";
-import type { TranslatorInstance } from "@/core";
 import type * as React from "react";
 import {
   type Locale,

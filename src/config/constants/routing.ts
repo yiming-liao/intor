@@ -12,7 +12,7 @@ export const DEFAULT_ROUTING_OPTIONS: RoutingResolvedOptions = {
   outbound: {
     localeCarrier: "path",
     queryKey: "locale",
-    host: { map: {}, default: undefined },
+    host: { map: {} },
     forceFullReload: false,
   },
 };

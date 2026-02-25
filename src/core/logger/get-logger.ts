@@ -1,4 +1,4 @@
-import type { LoggerOptions } from "@/config";
+import type { LoggerOptions } from "../../config";
 import type { FormatConfig, Logger, RenderConfig } from "logry";
 import { logry } from "logry";
 import { getGlobalLoggerPool } from "./global-logger-pool";
@@ -24,6 +24,12 @@ export function getLogger({
   preset,
   ...options
 }: LoggerOptions & { scope?: string }): Logger {
+  const shouldUseDefault = preset === undefined;
+  const resolvedFormatConfig =
+    formatConfig ?? (shouldUseDefault ? DEFAULT_FORMAT_CONFIG : undefined);
+  const resolvedRenderConfig =
+    renderConfig ?? (shouldUseDefault ? DEFAULT_RENDER_CONFIG : undefined);
+
   const pool = getGlobalLoggerPool();
 
   let logger = pool.get(id);
@@ -31,11 +37,13 @@ export function getLogger({
   if (!logger) {
     logger = logry({
       id,
-      formatConfig:
-        !formatConfig && !preset ? DEFAULT_FORMAT_CONFIG : formatConfig,
-      renderConfig:
-        !renderConfig && !preset ? DEFAULT_RENDER_CONFIG : renderConfig,
-      preset,
+      ...(resolvedFormatConfig !== undefined
+        ? { formatConfig: resolvedFormatConfig }
+        : {}),
+      ...(resolvedRenderConfig !== undefined
+        ? { renderConfig: resolvedRenderConfig }
+        : {}),
+      ...(preset !== undefined ? { preset } : {}),
       ...options,
     });
 

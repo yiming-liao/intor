@@ -5,6 +5,7 @@ import type {
   Replacement,
   Rich,
 } from "intor-translator";
+import "./generated-registry";
 
 /* ============================================================
  * Generated-aware type system (Stable vFinal)

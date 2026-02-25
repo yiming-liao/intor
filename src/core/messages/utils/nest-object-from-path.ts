@@ -18,7 +18,7 @@ export function nestObjectFromPath(
 ): MessageObject {
   let obj: MessageObject = value;
   for (let i = path.length - 1; i >= 0; i--) {
-    obj = { [path[i]]: obj };
+    obj = { [path[i]!]: obj };
   }
   return obj;
 }

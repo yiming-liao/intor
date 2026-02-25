@@ -1,6 +1,6 @@
 import type { OutboundTarget } from "./determine-target";
-import type { IntorResolvedConfig } from "@/config";
-import { shouldFullReload } from "@/policies";
+import type { IntorResolvedConfig } from "../../config";
+import { shouldFullReload } from "../../policies";
 
 export type OutboundStrategy = "external" | "client" | "reload";
 

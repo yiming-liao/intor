@@ -6,7 +6,7 @@ import {
   isValidMessages,
   deepMerge,
   nestObjectFromPath,
-} from "@/core";
+} from "../../../../../core";
 import { jsonReader } from "./utils/json-reader";
 
 /**

@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../config";
 import type { Locale } from "intor-translator";
 
 /**
@@ -14,6 +14,6 @@ export const deriveHostDestination = (
   const resolvedHost = host.map[locale] ?? host.default;
   if (!resolvedHost) return rawDestination;
 
-  const url = new URL(rawDestination, "http://internal");
+  const url = new URL(rawDestination, "http://localhost");
   return `${url.protocol}//${resolvedHost}${url.pathname}${url.search}`;
 };

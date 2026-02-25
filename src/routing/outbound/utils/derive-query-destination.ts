@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../config";
 import type { Locale } from "intor-translator";
 
 /**
@@ -11,7 +11,7 @@ export const deriveQueryDestination = (
 ): string => {
   const { queryKey } = config.routing.outbound;
 
-  const url = new URL(rawDestination, "http://internal");
+  const url = new URL(rawDestination, "http://localhost");
   url.searchParams.set(queryKey, locale);
   return `${url.pathname}${url.search}`;
 };

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import type { VueTagRenderers } from "@/client/vue/render";
+import type { VueTagRenderers } from "../render";
 import type { Replacement } from "intor-translator";
 import { defineComponent, h, Fragment } from "vue";
-import { useTranslator } from "@/client/vue/translator/use-translator";
+import { useTranslator } from "../translator/use-translator";
 
 /**
  * `<Trans />` is a lightweight Vue component for rendering rich translations.

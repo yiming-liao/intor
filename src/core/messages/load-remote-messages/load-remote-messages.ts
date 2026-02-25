@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-at */
 import type { LoadRemoteMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import pLimit from "p-limit";
@@ -50,9 +51,9 @@ export const loadRemoteMessages = async ({
   const candidateLocales = [locale, ...(fallbackLocales || [])];
   let messages: LocaleMessages | undefined;
 
-  for (let i = 0; i < candidateLocales.length; i++) {
-    const candidateLocale = candidateLocales[i];
-    const isLast = i === candidateLocales.length - 1;
+  for (const candidateLocale of candidateLocales) {
+    const isLast =
+      candidateLocale === candidateLocales[candidateLocales.length - 1];
     try {
       // -----------------------------------------------------------------
       // Collect remote message resources for the locale
@@ -60,14 +61,20 @@ export const loadRemoteMessages = async ({
       const resources = collectRemoteResources({
         locale: candidateLocale,
         baseUrl,
-        namespaces,
+        ...(namespaces !== undefined ? { namespaces } : {}),
       });
 
       // -----------------------------------------------------------------
       // Fetch all message chunks in parallel
       // -----------------------------------------------------------------
       const fetchUrl = (url: string) =>
-        fetchRemoteResource({ url, headers, signal, loggerOptions, fetch });
+        fetchRemoteResource({
+          url,
+          ...(headers !== undefined ? { headers } : {}),
+          ...(signal !== undefined ? { signal } : {}),
+          loggerOptions,
+          fetch,
+        });
       const results = await Promise.all(
         resources.map(({ url }) =>
           limit ? limit(() => fetchUrl(url)) : fetchUrl(url),
@@ -81,7 +88,10 @@ export const loadRemoteMessages = async ({
       // Resolve and merge remote message resources
       // -----------------------------------------------------------------
       const resolved = resolveRemoteResources(
-        resources.map((res, i) => ({ path: res.path, data: results[i] })),
+        resources.map((res, i) => {
+          const data = results[i];
+          return { path: res.path, ...(data !== undefined ? { data } : {}) };
+        }),
       );
 
       // -----------------------------------------------------------------

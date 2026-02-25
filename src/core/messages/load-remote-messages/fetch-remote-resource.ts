@@ -1,5 +1,5 @@
+import type { RemoteHeaders, LoggerOptions } from "../../../config";
 import type { RuntimeFetch } from "../../types";
-import type { RemoteHeaders, LoggerOptions } from "@/config";
 import type { MessageObject } from "intor-translator";
 import { getLogger } from "../../logger";
 import { isValidMessages } from "../utils/is-valid-messages";
@@ -39,7 +39,7 @@ export async function fetchRemoteResource({
       method: "GET",
       headers: { "Content-Type": "application/json", ...headers },
       cache: "no-store",
-      signal,
+      ...(signal !== undefined ? { signal } : {}),
     });
 
     if (!response.ok) {

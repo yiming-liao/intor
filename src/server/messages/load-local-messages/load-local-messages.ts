@@ -1,8 +1,10 @@
+/* eslint-disable unicorn/no-array-sort */
+/* eslint-disable unicorn/prefer-at */
 import type { LoadLocalMessagesParams } from "./types";
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import pLimit from "p-limit";
-import { getLogger, normalizeCacheKey } from "@/core";
+import { getLogger, normalizeCacheKey } from "../../../core";
 import { getMessagesPool } from "./cache/messages-pool";
 import { readLocaleMessages } from "./read-locale-messages";
 
@@ -51,8 +53,8 @@ export const loadLocalMessages = async ({
       "loaderType:local",
       rootDir,
       locale,
-      fallbackLocales?.toSorted().join(","),
-      namespaces?.toSorted().join(","),
+      fallbackLocales?.sort().join(","),
+      namespaces?.sort().join(","),
     ].filter(Boolean),
   );
 
@@ -74,16 +76,16 @@ export const loadLocalMessages = async ({
   const candidateLocales = [locale, ...(fallbackLocales || [])];
   let messages: LocaleMessages | undefined;
 
-  for (let i = 0; i < candidateLocales.length; i++) {
-    const candidateLocale = candidateLocales[i];
-    const isLast = i === candidateLocales.length - 1;
+  for (const candidateLocale of candidateLocales) {
+    const isLast =
+      candidateLocale === candidateLocales[candidateLocales.length - 1];
     try {
       const result = await readLocaleMessages({
         locale: candidateLocale,
-        namespaces,
+        ...(namespaces !== undefined ? { namespaces } : {}),
         rootDir,
         limit,
-        readers,
+        readers: readers ?? {},
         loggerOptions,
       });
 
@@ -109,7 +111,7 @@ export const loadLocalMessages = async ({
   // ---------------------------------------------------------------------------
   // Cache write (explicitly permitted)
   // ---------------------------------------------------------------------------
-  const isProd = process.env.NODE_ENV === "production";
+  const isProd = process.env["NODE_ENV"] === "production";
   const canWriteCache = isProd && allowCacheWrite;
   if (canWriteCache && cacheKey && messages) {
     pool.set(cacheKey, messages);

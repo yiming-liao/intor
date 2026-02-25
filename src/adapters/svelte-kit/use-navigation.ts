@@ -1,9 +1,9 @@
 /* eslint-disable import/no-unresolved */
-import type { GenConfigKeys, GenLocale } from "@/core";
+import type { GenConfigKeys, GenLocale } from "../../core";
 import { get } from "svelte/store";
-import { executeNavigation } from "@/client";
-import { useIntorContext } from "@/client/svelte"; // NOTE: Internal imports are rewritten to `intor/svelte` via Rollup alias at build time.
-import { resolveOutbound } from "@/routing";
+import { executeNavigation } from "../../client";
+import { useIntorContext } from "../../client/svelte"; // NOTE: Internal imports are rewritten to `intor/svelte` via Rollup alias at build time.
+import { resolveOutbound } from "../../routing";
 import { goto as svelteGoto } from "$app/navigation";
 import { page } from "$app/state";
 
@@ -28,7 +28,7 @@ export function useNavigation<CK extends GenConfigKeys = "__default__">() {
       config,
       get(currentLocale),
       page.url.pathname,
-      { destination: url, locale },
+      { destination: url, ...(locale !== undefined ? { locale } : {}) },
     );
 
     executeNavigation(outboundResult, {

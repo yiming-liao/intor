@@ -1,3 +1,3 @@
 // intor / fastify
 
-export { intorFastifyPlugin, getTranslator } from "@/adapters/fastify";
+export { intorFastifyPlugin, getTranslator } from "../../src/adapters/fastify";

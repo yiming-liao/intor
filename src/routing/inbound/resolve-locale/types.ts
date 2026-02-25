@@ -1,4 +1,4 @@
-import type { RoutingLocaleSource } from "@/core";
+import type { RoutingLocaleSource } from "../../../core";
 import type { Locale } from "intor-translator";
 
 /** Context for locale resolution. */

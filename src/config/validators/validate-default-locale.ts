@@ -1,5 +1,5 @@
 import type { Locale } from "intor-translator";
-import { IntorError, IntorErrorCode } from "@/core";
+import { IntorError, IntorErrorCode } from "../../core";
 
 /**
  * Validates that the configured defaultLocale is supported.

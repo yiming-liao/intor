@@ -22,7 +22,7 @@ export {
 
   // types
   type GenLocale as Locale,
-} from "@/core";
+} from "../src/core";
 
 // config
 export {
@@ -31,10 +31,10 @@ export {
   // types
   type IntorRawConfig,
   type IntorResolvedConfig,
-} from "@/config";
+} from "../src/config";
 
 // routing
-export { localizePathname, type InboundContext } from "@/routing";
+export { localizePathname, type InboundContext } from "../src/routing";
 
 // intor-translator
 export {

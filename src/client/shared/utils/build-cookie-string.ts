@@ -1,4 +1,4 @@
-import type { CookieResolvedOptions } from "@/config";
+import type { CookieResolvedOptions } from "../../../config";
 
 /**
  * Build a serialized cookie string.
@@ -13,7 +13,7 @@ export const buildCookieString = (
   const parts: string[] = [`${name}=${encodeURIComponent(value)}`];
 
   // Add expiration and max-age if provided
-  if (maxAge) {
+  if (maxAge !== undefined) {
     const expires = new Date(Date.now() + maxAge * 1000).toUTCString();
     parts.push(`expires=${expires}`, `max-age=${maxAge}`);
   }
@@ -28,9 +28,9 @@ export const buildCookieString = (
 
   // Add SameSite policy (e.g., Lax, Strict)
   if (sameSite) {
-    parts.push(
-      `SameSite=${sameSite[0].toUpperCase()}${sameSite.slice(1).toLowerCase()}`,
-    );
+    const normalized =
+      sameSite.charAt(0).toUpperCase() + sameSite.slice(1).toLowerCase();
+    parts.push(`SameSite=${normalized}`);
   }
 
   // Add Secure flag if not explicitly disabled

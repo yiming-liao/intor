@@ -1,4 +1,4 @@
-import type { CookieResolvedOptions } from "@/config";
+import type { CookieResolvedOptions } from "../../../../config";
 import type { Locale } from "intor-translator";
 import { buildCookieString } from "../build-cookie-string";
 

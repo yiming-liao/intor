@@ -1,4 +1,4 @@
-import type { LoggerOptions } from "@/config";
+import type { LoggerOptions } from "../../../../../config";
 import type fs from "node:fs/promises";
 import type { LimitFunction } from "p-limit";
 

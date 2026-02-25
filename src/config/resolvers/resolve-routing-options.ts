@@ -4,7 +4,7 @@ import type {
   RoutingResolvedOptions,
   RoutingStructuredOptions,
 } from "../types/routing";
-import { deepMerge } from "@/core";
+import { deepMerge } from "../../core";
 import { DEFAULT_ROUTING_OPTIONS } from "../constants";
 
 /**

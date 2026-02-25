@@ -1,4 +1,4 @@
-import type { NormalizedQuery } from "@/core";
+import type { NormalizedQuery } from "../../core";
 
 /**
  * Get locale candidate from URL query parameters.

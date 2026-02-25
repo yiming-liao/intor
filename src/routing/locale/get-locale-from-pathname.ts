@@ -1,5 +1,5 @@
-import type { IntorResolvedConfig } from "@/config";
-import { normalizePathname } from "@/core";
+import type { IntorResolvedConfig } from "../../config";
+import { normalizePathname } from "../../core";
 
 /**
  * Get locale from pathname.

@@ -1,5 +1,5 @@
+import type { IntorResolvedConfig } from "../../../../config";
 import type { PathContext, PathDirective } from "../types";
-import type { IntorResolvedConfig } from "@/config";
 
 /**
  * Resolve pathname decision for routing prefix strategy: "except-default".

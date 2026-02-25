@@ -3,7 +3,7 @@ import type { FileEntry } from "../types";
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getLogger } from "@/core";
+import { getLogger } from "../../../../../core";
 
 /**
  * Recursively collects message file metadata under a given locale root.
