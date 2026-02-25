@@ -9,5 +9,5 @@
 
     "jsx": "react-jsx"
   },
-  "include": ["export", "src/core/types/generated-registry.ts"]
+  "include": ["export"]
 }

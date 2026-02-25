@@ -8,5 +8,6 @@
     "lib": ["dom", "esnext"],
     "types": ["node"]
   },
-  "include": ["src", "export"]
+  "include": ["src", "export", "__test__"],
+  "exclude": ["__test__/types/**/*.ts"]
 }
