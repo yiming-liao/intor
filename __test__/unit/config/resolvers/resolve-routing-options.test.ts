@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { DEFAULT_ROUTING_OPTIONS } from "@/config/constants";
-import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
+import { DEFAULT_ROUTING_OPTIONS } from "../../../../src/config/constants";
+import { resolveRoutingOptions } from "../../../../src/config/resolvers/resolve-routing-options";
 
 describe("resolveRoutingOptions", () => {
   it("returns default routing options when raw is undefined", () => {
@@ -77,8 +77,8 @@ describe("resolveRoutingOptions", () => {
       queryKey: "lang",
       forceFullReload: true,
     }) as Record<string, unknown>;
-    expect(resolved.queryKey).toBeUndefined();
-    expect(resolved.forceFullReload).toBeUndefined();
+    expect(resolved["queryKey"]).toBeUndefined();
+    expect(resolved["forceFullReload"]).toBeUndefined();
   });
 
   it("overrides default basePath when basePath is provided in raw options", () => {

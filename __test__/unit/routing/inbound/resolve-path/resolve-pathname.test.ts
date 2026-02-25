@@ -1,9 +1,9 @@
-import type { IntorResolvedConfig } from "@/config";
-import type { PathContext } from "@/routing/inbound/resolve-path/types";
+import type { IntorResolvedConfig } from "../../../../../src/config";
+import type { PathContext } from "../../../../../src/routing/inbound/resolve-path/types";
 import { describe, it, expect, vi } from "vitest";
-import { resolvePath } from "@/routing/inbound/resolve-path/resolve-path";
+import { resolvePath } from "../../../../../src/routing/inbound/resolve-path/resolve-path";
 
-vi.mock("@/routing/pathname", () => ({
+vi.mock("../../../../../src/routing/pathname", () => ({
   localizePathname: (pathname: string) => ({ pathname }),
 }));
 

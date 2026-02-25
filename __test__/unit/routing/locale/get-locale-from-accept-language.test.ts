@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getLocaleFromAcceptLanguage } from "@/routing";
+import { getLocaleFromAcceptLanguage } from "../../../../src/routing";
 
 describe("getLocaleFromAcceptLanguage", () => {
   it("returns undefined when header is missing", () => {

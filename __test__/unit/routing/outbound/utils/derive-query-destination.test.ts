@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../../src/config";
 import { describe, it, expect } from "vitest";
-import { deriveQueryDestination } from "@/routing/outbound/utils/derive-query-destination";
+import { deriveQueryDestination } from "../../../../../src/routing/outbound/utils/derive-query-destination";
 
 const createConfig = (key = "lang"): IntorResolvedConfig =>
   ({ routing: { outbound: { queryKey: key } } }) as IntorResolvedConfig;

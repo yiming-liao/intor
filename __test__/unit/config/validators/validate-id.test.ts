@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { validateId } from "@/config/validators/validate-id";
-import { IntorError, IntorErrorCode } from "@/core";
+import { validateId } from "../../../../src/config/validators/validate-id";
+import { IntorError, IntorErrorCode } from "../../../../src/core";
 
 describe("validateId", () => {
   it("throws if id is an empty string", () => {

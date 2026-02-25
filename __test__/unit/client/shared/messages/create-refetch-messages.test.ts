@@ -1,10 +1,10 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../../src/config";
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createRefetchMessages } from "@/client/shared/messages/create-refetch-messages";
-import { loadRemoteMessages } from "@/core/messages/load-remote-messages";
+import { createRefetchMessages } from "../../../../../src/client/shared/messages/create-refetch-messages";
+import { loadRemoteMessages } from "../../../../../src/core/messages/load-remote-messages";
 
-vi.mock("@/core/messages/load-remote-messages", () => ({
+vi.mock("../../../../../src/core/messages/load-remote-messages", () => ({
   loadRemoteMessages: vi.fn(),
 }));
 

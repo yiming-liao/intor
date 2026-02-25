@@ -1,8 +1,7 @@
-/* eslint-disable unicorn/no-array-sort */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as loggerModule from "@/core/logger/get-logger";
-import { collectFileEntries } from "@/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
+import * as loggerModule from "../../../../../../../src/core/logger/get-logger";
+import { collectFileEntries } from "../../../../../../../src/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
 
 function isFile(name: string) {
   return {

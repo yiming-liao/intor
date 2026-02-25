@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getLocaleFromQuery } from "@/routing";
+import { getLocaleFromQuery } from "../../../../src/routing";
 
 describe("getLocaleFromQuery", () => {
   it("returns undefined when query is undefined", () => {

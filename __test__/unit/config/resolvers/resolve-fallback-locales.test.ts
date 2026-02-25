@@ -1,8 +1,8 @@
-import type { IntorRawConfig } from "@/config";
+import type { IntorRawConfig } from "../../../../src/config";
 import { describe, it, expect, vi } from "vitest";
-import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
+import { resolveFallbackLocales } from "../../../../src/config/resolvers/resolve-fallback-locales";
 
-vi.mock("@/core", () => ({
+vi.mock("../../../../src/core", () => ({
   getLogger: () => ({ child: () => ({ warn: vi.fn() }) }),
 }));
 

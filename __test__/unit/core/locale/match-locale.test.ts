@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { matchLocale } from "@/core/locale";
+import { matchLocale } from "../../../../src/core/locale";
 
 describe("matchLocale (strict script mode)", () => {
   // Defensive guards

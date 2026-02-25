@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../src/config";
 import { describe, it, expect } from "vitest";
-import { standardizePathname } from "@/routing/pathname/standardize-pathname";
+import { standardizePathname } from "../../../../src/routing/pathname/standardize-pathname";
 
 describe("standardizePathname", () => {
   const config = {

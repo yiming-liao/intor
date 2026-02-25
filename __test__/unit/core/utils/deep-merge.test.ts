@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deepMerge } from "@/core/utils";
+import { deepMerge } from "../../../../src/core/utils";
 
 describe("deepMerge", () => {
   it("treats undefined inputs as empty objects", () => {

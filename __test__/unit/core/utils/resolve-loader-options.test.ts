@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "@/config";
-import type { LoaderOptions } from "@/config/types/loader";
+import type { IntorResolvedConfig } from "../../../../src/config";
+import type { LoaderOptions } from "../../../../src/config/types/loader";
 import { describe, it, expect } from "vitest";
-import { resolveLoaderOptions } from "@/core/utils/resolve-loader-options";
+import { resolveLoaderOptions } from "../../../../src/core/utils/resolve-loader-options";
 
 function mockClientLoader() {
   return {

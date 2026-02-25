@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createIntorHandler } from "@/adapters/next/create-intor-handler";
-import { INTOR_HEADERS } from "@/core";
-import { resolveInbound } from "@/routing/inbound/resolve-inbound";
+import { createIntorHandler } from "../../../../src/adapters/next/create-intor-handler";
+import { INTOR_HEADERS } from "../../../../src/core";
+import { resolveInbound } from "../../../../src/routing/inbound/resolve-inbound";
 
 const mockRedirect = vi.fn();
 const mockNext = vi.fn();
@@ -24,7 +24,7 @@ vi.mock("next/server", () => ({
   },
 }));
 
-vi.mock("@/routing/inbound/resolve-inbound", () => ({
+vi.mock("../../../../src/routing/inbound/resolve-inbound", () => ({
   resolveInbound: vi.fn(),
 }));
 

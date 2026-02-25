@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { collectRemoteResources } from "@/core/messages/load-remote-messages/collect-remote-resources";
+import { collectRemoteResources } from "../../../../../src/core/messages/load-remote-messages/collect-remote-resources";
 
 describe("collectRemoteResources", () => {
   const baseUrl = "https://api.example.com/messages";

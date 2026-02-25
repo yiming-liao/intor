@@ -2,9 +2,9 @@
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
 import { describe, it, expect, vi } from "vitest";
-import { readLocaleMessages } from "@/server/messages/load-local-messages/read-locale-messages";
-import * as collectModule from "@/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
-import * as parseModule from "@/server/messages/load-local-messages/read-locale-messages/parse-file-entries";
+import { readLocaleMessages } from "../../../../../../src/server/messages/load-local-messages/read-locale-messages";
+import * as collectModule from "../../../../../../src/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
+import * as parseModule from "../../../../../../src/server/messages/load-local-messages/read-locale-messages/parse-file-entries";
 
 describe("readLocaleMessages", () => {
   const mockFileEntries = [

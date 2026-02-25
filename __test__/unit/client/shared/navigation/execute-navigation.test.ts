@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { executeNavigation } from "@/client/shared/navigation";
-import { setLocaleCookie } from "@/client/shared/utils";
-import { shouldSyncLocale } from "@/policies";
+import { executeNavigation } from "../../../../../src/client/shared/navigation";
+import { setLocaleCookie } from "../../../../../src/client/shared/utils";
+import { shouldSyncLocale } from "../../../../../src/policies";
 
-vi.mock("@/policies", () => ({
+vi.mock("../../../../../src/policies", () => ({
   shouldSyncLocale: vi.fn(),
 }));
 
-vi.mock("@/client/shared/utils", () => ({
+vi.mock("../../../../../src/client/shared/utils", () => ({
   setLocaleCookie: vi.fn(),
 }));
 

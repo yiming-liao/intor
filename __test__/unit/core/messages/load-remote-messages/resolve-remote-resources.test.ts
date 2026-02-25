@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { resolveRemoteResources } from "@/core/messages/load-remote-messages/resolve-remote-resources";
+import { resolveRemoteResources } from "../../../../../src/core/messages/load-remote-messages/resolve-remote-resources";
 
 describe("resolveRemoteResources", () => {
   it("returns root messages when a single root resource is provided", () => {
@@ -70,7 +70,6 @@ describe("resolveRemoteResources", () => {
     const result = resolveRemoteResources([
       {
         path: [],
-        data: undefined,
       },
       {
         path: ["common"],
@@ -85,16 +84,7 @@ describe("resolveRemoteResources", () => {
   });
 
   it("returns an empty object when no valid resources are provided", () => {
-    const result = resolveRemoteResources([
-      {
-        path: [],
-        data: undefined,
-      },
-      {
-        path: ["common"],
-        data: undefined,
-      },
-    ]);
+    const result = resolveRemoteResources([{ path: [] }, { path: ["common"] }]);
     expect(result).toEqual({});
   });
 });

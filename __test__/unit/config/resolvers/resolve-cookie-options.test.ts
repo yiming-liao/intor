@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { DEFAULT_COOKIE_OPTIONS } from "@/config";
-import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";
+import { DEFAULT_COOKIE_OPTIONS } from "../../../../src/config";
+import { resolveCookieOptions } from "../../../../src/config/resolvers/resolve-cookie-options";
 
 describe("resolveCookieOptions", () => {
   it("should return default options when cookie is undefined", () => {

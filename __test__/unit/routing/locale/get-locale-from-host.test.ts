@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getLocaleFromHost } from "@/routing";
+import { getLocaleFromHost } from "../../../../src/routing";
 
 describe("getLocaleFromHost", () => {
   it("returns undefined when host is undefined", () => {

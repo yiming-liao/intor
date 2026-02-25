@@ -1,17 +1,20 @@
-import type { RoutingResolvedOptions, CookieResolvedOptions } from "@/config";
+import type {
+  RoutingResolvedOptions,
+  CookieResolvedOptions,
+} from "../../../src/config";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { defineIntorConfig } from "@/config";
-import { resolveCookieOptions } from "@/config/resolvers/resolve-cookie-options";
-import { resolveFallbackLocales } from "@/config/resolvers/resolve-fallback-locales";
-import { resolveRoutingOptions } from "@/config/resolvers/resolve-routing-options";
-import { validateDefaultLocale } from "@/config/validators/validate-default-locale";
-import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
+import { defineIntorConfig } from "../../../src/config";
+import { resolveCookieOptions } from "../../../src/config/resolvers/resolve-cookie-options";
+import { resolveFallbackLocales } from "../../../src/config/resolvers/resolve-fallback-locales";
+import { resolveRoutingOptions } from "../../../src/config/resolvers/resolve-routing-options";
+import { validateDefaultLocale } from "../../../src/config/validators/validate-default-locale";
+import { validateSupportedLocales } from "../../../src/config/validators/validate-supported-locales";
 
-vi.mock("@/config/resolvers/resolve-cookie-options");
-vi.mock("@/config/resolvers/resolve-fallback-locales");
-vi.mock("@/config/resolvers/resolve-routing-options");
-vi.mock("@/config/validators/validate-default-locale");
-vi.mock("@/config/validators/validate-supported-locales");
+vi.mock("../../../src/config/resolvers/resolve-cookie-options");
+vi.mock("../../../src/config/resolvers/resolve-fallback-locales");
+vi.mock("../../../src/config/resolvers/resolve-routing-options");
+vi.mock("../../../src/config/validators/validate-default-locale");
+vi.mock("../../../src/config/validators/validate-supported-locales");
 
 describe("defineIntorConfig", () => {
   beforeEach(() => {

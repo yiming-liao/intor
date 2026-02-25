@@ -1,26 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../src/config";
 import { describe, it, expect, vi } from "vitest";
-import { determineTarget } from "@/routing/outbound/determine-target";
+import { determineTarget } from "../../../../src/routing/outbound/determine-target";
 
-vi.mock("@/routing/pathname/localize-pathname", () => ({
+vi.mock("../../../../src/routing/pathname/localize-pathname", () => ({
   localizePathname: (pathname: string, _config: any, locale: string) => ({
     pathname: `/${locale}${pathname}`,
   }),
 }));
 
-vi.mock("@/routing/outbound/utils/derive-host-destination", () => ({
-  deriveHostDestination: (pathname: string, _config: any, locale: string) =>
-    `https://${locale}.example.com${pathname}`,
-}));
+vi.mock(
+  "../../../../src/routing/outbound/utils/derive-host-destination",
+  () => ({
+    deriveHostDestination: (pathname: string, _config: any, locale: string) =>
+      `https://${locale}.example.com${pathname}`,
+  }),
+);
 
-vi.mock("@/routing/outbound/utils/derive-query-destination", () => ({
-  deriveQueryDestination: (pathname: string, _config: any, locale: string) =>
-    `${pathname}?lang=${locale}`,
-}));
+vi.mock(
+  "../../../../src/routing/outbound/utils/derive-query-destination",
+  () => ({
+    deriveQueryDestination: (pathname: string, _config: any, locale: string) =>
+      `${pathname}?lang=${locale}`,
+  }),
+);
 
-vi.mock("@/core", async () => {
-  const actual = await vi.importActual<any>("@/core");
+vi.mock("../../../../src/core", async () => {
+  const actual = await vi.importActual<any>("../../../../src/core");
   return {
     ...actual,
     isExternalDestination: (destination: string) =>

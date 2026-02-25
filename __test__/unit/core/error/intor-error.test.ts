@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { IntorError, IntorErrorCode } from "@/core/error";
+import { IntorError, IntorErrorCode } from "../../../../src/core/error";
 
 describe("IntorError", () => {
   it("should create an error with message and name", () => {
@@ -35,7 +35,6 @@ describe("IntorError", () => {
   it("should not include id in the message if id is undefined", () => {
     const error = new IntorError({
       message: "Fallback message only",
-      id: undefined,
     });
     expect(error.message).toBe("Fallback message only");
     expect(error.id).toBeUndefined();
@@ -44,7 +43,6 @@ describe("IntorError", () => {
   it("should not include id in the message if id is undefined", () => {
     const error = new IntorError({
       message: "Fallback message only",
-      id: undefined,
     });
     expect(error.message).toBe("Fallback message only");
     expect(error.id).toBeUndefined();

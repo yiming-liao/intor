@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as loggerModule from "@/core/logger";
-import { fetchRemoteResource } from "@/core/messages/load-remote-messages/fetch-remote-resource";
+import * as loggerModule from "../../../../../src/core/logger";
+import { fetchRemoteResource } from "../../../../../src/core/messages/load-remote-messages/fetch-remote-resource";
 
 describe("fetchRemoteResource", () => {
   const loggerChild = {

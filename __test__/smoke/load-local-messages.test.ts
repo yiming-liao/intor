@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { loadLocalMessages } from "@/server/messages/load-local-messages/load-local-messages";
+import { loadLocalMessages } from "../../src/server/messages/load-local-messages/load-local-messages";
 
 // __test__/mocks/messages
 // ├── en-US

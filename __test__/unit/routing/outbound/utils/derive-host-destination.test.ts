@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../../src/config";
 import { describe, it, expect } from "vitest";
-import { deriveHostDestination } from "@/routing/outbound/utils/derive-host-destination";
+import { deriveHostDestination } from "../../../../../src/routing/outbound/utils/derive-host-destination";
 
 const createConfig = (
   hostMap: Record<string, string>,

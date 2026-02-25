@@ -1,7 +1,10 @@
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../src/config";
 import { describe, it, expect } from "vitest";
-import { DEFAULT_COOKIE_OPTIONS, DEFAULT_ROUTING_OPTIONS } from "@/config";
-import { getTranslator } from "@/server/helpers/get-translator";
+import {
+  DEFAULT_COOKIE_OPTIONS,
+  DEFAULT_ROUTING_OPTIONS,
+} from "../../src/config";
+import { getTranslator } from "../../src/server/helpers/get-translator";
 
 describe("getTranslator (smoke)", () => {
   const config: IntorResolvedConfig = {

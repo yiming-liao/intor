@@ -43,7 +43,6 @@ describe("resolveInbound", () => {
       {
         host: "zh-TW.example.com",
         query: {},
-        cookie: undefined,
         detected: "en",
       },
       { hasRedirected: false }, // hasRedirected

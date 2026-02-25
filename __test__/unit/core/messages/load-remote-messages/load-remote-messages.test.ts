@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MessageObject } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as loggerModule from "@/core/logger";
-import * as fetchModule from "@/core/messages/load-remote-messages/fetch-remote-resource";
-import { loadRemoteMessages } from "@/core/messages/load-remote-messages/load-remote-messages";
+import * as loggerModule from "../../../../../src/core/logger";
+import * as fetchModule from "../../../../../src/core/messages/load-remote-messages/fetch-remote-resource";
+import { loadRemoteMessages } from "../../../../../src/core/messages/load-remote-messages/load-remote-messages";
 
 describe("loadRemoteMessages", () => {
   const loggerChild = {
@@ -99,7 +99,7 @@ describe("loadRemoteMessages", () => {
     } as MessageObject);
     const result = await loadRemoteMessages({
       ...baseParams,
-      namespaces: undefined,
+      namespaces: [],
     });
     expect(result).toEqual({
       "en-US": {
@@ -122,7 +122,7 @@ describe("loadRemoteMessages", () => {
       .mockResolvedValueOnce({ app: "Fallback OK" });
     const result = await loadRemoteMessages({
       ...baseParams,
-      namespaces: undefined,
+      namespaces: [],
     });
     expect(result).toEqual({
       "zh-TW": {

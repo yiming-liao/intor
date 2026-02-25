@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../src/config";
 import { describe, it, expect } from "vitest";
-import { materializePathname } from "@/routing/pathname/materialize-pathname";
+import { materializePathname } from "../../../../src/routing/pathname/materialize-pathname";
 
 const createConfig = (
   overrides?: Partial<IntorResolvedConfig>,

@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "@/config";
-import type { PathContext } from "@/routing/inbound/resolve-path/types";
+import type { IntorResolvedConfig } from "../../../../../../src/config";
+import type { PathContext } from "../../../../../../src/routing/inbound/resolve-path/types";
 import { describe, it, expect } from "vitest";
-import { exceptDefault } from "@/routing/inbound/resolve-path/strategies";
+import { exceptDefault } from "../../../../../../src/routing/inbound/resolve-path/strategies";
 
 function createConfig(
   defaultLocale = "en-US",

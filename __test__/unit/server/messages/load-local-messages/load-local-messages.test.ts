@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import * as loggerModule from "@/core/logger/get-logger";
-import { getMessagesPool } from "@/server/messages/load-local-messages/cache/messages-pool";
-import { loadLocalMessages } from "@/server/messages/load-local-messages/load-local-messages";
-import * as readModule from "@/server/messages/load-local-messages/read-locale-messages";
+import * as loggerModule from "../../../../../src/core/logger/get-logger";
+import { getMessagesPool } from "../../../../../src/server/messages/load-local-messages/cache/messages-pool";
+import { loadLocalMessages } from "../../../../../src/server/messages/load-local-messages/load-local-messages";
+import * as readModule from "../../../../../src/server/messages/load-local-messages/read-locale-messages";
 
 const loggerChildMock = {
   debug: vi.fn(),
@@ -18,8 +18,12 @@ const loggerMock = {
 
 vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
 
-vi.mock("@/server/messages/load-local-messages/read-locale-messages");
-vi.mock("@/server/messages/load-local-messages/cache/messages-pool");
+vi.mock(
+  "../../../../../src/server/messages/load-local-messages/read-locale-messages",
+);
+vi.mock(
+  "../../../../../src/server/messages/load-local-messages/cache/messages-pool",
+);
 
 describe("loadLocalMessages", () => {
   const mockReadLocaleMessages = vi.mocked(readModule.readLocaleMessages);
@@ -31,15 +35,15 @@ describe("loadLocalMessages", () => {
 
   vi.mocked(getMessagesPool).mockReturnValue(mockPool as any);
 
-  const ORIGINAL_ENV = process.env.NODE_ENV;
+  const ORIGINAL_ENV = process.env["NODE_ENV"];
 
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.NODE_ENV = "test";
+    process.env["NODE_ENV"] = "test";
   });
 
   afterEach(() => {
-    process.env.NODE_ENV = ORIGINAL_ENV;
+    process.env["NODE_ENV"] = ORIGINAL_ENV;
   });
 
   it("returns cached messages when present in process-level cache", async () => {
@@ -124,7 +128,7 @@ describe("loadLocalMessages", () => {
   });
 
   it("writes to cache only in production when allowCacheWrite is true", async () => {
-    process.env.NODE_ENV = "production";
+    process.env["NODE_ENV"] = "production";
     const messages: LocaleMessages = {
       "en-US": { hello: "Hello" },
     };

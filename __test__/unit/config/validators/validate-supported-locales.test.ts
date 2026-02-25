@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
-import { validateSupportedLocales } from "@/config/validators/validate-supported-locales";
-import { IntorError, IntorErrorCode } from "@/core";
+import { validateSupportedLocales } from "../../../../src/config/validators/validate-supported-locales";
+import { IntorError, IntorErrorCode } from "../../../../src/core";
 
 describe("validateSupportedLocales", () => {
   const ID = "test";

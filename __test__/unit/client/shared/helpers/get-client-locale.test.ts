@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "@/config";
+import type { IntorResolvedConfig } from "../../../../../src/config";
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { getClientLocale } from "@/client/shared/helpers/get-client-locale";
+import { getClientLocale } from "../../../../../src/client/shared/helpers/get-client-locale";
 
 const mockConfig = {
   defaultLocale: "en-US",

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeQuery } from "@/core/utils/normalizers/normalize-query";
+import { normalizeQuery } from "../../../../../src/core/utils/normalizers/normalize-query";
 
 describe("normalizeQuery", () => {
   it("keeps string values", () => {

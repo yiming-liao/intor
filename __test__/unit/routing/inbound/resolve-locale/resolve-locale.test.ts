@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "@/config";
-import type { LocaleContext } from "@/routing/inbound/resolve-locale/types";
+import type { IntorResolvedConfig } from "../../../../../src/config";
+import type { LocaleContext } from "../../../../../src/routing/inbound/resolve-locale/types";
 import { describe, it, expect } from "vitest";
-import { resolveLocale } from "@/routing/inbound/resolve-locale/resolve-locale";
+import { resolveLocale } from "../../../../../src/routing/inbound/resolve-locale/resolve-locale";
 
 const baseConfig = {
   supportedLocales: ["en-US", "zh-TW"] as const,
@@ -29,7 +29,6 @@ describe("resolveLocale", () => {
 
   it("skips sources that cannot be normalized", () => {
     const context: LocaleContext = {
-      path: { locale: undefined },
       cookie: { locale: "fr" }, // unsupported
       detected: { locale: "zh-TW" },
     };
@@ -97,8 +96,6 @@ describe("resolveLocale", () => {
       },
     } as IntorResolvedConfig;
     const context: LocaleContext = {
-      path: { locale: undefined },
-      cookie: { locale: undefined },
       detected: { locale: "zh-TW" },
     };
     const result = resolveLocale(config, context);

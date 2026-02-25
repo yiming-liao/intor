@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { CookieResolvedOptions } from "@/config";
+import type { CookieResolvedOptions } from "../../../../../src/config";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { buildCookieString } from "@/client/shared/utils/build-cookie-string";
+import { buildCookieString } from "../../../../../src/client/shared/utils/build-cookie-string";
 
 const baseCookie: CookieResolvedOptions = {
   persist: true,
   name: "intor.locale",
-  domain: undefined,
   path: "/",
   maxAge: 10,
   httpOnly: false,
@@ -61,13 +60,7 @@ describe("buildCookieString", () => {
   });
 
   it("omits domain when not specified", () => {
-    const result = buildCookieString(
-      {
-        ...baseCookie,
-        domain: undefined,
-      },
-      "en-US",
-    );
+    const result = buildCookieString({ ...baseCookie }, "en-US");
     expect(result).not.toContain("domain=");
   });
 

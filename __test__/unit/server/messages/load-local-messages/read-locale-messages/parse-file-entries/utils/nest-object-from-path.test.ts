@@ -1,6 +1,6 @@
 import type { MessageObject } from "intor-translator";
 import { describe, it, expect } from "vitest";
-import { nestObjectFromPath } from "@/core/messages/utils/nest-object-from-path";
+import { nestObjectFromPath } from "../../../../../../../../src/core/messages/utils/nest-object-from-path";
 
 describe("nestObjectFromPath", () => {
   it("should return value directly if path is empty", () => {
