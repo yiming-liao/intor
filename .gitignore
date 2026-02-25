@@ -4,6 +4,7 @@ node_modules/
 # build output
 dist/
 coverage/
+.rollup.cache
 
 # misc
 .DS_Store
@@ -18,6 +19,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# generated types
-intor-generated-types.d.ts
 
