@@ -1,6 +1,6 @@
 import type { ReactTagRenderers } from "../render";
 import type { TranslatorInstance } from "@/core";
-import type { JSX } from "react/jsx-runtime";
+import type * as React from "react";
 import {
   type Locale,
   type LocaleMessages,
@@ -20,13 +20,13 @@ export type TranslatorInstanceReact<
   RichSchema = Rich,
   PK extends string | undefined = undefined,
 > = Omit<TranslatorInstance<M, ReplacementSchema, RichSchema, PK>, "tRich"> & {
-  /** Indicates whether translations are currently loading. */
+  /** Whether translations are loading. */
   isLoading: boolean;
 
   /** Update the active locale. */
   setLocale: (locale: Locale<M>) => void;
 
-  /** Translate a key into React nodes using semantic tags */
+  /** Resolve a localized value and render it as React nodes. */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
@@ -39,5 +39,5 @@ export type TranslatorInstanceReact<
     key?: K | (string & {}),
     tagRenderers?: ReactTagRenderers<RI> | ReactTagRenderers,
     replacements?: RE | Replacement,
-  ) => JSX.Element[];
+  ) => React.ReactNode[];
 };

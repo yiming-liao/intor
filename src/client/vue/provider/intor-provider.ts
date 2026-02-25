@@ -63,7 +63,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // Translator
     // ---------------------------------------------------------------------------
     const translator = computed(() => {
-      return new Translator<unknown>({
+      return new Translator<LocaleMessages>({
         messages: effectiveMessages.value,
         locale: locale.value,
         isLoading: effectiveIsLoading.value,

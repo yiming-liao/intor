@@ -26,7 +26,7 @@ export interface CreateTranslatorParams {
  */
 export function createTranslator(
   params: CreateTranslatorParams,
-): Translator<unknown> {
+): Translator<LocaleMessages> {
   const { config, locale, messages, handlers, plugins } = params;
 
   // Merge static config messages with runtime-loaded messages
@@ -35,7 +35,7 @@ export function createTranslator(
     locale,
   });
 
-  const translator = new Translator<unknown>({
+  const translator = new Translator<LocaleMessages>({
     locale,
     messages: finalMessages,
     fallbackLocales: config.fallbackLocales,

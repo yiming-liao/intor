@@ -58,7 +58,7 @@ export function createIntorStore({
   const translator = derived(
     [effectiveMessages, locale, effectiveIsLoading],
     ([$messages, $locale, $isLoading]) =>
-      new Translator<unknown>({
+      new Translator({
         messages: $messages,
         locale: $locale,
         isLoading: $isLoading,

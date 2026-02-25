@@ -38,7 +38,7 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   children,
   onClick,
   ...props
-}: LinkProps<CK>): React.JSX.Element => {
+}: LinkProps<CK>) => {
   const { config, locale: currentLocale, setLocale } = useIntorContext();
   const currentPathname = usePathname();
 

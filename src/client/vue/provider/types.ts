@@ -25,5 +25,5 @@ export type IntorContextValue = {
   config: IntorResolvedConfig;
   locale: Ref<string>;
   setLocale: (locale: Locale) => void;
-  translator: ComputedRef<Translator<unknown>>;
+  translator: ComputedRef<Translator<LocaleMessages>>;
 };

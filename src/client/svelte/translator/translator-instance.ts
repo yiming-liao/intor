@@ -13,17 +13,17 @@ export type TranslatorInstanceSvelte<
   RichSchema = Rich,
   PK extends string | undefined = undefined,
 > = {
-  /** `messages`: The message object containing all translations. */
+  /** Localized message map. */
   messages: Readable<
     TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["messages"]
   >;
 
-  /** Current locale in use. */
+  /** Active locale. */
   locale: Writable<
     TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["locale"]
   >;
 
-  /** Indicates whether translations are currently loading. */
+  /** Whether translations are loading. */
   isLoading: Readable<boolean>;
 
   /** Update the active locale. */
@@ -34,10 +34,10 @@ export type TranslatorInstanceSvelte<
     TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["hasKey"]
   >;
 
-  /** Translate a given key into its string representation. */
+  /** Resolve a localized value for the given key. */
   t: Readable<TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["t"]>;
 
-  /** Translate a key into an HTML string using semantic rich tags. */
+  /** Resolve a localized value and apply rich tag renderers. */
   tRich: Readable<
     TranslatorInstance<M, ReplacementSchema, RichSchema, PK>["tRich"]
   >;

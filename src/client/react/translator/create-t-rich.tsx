@@ -5,7 +5,6 @@ import {
   type Replacement,
   type TranslatorMethods,
 } from "intor-translator";
-import { Fragment } from "react/jsx-runtime";
 import { createReactRenderer } from "../render";
 
 /**
@@ -28,7 +27,6 @@ export const createTRich = (t: TranslatorMethods<LocaleMessages>["t"]) => {
   ) => {
     const message = t(key, replacements);
     const reactRenderer = createReactRenderer(tagRenderers);
-    const nodes = renderRichMessage(message, reactRenderer);
-    return nodes.map((node, index) => <Fragment key={index}>{node}</Fragment>);
+    return renderRichMessage(message, reactRenderer);
   };
 };

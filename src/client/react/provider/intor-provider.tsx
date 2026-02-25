@@ -59,7 +59,7 @@ export function IntorProvider({
   // Translator
   // -----------------------------------------------------------------------------
   const translator = React.useMemo(() => {
-    return new Translator<unknown>({
+    return new Translator<LocaleMessages>({
       messages: effectiveMessages,
       locale,
       isLoading: effectiveIsLoading,

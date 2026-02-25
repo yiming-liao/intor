@@ -23,19 +23,19 @@ export type TranslatorInstanceVue<
   TranslatorInstance<M, ReplacementSchema, RichSchema, PK>,
   "tRich" | "messages" | "locale"
 > & {
-  /** `messages`: The message object containing all translations. */
+  /** Localized message map. */
   messages: ComputedRef<M>;
 
-  /** Current locale in use. */
+  /** Active locale. */
   locale: ComputedRef<Locale<M>>;
 
-  /** Indicates whether translations are currently loading. */
+  /** Whether translations are loading. */
   isLoading: ComputedRef<boolean>;
 
   /** Update the active locale. */
   setLocale: (locale: Locale<M>) => void;
 
-  /** Translate a key into VNodes using semantic tags */
+  /** Resolve a localized value and render it as Vue nodes. */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string

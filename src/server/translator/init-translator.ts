@@ -24,7 +24,7 @@ export async function initTranslator(
   config: IntorResolvedConfig,
   locale: Locale,
   options: InitTranslatorOptions,
-): Promise<Translator<unknown>> {
+): Promise<Translator<LocaleMessages>> {
   const {
     loader,
     readers,

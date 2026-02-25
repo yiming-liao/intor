@@ -38,7 +38,5 @@ expectType<Replacement | undefined>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { t, tRich }: TranslatorInstanceReact<M, RE, RI> = {} as any;
   expectType<'Hello <a href="/">{name}</a>'>(t("hello", { name: "" }));
-  expectType<React.JSX.Element[]>(
-    tRich("hello", { a: (c) => c }, { name: "" }),
-  );
+  expectType<React.ReactNode[]>(tRich("hello", { a: (c) => c }, { name: "" }));
 }

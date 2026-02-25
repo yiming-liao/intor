@@ -27,10 +27,10 @@ export type TranslatorInstance<
   RichSchema = Rich,
   PK extends string | undefined = undefined,
 > = {
-  /** `messages`: The message object containing all translations. */
+  /** Localized message map. */
   messages: M;
 
-  /** Current locale in use. */
+  /** Active locale. */
   locale: Locale<M>;
 
   /** Check if a given key exists in the messages. */
@@ -41,7 +41,7 @@ export type TranslatorInstance<
     targetLocale?: Locale<M>,
   ) => boolean;
 
-  /** Translate a given key into its string representation. */
+  /** Resolve a localized value for the given key. */
   t: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     R extends Replacement = LocalizedReplacement<ReplacementSchema, K>,
@@ -53,7 +53,7 @@ export type TranslatorInstance<
     string
   >;
 
-  /** Translate a key into an HTML string using semantic rich tags. */
+  /** Resolve a localized value and apply rich tag renderers. */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
