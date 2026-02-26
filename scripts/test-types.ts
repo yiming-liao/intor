@@ -4,6 +4,6 @@ import { run } from "./run";
 run("tsd __test__/types/config/fallback");
 run("tsd __test__/types/config/generated");
 
-// translator-instance
-run("tsd __test__/types/translator-instance/fallback");
-run("tsd __test__/types/translator-instance/generated");
+// translator
+run("tsd __test__/types/translator/fallback");
+run("tsd __test__/types/translator/generated");

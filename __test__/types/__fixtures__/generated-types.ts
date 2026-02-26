@@ -12,7 +12,7 @@ export type GeneratedTypesFixture = {
       "{locale}": { hello: { name: string } };
     };
     Rich: {
-      "{locale}": { hello: { a: { href: string } } };
+      "{locale}": { hello: { a: Record<string, never> } };
     };
   };
   config1: {
@@ -27,7 +27,7 @@ export type GeneratedTypesFixture = {
       "{locale}": { hello: { name: string } };
     };
     Rich: {
-      "{locale}": { hello: { a: { href: string } } };
+      "{locale}": { hello: { a: Record<string, never> } };
     };
   };
   config2: {
@@ -43,7 +43,7 @@ export type GeneratedTypesFixture = {
       "{locale}": { hello: { name: string } };
     };
     Rich: {
-      "{locale}": { hello: { a: { href: string } } };
+      "{locale}": { hello: { a: Record<string, never> } };
     };
   };
 };
