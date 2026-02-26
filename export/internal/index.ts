@@ -13,8 +13,6 @@ export {
   INTOR_PREFIX,
   INTOR_MESSAGES_KIND_KEY,
   INTOR_MESSAGES_KIND,
-  getMessagesKind,
-  type IntorMessagesKind,
 } from "../../src/core";
 
 export { loadMessages } from "../../src/server";
