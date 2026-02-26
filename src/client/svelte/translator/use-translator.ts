@@ -8,7 +8,7 @@ import type {
 import type { LocalizedPreKey } from "intor-translator";
 import { derived } from "svelte/store";
 import { createTRich } from "../../../core";
-import { useIntorContext } from "../provider";
+import { getIntorContext } from "../provider";
 
 /**
  * Svelte utility for accessing the active, scope-aware translator instance.
@@ -23,7 +23,7 @@ export function useTranslator<
 >(
   preKey?: PK,
 ): TranslatorInstanceSvelte<GenMessages<CK>, ReplacementShape, RichShape, PK> {
-  const { translator, locale, setLocale } = useIntorContext();
+  const { translator, locale, setLocale } = getIntorContext();
   const scoped = derived(translator, ($t) => $t.scoped(preKey));
 
   return {

@@ -2,12 +2,16 @@ import type { IntorValue } from "./types";
 import { Translator, type Locale, type LocaleMessages } from "intor-translator";
 import { setContext } from "svelte";
 import { writable, derived, get, readable } from "svelte/store";
-import { attachLocaleEffects } from "./effects/locale-effects";
-import { attachMessagesEffects } from "./effects/messages-effects";
+import {
+  resolveEffectiveIsLoading,
+  resolveEffectiveMessages,
+} from "../../shared/provider/effective-state";
+import { attachLocaleEffects } from "./effects/attach-locale-effects";
+import { attachMessagesEffects } from "./effects/attach-messages-effects";
 
-export const INTOR_CONTEXT_KEY = Symbol("intor:svelte");
+export const INTOR_CONTEXT_KEY = Symbol("IntorContext");
 
-export function createIntorStore({
+export function buildIntorStores({
   config,
   locale: initialLocale,
   messages,
@@ -15,7 +19,7 @@ export function createIntorStore({
   plugins,
   onLocaleChange,
   isLoading: externalIsLoading,
-}: IntorValue): void {
+}: IntorValue) {
   // ---------------------------------------------------------------------------
   // Internal state
   // ---------------------------------------------------------------------------
@@ -41,17 +45,15 @@ export function createIntorStore({
     typeof externalIsLoading === "object" && "subscribe" in externalIsLoading
       ? externalIsLoading
       : readable(!!externalIsLoading);
-  // external > internal
   const effectiveIsLoading = derived(
     [externalIsLoadingStore, internalIsLoading],
-    ([$external, $internal]) => $external || $internal,
+    ([$external, $internal]) => resolveEffectiveIsLoading($external, $internal),
   );
-  // runtime (client refetch) > initial > config (static)
-  const initialMessagesStore = readable(messages || config.messages || {});
-  const effectiveMessages = derived(
-    [runtimeMessages, initialMessagesStore],
-    ([$runtime, $initial]) => $runtime || $initial,
+
+  const effectiveMessages = derived(runtimeMessages, ($runtime) =>
+    resolveEffectiveMessages($runtime, messages, config.messages),
   );
+
   // ---------------------------------------------------------------------------
   // Translator
   // ---------------------------------------------------------------------------
@@ -72,11 +74,26 @@ export function createIntorStore({
       }),
   );
 
-  // ---------------------------------------------------------------------------
-  // Side effects
-  // ---------------------------------------------------------------------------
-  attachLocaleEffects(locale, config);
-  attachMessagesEffects({ config, locale, runtimeMessages, internalIsLoading });
+  return {
+    config,
+    locale,
+    setLocale,
+    translator,
+    runtimeMessages,
+    internalIsLoading,
+  };
+}
 
-  setContext(INTOR_CONTEXT_KEY, { config, locale, setLocale, translator });
+export function createIntorStore(value: IntorValue): void {
+  const stores = buildIntorStores(value);
+
+  attachLocaleEffects(stores.locale, value.config);
+  attachMessagesEffects({
+    config: value.config,
+    locale: stores.locale,
+    runtimeMessages: stores.runtimeMessages,
+    internalIsLoading: stores.internalIsLoading,
+  });
+
+  setContext(INTOR_CONTEXT_KEY, stores);
 }

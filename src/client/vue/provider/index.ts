@@ -1,3 +1,3 @@
 export { IntorProvider } from "./intor-provider";
 export type { IntorValue } from "./types";
-export { injectIntor } from "./inject";
+export { injectIntorContext } from "./inject-intor-context";

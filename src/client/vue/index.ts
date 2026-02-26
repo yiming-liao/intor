@@ -1,5 +1,5 @@
 // contexts
-export { IntorProvider, injectIntor } from "./provider";
+export { IntorProvider, injectIntorContext } from "./provider";
 
 // translator
 export { useTranslator, Trans } from "./translator";

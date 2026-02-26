@@ -31,12 +31,7 @@ export function useMessagesEffects(
   });
 
   // Refetch messages when locale changes (except initial render).
-  let isInitial = true;
   watch(locale, (newLocale) => {
-    if (isInitial) {
-      isInitial = false;
-      return;
-    }
     void refetchMessages(newLocale);
   });
 }

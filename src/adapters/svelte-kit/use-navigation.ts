@@ -2,7 +2,7 @@
 import type { GenConfigKeys, GenLocale } from "../../core";
 import { get } from "svelte/store";
 import { executeNavigation } from "../../client";
-import { useIntorContext } from "../../client/svelte"; // NOTE: Internal imports are rewritten to `intor/svelte` via Rollup alias at build time.
+import { getIntorContext } from "../../client/svelte"; // NOTE: Internal imports are rewritten to `intor/svelte` via Rollup alias at build time.
 import { resolveOutbound } from "../../routing";
 import { goto as svelteGoto } from "$app/navigation";
 import { page } from "$app/state";
@@ -16,7 +16,7 @@ import { page } from "$app/state";
  * @platform SvelteKit
  */
 export function useNavigation<CK extends GenConfigKeys = "__default__">() {
-  const { config, locale: currentLocale, setLocale } = useIntorContext();
+  const { config, locale: currentLocale, setLocale } = getIntorContext();
 
   async function goto(
     url: string,

@@ -3,6 +3,10 @@
 import type { IntorContextValue, IntorProviderProps } from "./types";
 import { Translator, type Locale, type LocaleMessages } from "intor-translator";
 import * as React from "react";
+import {
+  resolveEffectiveIsLoading,
+  resolveEffectiveMessages,
+} from "../../shared/provider/effective-state";
 import { useLocaleEffects } from "./effects/use-locale-effects";
 import { useMessagesEffects } from "./effects/use-messages-effects";
 
@@ -47,12 +51,15 @@ export function IntorProvider({
   // -----------------------------------------------------------------------------
   // Effective state
   // -----------------------------------------------------------------------------
-  // external > internal > localeTransitioning
-  const effectiveIsLoading = !!externalIsLoading || internalIsLoading;
-  // runtime (client refetch) > initial > config (static)
-  const effectiveMessages = React.useMemo(
-    () => runtimeMessages || messages || config.messages || {},
-    [config.messages, messages, runtimeMessages],
+  const effectiveIsLoading = resolveEffectiveIsLoading(
+    !!externalIsLoading,
+    internalIsLoading,
+  );
+
+  const effectiveMessages = resolveEffectiveMessages(
+    runtimeMessages,
+    messages,
+    config.messages,
   );
 
   // -----------------------------------------------------------------------------

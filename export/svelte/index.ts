@@ -4,7 +4,7 @@ export {
   // provider
   createIntorStore, // @internal
   type IntorProviderProps,
-  useIntorContext, // @internal
+  getIntorContext, // @internal
 
   // translator
   useTranslator,

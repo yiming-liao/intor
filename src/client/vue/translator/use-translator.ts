@@ -7,7 +7,7 @@ import type {
 } from "../../../core";
 import type { LocalizedPreKey } from "intor-translator";
 import { computed } from "vue";
-import { injectIntor } from "..//provider";
+import { injectIntorContext } from "..//provider";
 import { createTRich } from "./create-t-rich";
 
 /**
@@ -23,7 +23,7 @@ export function useTranslator<
 >(
   preKey?: PK,
 ): TranslatorInstanceVue<GenMessages<CK>, ReplacementShape, RichShape, PK> {
-  const intor = injectIntor();
+  const intor = injectIntorContext();
   const translator = intor.value.translator;
   const scoped = computed(() => translator.value.scoped(preKey));
 

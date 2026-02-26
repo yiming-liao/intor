@@ -39,5 +39,5 @@ export function Trans<CK extends GenConfigKeys = "__default__">(
 ) {
   const { i18nKey, components, values } = props;
   const { tRich } = useTranslator<CK>();
-  return <>{tRich(i18nKey, components, values)}</>;
+  return tRich(i18nKey, components, values);
 }

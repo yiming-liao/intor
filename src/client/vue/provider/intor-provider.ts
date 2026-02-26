@@ -15,6 +15,10 @@ import {
   provide,
   watch,
 } from "vue";
+import {
+  resolveEffectiveIsLoading,
+  resolveEffectiveMessages,
+} from "../../shared/provider/effective-state";
 import { useLocaleEffects } from "./effects/use-locale-effects";
 import { useMessagesEffects } from "./effects/use-messages-effects";
 
@@ -46,17 +50,19 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // ---------------------------------------------------------------------------
     // Effective state
     // ---------------------------------------------------------------------------
-    // external > internal
-    const effectiveIsLoading = computed(
-      () => !!props.value.isLoading?.value || internalIsLoading.value,
+    const effectiveIsLoading = computed(() =>
+      resolveEffectiveIsLoading(
+        !!props.value.isLoading?.value,
+        internalIsLoading.value,
+      ),
     );
-    // runtime (client refetch) > initial > config (static)
-    const effectiveMessages = computed(
-      () =>
-        runtimeMessages.value ||
-        props.value.messages?.value ||
-        props.value.config.messages ||
-        {},
+
+    const effectiveMessages = computed(() =>
+      resolveEffectiveMessages(
+        runtimeMessages.value,
+        props.value.messages?.value,
+        props.value.config.messages,
+      ),
     );
 
     // ---------------------------------------------------------------------------
