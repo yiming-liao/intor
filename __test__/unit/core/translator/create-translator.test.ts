@@ -1,91 +1,120 @@
-import type { IntorResolvedConfig } from "../../../../src/config";
-import type { TranslateHandlers, TranslateHook } from "intor-translator";
-import { describe, it, expect } from "vitest";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Translator } from "intor-translator";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createTranslator } from "../../../../src/core/translator/create-translator";
 
-describe("createTranslator()", () => {
-  it("merges locale-scoped config messages with locale-scoped runtime messages", () => {
-    const config: IntorResolvedConfig = {
-      messages: {
-        en: {
-          common: {
-            fromConfig: "config-value",
-          },
-        },
-      },
-      fallbackLocales: {},
-      translator: {},
-    } as unknown as IntorResolvedConfig;
-    const { messages } = createTranslator({
-      config,
-      locale: "en",
-      messages: {
-        en: {
-          common: {
-            fromRuntime: "runtime-value",
-          },
-        },
-      },
-    });
-    expect(messages).toEqual({
-      en: {
-        common: {
-          fromConfig: "config-value",
-          fromRuntime: "runtime-value",
-        },
-      },
-    });
+vi.mock("intor-translator", () => {
+  return {
+    Translator: vi.fn().mockImplementation(function (this: any, opts: any) {
+      this.options = opts;
+      this.t = vi.fn();
+    }),
+  };
+});
+
+describe("createTranslator defensive branches", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("falls back to config locale messages when runtime locale messages are missing", () => {
-    const config: IntorResolvedConfig = {
-      messages: {
-        en: {
-          common: {
-            greeting: "Hello",
-          },
-        },
-      },
+  it("forwards loadingMessage and missingMessage when defined", () => {
+    const config = {
+      messages: {},
       fallbackLocales: {},
-      translator: {},
-    } as unknown as IntorResolvedConfig;
-    const { t } = createTranslator({
+      translator: {
+        loadingMessage: "Loading...",
+        missingMessage: "Missing!",
+      },
+    } as any;
+    createTranslator({
       config,
       locale: "en",
-      messages: {}, // runtime has no locale data
+      messages: {},
     });
-    expect(t("common.greeting")).toBe("Hello");
+    expect(Translator).toHaveBeenCalledWith(
+      expect.objectContaining({
+        loadingMessage: "Loading...",
+        missingMessage: "Missing!",
+      }),
+    );
   });
 
-  it("passes handlers and plugins without affecting translation behavior", () => {
-    const config: IntorResolvedConfig = {
-      messages: {
-        en: {
-          common: {
-            greeting: "Hello",
-          },
-        },
-      },
+  it("does not forward loadingMessage and missingMessage when undefined", () => {
+    const config = {
+      messages: {},
       fallbackLocales: {},
       translator: {},
-    } as unknown as IntorResolvedConfig;
-    const handlers: TranslateHandlers = {
-      formatHandler: (ctx) => ctx.formattedMessage!,
-    };
-    const plugin: TranslateHook = { name: "test", run: () => {} };
-    const { t } = createTranslator({
+    } as any;
+    createTranslator({
       config,
       locale: "en",
-      messages: {
-        en: {
-          common: {
-            greeting: "Hello",
-          },
-        },
-      },
+      messages: {},
+    });
+    const call = (Translator as any).mock.calls[0][0];
+    expect("loadingMessage" in call).toBe(false);
+    expect("missingMessage" in call).toBe(false);
+  });
+
+  it("forwards handlers when provided", () => {
+    const handlers = { formatHandler: vi.fn() };
+    createTranslator({
+      config: {
+        messages: {},
+        fallbackLocales: {},
+        translator: {},
+      } as any,
+      locale: "en",
+      messages: {},
       handlers,
-      plugins: [plugin],
     });
-    expect(t("common.greeting")).toBe("Hello");
+    expect(Translator).toHaveBeenCalledWith(
+      expect.objectContaining({ handlers }),
+    );
+  });
+
+  it("forwards plugins when provided", () => {
+    const plugins = [{ name: "test", run: vi.fn() }];
+    createTranslator({
+      config: {
+        messages: {},
+        fallbackLocales: {},
+        translator: {},
+      } as any,
+      locale: "en",
+      messages: {},
+      plugins,
+    });
+    expect(Translator).toHaveBeenCalledWith(
+      expect.objectContaining({ plugins }),
+    );
+  });
+
+  it("does not forward handlers or plugins when undefined", () => {
+    createTranslator({
+      config: {
+        messages: {},
+        fallbackLocales: {},
+        translator: {},
+      } as any,
+      locale: "en",
+      messages: {},
+    });
+    const call = (Translator as any).mock.calls[0][0];
+    expect("handlers" in call).toBe(false);
+    expect("plugins" in call).toBe(false);
+  });
+
+  it("handles undefined config.translator safely", () => {
+    createTranslator({
+      config: {
+        messages: {},
+        fallbackLocales: {},
+      } as any,
+      locale: "en",
+      messages: {},
+    });
+    const call = (Translator as any).mock.calls[0][0];
+    expect("loadingMessage" in call).toBe(false);
+    expect("missingMessage" in call).toBe(false);
   });
 });

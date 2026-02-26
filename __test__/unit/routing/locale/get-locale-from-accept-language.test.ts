@@ -50,4 +50,9 @@ describe("getLocaleFromAcceptLanguage", () => {
     ]);
     expect(result).toBe("en-US");
   });
+
+  it("handles malformed q segment without '=' value", () => {
+    const result = getLocaleFromAcceptLanguage("en;q, zh;q=0.5", ["en", "zh"]);
+    expect(result).toBe("zh");
+  });
 });

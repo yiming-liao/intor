@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   RoutingResolvedOptions,
   CookieResolvedOptions,
@@ -114,5 +115,43 @@ describe("defineIntorConfig", () => {
     });
 
     expect(result.messages).toEqual(messages);
+  });
+
+  it("should preserve loader if provided", () => {
+    const loader = { type: "local" } as any;
+    const result = defineIntorConfig({
+      loader,
+      supportedLocales: ["en"],
+      defaultLocale: "en",
+    });
+    expect(result.loader).toBe(loader);
+  });
+
+  it("should not include translator if not provided", () => {
+    const result = defineIntorConfig({
+      supportedLocales: ["en"],
+      defaultLocale: "en",
+    });
+    expect(result.translator).toBeUndefined();
+  });
+
+  it("should preserve client if provided", () => {
+    const client = { some: "client" } as any;
+    const result = defineIntorConfig({
+      client,
+      supportedLocales: ["en"],
+      defaultLocale: "en",
+    });
+    expect(result.client).toBe(client);
+  });
+
+  it("should preserve server if provided", () => {
+    const server = { some: "server" } as any;
+    const result = defineIntorConfig({
+      server,
+      supportedLocales: ["en"],
+      defaultLocale: "en",
+    });
+    expect(result.server).toBe(server);
   });
 });

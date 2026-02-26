@@ -2,86 +2,111 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as loggerModule from "../../../../../src/core/logger";
 import { fetchRemoteResource } from "../../../../../src/core/messages/load-remote-messages/fetch-remote-resource";
+import * as utilsModule from "../../../../../src/core/messages/utils/is-valid-messages";
 
 describe("fetchRemoteResource", () => {
-  const loggerChild = {
-    debug: vi.fn(),
-    warn: vi.fn(),
-  };
-
-  const logger = {
-    child: vi.fn(() => loggerChild),
-  };
-
-  let mockFetch: any;
-
-  const baseParams = () => ({
-    url: "https://cdn.example.com/en/common.json",
-    headers: { Authorization: "Bearer token" },
-    loggerOptions: { id: "test" },
-    fetch: mockFetch,
-  });
+  let warn: ReturnType<typeof vi.fn>;
+  let debug: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.spyOn(loggerModule, "getLogger").mockReturnValue(logger as any);
-    mockFetch = vi.fn();
-  });
-
-  it("returns parsed messages when fetch succeeds", async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({ title: "Hello" }),
+    warn = vi.fn();
+    debug = vi.fn();
+    vi.spyOn(loggerModule, "getLogger").mockReturnValue({
+      child: () => ({ warn, debug }),
     } as any);
-    const result = await fetchRemoteResource(baseParams());
-    expect(result).toEqual({ title: "Hello" });
   });
 
-  it("returns undefined when response is not ok", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
+  it("returns data when fetch and validation succeed", async () => {
+    vi.spyOn(utilsModule, "isValidMessages").mockReturnValue(true);
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ hello: "world" }),
+    });
+    const result = await fetchRemoteResource({
+      fetch: fetchMock,
+      url: "http://test",
+      loggerOptions: { id: "TEST_ID" },
+    });
+    expect(result).toEqual({ hello: "world" });
+  });
+
+  it("logs warning and returns undefined on HTTP error", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: false,
       status: 404,
       statusText: "Not Found",
-    } as any);
-    const result = await fetchRemoteResource(baseParams());
-    expect(result).toBeUndefined();
-    expect(loggerChild.warn).toHaveBeenCalled();
-  });
-
-  it("returns undefined when response payload is invalid", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => "not-an-object",
-    } as any);
-    const result = await fetchRemoteResource(baseParams());
-    expect(result).toBeUndefined();
-    expect(loggerChild.warn).toHaveBeenCalled();
-  });
-
-  it("returns early when fetch is aborted", async () => {
-    const controller = new AbortController();
-    const mockFetch = vi
-      .fn()
-      .mockRejectedValue(
-        Object.assign(new Error("Aborted"), { name: "AbortError" }),
-      );
-    controller.abort();
+    });
     const result = await fetchRemoteResource({
-      ...baseParams(),
-      fetch: mockFetch,
-      signal: controller.signal,
+      fetch: fetchMock,
+      url: "http://test",
+      loggerOptions: { id: "TEST_ID" },
     });
     expect(result).toBeUndefined();
-    expect(loggerChild.debug).toHaveBeenCalledWith(
+    expect(warn).toHaveBeenCalled();
+  });
+
+  it("logs warning when message structure is invalid", async () => {
+    vi.spyOn(utilsModule, "isValidMessages").mockReturnValue(false);
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ bad: "structure" }),
+    });
+    const result = await fetchRemoteResource({
+      fetch: fetchMock,
+      url: "http://test",
+      loggerOptions: { id: "TEST_ID" },
+    });
+    expect(result).toBeUndefined();
+    expect(warn).toHaveBeenCalled();
+  });
+
+  it("logs debug and returns undefined when aborted", async () => {
+    const abortError = new Error("aborted");
+    abortError.name = "AbortError";
+    const fetchMock = vi.fn().mockRejectedValue(abortError);
+    const result = await fetchRemoteResource({
+      fetch: fetchMock,
+      url: "http://test",
+      loggerOptions: { id: "TEST_ID" },
+    });
+    expect(result).toBeUndefined();
+    expect(debug).toHaveBeenCalledWith(
       "Remote fetch aborted.",
-      expect.objectContaining({ url: baseParams().url }),
+      expect.objectContaining({ url: "http://test" }),
     );
   });
 
-  it("returns undefined on network error", async () => {
-    globalThis.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
-    const result = await fetchRemoteResource(baseParams());
+  it("logs warning on generic network error", async () => {
+    const fetchMock = vi.fn().mockRejectedValue(new Error("Network"));
+    const result = await fetchRemoteResource({
+      fetch: fetchMock,
+      url: "http://test",
+      loggerOptions: { id: "TEST_ID" },
+    });
     expect(result).toBeUndefined();
-    expect(loggerChild.warn).toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledWith(
+      "Failed to fetch remote messages.",
+      expect.objectContaining({ url: "http://test" }),
+    );
+  });
+
+  it("passes signal to fetch when provided", async () => {
+    vi.spyOn(utilsModule, "isValidMessages").mockReturnValue(true);
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => ({}) });
+    const controller = new AbortController();
+    await fetchRemoteResource({
+      fetch: fetchMock,
+      url: "http://test",
+      signal: controller.signal,
+      loggerOptions: { id: "TEST_ID" },
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://test",
+      expect.objectContaining({
+        signal: controller.signal,
+      }),
+    );
   });
 });

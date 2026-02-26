@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocaleMessages } from "intor-translator";
 import path from "node:path";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { readLocaleMessages } from "../../../../../../src/server/messages/load-local-messages/read-locale-messages";
 import * as collectModule from "../../../../../../src/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
 import * as parseModule from "../../../../../../src/server/messages/load-local-messages/read-locale-messages/parse-file-entries";
 
-describe("readLocaleMessages", () => {
+describe("readLocaleMessages()", () => {
   const mockFileEntries = [
     {
       namespace: "common",
@@ -16,82 +16,105 @@ describe("readLocaleMessages", () => {
       fullPath: "/mock/path/common.json",
     },
   ];
-
   const mockNamespaceMessages = {
-    common: { hello: "Hello", world: "World" },
+    common: { hello: "Hello" },
   };
 
-  it("returns locale wrapped NamespaceMessages correctly", async () => {
-    // Mock collectFileEntries
+  beforeEach(() => {
+    vi.clearAllMocks();
     vi.spyOn(collectModule, "collectFileEntries").mockResolvedValue(
       mockFileEntries,
     );
-
-    // Mock parseFileEntries
     vi.spyOn(parseModule, "parseFileEntries").mockResolvedValue(
       mockNamespaceMessages,
     );
+  });
 
-    const options = {
-      limit: vi.fn() as any,
-      rootDir: "messages",
+  it("wraps parsed messages under locale key", async () => {
+    const result: LocaleMessages = await readLocaleMessages({
       locale: "en",
-      loggerOptions: { id: "test" },
-    };
-
-    const result: LocaleMessages = await readLocaleMessages(options);
-
+      rootDir: "messages",
+      limit: vi.fn() as any,
+      readers: {},
+      loggerOptions: { id: "TEST_ID" },
+    });
     expect(result).toEqual({
       en: mockNamespaceMessages,
     });
   });
 
-  it("passes custom messagesReader and exts to underlying functions", async () => {
-    const mockReader = vi.fn().mockResolvedValue(mockNamespaceMessages);
-    const mockLimit = vi.fn((fn) => fn());
-
-    vi.spyOn(collectModule, "collectFileEntries").mockResolvedValue(
-      mockFileEntries,
-    );
-    vi.spyOn(parseModule, "parseFileEntries").mockResolvedValue(
-      mockNamespaceMessages,
-    );
-
-    const options = {
-      limit: mockLimit as any,
-      rootDir: "messages",
+  it("forwards namespaces when defined", async () => {
+    await readLocaleMessages({
       locale: "en",
-      readOptions: {
-        exts: [".json", ".yaml"],
-        messagesReader: mockReader,
-      },
-      loggerOptions: { id: "test" },
-    };
-
-    const result = await readLocaleMessages(options);
-
-    expect(mockReader).not.toHaveBeenCalled(); // parseFileEntries 處理了 reader
-    expect(result).toEqual({ en: mockNamespaceMessages });
+      namespaces: ["common"],
+      rootDir: "messages",
+      limit: vi.fn() as any,
+      readers: {},
+      loggerOptions: { id: "TEST_ID" },
+    });
+    expect(collectModule.collectFileEntries).toHaveBeenCalledWith(
+      expect.objectContaining({
+        namespaces: ["common"],
+      }),
+    );
   });
 
-  it("resolves correct paths based on rootDir and locale", async () => {
-    const spyCollect = vi
-      .spyOn(collectModule, "collectFileEntries")
-      .mockResolvedValue(mockFileEntries);
-    vi.spyOn(parseModule, "parseFileEntries").mockResolvedValue(
-      mockNamespaceMessages,
-    );
-
+  it("does not forward namespaces when undefined", async () => {
     await readLocaleMessages({
-      limit: vi.fn() as any,
+      locale: "en",
       rootDir: "messages",
-      locale: "fr",
-      loggerOptions: { id: "test" },
+      limit: vi.fn() as any,
+      readers: {},
+      loggerOptions: { id: "TEST_ID" },
     });
+    const call = vi.mocked(collectModule.collectFileEntries).mock.calls[0]![0];
+    expect("namespaces" in call).toBe(false);
+  });
 
-    expect(spyCollect).toHaveBeenCalledWith(
+  it("derives exts from readers keys", async () => {
+    const readers = {
+      json: vi.fn(),
+      yaml: vi.fn(),
+    };
+    await readLocaleMessages({
+      locale: "en",
+      rootDir: "messages",
+      limit: vi.fn() as any,
+      readers,
+      loggerOptions: { id: "TEST_ID" },
+    });
+    expect(collectModule.collectFileEntries).toHaveBeenCalledWith(
       expect.objectContaining({
-        rootDir: path.resolve(process.cwd(), "messages", "fr"),
+        exts: ["json", "yaml"],
+      }),
+    );
+  });
+
+  it("uses empty exts and empty readers when undefined", async () => {
+    await readLocaleMessages({
+      locale: "en",
+      rootDir: "messages",
+      limit: vi.fn() as any,
+      loggerOptions: { id: "TEST_ID" },
+    } as any);
+    const collectCall = vi.mocked(collectModule.collectFileEntries).mock
+      .calls[0]![0];
+    const parseCall = vi.mocked(parseModule.parseFileEntries).mock.calls[0]![0];
+    expect(collectCall.exts).toEqual([]);
+    expect(parseCall.readers).toEqual({});
+  });
+
+  it("resolves correct rootDir path", async () => {
+    await readLocaleMessages({
+      locale: "fr",
+      rootDir: "messages",
+      limit: vi.fn() as any,
+      readers: {},
+      loggerOptions: { id: "TEST_ID" },
+    });
+    expect(collectModule.collectFileEntries).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rootDir: path.resolve("messages", "fr"),
       }),
     );
   });

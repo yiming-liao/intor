@@ -1,101 +1,119 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IntorResolvedConfig } from "../../../../src/config";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { resolveInbound } from "../../../../src/routing/inbound/resolve-inbound";
-import { resolveLocale } from "../../../../src/routing/inbound/resolve-locale";
-import { resolvePathname } from "../../../../src/routing/inbound/resolve-path";
+import * as resolveLocaleModule from "../../../../src/routing/inbound/resolve-locale";
+import * as resolvePathModule from "../../../../src/routing/inbound/resolve-path";
+import * as localeModule from "../../../../src/routing/locale";
 
-vi.mock("../../../../src/routing/inbound/resolve-locale", () => ({
-  resolveLocale: vi.fn(),
-}));
-
-vi.mock("../../../../src/routing/inbound/resolve-path", () => ({
-  resolvePathname: vi.fn(),
-}));
-
-describe("resolveInbound", () => {
-  const config = {
-    defaultLocale: "en",
-    supportedLocales: ["en"],
-    routing: {
-      inbound: {
-        firstVisit: { redirect: true },
-      },
-    },
-  } as unknown as IntorResolvedConfig;
-
+describe("resolveInbound()", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("resolves locale and path as a single inbound decision", async () => {
-    (resolveLocale as any).mockReturnValue({
-      locale: "zh-TW",
-      localeSource: "path",
-    });
-    (resolvePathname as any).mockReturnValue({
-      pathname: "/zh-TW/about",
+  const baseConfig = {
+    routing: {
+      inbound: {
+        queryKey: "lang",
+      },
+    },
+  } as any;
+
+  it("resolves full inbound state when all sources present", () => {
+    vi.spyOn(localeModule, "getLocaleFromPathname").mockReturnValue("en");
+    vi.spyOn(localeModule, "getLocaleFromHost").mockReturnValue("fr");
+    vi.spyOn(localeModule, "getLocaleFromQuery").mockReturnValue("de");
+    vi.spyOn(resolveLocaleModule, "resolveLocale").mockReturnValue({
+      locale: "fr",
+      localeSource: "host",
+    } as any);
+    vi.spyOn(resolvePathModule, "resolvePathname").mockReturnValue({
+      pathname: "/fr/home",
       shouldRedirect: true,
     });
-    const result = await resolveInbound(
-      config,
-      "/about",
+    const result = resolveInbound(
+      baseConfig,
+      "/en/home",
       {
-        host: "zh-TW.example.com",
-        query: {},
-        detected: "en",
+        host: "fr.example.com",
+        query: { lang: "de" },
+        cookie: "it",
+        detected: "es",
       },
-      { hasRedirected: false }, // hasRedirected
+      { hasRedirected: false },
     );
-    expect(resolveLocale).toHaveBeenCalledWith(
-      config,
+    expect(resolveLocaleModule.resolveLocale).toHaveBeenCalledWith(
+      baseConfig,
       expect.objectContaining({
-        host: { locale: "zh-TW" },
-        detected: { locale: "en" },
+        path: { locale: "en" },
+        host: { locale: "fr" },
+        query: { locale: "de" },
+        cookie: { locale: "it" },
+        detected: { locale: "es" },
       }),
     );
-    expect(resolvePathname).toHaveBeenCalledWith(
-      config,
-      "/about",
-      expect.objectContaining({
-        locale: "zh-TW",
-        hasPathLocale: false,
-        hasPersisted: false,
+    expect(resolvePathModule.resolvePathname).toHaveBeenCalledWith(
+      baseConfig,
+      "/en/home",
+      {
+        locale: "fr",
+        hasPathLocale: true,
+        hasPersisted: true,
         hasRedirected: false,
-      }),
+      },
     );
     expect(result).toEqual({
-      locale: "zh-TW",
-      localeSource: "path",
-      pathname: "/zh-TW/about",
+      locale: "fr",
+      localeSource: "host",
+      pathname: "/fr/home",
       shouldRedirect: true,
     });
   });
 
-  it("passes through when no redirect is required", async () => {
-    (resolveLocale as any).mockReturnValue({
+  it("omits undefined locale sources", () => {
+    vi.spyOn(localeModule, "getLocaleFromPathname").mockReturnValue(undefined);
+    vi.spyOn(localeModule, "getLocaleFromHost").mockReturnValue(undefined);
+    vi.spyOn(localeModule, "getLocaleFromQuery").mockReturnValue(undefined);
+    vi.spyOn(resolveLocaleModule, "resolveLocale").mockReturnValue({
       locale: "en",
-      localeSource: "cookie",
-    });
-    (resolvePathname as any).mockReturnValue({
-      pathname: "/about",
+      localeSource: "detected",
+    } as any);
+    vi.spyOn(resolvePathModule, "resolvePathname").mockReturnValue({
+      pathname: "/en",
       shouldRedirect: false,
     });
-    const result = await resolveInbound(
-      config,
-      "/about",
-      {
-        cookie: "en",
-        detected: "en",
-      },
-      { hasRedirected: false },
+    resolveInbound(baseConfig, "/home", {
+      detected: "en",
+    });
+    const callArgs = (resolveLocaleModule.resolveLocale as any).mock
+      .calls[0][1];
+    expect(callArgs).not.toHaveProperty("path");
+    expect(callArgs).not.toHaveProperty("host");
+    expect(callArgs).not.toHaveProperty("query");
+    expect(callArgs).not.toHaveProperty("cookie");
+    expect(callArgs).toHaveProperty("detected");
+  });
+
+  it("handles missing options safely", () => {
+    vi.spyOn(localeModule, "getLocaleFromPathname").mockReturnValue("en");
+    vi.spyOn(localeModule, "getLocaleFromHost").mockReturnValue(undefined);
+    vi.spyOn(localeModule, "getLocaleFromQuery").mockReturnValue(undefined);
+    vi.spyOn(resolveLocaleModule, "resolveLocale").mockReturnValue({
+      locale: "en",
+      localeSource: "path",
+    } as any);
+    vi.spyOn(resolvePathModule, "resolvePathname").mockReturnValue({
+      pathname: "/en",
+      shouldRedirect: false,
+    });
+    resolveInbound(baseConfig, "/en", {
+      detected: "en",
+    });
+    expect(resolvePathModule.resolvePathname).toHaveBeenCalledWith(
+      baseConfig,
+      "/en",
+      expect.objectContaining({
+        hasRedirected: false,
+      }),
     );
-    expect(resolvePathname).toHaveBeenCalledWith(
-      config,
-      "/about",
-      expect.objectContaining({ locale: "en", hasPersisted: true }),
-    );
-    expect(result.shouldRedirect).toBe(false);
-    expect(result.pathname).toBe("/about");
   });
 });

@@ -1,162 +1,228 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import * as coreModule from "../../../../../src/core";
 import * as loggerModule from "../../../../../src/core/logger/get-logger";
-import { getMessagesPool } from "../../../../../src/server/messages/load-local-messages/cache/messages-pool";
+import * as poolModule from "../../../../../src/server/messages/load-local-messages/cache/messages-pool";
 import { loadLocalMessages } from "../../../../../src/server/messages/load-local-messages/load-local-messages";
 import * as readModule from "../../../../../src/server/messages/load-local-messages/read-locale-messages";
 
-const loggerChildMock = {
-  debug: vi.fn(),
-  trace: vi.fn(),
-  warn: vi.fn(),
-};
+describe("loadLocalMessages()", () => {
+  const debug = vi.fn();
+  const trace = vi.fn();
+  const warn = vi.fn();
 
-const loggerMock = {
-  child: vi.fn().mockReturnValue(loggerChildMock),
-};
-
-vi.spyOn(loggerModule, "getLogger").mockImplementation(() => loggerMock as any);
-
-vi.mock(
-  "../../../../../src/server/messages/load-local-messages/read-locale-messages",
-);
-vi.mock(
-  "../../../../../src/server/messages/load-local-messages/cache/messages-pool",
-);
-
-describe("loadLocalMessages", () => {
-  const mockReadLocaleMessages = vi.mocked(readModule.readLocaleMessages);
-
-  const mockPool = {
+  const pool = {
     get: vi.fn(),
     set: vi.fn(),
   };
-
-  vi.mocked(getMessagesPool).mockReturnValue(mockPool as any);
 
   const ORIGINAL_ENV = process.env["NODE_ENV"];
 
   beforeEach(() => {
     vi.clearAllMocks();
     process.env["NODE_ENV"] = "test";
+    vi.spyOn(loggerModule, "getLogger").mockReturnValue({
+      child: () => ({ debug, trace, warn }),
+    } as any);
+    vi.spyOn(poolModule, "getMessagesPool").mockReturnValue(pool as any);
+    vi.spyOn(coreModule, "normalizeCacheKey").mockReturnValue("key");
+    vi.spyOn(readModule, "readLocaleMessages");
   });
 
   afterEach(() => {
     process.env["NODE_ENV"] = ORIGINAL_ENV;
   });
 
-  it("returns cached messages when present in process-level cache", async () => {
-    const cached: LocaleMessages = {
-      "en-US": { hello: "Cached" },
-    };
-    mockPool.get.mockReturnValueOnce(cached);
+  it("returns cached messages when cache hit", async () => {
+    pool.get.mockReturnValue({ en: { hello: "cached" } });
     const result = await loadLocalMessages({
       id: "test",
-      locale: "en-US",
-      loggerOptions: { id: "test" },
-    });
-    expect(result).toEqual(cached);
-    expect(mockPool.get).toHaveBeenCalledTimes(1);
-    expect(mockReadLocaleMessages).not.toHaveBeenCalled();
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
+    } as any);
+    expect(result).toEqual({ en: { hello: "cached" } });
+    expect(readModule.readLocaleMessages).not.toHaveBeenCalled();
   });
 
-  it("loads messages when cache is empty", async () => {
-    const messages: LocaleMessages = {
-      "en-US": { hello: "Hello" },
-    };
-    mockPool.get.mockReturnValueOnce(undefined);
-    mockReadLocaleMessages.mockResolvedValueOnce(messages);
+  it("loads messages for primary locale", async () => {
+    pool.get.mockReturnValue(undefined);
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { hello: "world" },
+    });
     const result = await loadLocalMessages({
       id: "test",
-      locale: "en-US",
-      loggerOptions: { id: "test" },
-    });
-    expect(result).toEqual(messages);
-    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(1);
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
+    } as any);
+    expect(result).toEqual({ en: { hello: "world" } });
+    expect(trace).toHaveBeenCalled();
   });
 
-  it("tries fallback locales in order", async () => {
-    const messages: LocaleMessages = {
-      "en-US": { hello: "Hello" },
-    };
-    mockPool.get.mockReturnValueOnce(undefined);
-    mockReadLocaleMessages
-      .mockRejectedValueOnce(new Error("fail fr-FR"))
-      .mockResolvedValueOnce(messages);
+  it("falls back when primary locale has no messages", async () => {
+    (readModule.readLocaleMessages as any)
+      .mockResolvedValueOnce({ en: {} })
+      .mockResolvedValueOnce({ zh: { hello: "zh" } });
     const result = await loadLocalMessages({
       id: "test",
-      locale: "fr-FR",
-      fallbackLocales: ["en-US"],
-      loggerOptions: { id: "test" },
-    });
-    expect(result).toEqual(messages);
-    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
+      locale: "en",
+      fallbackLocales: ["zh"],
+      readers: {},
+    } as any);
+    expect(result).toEqual({ zh: { hello: "zh" } });
   });
 
-  it("continues when messages are empty", async () => {
-    const messages: LocaleMessages = {
-      "en-US": { hello: "Hello" },
-    };
-    mockPool.get.mockReturnValueOnce(undefined);
-    mockReadLocaleMessages
-      .mockResolvedValueOnce({ "fr-FR": {} })
-      .mockResolvedValueOnce(messages);
+  it("returns undefined when all locales are empty", async () => {
+    (readModule.readLocaleMessages as any).mockResolvedValue({ en: {} });
     const result = await loadLocalMessages({
       id: "test",
-      locale: "fr-FR",
-      fallbackLocales: ["en-US"],
-      loggerOptions: { id: "test" },
-    });
-    expect(result).toEqual(messages);
-    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
-  });
-
-  it("returns undefined if all locales fail", async () => {
-    mockPool.get.mockReturnValueOnce(undefined);
-    mockReadLocaleMessages
-      .mockRejectedValueOnce(new Error("fail fr-FR"))
-      .mockRejectedValueOnce(new Error("fail en-US"));
-    const result = await loadLocalMessages({
-      id: "test",
-      locale: "fr-FR",
-      fallbackLocales: ["en-US"],
-      loggerOptions: { id: "test" },
-    });
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
+    } as any);
     expect(result).toBeUndefined();
-    expect(mockReadLocaleMessages).toHaveBeenCalledTimes(2);
   });
 
-  it("writes to cache only in production when allowCacheWrite is true", async () => {
-    process.env["NODE_ENV"] = "production";
-    const messages: LocaleMessages = {
-      "en-US": { hello: "Hello" },
-    };
-    mockPool.get.mockReturnValueOnce(undefined);
-    mockReadLocaleMessages.mockResolvedValueOnce(messages);
+  it("warns and tries fallback when primary throws", async () => {
+    (readModule.readLocaleMessages as any)
+      .mockRejectedValueOnce(new Error("fail"))
+      .mockResolvedValueOnce({ zh: { ok: true } });
     const result = await loadLocalMessages({
       id: "test",
-      locale: "en-US",
-      allowCacheWrite: true,
-      loggerOptions: { id: "test" },
-    });
-    expect(result).toEqual(messages);
-    expect(mockPool.set).toHaveBeenCalledTimes(1);
-    expect(mockPool.set).toHaveBeenCalledWith(expect.any(String), messages);
+      locale: "en",
+      fallbackLocales: ["zh"],
+      readers: {},
+    } as any);
+    expect(warn).toHaveBeenCalled();
+    expect(result).toEqual({ zh: { ok: true } });
   });
 
-  it("does not write to cache when not in production", async () => {
-    const messages: LocaleMessages = {
-      "en-US": { hello: "Hello" },
-    };
-    mockPool.get.mockReturnValueOnce(undefined);
-    mockReadLocaleMessages.mockResolvedValueOnce(messages);
+  it("warns when all candidate locales fail", async () => {
+    (readModule.readLocaleMessages as any).mockRejectedValue(new Error("fail"));
+    const result = await loadLocalMessages({
+      id: "test",
+      locale: "en",
+      fallbackLocales: ["zh"],
+      readers: {},
+    } as any);
+    expect(result).toBeUndefined();
+    expect(warn).toHaveBeenCalledWith(
+      "Failed to load messages for all candidate locales.",
+      expect.any(Object),
+    );
+  });
+
+  it("writes cache only in production with allowCacheWrite", async () => {
+    process.env["NODE_ENV"] = "production";
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { ok: true },
+    });
     await loadLocalMessages({
       id: "test",
-      locale: "en-US",
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
       allowCacheWrite: true,
-      loggerOptions: { id: "test" },
+    } as any);
+    expect(pool.set).toHaveBeenCalledWith("key", {
+      en: { ok: true },
     });
-    expect(mockPool.set).not.toHaveBeenCalled();
+  });
+
+  it("does not write cache outside production", async () => {
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { ok: true },
+    });
+    await loadLocalMessages({
+      id: "test",
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
+      allowCacheWrite: true,
+    } as any);
+    expect(pool.set).not.toHaveBeenCalled();
+  });
+
+  it("does not write cache when allowCacheWrite is false", async () => {
+    process.env["NODE_ENV"] = "production";
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { ok: true },
+    });
+    await loadLocalMessages({
+      id: "test",
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
+      allowCacheWrite: false,
+    } as any);
+    expect(pool.set).not.toHaveBeenCalled();
+  });
+
+  it("passes namespaces only when defined", async () => {
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { ok: true },
+    });
+    await loadLocalMessages({
+      id: "test",
+      locale: "en",
+      fallbackLocales: [],
+      namespaces: ["common"],
+      readers: {},
+    } as any);
+    const call = (readModule.readLocaleMessages as any).mock.calls[0][0];
+    expect(call.namespaces).toEqual(["common"]);
+  });
+
+  it("defaults readers to empty object", async () => {
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { ok: true },
+    });
+    await loadLocalMessages({
+      id: "test",
+      locale: "en",
+      fallbackLocales: [],
+    } as any);
+    const call = (readModule.readLocaleMessages as any).mock.calls[0][0];
+    expect(call.readers).toEqual({});
+  });
+
+  it("skips cache when cacheKey is falsy", async () => {
+    vi.spyOn(coreModule, "normalizeCacheKey").mockReturnValue(undefined as any);
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { ok: true },
+    });
+    const result = await loadLocalMessages({
+      id: "test",
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
+    } as any);
+    expect(pool.get).not.toHaveBeenCalled();
+    expect(result).toEqual({ en: { ok: true } });
+  });
+
+  it("handles undefined fallbackLocales", async () => {
+    (readModule.readLocaleMessages as any).mockResolvedValue({
+      en: { ok: true },
+    });
+    const result = await loadLocalMessages({
+      id: "test",
+      locale: "en",
+
+      readers: {},
+    } as any);
+    expect(result).toEqual({ en: { ok: true } });
+  });
+
+  it("handles undefined locale result safely", async () => {
+    (readModule.readLocaleMessages as any).mockResolvedValue({});
+    const result = await loadLocalMessages({
+      id: "test",
+      locale: "en",
+      fallbackLocales: [],
+      readers: {},
+    } as any);
+    expect(result).toBeUndefined();
   });
 });

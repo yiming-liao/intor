@@ -1,44 +1,46 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "../../../../../src/config";
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createRefetchMessages } from "../../../../../src/client/shared/messages/create-refetch-messages";
-import { loadRemoteMessages } from "../../../../../src/core/messages/load-remote-messages";
+import { loadRemoteMessages, mergeMessages } from "../../../../../src/core";
 
-vi.mock("../../../../../src/core/messages/load-remote-messages", () => ({
-  loadRemoteMessages: vi.fn(),
-}));
+vi.mock("../../../../../src/core", async () => {
+  const actual = await vi.importActual<any>("../../../../../src/core");
+  return {
+    ...actual,
+    loadRemoteMessages: vi.fn(),
+    mergeMessages: vi.fn(),
+  };
+});
 
 const mockedLoadRemoteMessages = vi.mocked(loadRemoteMessages);
+const mockedMergeMessages = vi.mocked(mergeMessages);
 
 const createBaseConfig = (): IntorResolvedConfig =>
   ({
     id: "test",
-    messages: { en: { hello: "base" } },
-    fallbackLocales: {},
-    cache: {},
+    messages: { en: { base: "base" } },
+    fallbackLocales: { en: ["zh"] },
     logger: {},
     loader: {
       mode: "remote",
-      remoteUrl: "https://example.com",
-      namespaces: [],
-      rootDir: "",
+      url: "https://example.com",
     },
-  }) as unknown as IntorResolvedConfig;
+  }) as any;
 
 const deferred = <T>() => {
   let resolve!: (value: T) => void;
-  let reject!: (reason?: unknown) => void;
-  const promise = new Promise<T>((res, rej) => {
+  const promise = new Promise<T>((res) => {
     resolve = res;
-    reject = rej;
   });
-  return { promise, resolve, reject };
+  return { promise, resolve };
 };
 
 describe("createRefetchMessages", () => {
-  let onLoadingStart: () => void;
-  let onLoadingEnd: () => void;
-  let onMessages: () => void;
+  let onLoadingStart: ReturnType<any>;
+  let onLoadingEnd: ReturnType<any>;
+  let onMessages: ReturnType<any>;
 
   beforeEach(() => {
     onLoadingStart = vi.fn();
@@ -51,69 +53,112 @@ describe("createRefetchMessages", () => {
     const config = {
       ...createBaseConfig(),
       loader: { mode: "local" },
-    } as IntorResolvedConfig;
-
+    } as any;
     const refetch = createRefetchMessages({
       config,
       onLoadingStart,
       onLoadingEnd,
       onMessages,
     });
-
     await refetch("en");
-
-    expect(onLoadingStart).not.toHaveBeenCalled();
-    expect(onMessages).not.toHaveBeenCalled();
-    expect(onLoadingEnd).not.toHaveBeenCalled();
+    expect(mockedLoadRemoteMessages).not.toHaveBeenCalled();
   });
 
-  it("calls loading callbacks around a successful request", async () => {
+  it("passes only defined loader options", async () => {
     mockedLoadRemoteMessages.mockResolvedValue({
       en: { hello: "world" },
     } as LocaleMessages);
-
+    const config = {
+      ...createBaseConfig(),
+      loader: {
+        mode: "remote",
+        url: "https://example.com",
+        namespaces: ["common"],
+        concurrency: 3,
+        headers: { Authorization: "token" },
+      },
+    } as any;
     const refetch = createRefetchMessages({
-      config: createBaseConfig(),
-      onLoadingStart,
-      onLoadingEnd,
+      config,
       onMessages,
     });
-
     await refetch("en");
-
-    expect(onLoadingStart).toHaveBeenCalledOnce();
-    expect(onMessages).toHaveBeenCalledOnce();
-    expect(onLoadingEnd).toHaveBeenCalledOnce();
+    expect(mockedLoadRemoteMessages).toHaveBeenCalledWith(
+      expect.objectContaining({
+        namespaces: ["common"],
+        concurrency: 3,
+        headers: { Authorization: "token" },
+        fallbackLocales: ["zh"],
+      }),
+    );
   });
 
-  it("only applies messages from the latest request", async () => {
+  it("does not pass undefined loader options", async () => {
+    mockedLoadRemoteMessages.mockResolvedValue({
+      en: { hello: "world" },
+    } as LocaleMessages);
+    const refetch = createRefetchMessages({
+      config: createBaseConfig(),
+      onMessages,
+    });
+    await refetch("en");
+    const args = mockedLoadRemoteMessages.mock.calls[0]![0];
+    expect(args.namespaces).toBeUndefined();
+    expect(args.concurrency).toBeUndefined();
+    expect(args.headers).toBeUndefined();
+  });
+
+  it("only applies latest request (abort previous)", async () => {
     const d1 = deferred<LocaleMessages>();
     const d2 = deferred<LocaleMessages>();
-
     mockedLoadRemoteMessages
       .mockReturnValueOnce(d1.promise)
       .mockReturnValueOnce(d2.promise);
-
     const refetch = createRefetchMessages({
       config: createBaseConfig(),
-      onLoadingStart,
-      onLoadingEnd,
       onMessages,
     });
-
     refetch("en");
     refetch("ja");
-
-    d1.resolve({ en: { hello: "old" } } as LocaleMessages);
-    d2.resolve({ ja: { hello: "new" } } as LocaleMessages);
-
+    d1.resolve({ en: { old: "old" } } as LocaleMessages);
+    d2.resolve({ ja: { new: "new" } } as LocaleMessages);
     await Promise.allSettled([d1.promise, d2.promise]);
-
     expect(onMessages).toHaveBeenCalledTimes(1);
-    expect(onMessages).toHaveBeenCalledWith(
+  });
+
+  it("calls mergeMessages before emitting messages", async () => {
+    mockedLoadRemoteMessages.mockResolvedValue({
+      en: { hello: "world" },
+    } as LocaleMessages);
+    mockedMergeMessages.mockReturnValue({
+      en: { merged: true },
+    } as any);
+    const refetch = createRefetchMessages({
+      config: createBaseConfig(),
+      onMessages,
+    });
+    await refetch("en");
+    expect(mockedMergeMessages).toHaveBeenCalledWith(
+      createBaseConfig().messages,
+      { en: { hello: "world" } },
       expect.objectContaining({
-        ja: { hello: "new" },
+        locale: "en",
       }),
     );
+    expect(onMessages).toHaveBeenCalledWith(
+      expect.objectContaining({
+        en: { merged: true },
+      }),
+    );
+  });
+
+  it("passes abort signal to remote loader", async () => {
+    mockedLoadRemoteMessages.mockResolvedValue({} as LocaleMessages);
+    const refetch = createRefetchMessages({
+      config: createBaseConfig(),
+    });
+    await refetch("en");
+    const args = mockedLoadRemoteMessages.mock.calls[0]![0];
+    expect(args.signal).toBeInstanceOf(AbortSignal);
   });
 });

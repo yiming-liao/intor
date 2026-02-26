@@ -88,4 +88,18 @@ describe("deriveTarget", () => {
     const result = determineTarget(config, "en-US", "/docs");
     expect(result.destination).toBe("/docs?lang=en-US");
   });
+
+  it("falls back to rawDestination for unknown localeCarrier", () => {
+    const config = {
+      supportedLocales: ["en-US", "zh-TW"],
+      routing: {
+        outbound: {
+          localeCarrier: "unknown-carrier",
+        },
+      },
+    } as any as IntorResolvedConfig;
+    const result = determineTarget(config, "en-US", "/docs");
+    expect(result.destination).toBe("/docs");
+    expect(result.isExternal).toBe(false);
+  });
 });

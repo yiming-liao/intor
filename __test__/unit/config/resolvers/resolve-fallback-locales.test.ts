@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorRawConfig } from "../../../../src/config";
 import { describe, it, expect, vi } from "vitest";
 import { resolveFallbackLocales } from "../../../../src/config/resolvers/resolve-fallback-locales";
@@ -50,6 +51,15 @@ describe("resolveFallbackLocales", () => {
   it("returns empty mapping when all fallback targets are invalid", () => {
     const result = resolveFallbackLocales(
       { ...baseConfig, fallbackLocales: { zh: ["jp", "kr"] } },
+      "TEST_ID",
+      supportedSet,
+    );
+    expect(result).toEqual({});
+  });
+
+  it("ignores non-array fallback values", () => {
+    const result = resolveFallbackLocales(
+      { ...baseConfig, fallbackLocales: { zh: "en" as any } },
       "TEST_ID",
       supportedSet,
     );

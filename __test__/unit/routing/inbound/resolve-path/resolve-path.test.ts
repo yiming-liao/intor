@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "../../../../../src/config";
 import type { PathContext } from "../../../../../src/routing/inbound/resolve-path/types";
 import { describe, it, expect, vi } from "vitest";
@@ -69,5 +70,13 @@ describe("resolvePathname (decision only)", () => {
     const context = createContext({ hasRedirected: true });
     const result = resolvePath(config, "/about", context);
     expect(result).toEqual({ pathname: "/about", shouldRedirect: false });
+  });
+
+  it("throws for unknown prefix strategy", () => {
+    expect(() =>
+      resolvePath({ routing: { localePrefix: "invalid" } } as any, "/", {
+        locale: "en",
+      } as any),
+    ).toThrow("Unhandled prefix strategy");
   });
 });

@@ -108,7 +108,7 @@ describe("intorProxy (Next.js adapter)", () => {
     });
     const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/");
-    await handler(request);
+    handler(request);
     expect(request.cookies.get).toHaveBeenCalled();
   });
 });

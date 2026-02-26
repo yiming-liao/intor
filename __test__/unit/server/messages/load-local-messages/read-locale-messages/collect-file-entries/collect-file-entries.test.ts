@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import path from "node:path";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as loggerModule from "../../../../../../../src/core/logger/get-logger";
 import { collectFileEntries } from "../../../../../../../src/server/messages/load-local-messages/read-locale-messages/collect-file-entries";
@@ -176,5 +177,18 @@ describe("collectFileEntries", () => {
       loggerOptions: { id: "test" },
     });
     expect(files.map((f) => f.namespace)).toEqual(["auth"]);
+  });
+
+  it("skips files when namespace cannot be resolved", async () => {
+    mockReaddir.mockResolvedValue([isFile("index.json")]);
+    vi.spyOn(path, "relative").mockReturnValue("");
+    const files = await collectFileEntries({
+      readdir: mockReaddir,
+      limit: mockLimit,
+      rootDir,
+      exts: ["json"],
+      loggerOptions: { id: "test" },
+    });
+    expect(files).toEqual([]);
   });
 });
