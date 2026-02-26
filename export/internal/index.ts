@@ -23,7 +23,9 @@ export type {
   GenConfig,
 
   // translator-instance
-  TranslatorInstance,
+  BaseTranslator,
 } from "../../src/core";
 
-export type { TranslatorInstanceReact } from "../../src/client/react/translator/translator-instance";
+export type { ReactTranslator } from "../../src/client/react/translator/types";
+export type { VueTranslator } from "../../src/client/vue/translator/types";
+export type { SvelteTranslator } from "../../src/client/svelte/translator/types";

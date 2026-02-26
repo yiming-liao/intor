@@ -10,7 +10,7 @@ export type {
 } from "./generated";
 
 // translator-instance
-export type { TranslatorInstance } from "./translator-instance";
+export type { BaseTranslator } from "./translator";
 
 // routing
 export type {

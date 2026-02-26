@@ -1,4 +1,4 @@
-import type { TranslatorInstanceReact } from "./translator-instance";
+import type { ReactTranslator } from "./types";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -21,7 +21,7 @@ export function useTranslator<
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): TranslatorInstanceReact<GenMessages<CK>, ReplacementShape, RichShape, PK> {
+): ReactTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const { translator, setLocale } = useIntorContext();
   const scoped = translator.scoped(preKey);
 
@@ -33,10 +33,5 @@ export function useTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-  } as TranslatorInstanceReact<
-    GenMessages<CK>,
-    ReplacementShape,
-    RichShape,
-    PK
-  >;
+  } as ReactTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }

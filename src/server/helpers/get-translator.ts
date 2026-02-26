@@ -14,7 +14,7 @@ import {
   type GenRich,
   type MessagesReaders,
   type RuntimeFetch,
-  type TranslatorInstance,
+  type BaseTranslator,
 } from "../../core";
 import { initTranslator, type MessagesLoader } from "../translator";
 
@@ -39,9 +39,7 @@ export async function getTranslator<
 >(
   config: IntorResolvedConfig,
   params: GetTranslatorParams<CK> & { preKey?: PK },
-): Promise<
-  TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>
-> {
+): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
   const {
     locale,
     loader,
@@ -70,5 +68,5 @@ export async function getTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-  } as TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>;
+  } as BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }

@@ -1,4 +1,4 @@
-import type { TranslatorInstanceSvelte } from "./translator-instance";
+import type { SvelteTranslator } from "./types";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -22,7 +22,7 @@ export function useTranslator<
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): TranslatorInstanceSvelte<GenMessages<CK>, ReplacementShape, RichShape, PK> {
+): SvelteTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const { translator, locale, setLocale } = getIntorContext();
   const scoped = derived(translator, ($t) => $t.scoped(preKey));
 
@@ -34,7 +34,7 @@ export function useTranslator<
     hasKey: derived(scoped, ($t) => $t.hasKey),
     t: derived(scoped, ($t) => $t.t),
     tRich: derived(scoped, ($t) => createTRich($t.t)),
-  } as unknown as TranslatorInstanceSvelte<
+  } as unknown as SvelteTranslator<
     GenMessages<CK>,
     ReplacementShape,
     RichShape,

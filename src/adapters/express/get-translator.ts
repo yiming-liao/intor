@@ -4,7 +4,7 @@ import type {
   GenMessages,
   GenReplacements,
   GenRich,
-  TranslatorInstance,
+  BaseTranslator,
 } from "../../core";
 import type { GetTranslatorParams } from "../../server";
 import type { Request } from "express";
@@ -30,9 +30,7 @@ export async function getTranslator<
   config: IntorResolvedConfig,
   req: Request,
   params?: GetTranslatorExpressParams<CK> & { preKey?: PK },
-): Promise<
-  TranslatorInstance<GenMessages<CK>, ReplacementShape, RichShape, PK>
-> {
+): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
   const locale = req.intor?.locale || config.defaultLocale;
 
   if (!params) return getTranslatorCore(config, { locale });

@@ -1,4 +1,4 @@
-import type { TranslatorInstanceVue } from "./translator-instance";
+import type { VueTranslator } from "./types";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -22,7 +22,7 @@ export function useTranslator<
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): TranslatorInstanceVue<GenMessages<CK>, ReplacementShape, RichShape, PK> {
+): VueTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const intor = injectIntorContext();
   const translator = intor.value.translator;
   const scoped = computed(() => translator.value.scoped(preKey));
@@ -37,7 +37,7 @@ export function useTranslator<
     t: (...args: Parameters<typeof scoped.value.t>) => scoped.value.t(...args),
     tRich: (...args: Parameters<ReturnType<typeof createTRich>>) =>
       createTRich(scoped.value.t)(...args),
-  } as unknown as TranslatorInstanceVue<
+  } as unknown as VueTranslator<
     GenMessages<CK>,
     ReplacementShape,
     RichShape,

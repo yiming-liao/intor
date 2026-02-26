@@ -1,6 +1,6 @@
-import type { TranslatorInstance } from "../../../core";
-import type { VueTagRenderers } from "../render";
-import type { ComputedRef, VNodeChild } from "vue";
+import type { BaseTranslator } from "../../../core";
+import type { ReactTagRenderers } from "../render";
+import type * as React from "react";
 import {
   type Locale,
   type LocaleMessages,
@@ -14,28 +14,19 @@ import {
   type ScopedRich,
 } from "intor-translator";
 
-export type TranslatorInstanceVue<
+export type ReactTranslator<
   M extends LocaleMessages,
   ReplacementShape = Replacement,
   RichShape = Rich,
   PK extends string | undefined = undefined,
-> = Omit<
-  TranslatorInstance<M, ReplacementShape, RichShape, PK>,
-  "tRich" | "messages" | "locale"
-> & {
-  /** Localized message map. */
-  messages: ComputedRef<M>;
-
-  /** Active locale. */
-  locale: ComputedRef<Locale<M>>;
-
+> = Omit<BaseTranslator<M, ReplacementShape, RichShape, PK>, "tRich"> & {
   /** Whether translations are loading. */
-  isLoading: ComputedRef<boolean>;
+  isLoading: boolean;
 
   /** Update the active locale. */
   setLocale: (locale: Locale<M>) => void;
 
-  /** Resolve a localized value and render it as Vue nodes. */
+  /** Resolve a localized value and render it as React nodes. */
   tRich: <
     K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
@@ -46,7 +37,7 @@ export type TranslatorInstanceVue<
       : LocalizedReplacement<ReplacementShape, K>,
   >(
     key?: K | (string & {}),
-    tagRenderers?: VueTagRenderers<RI> | VueTagRenderers,
+    tagRenderers?: ReactTagRenderers<RI> | ReactTagRenderers,
     replacements?: RE | Replacement,
-  ) => VNodeChild[];
+  ) => React.ReactNode[];
 };

@@ -17,11 +17,11 @@ import {
 type FallbackIfNever<T, Fallback> = [T] extends [never] ? Fallback : T;
 
 /**
- * Core translator instance interface.
+ * Base translator interface.
  *
  * This type represents the minimal, framework-independent translator contract.
  */
-export type TranslatorInstance<
+export type BaseTranslator<
   M extends LocaleMessages,
   ReplacementShape = Replacement,
   RichShape = Rich,

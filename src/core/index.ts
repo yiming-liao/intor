@@ -66,8 +66,8 @@ export type {
   GenLocale,
   GenReplacements,
   GenRich,
-  // translator-instance
-  TranslatorInstance,
+  // translator
+  BaseTranslator,
   // routing
   RoutingLocaleSource,
   RoutingLocaleCarrier,
