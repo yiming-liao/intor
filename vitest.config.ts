@@ -13,6 +13,7 @@ export default defineConfig({
         "src/**/types.ts",
         "src/core/types/**/*.ts",
         "src/config/types/*.ts",
+        "src/**/augmentation.ts",
       ],
       reporter: ["lcov", "text"],
       thresholds: {
