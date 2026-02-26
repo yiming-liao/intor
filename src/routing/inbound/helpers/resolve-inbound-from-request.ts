@@ -4,10 +4,10 @@ import { normalizeQuery, parseCookieHeader } from "../../../core";
 import { getLocaleFromAcceptLanguage } from "../../locale";
 import { resolveInbound } from "../resolve-inbound";
 
-export async function resolveInboundFromRequest(
+export function resolveInboundFromRequest(
   config: IntorResolvedConfig,
   request: Request,
-): Promise<InboundResult> {
+): InboundResult {
   const url = new URL(request.url);
   const headers = request.headers;
 

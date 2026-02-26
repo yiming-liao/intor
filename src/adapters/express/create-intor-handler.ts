@@ -35,7 +35,7 @@ export function createIntorHandler(
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
     const cookie = parseCookieHeader(req.headers.cookie)[config.cookie.name];
-    const { locale, localeSource, pathname } = await resolveInbound(
+    const { locale, localeSource, pathname } = resolveInbound(
       config,
       req.path,
       {

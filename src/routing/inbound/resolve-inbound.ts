@@ -25,12 +25,12 @@ interface LocaleInputs {
  *
  * No side effects. No navigation.
  */
-export async function resolveInbound(
+export function resolveInbound(
   config: IntorResolvedConfig,
   rawPathname: string,
   localeInputs: LocaleInputs,
   options?: { hasRedirected: boolean },
-): Promise<InboundResult> {
+): InboundResult {
   const { queryKey } = config.routing.inbound;
   const { host, query, cookie, detected } = localeInputs;
 

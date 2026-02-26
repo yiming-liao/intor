@@ -4,7 +4,6 @@ import {
   getLogger,
   type GenConfigKeys,
   type GenLocale,
-  type GenMessages,
   type MessagesReaders,
   type RuntimeFetch,
 } from "../../core";
@@ -41,7 +40,7 @@ export async function intor<CK extends GenConfigKeys = "__default__">(
 
   return {
     config,
-    locale: translator.locale as GenLocale<CK>,
-    messages: translator.messages as Readonly<GenMessages<CK>>,
+    locale: translator.locale,
+    messages: translator.messages,
   };
 }

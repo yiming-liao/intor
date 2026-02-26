@@ -27,11 +27,11 @@ export function createIntorStore({
   // Locale transition
   // -----------------------------------------------------------------------------
   /** Request a locale change. */
-  async function setLocale(next: Locale) {
+  function setLocale(next: Locale) {
     const current = get(locale);
     if (next === current) return;
     locale.set(next);
-    onLocaleChange?.(next); // Notify external listener (fire-and-forget)
+    void onLocaleChange?.(next); // Notify external listener (fire-and-forget)
   }
 
   // ---------------------------------------------------------------------------

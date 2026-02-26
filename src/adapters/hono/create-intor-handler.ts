@@ -32,7 +32,7 @@ export function createIntorHandler(
     const cookie = parseCookieHeader(c.req.header("cookie"))[
       config.cookie.name
     ];
-    const { locale, localeSource, pathname } = await resolveInbound(
+    const { locale, localeSource, pathname } = resolveInbound(
       config,
       url.pathname,
       {

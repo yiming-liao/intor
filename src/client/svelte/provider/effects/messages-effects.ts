@@ -29,7 +29,7 @@ export function attachMessagesEffects({
       isInitial = false;
       return;
     }
-    refetchMessages(value);
+    void refetchMessages(value);
   });
 
   return unsubscribe;

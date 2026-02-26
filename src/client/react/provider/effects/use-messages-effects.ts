@@ -35,6 +35,6 @@ export function useMessagesEffects(
       isInitialRenderRef.current = false;
       return;
     }
-    refetchMessages(locale);
+    void refetchMessages(locale);
   }, [refetchMessages, locale]);
 }

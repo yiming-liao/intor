@@ -43,7 +43,7 @@ export function createIntorHandler(config: IntorResolvedConfig): Handle {
     } else {
       const cookie = event.cookies.get(config.cookie.name);
       const { host, searchParams, pathname: rawPathname } = event.url;
-      inboundResult = await resolveInbound(config, rawPathname, {
+      inboundResult = resolveInbound(config, rawPathname, {
         host,
         query: normalizeQuery(Object.fromEntries(searchParams.entries())),
         ...(cookie !== undefined ? { cookie } : {}),

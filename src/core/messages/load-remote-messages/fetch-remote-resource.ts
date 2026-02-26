@@ -47,7 +47,7 @@ export async function fetchRemoteResource({
     }
 
     // Parse JSON body
-    const data = await response.json();
+    const data = (await response.json()) as MessageObject;
 
     // Validate messages structure
     if (!isValidMessages(data)) {

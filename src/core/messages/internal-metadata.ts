@@ -14,6 +14,11 @@ export type IntorMessagesKind =
  */
 export function getMessagesKind(value: unknown): IntorMessagesKind | undefined {
   if (!value || typeof value !== "object") return;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (value as any)[INTOR_MESSAGES_KIND_KEY];
+
+  const kind = (value as Record<string, unknown>)[INTOR_MESSAGES_KIND_KEY];
+
+  return typeof kind === "string" &&
+    Object.values(INTOR_MESSAGES_KIND).includes(kind as IntorMessagesKind)
+    ? (kind as IntorMessagesKind)
+    : undefined;
 }

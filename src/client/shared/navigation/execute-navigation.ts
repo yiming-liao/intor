@@ -7,7 +7,7 @@ import { setLocaleCookie } from "../utils";
 interface NavigationExecutionContext {
   config: IntorResolvedConfig;
   currentLocale: Locale;
-  setLocale(locale: Locale): void;
+  setLocale(this: void, locale: Locale): void;
 }
 
 /**

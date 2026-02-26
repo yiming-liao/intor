@@ -65,7 +65,7 @@ export async function collectFileEntries({
     const tasks = entries
       .filter((entry) => entry.isFile())
       .map((entry) =>
-        limit(async () => {
+        limit(() => {
           const fullPath = path.join(currentDir, entry.name);
 
           const ext = path.extname(entry.name).slice(1);

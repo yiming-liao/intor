@@ -9,6 +9,6 @@ export async function jsonReader(
   readFile = fs.readFile,
 ): Promise<MessageObject> {
   const raw = await readFile(filePath, "utf8");
-  const parsed = JSON.parse(raw);
+  const parsed = JSON.parse(raw) as MessageObject;
   return parsed;
 }

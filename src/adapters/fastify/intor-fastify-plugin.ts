@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "../../config";
 import type { GetTranslatorParams } from "../../server";
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyPluginCallback } from "fastify";
+import fp from "fastify-plugin";
 import { createIntorHandler } from "./create-intor-handler";
 
 interface IntorFastifyPluginOptions
   extends Omit<GetTranslatorParams, "locale" | "fetch" | "allowCacheWrite"> {
   config: IntorResolvedConfig;
+
   /**
    * Bind DX shortcuts to request:
    * - request.locale
@@ -19,13 +20,18 @@ interface IntorFastifyPluginOptions
   shortcuts?: boolean;
 }
 
+/** Internal helpers */
+function decorateRequest(fastify: FastifyInstance, key: string) {
+  if (fastify.hasRequestDecorator?.(key)) return;
+  fastify.decorateRequest(key, null);
+}
+
 /**
- * Intor Fastify adapter plugin
+ * Internal plugin implementation
  */
-export function intorFastifyPlugin(
-  fastify: FastifyInstance,
-  options: IntorFastifyPluginOptions,
-) {
+const intorFastifyPluginImpl: FastifyPluginCallback<
+  IntorFastifyPluginOptions
+> = (fastify: FastifyInstance, options, done) => {
   const {
     config,
     loader,
@@ -60,15 +66,13 @@ export function intorFastifyPlugin(
       shortcuts,
     }),
   );
-}
 
-/** Fastify plugin metadata (without fastify-plugin) */
-(intorFastifyPlugin as any)[Symbol.for("fastify.display-name")] =
-  "@intor/fastify";
-(intorFastifyPlugin as any)[Symbol.for("skip-override")] = true;
+  done();
+};
 
-/** Internal helpers */
-function decorateRequest(fastify: FastifyInstance, key: string) {
-  if ((fastify as any).hasRequestDecorator?.(key)) return;
-  fastify.decorateRequest(key, null);
-}
+/**
+ * Exported Fastify plugin (root-level, non-encapsulated)
+ */
+export const intorFastifyPlugin = fp(intorFastifyPluginImpl, {
+  name: "@intor/fastify",
+});

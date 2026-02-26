@@ -36,10 +36,10 @@ export function IntorProvider({
   // -----------------------------------------------------------------------------
   /** Request a locale change. */
   const setLocale = React.useCallback(
-    async (newLocale: Locale) => {
+    (newLocale: Locale) => {
       if (newLocale === locale) return;
       setLocaleState(newLocale);
-      onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
+      void onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
     },
     [locale, onLocaleChange],
   );

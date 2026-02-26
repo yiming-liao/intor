@@ -32,7 +32,7 @@ type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes
  * - Prevents keyof widening issues.
  */
 type GeneratedConfigKeys = HasGen extends true
-  ? Exclude<keyof IntorGeneratedTypes & string, INTOR_GENERATED_KEY>
+  ? Exclude<keyof IntorGeneratedTypes, INTOR_GENERATED_KEY>
   : never;
 
 /**

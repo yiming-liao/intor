@@ -36,7 +36,7 @@ export function createIntorHandler(
     const rawPathname = new URL(request.raw.url ?? "/", "http://localhost")
       .pathname;
 
-    const { locale, localeSource, pathname } = await resolveInbound(
+    const { locale, localeSource, pathname } = resolveInbound(
       config,
       rawPathname,
       {

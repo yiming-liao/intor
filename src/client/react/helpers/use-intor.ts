@@ -46,7 +46,7 @@ export function useIntor(
   // Initial load
   // ---------------------------------------------------------------------------
   React.useEffect(() => {
-    onLocaleChange(locale);
+    void onLocaleChange(locale);
   }, [locale, onLocaleChange]);
 
   return {

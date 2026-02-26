@@ -17,7 +17,7 @@ export const getLocale = async <CK extends GenConfigKeys = "__default__">(
   // Inbound routing context (authoritative)
   const headerLocale = headersStore.get(INTOR_HEADERS.LOCALE);
   if (headerLocale) {
-    return headerLocale as GenLocale<CK>;
+    return headerLocale;
   }
 
   // Persisted state
@@ -25,9 +25,9 @@ export const getLocale = async <CK extends GenConfigKeys = "__default__">(
   const cookieLocale = cookieStore.get(config.cookie.name)?.value;
   if (cookieLocale) {
     const matched = matchLocale(cookieLocale, config.supportedLocales);
-    if (matched) return matched as GenLocale<CK>;
+    if (matched) return matched;
   }
 
   // Explicit default
-  return config.defaultLocale as GenLocale<CK>;
+  return config.defaultLocale;
 };

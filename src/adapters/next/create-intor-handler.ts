@@ -14,7 +14,7 @@ import { getLocaleFromAcceptLanguage, resolveInbound } from "../../routing";
  * @platform Next.js
  */
 export function createIntorHandler(config: IntorResolvedConfig) {
-  return async function intorHandler(request: NextRequest) {
+  return function intorHandler(request: NextRequest) {
     const { host, searchParams, pathname: rawPathname } = request.nextUrl;
 
     // Locale from Accept-Language header
@@ -31,18 +31,17 @@ export function createIntorHandler(config: IntorResolvedConfig) {
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
     const cookie = request.cookies.get(config.cookie.name)?.value;
-    const { locale, localeSource, pathname, shouldRedirect } =
-      await resolveInbound(
-        config,
-        rawPathname,
-        {
-          host,
-          query: normalizeQuery(Object.fromEntries(searchParams.entries())),
-          ...(cookie !== undefined ? { cookie } : {}),
-          detected: localeFromAcceptLanguage || config.defaultLocale,
-        },
-        { hasRedirected },
-      );
+    const { locale, localeSource, pathname, shouldRedirect } = resolveInbound(
+      config,
+      rawPathname,
+      {
+        host,
+        query: normalizeQuery(Object.fromEntries(searchParams.entries())),
+        ...(cookie !== undefined ? { cookie } : {}),
+        detected: localeFromAcceptLanguage || config.defaultLocale,
+      },
+      { hasRedirected },
+    );
 
     // ----------------------------------------------------------
     // Prepare Next.js response (redirect or pass-through)

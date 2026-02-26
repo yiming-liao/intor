@@ -16,23 +16,18 @@ import { resolveOutbound } from "../../routing";
  *
  * @platform Next.js
  */
-export const useRouter = () => {
+export function useRouter() {
   const { config, locale: currentLocale, setLocale } = useIntorContext();
   const currentPathname = usePathname();
-  const {
-    push: nextRouterPush,
-    replace: nextRouterReplace,
-    prefetch: nextRouterPrefetch,
-    ...rest
-  } = useNextRouter();
+  const nextRouter = useNextRouter();
 
   // --------------------------------------------------
   // push
   // --------------------------------------------------
-  const push = <CK extends GenConfigKeys = "__default__">(
+  function push<CK extends GenConfigKeys = "__default__">(
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
-  ) => {
+  ) {
     const { locale } = options ?? {};
     const outboundResult = resolveOutbound(
       config,
@@ -41,16 +36,16 @@ export const useRouter = () => {
       { destination: href, ...(locale !== undefined ? { locale } : {}) },
     );
     executeNavigation(outboundResult, { config, currentLocale, setLocale });
-    nextRouterPush(outboundResult.destination, options);
-  };
+    nextRouter.push(outboundResult.destination, options);
+  }
 
   // --------------------------------------------------
   // replace
   // --------------------------------------------------
-  const replace = <CK extends GenConfigKeys = "__default__">(
+  function replace<CK extends GenConfigKeys = "__default__">(
     href: string,
     options?: NavigateOptions & { locale?: GenLocale<CK> },
-  ) => {
+  ) {
     const { locale } = options ?? {};
     const outboundResult = resolveOutbound(
       config,
@@ -59,16 +54,16 @@ export const useRouter = () => {
       { destination: href, ...(locale !== undefined ? { locale } : {}) },
     );
     executeNavigation(outboundResult, { config, currentLocale, setLocale });
-    nextRouterReplace(outboundResult.destination, options);
-  };
+    nextRouter.replace(outboundResult.destination, options);
+  }
 
   // --------------------------------------------------
   // prefetch
   // --------------------------------------------------
-  const prefetch = <CK extends GenConfigKeys = "__default__">(
+  function prefetch<CK extends GenConfigKeys = "__default__">(
     href: string,
     options?: PrefetchOptions & { locale?: GenLocale<CK> },
-  ) => {
+  ) {
     const { locale } = options ?? {};
     const { kind, destination } = resolveOutbound(
       config,
@@ -77,13 +72,15 @@ export const useRouter = () => {
       { destination: href, ...(locale !== undefined ? { locale } : {}) },
     );
     if (kind !== "client") return; // Prefetch only makes sense for client-side navigation
-    nextRouterPrefetch(destination, options);
-  };
+    nextRouter.prefetch(destination, options);
+  }
 
   return {
     push,
     replace,
     prefetch,
-    ...rest,
+    back: () => nextRouter.back(),
+    forward: () => nextRouter.forward(),
+    refresh: () => nextRouter.refresh(),
   };
-};
+}

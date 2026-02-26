@@ -37,10 +37,10 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // Locale transition
     // ---------------------------------------------------------------------------
     /** Request a locale change. */
-    const setLocale = async (newLocale: Locale) => {
+    const setLocale = (newLocale: Locale) => {
       if (newLocale === locale.value) return;
       locale.value = newLocale;
-      props.value.onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
+      void props.value.onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)
     };
 
     // ---------------------------------------------------------------------------

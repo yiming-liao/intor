@@ -37,6 +37,6 @@ export function useMessagesEffects(
       isInitial = false;
       return;
     }
-    refetchMessages(newLocale);
+    void refetchMessages(newLocale);
   });
 }

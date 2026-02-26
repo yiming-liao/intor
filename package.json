@@ -154,7 +154,7 @@
     "tsd": "0.33.0",
     "tsx": "^4.21.0",
     "typescript": "5.8.3",
-    "typescript-eslint": "8.32.1",
+    "typescript-eslint": "^8.56.1",
     "vite": "7.3.0",
     "vite-tsconfig-paths": "6.0.3",
     "vitest": "4.0.16",

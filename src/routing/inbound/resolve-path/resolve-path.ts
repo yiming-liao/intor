@@ -4,7 +4,7 @@ import { localizePathname } from "../../pathname";
 import { all, exceptDefault, none } from "./strategies";
 
 const assertNever = (x: never): never => {
-  throw new Error(`Unhandled prefix strategy: ${x}`);
+  throw new Error(`Unhandled prefix strategy: ${String(x)}`);
 };
 
 /**
