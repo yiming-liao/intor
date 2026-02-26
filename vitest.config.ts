@@ -1,4 +1,3 @@
-import path from "node:path";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
@@ -14,7 +13,6 @@ export default defineConfig({
         "src/**/types.ts",
         "src/core/types/**/*.ts",
         "src/config/types/*.ts",
-        "src/adapters/**/*.ts",
       ],
       reporter: ["lcov", "text"],
       thresholds: {
@@ -26,12 +24,6 @@ export default defineConfig({
         "src/edge/**": { statements: 100, branches: 100 },
         "src/server/**": { statements: 100, branches: 100 },
       },
-    },
-    setupFiles: ["./vitest-setup.ts"],
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
     },
   },
 });

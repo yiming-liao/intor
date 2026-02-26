@@ -63,7 +63,7 @@ describe("intorProxy (Next.js adapter)", () => {
     });
     const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/about");
-    const response = await handler(request);
+    const response = handler(request);
     expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBe("/zh-TW/about");
     expect(response.headers.get("x-intor-redirected")).toBe("1");
@@ -78,7 +78,7 @@ describe("intorProxy (Next.js adapter)", () => {
     });
     const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/about");
-    const response = await handler(request);
+    const response = handler(request);
     expect(resolveInbound).toHaveBeenCalled();
     expect(response.headers.get("location")).toBeNull();
     expect(response.headers.get("x-intor-redirected")).toBeNull();
@@ -93,7 +93,7 @@ describe("intorProxy (Next.js adapter)", () => {
     });
     const handler = createIntorHandler(config);
     const request = createRequest("https://example.com/zh-TW/about");
-    const response = await handler(request);
+    const response = handler(request);
     expect(response.headers.get(INTOR_HEADERS.LOCALE)).toBe("zh-TW");
     expect(response.headers.get(INTOR_HEADERS.LOCALE_SOURCE)).toBe("path");
     expect(response.headers.get(INTOR_HEADERS.PATHNAME)).toBe("/zh-TW/about");
@@ -110,5 +110,28 @@ describe("intorProxy (Next.js adapter)", () => {
     const request = createRequest("https://example.com/");
     handler(request);
     expect(request.cookies.get).toHaveBeenCalled();
+  });
+
+  it("forwards cookie to resolveInbound when present", () => {
+    (resolveInbound as any).mockReturnValue({
+      locale: "zh-TW",
+      localeSource: "cookie",
+      pathname: "/zh-TW",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    const request = createRequest("https://example.com/");
+    (request.cookies as any).get = vi.fn(() => ({
+      value: "zh-TW",
+    }));
+    handler(request);
+    expect(resolveInbound).toHaveBeenCalledWith(
+      config,
+      "/",
+      expect.objectContaining({
+        cookie: "zh-TW",
+      }),
+      expect.any(Object),
+    );
   });
 });
