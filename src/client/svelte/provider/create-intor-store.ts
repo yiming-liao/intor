@@ -1,5 +1,5 @@
 import type { IntorValue } from "./types";
-import { Translator, type Locale, type LocaleMessages } from "intor-translator";
+import { Translator, type LocaleMessages } from "intor-translator";
 import { setContext } from "svelte";
 import { writable, derived, get, readable } from "svelte/store";
 import {
@@ -23,7 +23,7 @@ export function buildIntorStores({
   // ---------------------------------------------------------------------------
   // Internal state
   // ---------------------------------------------------------------------------
-  const locale = writable<Locale>(initialLocale);
+  const locale = writable<string>(initialLocale);
   const runtimeMessages = writable<LocaleMessages | null>(null);
   const internalIsLoading = writable(false);
 
@@ -31,7 +31,7 @@ export function buildIntorStores({
   // Locale transition
   // -----------------------------------------------------------------------------
   /** Request a locale change. */
-  function setLocale(next: Locale) {
+  function setLocale(next: string) {
     const current = get(locale);
     if (next === current) return;
     locale.set(next);
@@ -84,6 +84,11 @@ export function buildIntorStores({
   };
 }
 
+/**
+ * Svelte initializer for Intor.
+ *
+ * @public
+ */
 export function createIntorStore(value: IntorValue): void {
   const stores = buildIntorStores(value);
 

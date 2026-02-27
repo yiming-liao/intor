@@ -1,12 +1,11 @@
 import type { IntorConfig } from "../../../config";
 import type {
-  Locale,
   LocaleMessages,
-  TranslateHandlers,
+  Translator,
   TranslateHook,
+  TranslateHandlers,
   TranslatorPlugin,
 } from "intor-translator";
-import type { Translator } from "intor-translator";
 import type * as React from "react";
 
 /**
@@ -19,10 +18,10 @@ import type * as React from "react";
  */
 export interface IntorValue {
   config: IntorConfig;
-  locale: Locale;
+  locale: string;
   messages?: Readonly<LocaleMessages>;
   isLoading?: boolean;
-  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
+  onLocaleChange?: (newLocale: string) => Promise<void> | void;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
 }
@@ -43,7 +42,7 @@ export interface IntorProviderProps {
  */
 export type IntorContextValue = {
   config: IntorConfig;
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
+  locale: string;
+  setLocale: (locale: string) => void;
   translator: Translator<LocaleMessages>;
 };

@@ -4,8 +4,7 @@ import type {
   IntorContextValue,
   IntorValue,
 } from "./types";
-import type { Locale, LocaleMessages } from "intor-translator";
-import { Translator } from "intor-translator";
+import { Translator, type LocaleMessages } from "intor-translator";
 import {
   type InjectionKey,
   type ComputedRef,
@@ -25,6 +24,11 @@ import { useMessagesEffects } from "./effects/use-messages-effects";
 export const IntorContextKey: InjectionKey<ComputedRef<IntorContextValue>> =
   Symbol("IntorContext");
 
+/**
+ * Vue provider for Intor.
+ *
+ * @public
+ */
 export const IntorProvider = defineComponent<IntorProviderProps>({
   name: "IntorProvider",
   props: { value: { type: Object as () => IntorValue, required: true } },
@@ -33,7 +37,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // ---------------------------------------------------------------------------
     // Internal state
     // ---------------------------------------------------------------------------
-    const locale = ref<Locale>(props.value.locale);
+    const locale = ref<string>(props.value.locale);
     const runtimeMessages = ref<LocaleMessages | null>(null);
     const internalIsLoading = ref<boolean>(false);
 
@@ -41,7 +45,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // Locale transition
     // ---------------------------------------------------------------------------
     /** Request a locale change. */
-    const setLocale = (newLocale: Locale) => {
+    const setLocale = (newLocale: string) => {
       if (newLocale === locale.value) return;
       locale.value = newLocale;
       void props.value.onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)

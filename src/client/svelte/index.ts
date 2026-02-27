@@ -3,6 +3,7 @@ export {
   createIntorStore,
   IntorProvider,
   type IntorProviderProps,
+  type IntorValue,
   getIntorContext,
 } from "./provider";
 

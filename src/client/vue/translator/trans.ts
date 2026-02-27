@@ -5,9 +5,11 @@ import { defineComponent, h, Fragment } from "vue";
 import { useTranslator } from "../translator/use-translator";
 
 /**
- * `<Trans />` is a lightweight Vue component for rendering rich translations.
+ * Vue component for rendering rich translations.
  *
- * It is a thin adapter around `translator.tRich` and introduces no additional logic.
+ * A thin wrapper around `tRich`.
+ *
+ * @public
  */
 export const Trans = defineComponent({
   name: "Trans",

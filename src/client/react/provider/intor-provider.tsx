@@ -1,7 +1,7 @@
 "use client";
 
 import type { IntorContextValue, IntorProviderProps } from "./types";
-import { Translator, type Locale, type LocaleMessages } from "intor-translator";
+import { Translator, type LocaleMessages } from "intor-translator";
 import * as React from "react";
 import {
   resolveEffectiveIsLoading,
@@ -16,8 +16,6 @@ export const IntorContext = React.createContext<IntorContextValue | undefined>(
 
 /**
  * React provider for Intor.
- *
- * Provides Intor configuration and locale context to descendants.
  *
  * @public
  */
@@ -47,7 +45,7 @@ export function IntorProvider({
   // -----------------------------------------------------------------------------
   /** Request a locale change. */
   const setLocale = React.useCallback(
-    (newLocale: Locale) => {
+    (newLocale: string) => {
       if (newLocale === locale) return;
       setLocaleState(newLocale);
       void onLocaleChange?.(newLocale); // Notify external listener (fire-and-forget)

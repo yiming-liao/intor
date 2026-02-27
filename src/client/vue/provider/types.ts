@@ -1,29 +1,47 @@
 import type { IntorConfig } from "../../../config";
-import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import type {
-  TranslateHandlers,
+  LocaleMessages,
+  Translator,
   TranslateHook,
+  TranslateHandlers,
   TranslatorPlugin,
 } from "intor-translator";
 import type { ComputedRef, Ref } from "vue";
 
+/**
+ * Runtime state contract consumed by `IntorProvider`.
+ *
+ * Represents the locale-bound translation state,
+ * including loaded messages and optional runtime extensions.
+ *
+ * @public
+ */
 export interface IntorValue {
   config: IntorConfig;
-  locale: Locale;
+  locale: string;
   messages?: Ref<LocaleMessages>;
   isLoading?: Ref<boolean>;
-  onLocaleChange?: (newLocale: Locale) => Promise<void> | void;
+  onLocaleChange?: (newLocale: string) => Promise<void> | void;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
 }
 
+/**
+ * Props for `IntorProvider`.
+ *
+ * @public
+ */
 export interface IntorProviderProps {
   value: IntorValue;
 }
 
+/**
+ * Internal Vue context shape.
+ * Not part of the public API surface.
+ */
 export type IntorContextValue = {
   config: IntorConfig;
   locale: Ref<string>;
-  setLocale: (locale: Locale) => void;
+  setLocale: (locale: string) => void;
   translator: ComputedRef<Translator<LocaleMessages>>;
 };

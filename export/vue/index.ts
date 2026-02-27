@@ -3,6 +3,8 @@
 export {
   // contexts
   IntorProvider,
+  type IntorProviderProps,
+  type IntorValue,
 
   // translator
   useTranslator,

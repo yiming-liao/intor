@@ -4,6 +4,7 @@ export {
   // provider
   createIntorStore,
   type IntorProviderProps,
+  type IntorValue,
 
   // translator
   useTranslator,
@@ -15,5 +16,10 @@ import type { IntorProviderProps } from "../../src/client/svelte";
 import type { Component } from "svelte";
 import { IntorProvider as IntorProviderComponent } from "../../src/client/svelte";
 
+/**
+ * Svelte provider component for Intor.
+ *
+ * @public
+ */
 export const IntorProvider: Component<IntorProviderProps> =
   IntorProviderComponent;
