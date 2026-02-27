@@ -8,4 +8,5 @@ export {
 
   // helpers
   getTranslator,
+  type GetTranslatorParams,
 } from "../../src/server";
