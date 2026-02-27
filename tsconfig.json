@@ -10,9 +10,9 @@
 
     "paths": {
       "intor": ["./export/index.ts"],
-      "intor/*": ["./src/*"]
+      "intor/*": ["./export/*"]
     }
   },
-  "include": ["src", "export", "__test__"],
+  "include": ["src", "export", "__test__", "dist"],
   "exclude": ["__test__/types/**/*.ts"]
 }

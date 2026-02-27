@@ -9,7 +9,13 @@
     "stripInternal": true,
     "declarationDir": "dist/types",
 
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["node"],
+
+    "paths": {
+      "intor": ["./export/index.ts"],
+      "intor/*": ["./export/*"]
+    }
   },
   "include": ["export"]
 }
