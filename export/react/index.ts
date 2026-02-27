@@ -7,7 +7,6 @@ export {
 
   // translator
   useTranslator,
-  Trans,
 
   // helpers
   useIntor,
