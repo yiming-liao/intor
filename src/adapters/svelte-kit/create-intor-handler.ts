@@ -1,5 +1,5 @@
+import type { IntorConfig } from "../../config";
 import type { Handle } from "@sveltejs/kit";
-import type { IntorConfig } from "intor";
 import { redirect } from "@sveltejs/kit";
 import { normalizeQuery } from "../../core";
 import {

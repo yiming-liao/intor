@@ -1,3 +1,4 @@
+import type { IntorConfig } from "../../config";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -7,7 +8,6 @@ import type {
 } from "../../core";
 import type { GetTranslatorParams } from "../../edge";
 import type { Context } from "hono";
-import type { IntorConfig } from "intor";
 import type { LocalizedPreKey } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "intor/edge";
 

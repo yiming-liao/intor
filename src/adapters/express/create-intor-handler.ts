@@ -1,6 +1,6 @@
+import type { IntorConfig } from "../../config";
 import type { GetTranslatorParams } from "../../server";
 import type { Request, Response, NextFunction } from "express";
-import type { IntorConfig } from "intor";
 import { getTranslator } from "intor/server";
 import { normalizeQuery, parseCookieHeader } from "../../core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";

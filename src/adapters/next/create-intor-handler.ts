@@ -1,4 +1,4 @@
-import type { IntorConfig } from "intor";
+import type { IntorConfig } from "../../config";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { INTOR_HEADERS, normalizeQuery } from "../../core";

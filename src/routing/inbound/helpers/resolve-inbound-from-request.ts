@@ -1,5 +1,5 @@
+import type { IntorConfig } from "../../../config";
 import type { InboundResult } from "../types";
-import type { IntorConfig } from "intor";
 import { normalizeQuery, parseCookieHeader } from "../../../core";
 import { getLocaleFromAcceptLanguage } from "../../locale";
 import { resolveInbound } from "../resolve-inbound";

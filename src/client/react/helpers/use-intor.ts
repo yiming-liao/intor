@@ -1,5 +1,5 @@
+import type { IntorConfig } from "../../../config";
 import type { IntorValue } from "../provider";
-import type { IntorConfig } from "intor";
 import type { Locale, LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { getClientLocale } from "intor";

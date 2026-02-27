@@ -1,5 +1,5 @@
+import type { IntorConfig } from "../../../config";
 import type { GenConfigKeys, GenLocale } from "../../../core";
-import type { IntorConfig } from "intor";
 import { cookies, headers } from "next/headers";
 import { INTOR_HEADERS, matchLocale } from "../../../core";
 

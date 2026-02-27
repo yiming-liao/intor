@@ -1,4 +1,4 @@
-import type { IntorConfig } from "intor";
+import type { IntorConfig } from "../../config";
 import type {
   LocalizedPreKey,
   TranslateHandlers,

@@ -1,4 +1,4 @@
-import type { IntorConfig } from "intor";
+import type { IntorConfig } from "../../../config";
 import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import type {
   TranslateHandlers,

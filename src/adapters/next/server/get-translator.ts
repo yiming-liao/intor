@@ -1,3 +1,4 @@
+import type { IntorConfig } from "../../../config";
 import type {
   GenConfigKeys,
   GenMessages,
@@ -6,7 +7,6 @@ import type {
   BaseTranslator,
 } from "../../../core";
 import type { GetTranslatorParams } from "../../../server";
-import type { IntorConfig } from "intor";
 import type { LocalizedPreKey } from "intor-translator";
 import { getTranslator as getTranslatorCore } from "intor/server";
 import { getLocale } from "./get-locale";

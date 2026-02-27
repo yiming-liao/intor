@@ -1,5 +1,5 @@
+import type { IntorConfig } from "../../config";
 import type { GenConfigKeys, GenLocale } from "../../core";
-import type { IntorConfig } from "intor";
 import type { RedirectType } from "next/navigation";
 import { redirect as nextRedirect } from "next/navigation";
 import { resolveOutbound } from "../../routing";

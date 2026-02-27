@@ -1,6 +1,6 @@
+import type { IntorConfig } from "../../config";
 import type { GetTranslatorParams } from "../../server";
 import type { FastifyInstance, FastifyPluginCallback } from "fastify";
-import type { IntorConfig } from "intor";
 import fp from "fastify-plugin";
 import { createIntorHandler } from "./create-intor-handler";
 
