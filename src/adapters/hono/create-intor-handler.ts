@@ -1,7 +1,6 @@
 import type { IntorConfig } from "../../config";
-import type { GetTranslatorParams } from "../../edge";
 import type { Context, Next } from "hono";
-import { getTranslator } from "intor/edge";
+import { getTranslator, type GetTranslatorParams } from "intor/edge";
 import { normalizeQuery, parseCookieHeader } from "../../core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
 
@@ -9,8 +8,9 @@ import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
  * Resolves locale-aware routing for the current execution context.
  *
  * - Binds resolved routing state to the request.
+ * - Optionally binds convenience routing shortcuts for downstream consumption.
  *
- * @platform Hono
+ * @public
  */
 export function createIntorHandler(
   config: IntorConfig,
@@ -40,7 +40,9 @@ export function createIntorHandler(
         host: url.hostname,
         query: normalizeQuery(Object.fromEntries(url.searchParams)),
         ...(cookie !== undefined ? { cookie } : {}),
-        detected: localeFromAcceptLanguage || config.defaultLocale,
+        ...(localeFromAcceptLanguage !== undefined
+          ? { detected: localeFromAcceptLanguage }
+          : {}),
       },
     );
 

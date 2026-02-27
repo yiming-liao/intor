@@ -1,7 +1,6 @@
 import type { IntorConfig } from "../../config";
-import type { GetTranslatorParams } from "../../server";
 import type { Request, Response, NextFunction } from "express";
-import { getTranslator } from "intor/server";
+import { getTranslator, type GetTranslatorParams } from "intor/server";
 import { normalizeQuery, parseCookieHeader } from "../../core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
 
@@ -9,9 +8,9 @@ import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
  * Resolves locale-aware routing for the current execution context.
  *
  * - Binds resolved routing state to the request.
- * - Convenience routing shortcuts are also bound to the request for downstream consumption.
+ * - Optionally binds convenience routing shortcuts for downstream consumption.
  *
- * @platform Express
+ * @public
  */
 export function createIntorHandler(
   config: IntorConfig,
@@ -43,7 +42,9 @@ export function createIntorHandler(
         host: req.hostname,
         query: normalizeQuery(req.query),
         ...(cookie !== undefined ? { cookie } : {}),
-        detected: localeFromAcceptLanguage || config.defaultLocale,
+        ...(localeFromAcceptLanguage !== undefined
+          ? { detected: localeFromAcceptLanguage }
+          : {}),
       },
     );
 
@@ -52,7 +53,7 @@ export function createIntorHandler(
     // --------------------------------------------------
     req.intor = { locale, localeSource, pathname };
 
-    const { loader, handlers, plugins, readers } = options ?? {};
+    const { loader, readers, handlers, plugins } = options ?? {};
     const { hasKey, t, tRich } = await getTranslator(config, {
       locale,
       ...(loader !== undefined ? { loader } : {}),

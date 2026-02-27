@@ -71,7 +71,12 @@ const intorFastifyPluginImpl: FastifyPluginCallback<
 };
 
 /**
- * Exported Fastify plugin (root-level, non-encapsulated)
+ * Fastify plugin for Intor.
+ *
+ * Registers inbound routing resolution and binds
+ * locale-aware translation helpers to each request.
+ *
+ * @public
  */
 export const intorFastifyPlugin = fp(intorFastifyPluginImpl, {
   name: "@intor/fastify",

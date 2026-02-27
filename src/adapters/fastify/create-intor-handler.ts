@@ -9,9 +9,9 @@ import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
  * Resolves locale-aware routing for the current execution context.
  *
  * - Binds resolved routing state to the request.
- * - Convenience routing shortcuts are also bound to the request for downstream consumption.
+ * - Optionally binds convenience routing shortcuts for downstream consumption.
  *
- * @platform Fastify
+ * @public
  */
 export function createIntorHandler(
   config: IntorResolvedConfig,
@@ -44,7 +44,9 @@ export function createIntorHandler(
         host: request.hostname,
         query: normalizeQuery(request.query as Record<string, unknown>),
         ...(cookie !== undefined ? { cookie } : {}),
-        detected: localeFromAcceptLanguage || config.defaultLocale,
+        ...(localeFromAcceptLanguage !== undefined
+          ? { detected: localeFromAcceptLanguage }
+          : {}),
       },
     );
 
