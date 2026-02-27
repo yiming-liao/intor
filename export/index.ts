@@ -35,7 +35,12 @@ export {
 } from "../src/config";
 
 // routing
-export { localizePathname, type InboundContext } from "../src/routing";
+export {
+  localizePathname,
+  type InboundContext,
+  // helper
+  resolveInboundFromRequest,
+} from "../src/routing";
 
 // client
 export { getClientLocale } from "../src/client";

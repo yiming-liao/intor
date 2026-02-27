@@ -3,6 +3,8 @@ export {
   resolveInbound,
   type InboundResult,
   type InboundContext,
+
+  // helpers
   resolveInboundFromRequest,
 } from "./inbound";
 

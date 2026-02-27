@@ -1,6 +1,3 @@
 // intor / edge
 
-export { getTranslator } from "../../src/edge";
-
-// routing
-export { resolveInboundFromRequest } from "../../src/routing";
+export { getTranslator, type GetTranslatorParams } from "../../src/edge";

@@ -1,13 +1,18 @@
 import type { IntorConfig } from "../../../config";
-import type { InboundResult } from "../types";
+import type { InboundContext } from "../types";
 import { normalizeQuery, parseCookieHeader } from "../../../core";
 import { getLocaleFromAcceptLanguage } from "../../locale";
 import { resolveInbound } from "../resolve-inbound";
 
+/**
+ * Resolves inbound routing state from a Web standard `Request`.
+ *
+ * @public
+ */
 export function resolveInboundFromRequest(
   config: IntorConfig,
   request: Request,
-): InboundResult {
+): InboundContext {
   const url = new URL(request.url);
   const headers = request.headers;
 
@@ -25,10 +30,18 @@ export function resolveInboundFromRequest(
     config.supportedLocales,
   );
 
-  return resolveInbound(config, url.pathname, {
+  const inbounResult = resolveInbound(config, url.pathname, {
     host: url.hostname,
     query: normalizedQuery,
     ...(cookieLocale !== undefined ? { cookie: cookieLocale } : {}),
-    detected: localeFromAcceptLanguage || config.defaultLocale,
+    ...(localeFromAcceptLanguage !== undefined
+      ? { detected: localeFromAcceptLanguage }
+      : {}),
   });
+
+  return {
+    locale: inbounResult.locale,
+    localeSource: inbounResult.localeSource,
+    pathname: inbounResult.pathname,
+  };
 }
