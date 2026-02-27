@@ -1,6 +1,5 @@
 // intor / next
 
-// navigation
 export {
   Link,
   useRouter,

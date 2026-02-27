@@ -1,8 +1,7 @@
 import type { IntorConfig } from "../../../config";
-import type { MessagesReaders } from "../../../core";
-import type { GenConfigKeys } from "../../../core";
+import type { TypedConfigKeys } from "../../../core";
 import type { IntorValue } from "../../../server";
-import { intor as intorCore } from "intor/server";
+import { intor as intorCore, type IntorOptions } from "intor/server";
 import { getLocale } from "./get-locale";
 
 /**
@@ -10,16 +9,17 @@ import { getLocale } from "./get-locale";
  *
  * - Automatically resolves the locale from the framework context.
  * - Permits cache writes during server execution.
- * @platform Next.js
+ *
+ * @public
  */
-export async function intor<CK extends GenConfigKeys = "__default__">(
+export async function intor<CK extends TypedConfigKeys = "__default__">(
   config: IntorConfig,
-  options?: { readers?: MessagesReaders; allowCacheWrite?: boolean },
+  options?: Omit<IntorOptions, "fetch">,
 ): Promise<IntorValue<CK>> {
-  const { readers } = options ?? {};
+  const { readers, allowCacheWrite = true } = options ?? {};
 
   return await intorCore(config, await getLocale(config), {
     ...(readers !== undefined ? { readers } : {}),
-    allowCacheWrite: options?.allowCacheWrite ?? true,
+    allowCacheWrite,
   });
 }

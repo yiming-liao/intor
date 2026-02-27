@@ -1,12 +1,13 @@
 import type { GenConfigKeys, GenLocale } from "../../core";
-import type {
-  NavigateOptions,
-  PrefetchOptions,
-} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter, usePathname } from "next/navigation";
 import { executeNavigation } from "../../client";
 import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react/internal` via Rollup alias at build time.
-import { resolveOutbound } from "../../routing";
+import { resolveOutbound, type OutboundResult } from "../../routing";
+
+type NextRouter = ReturnType<typeof useNextRouter>;
+type PushOptions = Parameters<NextRouter["push"]>[1];
+type ReplaceOptions = Parameters<NextRouter["replace"]>[1];
+type PrefetchOptions = Parameters<NextRouter["prefetch"]>[1];
 
 /**
  * Locale-aware router hook for the current execution context.
@@ -15,7 +16,7 @@ import { resolveOutbound } from "../../routing";
  * - Commits locale changes only on actual navigation.
  * - Keeps routing logic pure and side-effects explicit.
  *
- * @platform Next.js
+ * @public
  */
 export function useRouter() {
   const { config, locale: currentLocale, setLocale } = useIntorContext();
@@ -29,8 +30,8 @@ export function useRouter() {
     });
   }
 
-  function commit(outbound: ReturnType<typeof resolve>) {
-    executeNavigation(outbound, { config, currentLocale, setLocale });
+  function execute(outboundResult: OutboundResult) {
+    executeNavigation(outboundResult, { config, currentLocale, setLocale });
   }
 
   // --------------------------------------------------
@@ -38,16 +39,16 @@ export function useRouter() {
   // --------------------------------------------------
   function push<CK extends GenConfigKeys = "__default__">(
     href: string,
-    options?: NavigateOptions & { locale?: GenLocale<CK> },
+    options?: PushOptions & { locale?: GenLocale<CK> },
   ) {
-    const outbound = resolve(href, options?.locale);
-    commit(outbound);
+    const outboundResult = resolve(href, options?.locale);
+    execute(outboundResult);
     if (!options) {
-      nextRouter.push(outbound.destination);
+      nextRouter.push(outboundResult.destination);
       return;
     }
     const { locale: _, ...rest } = options;
-    nextRouter.push(outbound.destination, rest);
+    nextRouter.push(outboundResult.destination, rest);
   }
 
   // --------------------------------------------------
@@ -55,16 +56,16 @@ export function useRouter() {
   // --------------------------------------------------
   function replace<CK extends GenConfigKeys = "__default__">(
     href: string,
-    options?: NavigateOptions & { locale?: GenLocale<CK> },
+    options?: ReplaceOptions & { locale?: GenLocale<CK> },
   ) {
-    const outbound = resolve(href, options?.locale);
-    commit(outbound);
+    const outboundResult = resolve(href, options?.locale);
+    execute(outboundResult);
     if (!options) {
-      nextRouter.replace(outbound.destination);
+      nextRouter.replace(outboundResult.destination);
       return;
     }
     const { locale: _, ...rest } = options;
-    nextRouter.replace(outbound.destination, rest);
+    nextRouter.replace(outboundResult.destination, rest);
   }
 
   // --------------------------------------------------
@@ -74,14 +75,14 @@ export function useRouter() {
     href: string,
     options?: PrefetchOptions & { locale?: GenLocale<CK> },
   ) {
-    const outbound = resolve(href, options?.locale);
-    if (outbound.kind !== "client") return;
+    const outboundResult = resolve(href, options?.locale);
+    if (outboundResult.kind !== "client") return;
     if (!options) {
-      nextRouter.prefetch(outbound.destination);
+      nextRouter.prefetch(outboundResult.destination);
       return;
     }
     const { locale: _, ...rest } = options;
-    nextRouter.prefetch(outbound.destination, rest);
+    nextRouter.prefetch(outboundResult.destination, rest);
   }
 
   return {

@@ -11,7 +11,7 @@ import { getLocaleFromAcceptLanguage, resolveInbound } from "../../routing";
  *
  * - Acts as the canonical routing authority, guaranteeing a canonical routing result for every request.
  *
- * @platform Next.js
+ * @public
  */
 export function createIntorHandler(config: IntorConfig) {
   return function intorHandler(request: NextRequest) {
@@ -38,7 +38,9 @@ export function createIntorHandler(config: IntorConfig) {
         host,
         query: normalizeQuery(Object.fromEntries(searchParams.entries())),
         ...(cookie !== undefined ? { cookie } : {}),
-        detected: localeFromAcceptLanguage || config.defaultLocale,
+        ...(localeFromAcceptLanguage !== undefined
+          ? { detected: localeFromAcceptLanguage }
+          : {}),
       },
       { hasRedirected },
     );

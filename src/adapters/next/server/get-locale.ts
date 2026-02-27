@@ -6,8 +6,9 @@ import { INTOR_HEADERS, matchLocale } from "../../../core";
 /**
  * Get the locale for the current execution context.
  *
- * @note Uses inbound routing context when available, otherwise falls back to persisted state.
- * @platform Next.js
+ * Uses inbound routing context when available, otherwise falls back to persisted state.
+ *
+ * @public
  */
 export const getLocale = async <CK extends GenConfigKeys = "__default__">(
   config: IntorConfig,

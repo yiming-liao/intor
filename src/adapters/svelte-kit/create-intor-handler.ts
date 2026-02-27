@@ -15,7 +15,7 @@ import { isSvelteKitSSG } from "./utils/is-svelte-kit-ssg";
  *
  * - Acts as the canonical routing authority within the SvelteKit request lifecycle.
  *
- * @platform SvelteKit
+ * @public
  */
 export function createIntorHandler(config: IntorConfig): Handle {
   return async function intorHandler({ event, resolve }) {
@@ -47,7 +47,9 @@ export function createIntorHandler(config: IntorConfig): Handle {
         host,
         query: normalizeQuery(Object.fromEntries(searchParams.entries())),
         ...(cookie !== undefined ? { cookie } : {}),
-        detected: localeFromAcceptLanguage || config.defaultLocale,
+        ...(localeFromAcceptLanguage !== undefined
+          ? { detected: localeFromAcceptLanguage }
+          : {}),
       });
     }
     const { locale, localeSource, pathname, shouldRedirect } = inboundResult;

@@ -11,23 +11,26 @@ import { getLocale } from "./server/get-locale"; // NOTE: Import the concrete se
  * - Bypasses localization for external destinations.
  * - Automatically resolves the effective locale from the execution context.
  *
- * @platform Next.js
+ * @public
  */
 export const redirect = async <CK extends GenConfigKeys = "__default__">(
   config: IntorConfig,
   url: string,
-  { locale, type }: { locale?: GenLocale<CK>; type?: RedirectType },
+  options?: { locale?: GenLocale<CK>; type?: RedirectType },
 ) => {
+  const { locale, type } = options ?? {};
+
   const currentLocale = await getLocale(config);
 
-  const { destination, kind } = resolveOutbound(config, currentLocale, url, {
-    ...(locale !== undefined ? { locale } : {}),
-  });
-
-  if (kind === "external") {
-    nextRedirect(url);
-    return;
-  }
+  const { destination } = resolveOutbound(
+    config,
+    currentLocale,
+    "", // server redirect does not depend on current pathname
+    {
+      destination: url,
+      ...(locale !== undefined ? { locale } : {}),
+    },
+  );
 
   return nextRedirect(destination, type);
 };

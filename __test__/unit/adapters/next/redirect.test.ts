@@ -5,8 +5,14 @@ import { resolveOutbound } from "../../../../src/routing";
 import { redirect } from "../../../../src/adapters/next/redirect";
 import { getLocale } from "../../../../src/adapters/next/server/get-locale";
 
-vi.mock("next/navigation", () => ({ redirect: vi.fn() }));
-vi.mock("../../../../src/routing", () => ({ resolveOutbound: vi.fn() }));
+vi.mock("next/navigation", () => ({
+  redirect: vi.fn(),
+}));
+
+vi.mock("../../../../src/routing", () => ({
+  resolveOutbound: vi.fn(),
+}));
+
 vi.mock("../../../../src/adapters/next/server/get-locale", () => ({
   getLocale: vi.fn(),
 }));
@@ -18,14 +24,15 @@ describe("redirect (Next adapter)", () => {
     vi.clearAllMocks();
   });
 
-  it("redirects to localized destination", async () => {
+  it("resolves outbound using empty currentPathname and redirects", async () => {
     (getLocale as any).mockResolvedValue("en");
     (resolveOutbound as any).mockReturnValue({
       destination: "/en/about",
-      kind: "internal",
     });
-    await redirect(config, "/about", {});
-    expect(resolveOutbound).toHaveBeenCalledWith(config, "en", "/about", {});
+    await redirect(config, "/about");
+    expect(resolveOutbound).toHaveBeenCalledWith(config, "en", "", {
+      destination: "/about",
+    });
     expect(nextRedirect).toHaveBeenCalledWith("/en/about", undefined);
   });
 
@@ -33,10 +40,10 @@ describe("redirect (Next adapter)", () => {
     (getLocale as any).mockResolvedValue("en");
     (resolveOutbound as any).mockReturnValue({
       destination: "/fr/about",
-      kind: "internal",
     });
     await redirect(config, "/about", { locale: "fr" });
-    expect(resolveOutbound).toHaveBeenCalledWith(config, "en", "/about", {
+    expect(resolveOutbound).toHaveBeenCalledWith(config, "en", "", {
+      destination: "/about",
       locale: "fr",
     });
   });
@@ -45,19 +52,17 @@ describe("redirect (Next adapter)", () => {
     (getLocale as any).mockResolvedValue("en");
     (resolveOutbound as any).mockReturnValue({
       destination: "/en/about",
-      kind: "internal",
     });
     await redirect(config, "/about", { type: "replace" as any });
     expect(nextRedirect).toHaveBeenCalledWith("/en/about", "replace");
   });
 
-  it("bypasses localization for external destinations", async () => {
+  it("redirects external destinations as returned by routing core", async () => {
     (getLocale as any).mockResolvedValue("en");
     (resolveOutbound as any).mockReturnValue({
       destination: "https://google.com",
-      kind: "external",
     });
-    await redirect(config, "https://google.com", {});
-    expect(nextRedirect).toHaveBeenCalledWith("https://google.com");
+    await redirect(config, "https://google.com");
+    expect(nextRedirect).toHaveBeenCalledWith("https://google.com", undefined);
   });
 });

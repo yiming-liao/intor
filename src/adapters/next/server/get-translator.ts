@@ -1,39 +1,35 @@
 import type { IntorConfig } from "../../../config";
 import type {
-  GenConfigKeys,
-  GenMessages,
-  GenReplacements,
-  GenRich,
+  TypedConfigKeys,
+  TypedMessages,
+  TypedReplacements,
+  TypedRich,
   BaseTranslator,
 } from "../../../core";
-import type { GetTranslatorParams } from "../../../server";
 import type { LocalizedPreKey } from "intor-translator";
-import { getTranslator as getTranslatorCore } from "intor/server";
+import {
+  getTranslator as getTranslatorCore,
+  type GetTranslatorParams,
+} from "intor/server";
 import { getLocale } from "./get-locale";
-
-type GetTranslatorNextParams<CK extends GenConfigKeys = "__default__"> = Omit<
-  GetTranslatorParams<CK>,
-  "locale"
->;
 
 /**
  * Get a server-side translator for the current execution context.
  *
  * - Automatically resolves the locale from the framework context.
  *
- * @platform Next.js
+ * @public
  */
 export async function getTranslator<
-  CK extends GenConfigKeys = "__default__",
-  ReplacementShape = GenReplacements<CK>,
-  RichShape = GenRich<CK>,
-  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
+  CK extends TypedConfigKeys = "__default__",
+  ReplacementShape = TypedReplacements<CK>,
+  RichShape = TypedRich<CK>,
+  PK extends LocalizedPreKey<TypedMessages<CK>> | undefined = undefined,
 >(
   config: IntorConfig,
-  params?: GetTranslatorNextParams<CK> & { preKey?: PK },
-): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
+  params?: Omit<GetTranslatorParams, "locale"> & { preKey?: PK },
+): Promise<BaseTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>> {
   const locale = await getLocale(config);
 
-  if (!params) return getTranslatorCore(config, { locale });
-  return getTranslatorCore(config, { locale, ...params });
+  return getTranslatorCore(config, { locale, ...(params ?? {}) });
 }

@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import type { GenConfigKeys, GenLocale } from "../../core";
+import type { TypedConfigKeys, TypedLocale } from "../../core";
 import { get } from "svelte/store";
 import { executeNavigation } from "../../client";
 import { getIntorContext } from "../../client/svelte"; // NOTE: Internal imports are rewritten to `intor/svelte/internal` via Rollup alias at build time.
@@ -13,14 +13,14 @@ import { page } from "$app/state";
  * Provides imperative navigation helpers that integrate
  * Intor's locale-aware routing and side effects.
  *
- * @platform SvelteKit
+ * @public
  */
-export function useNavigation<CK extends GenConfigKeys = "__default__">() {
+export function useNavigation<CK extends TypedConfigKeys = "__default__">() {
   const { config, locale: currentLocale, setLocale } = getIntorContext();
 
   async function goto(
     url: string,
-    opts?: Parameters<typeof svelteGoto>[1] & { locale?: GenLocale<CK> },
+    opts?: Parameters<typeof svelteGoto>[1] & { locale?: TypedLocale<CK> },
   ) {
     const { locale, ...rest } = opts || {};
 

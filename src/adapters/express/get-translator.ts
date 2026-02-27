@@ -32,6 +32,5 @@ export async function getTranslator<
 ): Promise<BaseTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>> {
   const locale = req.intor?.locale ?? config.defaultLocale;
 
-  if (!params) return getTranslatorCore(config, { locale });
-  return getTranslatorCore(config, { locale, ...params });
+  return getTranslatorCore(config, { locale, ...(params ?? {}) });
 }

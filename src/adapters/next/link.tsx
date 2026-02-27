@@ -1,9 +1,7 @@
 "use client";
 
 import type { GenConfigKeys, GenLocale } from "../../core";
-import type { Url } from "next/dist/shared/lib/router/router";
 import type { LinkProps as NextLinkProps } from "next/link";
-import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -15,7 +13,7 @@ type LinkProps<CK extends GenConfigKeys = "__default__"> =
   React.PropsWithChildren<
     Omit<NextLinkProps, "href"> &
       Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
-        href?: Url;
+        href?: string;
         /**
          * Optional locale override for this navigation.
          *
@@ -31,7 +29,7 @@ type LinkProps<CK extends GenConfigKeys = "__default__"> =
  * - Resolves a locale-aware navigation destination.
  * - Determines whether navigation should be executed client-side or via full reload.
  *
- * @platform Next.js
+ * @public
  */
 export const Link = <CK extends GenConfigKeys = "__default__">({
   href,
@@ -43,17 +41,13 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   const { config, locale: currentLocale, setLocale } = useIntorContext();
   const currentPathname = usePathname();
 
-  // Normalize href into a string destination
-  const rawDestination =
-    typeof href === "string" ? href : href ? formatUrl(href) : undefined;
-
   // Resolve navigation result for this link
   const outboundResult = resolveOutbound(
     config,
     currentLocale,
     currentPathname,
     {
-      ...(rawDestination !== undefined ? { destination: rawDestination } : {}),
+      ...(href !== undefined ? { destination: href } : {}),
       ...(locale !== undefined ? { locale } : {}),
     },
   );
