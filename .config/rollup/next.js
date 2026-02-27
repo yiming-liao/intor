@@ -20,7 +20,7 @@ const EXTERNALS = [
   "next/navigation",
   "next/dist/shared/lib/router/utils/format-url",
   // intor
-  "intor/react",
+  "intor/react/internal",
   "intor/server",
 ];
 
@@ -42,9 +42,11 @@ export default [
       warn(warning);
     },
     plugins: [
-      // Prevent duplicate React runtime by redirecting to `intor/react`.
+      // Prevent duplicate React runtime by redirecting to `intor/react/internal`.
       alias({
-        entries: [{ find: "../../client/react", replacement: "intor/react" }],
+        entries: [
+          { find: "../../client/react", replacement: "intor/react/internal" },
+        ],
       }),
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       preserveDirectives(),

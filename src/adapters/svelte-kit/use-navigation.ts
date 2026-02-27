@@ -2,7 +2,7 @@
 import type { GenConfigKeys, GenLocale } from "../../core";
 import { get } from "svelte/store";
 import { executeNavigation } from "../../client";
-import { getIntorContext } from "../../client/svelte"; // NOTE: Internal imports are rewritten to `intor/svelte` via Rollup alias at build time.
+import { getIntorContext } from "../../client/svelte"; // NOTE: Internal imports are rewritten to `intor/svelte/internal` via Rollup alias at build time.
 import { resolveOutbound } from "../../routing";
 import { goto as svelteGoto } from "$app/navigation";
 import { page } from "$app/state";

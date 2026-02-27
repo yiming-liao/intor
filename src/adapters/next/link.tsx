@@ -8,7 +8,7 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { executeNavigation } from "../../client";
-import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react` via Rollup alias at build time.
+import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react/internal` via Rollup alias at build time.
 import { resolveOutbound } from "../../routing";
 
 type LinkProps<CK extends GenConfigKeys = "__default__"> =

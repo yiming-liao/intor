@@ -16,6 +16,7 @@ export default [
   {
     input: {
       "export/svelte/index": "export/svelte/index.ts",
+      "export/svelte/internal/index": "export/svelte/internal/index.ts",
     },
     output: {
       dir: "dist/svelte",

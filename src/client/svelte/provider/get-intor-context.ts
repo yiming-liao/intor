@@ -2,7 +2,6 @@ import type { IntorContextValue } from "./types";
 import { getContext } from "svelte";
 import { INTOR_CONTEXT_KEY } from "./create-intor-store";
 
-/** @internal */
 export function getIntorContext(): IntorContextValue {
   const context = getContext<IntorContextValue>(INTOR_CONTEXT_KEY);
   if (!context)

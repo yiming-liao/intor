@@ -5,7 +5,7 @@ import type {
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter, usePathname } from "next/navigation";
 import { executeNavigation } from "../../client";
-import { useIntorContext } from "../../client/react";
+import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react/internal` via Rollup alias at build time.
 import { resolveOutbound } from "../../routing";
 
 /**

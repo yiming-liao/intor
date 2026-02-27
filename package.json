@@ -51,6 +51,10 @@
       "types": "./dist/types/export/react/index.d.ts",
       "import": "./dist/react/export/react/index.js"
     },
+    "./react/internal": {
+      "types": "./dist/types/export/react/internal/index.d.ts",
+      "import": "./dist/react/export/react/internal/index.js"
+    },
     "./vue": {
       "types": "./dist/types/export/vue/index.d.ts",
       "import": "./dist/vue/export/vue/index.js"
@@ -58,6 +62,10 @@
     "./svelte": {
       "types": "./dist/types/export/svelte/index.d.ts",
       "import": "./dist/svelte/export/svelte/index.js"
+    },
+    "./svelte/internal": {
+      "types": "./dist/types/export/svelte/internal/index.d.ts",
+      "import": "./dist/svelte/export/svelte/internal/index.js"
     },
     "./next": {
       "types": "./dist/types/export/next/index.d.ts",

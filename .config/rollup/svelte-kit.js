@@ -14,7 +14,7 @@ const EXTERNALS = [
   "$app/navigation",
   "$app/state",
   // intor
-  "intor/svelte",
+  "intor/svelte/internal",
 ];
 
 /** @type {import('rollup').RollupOptions[]} */
@@ -33,9 +33,11 @@ export default [
       warn(warning);
     },
     plugins: [
-      // Prevent duplicate Svelte runtime by redirecting to `intor/svelte`.
+      // Prevent duplicate Svelte runtime by redirecting to `intor/svelte/internal`.
       alias({
-        entries: [{ find: "../../client/svelte", replacement: "intor/svelte" }],
+        entries: [
+          { find: "../../client/svelte", replacement: "intor/svelte/internal" },
+        ],
       }),
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
       fileSizeSummary(),
