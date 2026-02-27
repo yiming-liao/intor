@@ -5,6 +5,7 @@ import {
   type Replacement,
   type TranslatorMethods,
 } from "intor-translator";
+import * as React from "react";
 import { createReactRenderer } from "../render";
 
 /**
@@ -27,6 +28,13 @@ export const createTRich = (t: TranslatorMethods<LocaleMessages>["t"]) => {
   ) => {
     const message = t(key, replacements);
     const reactRenderer = createReactRenderer(tagRenderers);
-    return renderRichMessage(message, reactRenderer);
+    const nodes = renderRichMessage(message, reactRenderer);
+
+    if (!Array.isArray(nodes)) return nodes;
+    return nodes.map((node, i) =>
+      React.isValidElement(node) && node.key == null
+        ? React.cloneElement(node, { key: i })
+        : node,
+    );
   };
 };
