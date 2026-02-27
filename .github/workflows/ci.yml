@@ -43,3 +43,6 @@ jobs:
 
       - name: Test Types
         run: yarn test:types
+
+      - name: API Surface Check
+        run: yarn api:check
