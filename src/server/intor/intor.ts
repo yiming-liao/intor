@@ -1,12 +1,6 @@
-import type { IntorValue } from "./types";
+import type { IntorOptions, IntorValue } from "./types";
 import type { IntorConfig } from "../../config";
-import {
-  getLogger,
-  type GenConfigKeys,
-  type GenLocale,
-  type MessagesReaders,
-  type RuntimeFetch,
-} from "../../core";
+import { getLogger, type TypedConfigKeys } from "../../core";
 import { initTranslator } from "../translator";
 
 /**
@@ -14,26 +8,30 @@ import { initTranslator } from "../translator";
  *
  * Produces a server-side snapshot for SSR and
  * full-stack rendering environments.
+ *
+ * @public
  */
-export async function intor<CK extends GenConfigKeys = "__default__">(
+export async function intor<CK extends TypedConfigKeys = "__default__">(
   config: IntorConfig,
-  locale: GenLocale<CK> | (string & {}),
-  options?: {
-    readers?: MessagesReaders;
-    allowCacheWrite?: boolean;
-    fetch?: RuntimeFetch;
-  },
+  locale: string,
+  options?: IntorOptions,
 ): Promise<IntorValue<CK>> {
   const baseLogger = getLogger(config.logger);
   const logger = baseLogger.child({ scope: "intor" });
   logger.info("Start Intor initialization.");
   logger.debug(`Initializing Intor with locale "${locale}".`);
 
+  const {
+    readers,
+    allowCacheWrite = true,
+    fetch = globalThis.fetch,
+  } = options ?? {};
+
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
-    ...(options?.readers !== undefined ? { readers: options?.readers } : {}),
-    allowCacheWrite: options?.allowCacheWrite ?? true,
-    fetch: options?.fetch ?? globalThis.fetch,
+    ...(readers !== undefined ? { readers: readers } : {}),
+    allowCacheWrite,
+    fetch,
   });
 
   logger.info("Intor initialized.");

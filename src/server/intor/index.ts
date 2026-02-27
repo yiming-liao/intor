@@ -1,2 +1,2 @@
 export { intor } from "./intor";
-export type { IntorValue } from "./types";
+export type { IntorOptions, IntorValue } from "./types";

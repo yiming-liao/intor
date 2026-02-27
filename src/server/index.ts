@@ -1,5 +1,5 @@
 // intor
-export { intor, type IntorValue } from "./intor";
+export { intor, type IntorOptions, type IntorValue } from "./intor";
 
 // messages
 export { loadMessages, clearMessagesPool } from "./messages";

@@ -1,1 +1,4 @@
-export { initTranslator } from "../translator/init-translator";
+export {
+  initTranslator,
+  type InitTranslatorOptions,
+} from "../translator/init-translator";

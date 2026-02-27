@@ -3,10 +3,8 @@
 export {
   // intor
   intor,
+  type IntorOptions,
   type IntorValue,
-
-  // messages
-  clearMessagesPool,
 
   // helpers
   getTranslator,

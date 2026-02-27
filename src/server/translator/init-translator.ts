@@ -1,5 +1,5 @@
 import type { IntorResolvedConfig } from "../../config";
-import type { Locale, LocaleMessages, Translator } from "intor-translator";
+import type { LocaleMessages, Translator } from "intor-translator";
 import {
   resolveLoaderOptions,
   createTranslator,
@@ -8,7 +8,7 @@ import {
 } from "../../core";
 import { loadMessages, type LoadMessagesParams } from "../messages";
 
-interface InitTranslatorOptions
+export interface InitTranslatorOptions
   extends Pick<LoadMessagesParams, "readers" | "allowCacheWrite" | "fetch">,
     Pick<CreateTranslatorParams, "handlers" | "plugins"> {
   loader?: MessagesLoader;
@@ -22,7 +22,7 @@ interface InitTranslatorOptions
  */
 export async function initTranslator(
   config: IntorResolvedConfig,
-  locale: Locale,
+  locale: string,
   options: InitTranslatorOptions,
 ): Promise<Translator<LocaleMessages>> {
   const {

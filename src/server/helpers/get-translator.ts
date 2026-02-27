@@ -8,7 +8,6 @@ import type {
 import {
   createTRich,
   type GenConfigKeys,
-  type GenLocale,
   type GenMessages,
   type GenReplacements,
   type GenRich,
@@ -19,8 +18,8 @@ import {
 } from "../../core";
 import { initTranslator } from "../translator";
 
-export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
-  locale: GenLocale<CK> | (string & {});
+export interface GetTranslatorParams {
+  locale: string;
   loader?: MessagesLoader;
   readers?: MessagesReaders;
   allowCacheWrite?: boolean;
@@ -31,6 +30,8 @@ export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
 
 /**
  * Get a server-side translator for the current execution context.
+ *
+ * @public
  */
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
@@ -39,7 +40,7 @@ export async function getTranslator<
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorConfig,
-  params: GetTranslatorParams<CK> & { preKey?: PK },
+  params: GetTranslatorParams & { preKey?: PK },
 ): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
   const {
     locale,
