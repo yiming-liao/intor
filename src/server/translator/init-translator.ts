@@ -9,8 +9,8 @@ import {
 import { loadMessages, type LoadMessagesParams } from "../messages";
 
 export interface InitTranslatorOptions
-  extends Pick<LoadMessagesParams, "readers" | "allowCacheWrite" | "fetch">,
-    Pick<CreateTranslatorParams, "handlers" | "plugins"> {
+  extends Omit<LoadMessagesParams, "config" | "locale">,
+    Omit<CreateTranslatorParams, "config" | "locale" | "messages"> {
   loader?: MessagesLoader;
 }
 

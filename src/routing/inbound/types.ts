@@ -19,7 +19,4 @@ export interface InboundResult {
  *
  * @public
  */
-export type InboundContext = Pick<
-  InboundResult,
-  "locale" | "pathname" | "localeSource"
->;
+export type InboundContext = Omit<InboundResult, "shouldRedirect">;

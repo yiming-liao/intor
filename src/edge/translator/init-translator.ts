@@ -8,7 +8,7 @@ import {
 } from "../../core";
 
 interface InitTranslatorOptions
-  extends Pick<CreateTranslatorParams, "handlers" | "plugins"> {
+  extends Omit<CreateTranslatorParams, "config" | "locale" | "messages"> {
   fetch: RuntimeFetch;
 }
 
