@@ -15,10 +15,8 @@ const EXTERNALS = [
   // next
   "next/server",
   "next/headers",
-  "next/dist",
   "next/link",
   "next/navigation",
-  "next/dist/shared/lib/router/utils/format-url",
   // intor
   "intor/react/internal",
   "intor/server",
