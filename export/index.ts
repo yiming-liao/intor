@@ -4,13 +4,11 @@
 export {
   // error
   IntorError,
-  IntorErrorCode,
+  INTOR_ERROR_CODE,
+  type IntorErrorCode,
 
   // locale,
   matchLocale,
-
-  // logger
-  clearLoggerPool,
 
   // messages
   mergeMessages,

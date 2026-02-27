@@ -1,4 +1,4 @@
-import { IntorError, IntorErrorCode } from "../../core";
+import { IntorError, INTOR_ERROR_CODE } from "../../core";
 
 /**
  * Validates that the given id is a non-empty string.
@@ -9,7 +9,7 @@ export const validateId = (id: string): string => {
   if (id.trim() === "") {
     throw new IntorError({
       id,
-      code: IntorErrorCode.INVALID_CONFIG_ID,
+      code: INTOR_ERROR_CODE.CONFIG_INVALID_ID,
       message: `"id" must be a non-empty string.`,
     });
   }

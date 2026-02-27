@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
 import { validateSupportedLocales } from "../../../../src/config/validators/validate-supported-locales";
-import { IntorError, IntorErrorCode } from "../../../../src/core";
+import { IntorError, INTOR_ERROR_CODE } from "../../../../src/core";
 
 describe("validateSupportedLocales", () => {
   const ID = "test";
@@ -22,7 +22,7 @@ describe("validateSupportedLocales", () => {
     } catch (error) {
       expect(error).toBeInstanceOf(IntorError);
       const e = error as IntorError;
-      expect(e.code).toBe(IntorErrorCode.MISSING_SUPPORTED_LOCALES);
+      expect(e.code).toBe(INTOR_ERROR_CODE.CONFIG_MISSING_SUPPORTED_LOCALES);
       expect(e.message).toContain("supportedLocales");
     }
   });

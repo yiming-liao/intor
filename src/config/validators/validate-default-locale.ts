@@ -1,5 +1,5 @@
 import type { Locale } from "intor-translator";
-import { IntorError, IntorErrorCode } from "../../core";
+import { IntorError, INTOR_ERROR_CODE } from "../../core";
 
 /**
  * Validates that the configured defaultLocale is supported.
@@ -14,7 +14,7 @@ export const validateDefaultLocale = (
   if (!supportedSet.has(defaultLocale)) {
     throw new IntorError({
       id,
-      code: IntorErrorCode.UNSUPPORTED_DEFAULT_LOCALE,
+      code: INTOR_ERROR_CODE.CONFIG_UNSUPPORTED_DEFAULT_LOCALE,
       message: `"defaultLocale" must be included in "supportedLocales".`,
     });
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { IntorError, IntorErrorCode } from "../../../../src/core/error";
+import { IntorError, INTOR_ERROR_CODE } from "../../../../src/core/error";
 
 describe("IntorError", () => {
   it("should create an error with message and name", () => {
@@ -21,9 +21,9 @@ describe("IntorError", () => {
   it("should include code if provided", () => {
     const error = new IntorError({
       message: "Missing default locale",
-      code: IntorErrorCode.INVALID_CONFIG_ID,
+      code: INTOR_ERROR_CODE.CONFIG_INVALID_ID,
     });
-    expect(error.code).toBe(IntorErrorCode.INVALID_CONFIG_ID);
+    expect(error.code).toBe(INTOR_ERROR_CODE.CONFIG_INVALID_ID);
   });
 
   it("should preserve prototype chain", () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validateDefaultLocale } from "../../../../src/config/validators/validate-default-locale";
-import { IntorError, IntorErrorCode } from "../../../../src/core";
+import { IntorError, INTOR_ERROR_CODE } from "../../../../src/core";
 
 describe("validateDefaultLocale", () => {
   const ID = "test";
@@ -19,7 +19,7 @@ describe("validateDefaultLocale", () => {
     } catch (error) {
       expect(error).toBeInstanceOf(IntorError);
       const e = error as IntorError;
-      expect(e.code).toBe(IntorErrorCode.UNSUPPORTED_DEFAULT_LOCALE);
+      expect(e.code).toBe(INTOR_ERROR_CODE.CONFIG_UNSUPPORTED_DEFAULT_LOCALE);
       expect(e.message).toContain("defaultLocale");
     }
   });

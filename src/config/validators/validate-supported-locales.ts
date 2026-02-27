@@ -1,5 +1,5 @@
 import type { IntorRawConfig } from "../../config";
-import { IntorError, IntorErrorCode } from "../../core";
+import { IntorError, INTOR_ERROR_CODE } from "../../core";
 
 /**
  * Validates that supportedLocales is provided and non-empty.
@@ -13,7 +13,7 @@ export const validateSupportedLocales = (
   if (!supportedLocales || supportedLocales.length === 0) {
     throw new IntorError({
       id,
-      code: IntorErrorCode.MISSING_SUPPORTED_LOCALES,
+      code: INTOR_ERROR_CODE.CONFIG_MISSING_SUPPORTED_LOCALES,
       message: `"supportedLocales" must be specified.`,
     });
   }

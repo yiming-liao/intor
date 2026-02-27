@@ -4,6 +4,9 @@ interface IntorErrorOptions {
   id?: string;
 }
 
+/**
+ * @public
+ */
 export class IntorError extends Error {
   readonly code?: IntorErrorCode;
   readonly id?: string;
@@ -19,9 +22,17 @@ export class IntorError extends Error {
   }
 }
 
-export enum IntorErrorCode {
-  // config
-  INVALID_CONFIG_ID = "INTOR_INVALID_CONFIG_ID",
-  MISSING_SUPPORTED_LOCALES = "INTOR_MISSING_SUPPORTED_LOCALES",
-  UNSUPPORTED_DEFAULT_LOCALE = "INTOR_UNSUPPORTED_DEFAULT_LOCALE",
-}
+/**
+ * @public
+ */
+export const INTOR_ERROR_CODE = {
+  CONFIG_INVALID_ID: "INTOR_CONFIG_INVALID_ID",
+  CONFIG_MISSING_SUPPORTED_LOCALES: "INTOR_CONFIG_MISSING_SUPPORTED_LOCALES",
+  CONFIG_UNSUPPORTED_DEFAULT_LOCALE: "INTOR_CONFIG_UNSUPPORTED_DEFAULT_LOCALE",
+} as const;
+
+/**
+ * @public
+ */
+export type IntorErrorCode =
+  (typeof INTOR_ERROR_CODE)[keyof typeof INTOR_ERROR_CODE];

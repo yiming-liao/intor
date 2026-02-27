@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validateId } from "../../../../src/config/validators/validate-id";
-import { IntorError, IntorErrorCode } from "../../../../src/core";
+import { IntorError, INTOR_ERROR_CODE } from "../../../../src/core";
 
 describe("validateId", () => {
   it("throws if id is an empty string", () => {
@@ -17,7 +17,7 @@ describe("validateId", () => {
     } catch (error) {
       expect(error).toBeInstanceOf(IntorError);
       const e = error as IntorError;
-      expect(e.code).toBe(IntorErrorCode.INVALID_CONFIG_ID);
+      expect(e.code).toBe(INTOR_ERROR_CODE.CONFIG_INVALID_ID);
       expect(e.message).toContain("id");
     }
   });
