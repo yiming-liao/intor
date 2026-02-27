@@ -15,7 +15,7 @@ type LinkProps<CK extends GenConfigKeys = "__default__"> =
   React.PropsWithChildren<
     Omit<NextLinkProps, "href"> &
       Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
-        href: Url;
+        href?: Url;
         /**
          * Optional locale override for this navigation.
          *
