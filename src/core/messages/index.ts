@@ -8,7 +8,7 @@ export { mergeMessages, type MergeMessagesEvent } from "./merge-messages";
 export { isValidMessages, nestObjectFromPath } from "./utils";
 
 // types
-export type { MessagesReader, MessagesReaders } from "./types";
+export type { MessagesReader, MessagesReaders, MessagesLoader } from "./types";
 
 // internal-metadata
 export {

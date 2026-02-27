@@ -35,6 +35,7 @@ export {
   // types
   type MessagesReader,
   type MessagesReaders,
+  type MessagesLoader,
   // internal-metadata
   INTOR_PREFIX,
   INTOR_MESSAGES_KIND_KEY,

@@ -15,6 +15,7 @@ export {
   type MergeMessagesEvent,
   type MessagesReader,
   type MessagesReaders,
+  type MessagesLoader,
 
   // types
   type GenLocale as Locale,

@@ -1,33 +1,50 @@
+import type { IntorConfig } from "../../config";
+import type { LocaleMessages } from "intor-translator";
+
 /**
- * A function that reads and parses a message file into a message object
- * for a single locale (without locale prefix).
+ * Reads and parses a message file for a single locale.
  *
- * This function is format-specific (YAML, TOML, etc.)
- * and is NOT responsible for validating the returned structure.
+ * The reader must return the messages object for one locale only,
+ * without adding a locale wrapper.
  *
- * @param filePath - The path to the message file to read.
- * @returns A Promise that resolves to parsed, unvalidated content.
+ * The returned value is intentionally untyped (`unknown`).
+ * Intor validates and normalizes it internally.
  *
  * @example
  * ```ts
- * const reader: MessagesReader = async () => {
- *   // Single-locale message object (no locale prefix)
- *   return {
- *     title: "Hello",
- *   };
- * };
+ * const reader: MessagesReader = async () => ({
+ *   title: "Hello"
+ * });
  * ```
+ *
+ * @public
  */
 export type MessagesReader = (filePath: string) => Promise<unknown>;
 
 /**
- * A map of file extension (without dot) to message reader.
+ * Maps file extensions (without leading dot) to message readers.
  *
- * Example:
+ * @example
+ * ```ts
  * {
- *   md: mdReader,
  *   yaml: yamlReader,
- *   toml: tomlReader,
+ *   md: mdReader
  * }
+ * ```
+ *
+ * @public
  */
 export type MessagesReaders = Record<string, MessagesReader>;
+
+/**
+ * High-level message loading strategy.
+ *
+ * Allows users to override how locale-specific messages
+ * are resolved at runtime (e.g. dynamic imports, remote fetch, custom merging).
+ *
+ * @public
+ */
+export type MessagesLoader = (
+  config: IntorConfig,
+  locale: string,
+) => Promise<LocaleMessages>;
