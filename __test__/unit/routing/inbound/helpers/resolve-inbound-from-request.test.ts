@@ -60,7 +60,7 @@ describe("resolveInboundFromRequest()", () => {
     expect(result.locale).toBe("zh");
   });
 
-  it("falls back to defaultLocale when accept-language is missing", () => {
+  it("does not pass detected when accept-language is missing", () => {
     vi.spyOn(coreModule, "parseCookieHeader").mockReturnValue({});
     vi.spyOn(coreModule, "normalizeQuery").mockReturnValue({});
     vi.spyOn(localeModule, "getLocaleFromAcceptLanguage").mockReturnValue(
@@ -78,8 +78,8 @@ describe("resolveInboundFromRequest()", () => {
     expect(inboundSpy).toHaveBeenCalledWith(
       baseConfig,
       "/docs",
-      expect.objectContaining({
-        detected: "en",
+      expect.not.objectContaining({
+        detected: expect.anything(),
       }),
     );
   });

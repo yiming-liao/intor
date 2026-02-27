@@ -202,12 +202,12 @@ describe("createIntorHandler (Hono)", () => {
     expect(normalizeQuery).toHaveBeenCalledWith({ foo: "bar" });
   });
 
-  it("falls back to defaultLocale when Accept-Language is not detected", async () => {
+  it("does not pass detected when accept-language is missing", async () => {
     (getLocaleFromAcceptLanguage as any).mockReturnValue(undefined);
     (parseCookieHeader as any).mockReturnValue({});
     (resolveInbound as any).mockReturnValue({
       locale: "en",
-      localeSource: "detected",
+      localeSource: "default",
       pathname: "/",
     });
     (getTranslator as any).mockResolvedValue({
@@ -220,8 +220,8 @@ describe("createIntorHandler (Hono)", () => {
     expect(resolveInbound).toHaveBeenCalledWith(
       config,
       "/",
-      expect.objectContaining({
-        detected: "en", // defaultLocale
+      expect.not.objectContaining({
+        detected: expect.anything(),
       }),
     );
   });

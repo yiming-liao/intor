@@ -1,135 +1,178 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { NextRequest } from "next/server";
+import {
+  getLocaleFromAcceptLanguage,
+  resolveInbound,
+} from "../../../../src/routing";
 import { createIntorHandler } from "../../../../src/adapters/next/create-intor-handler";
 import { INTOR_HEADERS } from "../../../../src/core";
-import { resolveInbound } from "../../../../src/routing/inbound/resolve-inbound";
 
-const mockRedirect = vi.fn();
-const mockNext = vi.fn();
-
-vi.mock("next/server", () => ({
-  NextResponse: {
-    redirect: vi.fn((url) => {
-      const headers = new Headers();
-      headers.set("location", url.pathname);
-      mockRedirect(url.pathname);
-      return { headers };
-    }),
-    next: vi.fn(() => {
-      const headers = new Headers();
-      mockNext();
-      return { headers };
-    }),
-  },
-}));
-
-vi.mock("../../../../src/routing/inbound/resolve-inbound", () => ({
+vi.mock("../../../../src/routing", () => ({
   resolveInbound: vi.fn(),
+  getLocaleFromAcceptLanguage: vi.fn(),
 }));
 
-function createRequest(
-  url: string,
-  headers?: Record<string, string>,
-): NextRequest {
-  const parsed = new URL(url);
-  return {
-    headers: new Headers(headers),
-    nextUrl: {
-      pathname: parsed.pathname,
-      host: parsed.host,
-      searchParams: parsed.searchParams,
-      clone() {
-        return { ...this };
-      },
-    },
-    cookies: { get: vi.fn() },
-  } as unknown as NextRequest;
-}
+describe("createIntorHandler (Next.js)", () => {
+  const config = {
+    supportedLocales: ["en", "fr"],
+    defaultLocale: "en",
+    cookie: { name: "locale" },
+  } as any;
 
-describe("intorProxy (Next.js adapter)", () => {
-  const config = { defaultLocale: "en", cookie: { name: "locale" } } as any;
+  let request: Partial<NextRequest> & Record<string, any>;
+
+  function createMockRequest(
+    pathname = "/",
+    search: Record<string, string> = {},
+  ): any {
+    const url = new URL(`https://example.com${pathname}`);
+    Object.entries(search).forEach(([k, v]) => url.searchParams.set(k, v));
+    return {
+      nextUrl: {
+        host: "example.com",
+        pathname: url.pathname,
+        searchParams: url.searchParams,
+        clone: () => new URL(url.toString()),
+      },
+      headers: {
+        get: vi.fn(() => undefined),
+      },
+      cookies: {
+        get: vi.fn(() => undefined),
+      },
+    };
+  }
 
   beforeEach(() => {
+    request = createMockRequest("/");
     vi.clearAllMocks();
   });
 
-  it("redirects when routing core requests a redirect", async () => {
-    (resolveInbound as any).mockReturnValue({
-      locale: "zh-TW",
-      localeSource: "cookie",
-      pathname: "/zh-TW/about",
-      shouldRedirect: true,
-    });
-    const handler = createIntorHandler(config);
-    const request = createRequest("https://example.com/about");
-    const response = handler(request);
-    expect(resolveInbound).toHaveBeenCalled();
-    expect(response.headers.get("location")).toBe("/zh-TW/about");
-    expect(response.headers.get("x-intor-redirected")).toBe("1");
-  });
-
-  it("passes through when no redirect is required", async () => {
+  it("forwards correct pathname and query to resolveInbound", () => {
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
     (resolveInbound as any).mockReturnValue({
       locale: "en",
-      localeSource: "cookie",
-      pathname: "/about",
-      shouldRedirect: false,
-    });
-    const handler = createIntorHandler(config);
-    const request = createRequest("https://example.com/about");
-    const response = handler(request);
-    expect(resolveInbound).toHaveBeenCalled();
-    expect(response.headers.get("location")).toBeNull();
-    expect(response.headers.get("x-intor-redirected")).toBeNull();
-  });
-
-  it("exposes resolved routing metadata via response headers", async () => {
-    (resolveInbound as any).mockReturnValue({
-      locale: "zh-TW",
-      localeSource: "path",
-      pathname: "/zh-TW/about",
-      shouldRedirect: false,
-    });
-    const handler = createIntorHandler(config);
-    const request = createRequest("https://example.com/zh-TW/about");
-    const response = handler(request);
-    expect(response.headers.get(INTOR_HEADERS.LOCALE)).toBe("zh-TW");
-    expect(response.headers.get(INTOR_HEADERS.LOCALE_SOURCE)).toBe("path");
-    expect(response.headers.get(INTOR_HEADERS.PATHNAME)).toBe("/zh-TW/about");
-  });
-
-  it("never mutates cookies", async () => {
-    (resolveInbound as any).mockReturnValue({
-      locale: "en",
-      localeSource: "detected",
+      localeSource: "default",
       pathname: "/",
       shouldRedirect: false,
     });
     const handler = createIntorHandler(config);
-    const request = createRequest("https://example.com/");
-    handler(request);
-    expect(request.cookies.get).toHaveBeenCalled();
-  });
-
-  it("forwards cookie to resolveInbound when present", () => {
-    (resolveInbound as any).mockReturnValue({
-      locale: "zh-TW",
-      localeSource: "cookie",
-      pathname: "/zh-TW",
-      shouldRedirect: false,
-    });
-    const handler = createIntorHandler(config);
-    const request = createRequest("https://example.com/");
-    (request.cookies as any).get = vi.fn(() => ({
-      value: "zh-TW",
-    }));
-    handler(request);
+    handler(request as NextRequest);
     expect(resolveInbound).toHaveBeenCalledWith(
       config,
       "/",
       expect.objectContaining({
-        cookie: "zh-TW",
+        host: "example.com",
+        query: {},
+        detected: "en",
+      }),
+      expect.objectContaining({
+        hasRedirected: false,
+      }),
+    );
+  });
+
+  it("returns redirect response when shouldRedirect is true", () => {
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/fr",
+      shouldRedirect: true,
+    });
+    const handler = createIntorHandler(config);
+    const response = handler(request as NextRequest);
+    expect(response.status).toBe(307);
+    expect(response.headers.get(INTOR_HEADERS.REDIRECTED)).toBe("1");
+  });
+
+  it("returns next response when shouldRedirect is false", () => {
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    const response = handler(request as NextRequest);
+    expect(response.status).toBe(200);
+  });
+
+  it("attaches routing metadata headers", () => {
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("fr");
+    (resolveInbound as any).mockReturnValue({
+      locale: "fr",
+      localeSource: "cookie",
+      pathname: "/fr",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    const response = handler(request as NextRequest);
+    expect(response.headers.get(INTOR_HEADERS.LOCALE)).toBe("fr");
+    expect(response.headers.get(INTOR_HEADERS.LOCALE_SOURCE)).toBe("cookie");
+    expect(response.headers.get(INTOR_HEADERS.PATHNAME)).toBe("/fr");
+  });
+
+  it("passes hasRedirected=true when header is set", () => {
+    (request.headers as any).get = vi.fn((key: string) =>
+      key === INTOR_HEADERS.REDIRECTED ? "1" : undefined,
+    );
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    handler(request as NextRequest);
+    expect(resolveInbound).toHaveBeenCalledWith(
+      config,
+      "/",
+      expect.any(Object),
+      expect.objectContaining({
+        hasRedirected: true,
+      }),
+    );
+  });
+
+  it("forwards cookie when present", () => {
+    (request.cookies as any).get = vi.fn(() => ({ value: "fr" }));
+    (getLocaleFromAcceptLanguage as any).mockReturnValue(undefined);
+    (resolveInbound as any).mockReturnValue({
+      locale: "fr",
+      localeSource: "cookie",
+      pathname: "/fr",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    handler(request as NextRequest);
+    expect(resolveInbound).toHaveBeenCalledWith(
+      config,
+      "/",
+      expect.objectContaining({
+        cookie: "fr",
+      }),
+      expect.any(Object),
+    );
+  });
+
+  it("does not pass detected when accept-language is undefined", () => {
+    (getLocaleFromAcceptLanguage as any).mockReturnValue(undefined);
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    handler(request as NextRequest);
+    expect(resolveInbound).toHaveBeenCalledWith(
+      config,
+      "/",
+      expect.not.objectContaining({
+        detected: expect.anything(),
       }),
       expect.any(Object),
     );

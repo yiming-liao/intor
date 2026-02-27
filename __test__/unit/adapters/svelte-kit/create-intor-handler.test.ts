@@ -114,12 +114,12 @@ describe("createIntorHandler (SvelteKit)", () => {
     );
   });
 
-  it("falls back to defaultLocale when Accept-Language not detected", async () => {
+  it("does not pass detected when Accept-Language is not detected", async () => {
     (isSvelteKitSSG as any).mockReturnValue(false);
     (getLocaleFromAcceptLanguage as any).mockReturnValue(undefined);
     (resolveInbound as any).mockReturnValue({
       locale: "en",
-      localeSource: "detected",
+      localeSource: "default",
       pathname: "/about",
       shouldRedirect: false,
     });
@@ -128,7 +128,9 @@ describe("createIntorHandler (SvelteKit)", () => {
     expect(resolveInbound).toHaveBeenCalledWith(
       config,
       "/about",
-      expect.objectContaining({ detected: "en" }),
+      expect.not.objectContaining({
+        detected: expect.anything(),
+      }),
     );
   });
 });
