@@ -1,5 +1,5 @@
 import type {
-  RoutingLocaleSource,
+  RoutingLocaleSignal,
   RoutingLocaleCarrier,
   LocalePathPrefix,
 } from "../../core";
@@ -13,7 +13,7 @@ export type RoutingStructuredOptions = {
   /** Inbound routing configuration. */
   inbound?: {
     /** Ordered sources used to resolve the active locale. */
-    localeSources?: RoutingLocaleSource[];
+    localeSources?: RoutingLocaleSignal[];
     /** Query parameter key used when resolving locale from the URL. */
     queryKey?: string;
     /** Behavior applied on the user's first visit. */
@@ -59,7 +59,7 @@ export type RoutingResolvedOptions = {
   basePath: string;
   localePrefix: LocalePathPrefix;
   inbound: {
-    localeSources: RoutingLocaleSource[];
+    localeSources: RoutingLocaleSignal[];
     queryKey: string;
     firstVisit: {
       localeSource: "default" | "browser";
@@ -85,7 +85,7 @@ export interface RoutingFlatOptions {
   basePath?: string;
   localePrefix?: LocalePathPrefix;
   queryKey?: string; // (shared)
-  localeSources?: RoutingLocaleSource[];
+  localeSources?: RoutingLocaleSignal[];
   firstVisit?: NonNullable<RoutingStructuredOptions["inbound"]>["firstVisit"];
   localeCarrier?: RoutingLocaleCarrier;
   host?: NonNullable<RoutingStructuredOptions["outbound"]>["host"];

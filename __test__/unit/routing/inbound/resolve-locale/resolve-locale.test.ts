@@ -14,10 +14,10 @@ const baseConfig = {
 } as unknown as IntorResolvedConfig;
 
 describe("resolveLocale", () => {
-  it("resolves locale from the first source that can be normalized", () => {
+  it("resolves locale from the first normalized configured signal", () => {
     const context: LocaleContext = {
-      path: { locale: "fr-FR" }, // unsupported
-      cookie: { locale: "en-US" }, // supported
+      path: { locale: "fr-FR" },
+      cookie: { locale: "en-US" },
       detected: { locale: "zh-TW" },
     };
     const result = resolveLocale(baseConfig, context);
@@ -27,9 +27,9 @@ describe("resolveLocale", () => {
     });
   });
 
-  it("skips sources that cannot be normalized", () => {
+  it("skips unsupported configured signals and uses detected", () => {
     const context: LocaleContext = {
-      cookie: { locale: "fr" }, // unsupported
+      cookie: { locale: "fr" },
       detected: { locale: "zh-TW" },
     };
     const result = resolveLocale(baseConfig, context);
@@ -39,7 +39,7 @@ describe("resolveLocale", () => {
     });
   });
 
-  it("falls back to detected locale when no configured source matches", () => {
+  it("uses detected when no configured signal matches", () => {
     const context: LocaleContext = {
       path: {},
       cookie: {},
@@ -52,20 +52,20 @@ describe("resolveLocale", () => {
     });
   });
 
-  it("falls back to defaultLocale when detected locale cannot be normalized", () => {
+  it("falls back to default when detected cannot be normalized", () => {
     const context: LocaleContext = {
       path: {},
       cookie: {},
-      detected: { locale: "fr-FR" }, // unsupported
+      detected: { locale: "fr-FR" },
     };
     const result = resolveLocale(baseConfig, context);
     expect(result).toEqual({
       locale: "en-US",
-      localeSource: "detected",
+      localeSource: "default",
     });
   });
 
-  it("respects custom source priority order", () => {
+  it("respects custom configured signal priority order", () => {
     const config = {
       ...baseConfig,
       routing: {
@@ -86,7 +86,7 @@ describe("resolveLocale", () => {
     });
   });
 
-  it("falls back to detected even if detected is not listed in localeSources", () => {
+  it("uses detected even if not explicitly listed in localeSources", () => {
     const config = {
       ...baseConfig,
       routing: {
@@ -103,5 +103,13 @@ describe("resolveLocale", () => {
       locale: "zh-TW",
       localeSource: "detected",
     });
+  });
+
+  it("guarantees a supported locale is always returned", () => {
+    const context: LocaleContext = {
+      detected: { locale: "unknown" },
+    };
+    const result = resolveLocale(baseConfig, context);
+    expect(baseConfig.supportedLocales).toContain(result.locale);
   });
 });

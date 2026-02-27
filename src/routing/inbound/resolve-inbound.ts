@@ -13,7 +13,7 @@ interface LocaleInputs {
   host?: string;
   query?: NormalizedQuery;
   cookie?: string;
-  detected: string;
+  detected?: string;
 }
 
 /**
@@ -46,7 +46,7 @@ export function resolveInbound(
     ...(hostLocale !== undefined && { host: { locale: hostLocale } }),
     ...(queryLocale !== undefined && { query: { locale: queryLocale } }),
     ...(cookie !== undefined && { cookie: { locale: cookie } }),
-    detected: { locale: detected },
+    ...(detected !== undefined && { detected: { locale: detected } }),
   });
 
   // ------------------------------------------------------

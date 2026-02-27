@@ -7,13 +7,7 @@ export interface LocaleContext {
   host?: { locale?: Locale };
   query?: { locale?: Locale };
   cookie?: { locale?: Locale };
-  /**
-   * Fallback locale determined by the system.
-   *
-   * - This value is always available and represents the
-   * final fallback when no other source matches.
-   */
-  detected: { locale: Locale };
+  detected?: { locale: Locale };
 }
 
 /** Final resolved locale. */

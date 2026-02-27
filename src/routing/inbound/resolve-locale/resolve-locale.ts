@@ -3,11 +3,14 @@ import type { IntorResolvedConfig } from "../../../config";
 import { matchLocale } from "../../../core";
 
 /**
- * Resolve the active locale from inbound routing configuration.
+ * Resolves the active locale from inbound routing configuration.
  *
- * Iterates through configured locale sources and returns the first normalized, supported locale.
+ * Resolution order:
+ * 1. Configured locale signals (path / query / host / cookie)
+ * 2. Runtime detection signal ("detected")
+ * 3. Invariant fallback ("default")
  *
- * Falls back to the detected locale or the default locale if none match.
+ * Always returns a supported locale.
  */
 export function resolveLocale(
   config: IntorResolvedConfig,
@@ -15,6 +18,9 @@ export function resolveLocale(
 ): ResolvedLocale {
   const { localeSources } = config.routing.inbound;
 
+  // ------------------------------------------------------
+  // 1. Configured resolution signals (policy-ordered)
+  // ------------------------------------------------------
   for (const source of localeSources) {
     const locale = context[source]?.locale;
 
@@ -27,13 +33,25 @@ export function resolveLocale(
     };
   }
 
-  // Fallback: detected is always available
-  const fallback =
-    matchLocale(context.detected.locale, config.supportedLocales) ||
-    config.defaultLocale;
+  // ------------------------------------------------------
+  // 2. Detection fallback (runtime signal)
+  // ------------------------------------------------------
+  const detected = matchLocale(
+    context.detected?.locale,
+    config.supportedLocales,
+  );
+  if (detected) {
+    return {
+      locale: detected,
+      localeSource: "detected",
+    };
+  }
 
+  // ------------------------------------------------------
+  // 3. Final invariant fallback (guaranteed)
+  // ------------------------------------------------------
   return {
-    locale: fallback,
-    localeSource: "detected",
+    locale: config.defaultLocale,
+    localeSource: "default",
   };
 }

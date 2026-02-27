@@ -75,6 +75,7 @@ export type {
   // translator
   BaseTranslator,
   // routing
+  RoutingLocaleSignal,
   RoutingLocaleSource,
   RoutingLocaleCarrier,
   LocalePathPrefix,

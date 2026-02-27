@@ -15,19 +15,31 @@
 export type RoutingLocaleCarrier = "path" | "host" | "query";
 
 /**
- * Locale resolution sources used by routing configuration.
+ * Locale resolution signals used by inbound routing configuration.
  *
- * A source represents a resolved input that can influence
- * the active locale during routing.
+ * A signal represents a candidate input that may influence
+ * the active locale during resolution.
  *
- * Sources include:
- * - URL carriers (path / query / host), which are part of the URL
- * - Non-URL inputs (cookie / detected), which provide
- *   environment or persisted hints
+ * Signals include:
+ * - URL carriers (path / query / host), which are structural parts of the URL
+ * - Non-URL hints (cookie / detected), which provide persisted or
+ *   environment-based information
  *
- * This type represents resolved data sources, not detection strategies.
+ * Signals are ordered by configuration and evaluated
+ * deterministically during locale resolution.
  */
-export type RoutingLocaleSource = RoutingLocaleCarrier | "cookie" | "detected";
+export type RoutingLocaleSignal = RoutingLocaleCarrier | "cookie" | "detected";
+
+/**
+ * Final locale source label returned by resolution.
+ *
+ * Includes all possible resolution signals plus the
+ * invariant fallback `"default"`.
+ *
+ * `"default"` indicates that no configured signal
+ * produced a supported locale.
+ */
+export type RoutingLocaleSource = RoutingLocaleSignal | "default";
 
 /**
  * Controls how the locale is prefixed in URL pathnames.
