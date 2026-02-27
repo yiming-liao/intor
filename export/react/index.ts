@@ -4,6 +4,7 @@ export {
   // provider
   IntorProvider,
   type IntorProviderProps,
+  type IntorValue,
 
   // translator
   useTranslator,

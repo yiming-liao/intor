@@ -14,6 +14,13 @@ export const IntorContext = React.createContext<IntorContextValue | undefined>(
   undefined,
 );
 
+/**
+ * React provider for Intor.
+ *
+ * Provides Intor configuration and locale context to descendants.
+ *
+ * @public
+ */
 export function IntorProvider({
   value: {
     config,

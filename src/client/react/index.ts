@@ -2,6 +2,7 @@
 export {
   IntorProvider,
   type IntorProviderProps,
+  type IntorValue,
   useIntorContext,
 } from "./provider";
 

@@ -1,13 +1,24 @@
 import type { IntorConfig } from "../../../config";
+import type { MessagesLoader } from "../../../core";
 import type { IntorValue } from "../provider";
-import type { Locale, LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { getClientLocale } from "intor";
 
+/**
+ * Client-side Intor runtime helper.
+ *
+ * Manages locale state and dynamic message loading
+ * in pure client-side (SPA) environments.
+ *
+ * @public
+ */
 export function useIntor(
   config: IntorConfig,
-  loader: (config: IntorConfig, locale: Locale) => Promise<LocaleMessages>,
-): Omit<IntorValue, "handlers" | "plugins"> {
+  loader: MessagesLoader,
+): Pick<
+  IntorValue,
+  "config" | "locale" | "messages" | "isLoading" | "onLocaleChange"
+> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------
@@ -24,7 +35,7 @@ export function useIntor(
   // Locale change handler
   // ---------------------------------------------------------------------------
   const onLocaleChange = React.useCallback(
-    async (newLocale: Locale) => {
+    async (newLocale: string) => {
       activeLocaleRef.current = newLocale;
       setIsLoading(true);
 
