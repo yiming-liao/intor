@@ -52,7 +52,7 @@ export async function getTranslator<
     loader,
     readers,
     allowCacheWrite = false,
-    fetch,
+    fetch = globalThis.fetch,
     handlers,
     plugins,
     preKey,
@@ -63,7 +63,7 @@ export async function getTranslator<
     ...(loader !== undefined ? { loader } : {}),
     ...(readers !== undefined ? { readers } : {}),
     allowCacheWrite,
-    fetch: fetch ?? globalThis.fetch,
+    fetch,
     ...(handlers !== undefined ? { handlers } : {}),
     ...(plugins !== undefined ? { plugins } : {}),
   });

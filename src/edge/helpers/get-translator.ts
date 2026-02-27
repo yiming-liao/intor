@@ -7,18 +7,22 @@ import type {
 } from "intor-translator";
 import {
   createTRich,
-  type GenConfigKeys,
-  type GenLocale,
-  type GenMessages,
-  type GenReplacements,
-  type GenRich,
+  type TypedConfigKeys,
+  type TypedMessages,
+  type TypedReplacements,
+  type TypedRich,
   type RuntimeFetch,
   type BaseTranslator,
 } from "../../core";
 import { initTranslator } from "../translator";
 
-export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
-  locale: GenLocale<CK> | (string & {});
+/**
+ * Input parameters for `getTranslator`.
+ *
+ * @public
+ */
+export interface GetTranslatorParams {
+  locale: string;
   fetch?: RuntimeFetch;
   handlers?: TranslateHandlers;
   plugins?: (TranslatorPlugin | TranslateHook)[];
@@ -26,21 +30,29 @@ export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
 
 /**
  * Get a edge-runtime translator for the current execution context.
+ *
+ * @public
  */
 export async function getTranslator<
-  CK extends GenConfigKeys = "__default__",
-  ReplacementShape = GenReplacements<CK>,
-  RichShape = GenRich<CK>,
-  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
+  CK extends TypedConfigKeys = "__default__",
+  ReplacementShape = TypedReplacements<CK>,
+  RichShape = TypedRich<CK>,
+  PK extends LocalizedPreKey<TypedMessages<CK>> | undefined = undefined,
 >(
   config: IntorConfig,
-  params: GetTranslatorParams<CK> & { preKey?: PK },
-): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
-  const { locale, fetch, preKey, handlers, plugins } = params;
+  params: GetTranslatorParams & { preKey?: PK },
+): Promise<BaseTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>> {
+  const {
+    locale,
+    fetch = globalThis.fetch,
+    preKey,
+    handlers,
+    plugins,
+  } = params;
 
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
-    fetch: fetch ?? globalThis.fetch,
+    fetch,
     ...(handlers !== undefined ? { handlers } : {}),
     ...(plugins !== undefined ? { plugins } : {}),
   });
@@ -52,5 +64,5 @@ export async function getTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-  } as BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
+  } as BaseTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>;
 }
