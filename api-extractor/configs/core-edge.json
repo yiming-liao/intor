@@ -1,0 +1,9 @@
+{
+  "extends": "../base.json",
+
+  "mainEntryPointFilePath": "../../dist/types/export/edge/index.d.ts",
+
+  "apiReport": {
+    "reportFileName": "core-edge"
+  }
+}

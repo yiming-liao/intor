@@ -112,7 +112,9 @@
     "test:check": "tsx scripts/check-test-structure.ts",
     "knip": "knip --config .config/knip.config.ts",
     "build": "tsx scripts/build.ts",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "api:build": "tsx scripts/api-extractor/build.ts",
+    "api:check": "tsx scripts/api-extractor/check.ts"
   },
   "dependencies": {
     "intor-translator": "^1.4.15",
@@ -120,6 +122,7 @@
     "p-limit": "7.2.0"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.57.6",
     "@rollup/plugin-alias": "6.0.0",
     "@rollup/plugin-typescript": "12.3.0",
     "@rollup/pluginutils": "5.3.0",

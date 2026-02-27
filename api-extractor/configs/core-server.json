@@ -1,0 +1,9 @@
+{
+  "extends": "../base.json",
+
+  "mainEntryPointFilePath": "../../dist/types/export/server/index.d.ts",
+
+  "apiReport": {
+    "reportFileName": "core-server"
+  }
+}

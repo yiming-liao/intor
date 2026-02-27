@@ -1,0 +1,9 @@
+{
+  "extends": "../base.json",
+
+  "mainEntryPointFilePath": "../../dist/types/export/fastify/index.d.ts",
+
+  "apiReport": {
+    "reportFileName": "fastify"
+  }
+}

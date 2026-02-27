@@ -1,0 +1,9 @@
+{
+  "extends": "../base.json",
+
+  "mainEntryPointFilePath": "../../dist/types/export/hono/index.d.ts",
+
+  "apiReport": {
+    "reportFileName": "hono"
+  }
+}

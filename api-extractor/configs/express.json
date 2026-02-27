@@ -1,0 +1,9 @@
+{
+  "extends": "../base.json",
+
+  "mainEntryPointFilePath": "../../dist/types/export/express/index.d.ts",
+
+  "apiReport": {
+    "reportFileName": "express"
+  }
+}
