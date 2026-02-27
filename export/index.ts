@@ -30,7 +30,7 @@ export {
 
   // types
   type IntorRawConfig,
-  type IntorResolvedConfig,
+  type IntorConfig,
 } from "../src/config";
 
 // routing

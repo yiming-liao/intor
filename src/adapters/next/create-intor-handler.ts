@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../config";
+import type { IntorConfig } from "intor";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { INTOR_HEADERS, normalizeQuery } from "../../core";
@@ -13,7 +13,7 @@ import { getLocaleFromAcceptLanguage, resolveInbound } from "../../routing";
  *
  * @platform Next.js
  */
-export function createIntorHandler(config: IntorResolvedConfig) {
+export function createIntorHandler(config: IntorConfig) {
   return function intorHandler(request: NextRequest) {
     const { host, searchParams, pathname: rawPathname } = request.nextUrl;
 

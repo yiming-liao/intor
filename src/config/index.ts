@@ -7,6 +7,7 @@ export { DEFAULT_ROUTING_OPTIONS, DEFAULT_COOKIE_OPTIONS } from "./constants";
 export type {
   IntorRawConfig,
   IntorResolvedConfig,
+  IntorConfig,
   // loader
   LoaderOptions,
   RemoteHeaders,

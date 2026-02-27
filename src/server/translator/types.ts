@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../config";
+import type { IntorConfig } from "intor";
 import type { LocaleMessages } from "intor-translator";
 
 /**
@@ -8,6 +8,6 @@ import type { LocaleMessages } from "intor-translator";
  * message loading defined in the Intor config.
  */
 export type MessagesLoader = (
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   locale: string,
 ) => Promise<LocaleMessages>;

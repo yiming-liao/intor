@@ -1,11 +1,11 @@
-import type { IntorResolvedConfig } from "../../../config";
 import type { InboundResult } from "../types";
+import type { IntorConfig } from "intor";
 import { normalizeQuery, parseCookieHeader } from "../../../core";
 import { getLocaleFromAcceptLanguage } from "../../locale";
 import { resolveInbound } from "../resolve-inbound";
 
 export function resolveInboundFromRequest(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   request: Request,
 ): InboundResult {
   const url = new URL(request.url);

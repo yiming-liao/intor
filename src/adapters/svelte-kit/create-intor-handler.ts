@@ -1,5 +1,5 @@
-import type { IntorResolvedConfig } from "../../config";
 import type { Handle } from "@sveltejs/kit";
+import type { IntorConfig } from "intor";
 import { redirect } from "@sveltejs/kit";
 import { normalizeQuery } from "../../core";
 import {
@@ -17,7 +17,7 @@ import { isSvelteKitSSG } from "./utils/is-svelte-kit-ssg";
  *
  * @platform SvelteKit
  */
-export function createIntorHandler(config: IntorResolvedConfig): Handle {
+export function createIntorHandler(config: IntorConfig): Handle {
   return async function intorHandler({ event, resolve }) {
     // Locale from Accept-Language header
     const acceptLanguage = event.request.headers.get("accept-language");

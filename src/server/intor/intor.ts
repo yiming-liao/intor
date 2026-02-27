@@ -1,5 +1,5 @@
 import type { IntorValue } from "./types";
-import type { IntorResolvedConfig } from "../../config";
+import type { IntorConfig } from "intor";
 import {
   getLogger,
   type GenConfigKeys,
@@ -16,7 +16,7 @@ import { initTranslator } from "../translator";
  * full-stack rendering environments.
  */
 export async function intor<CK extends GenConfigKeys = "__default__">(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   locale: GenLocale<CK> | (string & {}),
   options?: {
     readers?: MessagesReaders;

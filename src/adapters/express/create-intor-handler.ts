@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "../../config";
 import type { GetTranslatorParams } from "../../server";
 import type { Request, Response, NextFunction } from "express";
+import type { IntorConfig } from "intor";
 import { getTranslator } from "intor/server";
 import { normalizeQuery, parseCookieHeader } from "../../core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
@@ -14,7 +14,7 @@ import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
  * @platform Express
  */
 export function createIntorHandler(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   options?: Omit<
     GetTranslatorParams,
     "locale" | "fetch" | "allowCacheWrite"

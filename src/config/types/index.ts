@@ -1,4 +1,8 @@
-export type { IntorRawConfig, IntorResolvedConfig } from "./intor-config";
+export type {
+  IntorRawConfig,
+  IntorResolvedConfig,
+  IntorConfig,
+} from "./intor-config";
 
 // loader
 export type { LoaderOptions, RemoteHeaders } from "./loader";

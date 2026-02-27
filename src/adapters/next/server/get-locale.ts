@@ -1,5 +1,5 @@
-import type { IntorResolvedConfig } from "../../../config";
 import type { GenConfigKeys, GenLocale } from "../../../core";
+import type { IntorConfig } from "intor";
 import { cookies, headers } from "next/headers";
 import { INTOR_HEADERS, matchLocale } from "../../../core";
 
@@ -10,7 +10,7 @@ import { INTOR_HEADERS, matchLocale } from "../../../core";
  * @platform Next.js
  */
 export const getLocale = async <CK extends GenConfigKeys = "__default__">(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
 ): Promise<GenLocale<CK>> => {
   const headersStore = await headers();
 

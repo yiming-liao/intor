@@ -1,7 +1,7 @@
-import type { IntorResolvedConfig } from "../../../config";
 import type { MessagesReaders } from "../../../core";
 import type { GenConfigKeys } from "../../../core";
 import type { IntorValue } from "../../../server";
+import type { IntorConfig } from "intor";
 import { intor as intorCore } from "intor/server";
 import { getLocale } from "./get-locale";
 
@@ -13,7 +13,7 @@ import { getLocale } from "./get-locale";
  * @platform Next.js
  */
 export async function intor<CK extends GenConfigKeys = "__default__">(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   options?: { readers?: MessagesReaders; allowCacheWrite?: boolean },
 ): Promise<IntorValue<CK>> {
   const { readers } = options ?? {};

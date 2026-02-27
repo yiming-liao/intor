@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../config";
+import type { IntorConfig } from "intor";
 import type {
   LocalizedPreKey,
   TranslateHandlers,
@@ -37,7 +37,7 @@ export async function getTranslator<
   RichShape = GenRich<CK>,
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   params: GetTranslatorParams<CK> & { preKey?: PK },
 ): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
   const {

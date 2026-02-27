@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../../config";
+import type { IntorConfig } from "intor";
 import type { Locale, LocaleMessages, Translator } from "intor-translator";
 import type {
   TranslateHandlers,
@@ -8,7 +8,7 @@ import type {
 import type { ComputedRef, Ref } from "vue";
 
 export interface IntorValue {
-  config: IntorResolvedConfig;
+  config: IntorConfig;
   locale: Locale;
   messages?: Ref<LocaleMessages>;
   isLoading?: Ref<boolean>;
@@ -22,7 +22,7 @@ export interface IntorProviderProps {
 }
 
 export type IntorContextValue = {
-  config: IntorResolvedConfig;
+  config: IntorConfig;
   locale: Ref<string>;
   setLocale: (locale: Locale) => void;
   translator: ComputedRef<Translator<LocaleMessages>>;

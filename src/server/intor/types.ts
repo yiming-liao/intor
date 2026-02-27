@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../config";
+import type { IntorConfig } from "intor";
 import {
   type GenConfigKeys,
   type GenLocale,
@@ -6,7 +6,7 @@ import {
 } from "../../core";
 
 export interface IntorValue<CK extends GenConfigKeys = "__default__"> {
-  config: IntorResolvedConfig;
+  config: IntorConfig;
   locale: GenLocale<CK>;
   messages: Readonly<GenMessages<CK>>;
 }

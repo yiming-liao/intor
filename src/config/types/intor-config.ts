@@ -7,13 +7,18 @@ import type {
 import type { LoggerOptions } from "./logger";
 import type { RoutingRawOptions, RoutingResolvedOptions } from "./routing";
 import type { TranslatorOptions } from "./translator";
+import type { defineIntorConfig } from "../define-intor-config";
 import type {
   FallbackLocalesMap,
   Locale,
   LocaleMessages,
 } from "intor-translator";
 
-/** Raw configuration object used to define Intor behavior. */
+/**
+ * Raw configuration object used to define Intor behavior.
+ *
+ * @public
+ */
 export type IntorRawConfig = {
   /** Identifier for this Intor config scope; defaults to "default" and should be unique across configs. */
   readonly id?: string;
@@ -46,7 +51,9 @@ export type IntorRawConfig = {
   readonly logger?: Omit<LoggerOptions, "id">;
 };
 
-/** Fully resolved configuration after validation and normalization. */
+/**
+ * Fully resolved configuration after validation and normalization.
+ */
 export type IntorResolvedConfig = {
   readonly id: string;
 
@@ -71,3 +78,13 @@ export type IntorResolvedConfig = {
   // --- Observability ---
   readonly logger: LoggerOptions;
 };
+
+/**
+ * Runtime-ready Intor configuration.
+ *
+ * This type represents the validated and normalized configuration
+ * returned by `defineIntorConfig`.
+ *
+ * @public
+ */
+export type IntorConfig = ReturnType<typeof defineIntorConfig>;

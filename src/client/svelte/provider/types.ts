@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../../config";
+import type { IntorConfig } from "intor";
 import type {
   Locale,
   TranslateHandlers,
@@ -10,7 +10,7 @@ import type {
 import type { Readable, Writable } from "svelte/store";
 
 export interface IntorValue {
-  config: IntorResolvedConfig;
+  config: IntorConfig;
   locale: Locale;
   messages?: Readonly<LocaleMessages>;
   isLoading?: boolean;
@@ -26,7 +26,7 @@ export interface IntorProviderProps {
 }
 
 export interface IntorContextValue {
-  config: IntorResolvedConfig;
+  config: IntorConfig;
   locale: Writable<Locale>;
   setLocale: (locale: Locale) => void;
   translator: Readable<Translator<LocaleMessages>>;

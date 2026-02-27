@@ -1,4 +1,5 @@
-import type { IntorRawConfig, IntorResolvedConfig } from "../config";
+import type { IntorRawConfig } from "../config";
+import type { IntorResolvedConfig } from "./types/intor-config";
 import { resolveCookieOptions } from "../config/resolvers/resolve-cookie-options";
 import { resolveFallbackLocales } from "../config/resolvers/resolve-fallback-locales";
 import { resolveRoutingOptions } from "../config/resolvers/resolve-routing-options";
@@ -9,16 +10,19 @@ import { validateSupportedLocales } from "../config/validators/validate-supporte
 /**
  * Defines the canonical Intor configuration.
  *
- * Transforms a raw config into a validated and runtime-ready form by:
+ * This is the primary entry point for creating a validated,
+ * runtime-ready Intor configuration.
+ *
+ * It transforms a user-provided raw config into a normalized form by:
  * - enforcing required invariants
  * - resolving derived options
  * - applying stable defaults
  *
- * This function is declarative and side-effect free.
+ * This function is pure and side-effect free.
+ *
+ * @public
  */
-export const defineIntorConfig = (
-  config: IntorRawConfig,
-): IntorResolvedConfig => {
+export const defineIntorConfig = (config: IntorRawConfig) => {
   // -----------------------------------------------------------------------------
   // Validators
   // -----------------------------------------------------------------------------
@@ -56,5 +60,5 @@ export const defineIntorConfig = (
     logger: { id, ...config.logger },
     ...(config.client !== undefined ? { client: config.client } : {}),
     ...(config.server !== undefined ? { server: config.server } : {}),
-  };
+  } satisfies IntorResolvedConfig;
 };

@@ -1,5 +1,5 @@
-import type { IntorResolvedConfig } from "../../config";
 import type { GenConfigKeys, GenLocale } from "../../core";
+import type { IntorConfig } from "intor";
 import type { RedirectType } from "next/navigation";
 import { redirect as nextRedirect } from "next/navigation";
 import { resolveOutbound } from "../../routing";
@@ -14,7 +14,7 @@ import { getLocale } from "./server/get-locale"; // NOTE: Import the concrete se
  * @platform Next.js
  */
 export const redirect = async <CK extends GenConfigKeys = "__default__">(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   url: string,
   { locale, type }: { locale?: GenLocale<CK>; type?: RedirectType },
 ) => {

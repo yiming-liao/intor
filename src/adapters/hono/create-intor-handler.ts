@@ -1,6 +1,6 @@
-import type { IntorResolvedConfig } from "../../config";
 import type { GetTranslatorParams } from "../../edge";
 import type { Context, Next } from "hono";
+import type { IntorConfig } from "intor";
 import { getTranslator } from "intor/edge";
 import { normalizeQuery, parseCookieHeader } from "../../core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
@@ -13,7 +13,7 @@ import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
  * @platform Hono
  */
 export function createIntorHandler(
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   options?: Omit<GetTranslatorParams, "locale" | "fetch"> & {
     shortcuts?: boolean;
   },

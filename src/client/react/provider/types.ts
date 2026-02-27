@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../../config";
+import type { IntorConfig } from "intor";
 import type {
   Locale,
   LocaleMessages,
@@ -10,7 +10,7 @@ import type { Translator } from "intor-translator";
 import type * as React from "react";
 
 export interface IntorValue {
-  config: IntorResolvedConfig;
+  config: IntorConfig;
   locale: Locale;
   messages?: Readonly<LocaleMessages>;
   isLoading?: boolean;
@@ -25,7 +25,7 @@ export interface IntorProviderProps {
 }
 
 export type IntorContextValue = {
-  config: IntorResolvedConfig;
+  config: IntorConfig;
   locale: Locale;
   setLocale: (locale: Locale) => void;
   translator: Translator<LocaleMessages>;

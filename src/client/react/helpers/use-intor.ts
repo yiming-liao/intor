@@ -1,15 +1,12 @@
-import type { IntorResolvedConfig } from "../../../config";
 import type { IntorValue } from "../provider";
+import type { IntorConfig } from "intor";
 import type { Locale, LocaleMessages } from "intor-translator";
 import * as React from "react";
 import { getClientLocale } from "intor";
 
 export function useIntor(
-  config: IntorResolvedConfig,
-  loader: (
-    config: IntorResolvedConfig,
-    locale: Locale,
-  ) => Promise<LocaleMessages>,
+  config: IntorConfig,
+  loader: (config: IntorConfig, locale: Locale) => Promise<LocaleMessages>,
 ): Omit<IntorValue, "handlers" | "plugins"> {
   // ---------------------------------------------------------------------------
   // Initial locale
