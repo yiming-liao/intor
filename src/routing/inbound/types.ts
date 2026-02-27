@@ -12,6 +12,13 @@ export interface InboundResult {
   shouldRedirect: boolean;
 }
 
+/**
+ * Inbound routing context attached to a request.
+ *
+ * Represents the resolved routing state for the current request.
+ *
+ * @public
+ */
 export type InboundContext = Pick<
   InboundResult,
   "locale" | "pathname" | "localeSource"

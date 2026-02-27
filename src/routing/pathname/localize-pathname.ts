@@ -1,4 +1,4 @@
-import type { IntorResolvedConfig } from "../../config";
+import type { IntorConfig } from "../../config";
 import { canonicalizePathname } from "./canonicalize-pathname";
 import { materializePathname } from "./materialize-pathname";
 import { standardizePathname } from "./standardize-pathname";
@@ -12,6 +12,8 @@ import { standardizePathname } from "./standardize-pathname";
 export interface LocalizedPathname {
   /**
    * Final, locale-resolved pathname ready for consumption.
+   *
+   * @example
    * ```ts
    * // e.g. pathname: "/app/en-US/about"
    * ```
@@ -19,6 +21,8 @@ export interface LocalizedPathname {
   pathname: string;
   /**
    * Pathname with routing-specific prefixes removed.
+   *
+   * @example
    * ```ts
    * // e.g. unprefixedPathname: "/about"
    * ```
@@ -26,6 +30,8 @@ export interface LocalizedPathname {
   unprefixedPathname: string;
   /**
    * Pathname template with a locale placeholder.
+   *
+   * @example
    * ```ts
    * // e.g. templatedPathname: "/app/{locale}/about"
    * ```
@@ -49,10 +55,12 @@ export interface LocalizedPathname {
  * //   templatedPathname: '/app/{locale}/about',
  * // }
  * ```
+ *
+ * @public
  */
 export const localizePathname = (
   rawPathname: string,
-  config: IntorResolvedConfig,
+  config: IntorConfig,
   locale?: string,
 ): LocalizedPathname => {
   // 1. Canonicalize: normalize and remove routing-specific prefixes

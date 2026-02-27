@@ -18,7 +18,11 @@ export {
   type MessagesLoader,
 
   // types
-  type GenLocale as Locale,
+  type TypedConfigKeys,
+  type TypedMessages,
+  type TypedLocale,
+  type TypedReplacements,
+  type TypedRich,
 } from "../src/core";
 
 // config

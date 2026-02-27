@@ -7,6 +7,13 @@ export type {
   GenLocale,
   GenReplacements,
   GenRich,
+
+  // public api
+  TypedConfigKeys,
+  TypedMessages,
+  TypedLocale,
+  TypedReplacements,
+  TypedRich,
 } from "./generated";
 
 // translator-instance

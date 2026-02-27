@@ -105,3 +105,21 @@ export type GenReplacements<CK extends GenConfigKeys> =
   GenConfig<CK>["Replacements"];
 
 export type GenRich<CK extends GenConfigKeys> = GenConfig<CK>["Rich"];
+
+/* ============================================================
+ * Public API
+ * ============================================================ */
+/** @public */
+export type TypedConfigKeys = GenConfigKeys;
+
+/** @public */
+export type TypedMessages<CK extends TypedConfigKeys> = GenMessages<CK>;
+
+/** @public */
+export type TypedLocale<CK extends TypedConfigKeys> = GenLocale<CK>;
+
+/** @public */
+export type TypedReplacements<CK extends TypedConfigKeys> = GenReplacements<CK>;
+
+/** @public */
+export type TypedRich<CK extends TypedConfigKeys> = GenRich<CK>;

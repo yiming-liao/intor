@@ -9,12 +9,16 @@ import { parseLocale } from "./parse-locale";
  * 2. Same language + same script
  * 3. Same language only (only if candidate has no script)
  *
+ * Returns one of the original `supportedLocales` values if matched.
  * Returns `undefined` if no match is found.
  *
  * Notes:
  * - Matching is deterministic and order-sensitive.
- * - Does not perform automatic fallback to default locale.
- * - Does not cross script boundaries.
+ * - Does not perform automatic fallback to a default locale.
+ *   Consumers are responsible for applying fallback logic.
+ * - If the candidate includes a script subtag, language-only fallback is skipped.
+ *
+ * @public
  */
 export function matchLocale(
   locale: string | undefined,

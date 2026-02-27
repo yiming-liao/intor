@@ -66,6 +66,12 @@ export type {
   GenLocale,
   GenReplacements,
   GenRich,
+  // generated (public api)
+  TypedConfigKeys,
+  TypedMessages,
+  TypedLocale,
+  TypedReplacements,
+  TypedRich,
   // translator
   BaseTranslator,
   // routing
