@@ -2,6 +2,7 @@ import type { IntorContextValue } from "./types";
 import React from "react";
 import { IntorContext } from "./intor-provider";
 
+/** @internal */
 export function useIntorContext(): IntorContextValue {
   const context = React.useContext(IntorContext);
   if (!context)

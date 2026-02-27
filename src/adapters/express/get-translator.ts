@@ -9,7 +9,7 @@ import type {
 import type { GetTranslatorParams } from "../../server";
 import type { Request } from "express";
 import type { LocalizedPreKey } from "intor-translator";
-import { getTranslator as getTranslatorCore } from "../../server";
+import { getTranslator as getTranslatorCore } from "intor/server";
 
 type GetTranslatorExpressParams<CK extends GenConfigKeys = "__default__"> =
   Omit<GetTranslatorParams<CK>, "locale">;

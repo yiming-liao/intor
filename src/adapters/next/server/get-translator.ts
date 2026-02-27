@@ -8,7 +8,7 @@ import type {
 } from "../../../core";
 import type { GetTranslatorParams } from "../../../server";
 import type { LocalizedPreKey } from "intor-translator";
-import { getTranslator as getTranslatorCore } from "../../../server";
+import { getTranslator as getTranslatorCore } from "intor/server";
 import { getLocale } from "./get-locale";
 
 type GetTranslatorNextParams<CK extends GenConfigKeys = "__default__"> = Omit<

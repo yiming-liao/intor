@@ -1,7 +1,8 @@
 import type { IntorResolvedConfig } from "../../../config";
 import type { MessagesReaders } from "../../../core";
-import { type GenConfigKeys } from "../../../core";
-import { intor as intorCore, type IntorValue } from "../../../server";
+import type { GenConfigKeys } from "../../../core";
+import type { IntorValue } from "../../../server";
+import { intor as intorCore } from "intor/server";
 import { getLocale } from "./get-locale";
 
 /**

@@ -6,7 +6,12 @@
 
     "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
-    "types": ["node"]
+    "types": ["node"],
+
+    "paths": {
+      "intor": ["./export/index.ts"],
+      "intor/*": ["./src/*"]
+    }
   },
   "include": ["src", "export", "__test__"],
   "exclude": ["__test__/types/**/*.ts"]

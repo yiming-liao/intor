@@ -2,15 +2,12 @@
 
 export {
   // provider
-  createIntorStore, // @internal
+  createIntorStore,
   type IntorProviderProps,
   getIntorContext, // @internal
 
   // translator
   useTranslator,
-
-  // helpers
-  getClientLocale,
 } from "../../src/client/svelte";
 
 // Re-bind the Svelte component with an explicit type so tsc can generate

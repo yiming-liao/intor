@@ -2,7 +2,7 @@ import type { IntorResolvedConfig } from "../../../config";
 import type { IntorValue } from "../provider";
 import type { Locale, LocaleMessages } from "intor-translator";
 import { ref, onMounted } from "vue";
-import { getClientLocale } from "../../shared/helpers";
+import { getClientLocale } from "intor";
 
 export function useIntor(
   config: IntorResolvedConfig,

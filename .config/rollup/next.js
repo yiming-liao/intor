@@ -6,24 +6,28 @@ import { preserveDirectives } from "./plugins/preserve-directives.js";
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
 const EXTERNALS = [
+  // node
   "node:path",
   "node:fs/promises",
+  // react
   "react/jsx-runtime",
   "react",
+  // next
   "next/server",
   "next/headers",
   "next/dist",
   "next/link",
   "next/navigation",
   "next/dist/shared/lib/router/utils/format-url",
-  "intor/react", // intor module
+  // intor
+  "intor/react",
+  "intor/server",
 ];
 
 /** @type {import('rollup').RollupOptions[]} */
 export default [
   {
     input: {
-      // --- next
       "export/next/index": "export/next/index.ts",
       "export/next/server/index": "export/next/server/index.ts",
     },
@@ -38,6 +42,7 @@ export default [
       warn(warning);
     },
     plugins: [
+      // Prevent duplicate React runtime by redirecting to `intor/react`.
       alias({
         entries: [{ find: "../../client/react", replacement: "intor/react" }],
       }),

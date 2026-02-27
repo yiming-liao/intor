@@ -9,7 +9,7 @@ import type {
 import type { GetTranslatorParams } from "../../server";
 import type { FastifyRequest } from "fastify";
 import type { LocalizedPreKey } from "intor-translator";
-import { getTranslator as getTranslatorCore } from "../../server";
+import { getTranslator as getTranslatorCore } from "intor/server";
 
 type GetTranslatorFastifyParams<CK extends GenConfigKeys = "__default__"> =
   Omit<GetTranslatorParams<CK>, "locale">;

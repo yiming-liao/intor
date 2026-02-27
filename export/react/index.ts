@@ -12,5 +12,4 @@ export {
 
   // helpers
   useIntor,
-  getClientLocale,
 } from "../../src/client/react";

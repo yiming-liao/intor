@@ -1,8 +1,9 @@
 import type { IntorResolvedConfig } from "../../config";
+import type { GetTranslatorParams } from "../../server";
 import type { Request, Response, NextFunction } from "express";
+import { getTranslator } from "intor/server";
 import { normalizeQuery, parseCookieHeader } from "../../core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
-import { getTranslator, type GetTranslatorParams } from "../../server";
 
 /**
  * Resolves locale-aware routing for the current execution context.

@@ -4,7 +4,12 @@ import package_ from "../../package.json" with { type: "json" };
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 import copy from "rollup-plugin-copy";
 
-const EXTERNALS = ["svelte", "svelte/store", /\.svelte$/];
+const EXTERNALS = [
+  // svelte
+  "svelte",
+  "svelte/store",
+  /\.svelte$/, // Keep .svelte components as external
+];
 
 /** @type {import('rollup').RollupOptions[]} */
 export default [
@@ -23,6 +28,7 @@ export default [
     },
     plugins: [
       typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
+      // Keep Svelte provider as source file (compiled by consumer)
       copy({
         targets: [
           {

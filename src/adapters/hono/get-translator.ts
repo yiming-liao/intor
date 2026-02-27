@@ -9,7 +9,7 @@ import type {
 import type { GetTranslatorParams } from "../../edge";
 import type { Context } from "hono";
 import type { LocalizedPreKey } from "intor-translator";
-import { getTranslator as getTranslatorCore } from "../../edge";
+import { getTranslator as getTranslatorCore } from "intor/edge";
 
 type GetTranslatorHonoParams<CK extends GenConfigKeys = "__default__"> = Omit<
   GetTranslatorParams<CK>,

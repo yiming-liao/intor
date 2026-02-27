@@ -5,20 +5,22 @@ import package_ from "../../package.json" with { type: "json" };
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
 const EXTERNALS = [
+  // node
   "node:path",
   "node:fs/promises",
+  // svelte
   "@sveltejs/kit",
   "svelte/store",
   "$app/navigation",
   "$app/state",
-  "intor/svelte", // intor module
+  // intor
+  "intor/svelte",
 ];
 
 /** @type {import('rollup').RollupOptions[]} */
 export default [
   {
     input: {
-      // svelte-kit
       "export/svelte-kit/index": "export/svelte-kit/index.ts",
     },
     output: {
@@ -31,6 +33,7 @@ export default [
       warn(warning);
     },
     plugins: [
+      // Prevent duplicate Svelte runtime by redirecting to `intor/svelte`.
       alias({
         entries: [{ find: "../../client/svelte", replacement: "intor/svelte" }],
       }),

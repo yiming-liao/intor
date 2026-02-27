@@ -4,7 +4,13 @@ import package_ from "../../package.json" with { type: "json" };
 import { preserveDirectives } from "./plugins/preserve-directives.js";
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 
-const EXTERNALS = ["react", "react/jsx-runtime"];
+const EXTERNALS = [
+  // react
+  "react",
+  "react/jsx-runtime",
+  // intor
+  "intor",
+];
 
 /** @type {import('rollup').RollupOptions[]} */
 export default [

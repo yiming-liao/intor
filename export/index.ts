@@ -36,6 +36,9 @@ export {
 // routing
 export { localizePathname, type InboundContext } from "../src/routing";
 
+// client
+export { getClientLocale } from "../src/client";
+
 // intor-translator
 export {
   Translator,

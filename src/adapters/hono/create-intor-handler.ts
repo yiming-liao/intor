@@ -1,7 +1,8 @@
 import type { IntorResolvedConfig } from "../../config";
+import type { GetTranslatorParams } from "../../edge";
 import type { Context, Next } from "hono";
+import { getTranslator } from "intor/edge";
 import { normalizeQuery, parseCookieHeader } from "../../core";
-import { getTranslator, type GetTranslatorParams } from "../../edge";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";
 
 /**
