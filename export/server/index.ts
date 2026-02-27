@@ -10,7 +10,4 @@ export {
 
   // helpers
   getTranslator,
-
-  // translator
-  type MessagesLoader,
 } from "../../src/server";

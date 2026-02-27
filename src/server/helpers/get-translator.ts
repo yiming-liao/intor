@@ -15,8 +15,9 @@ import {
   type MessagesReaders,
   type RuntimeFetch,
   type BaseTranslator,
+  type MessagesLoader,
 } from "../../core";
-import { initTranslator, type MessagesLoader } from "../translator";
+import { initTranslator } from "../translator";
 
 export interface GetTranslatorParams<CK extends GenConfigKeys = "__default__"> {
   locale: GenLocale<CK> | (string & {});

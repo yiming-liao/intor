@@ -6,6 +6,3 @@ export { loadMessages, clearMessagesPool } from "./messages";
 
 // helpers
 export { getTranslator, type GetTranslatorParams } from "./helpers";
-
-// translator
-export type { MessagesLoader } from "./translator";
