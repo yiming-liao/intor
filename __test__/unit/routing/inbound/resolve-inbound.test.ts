@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { resolveInbound } from "../../../../src/routing/inbound/resolve-inbound";
 import * as resolveLocaleModule from "../../../../src/routing/inbound/resolve-locale";
-import * as resolvePathModule from "../../../../src/routing/inbound/resolve-path";
+import * as resolvePathModule from "../../../../src/routing/inbound/resolve-pathname";
 import * as localeModule from "../../../../src/routing/locale";
 
 describe("resolveInbound()", () => {

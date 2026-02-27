@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "../../../../../../src/config";
-import type { PathContext } from "../../../../../../src/routing/inbound/resolve-path/types";
+import type { PathContext } from "../../../../../../src/routing/inbound/resolve-pathname/types";
 import { describe, it, expect } from "vitest";
-import { all } from "../../../../../../src/routing/inbound/resolve-path/strategies";
+import { all } from "../../../../../../src/routing/inbound/resolve-pathname/strategies";
 
 function createConfig(redirect?: boolean): IntorResolvedConfig {
   return {

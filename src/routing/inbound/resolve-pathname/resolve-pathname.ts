@@ -13,7 +13,7 @@ const assertNever = (x: never): never => {
  * The resolved pathname represents the final, normalized form
  * used for routing and navigation.
  */
-export const resolvePath = (
+export const resolvePathname = (
   config: IntorResolvedConfig,
   rawPathname: string,
   context: PathContext,
