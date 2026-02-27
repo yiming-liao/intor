@@ -7,7 +7,6 @@
 export {
   // utils
   resolveLoaderOptions,
-  type DeepMergeOverrideEvent,
 
   // internal-metadata
   INTOR_PREFIX,

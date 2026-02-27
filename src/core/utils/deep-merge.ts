@@ -1,9 +1,13 @@
 export type PlainObject = Record<string, unknown>;
 
 export interface DeepMergeOverrideEvent {
+  /** Dot-separated property path. */
   path: string;
+  /** Previous value before merge. */
   prev: unknown;
+  /** Next value after merge. */
   next: unknown;
+  /** Type of change. */
   kind: "add" | "override";
 }
 

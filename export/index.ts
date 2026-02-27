@@ -2,9 +2,6 @@
 
 // core
 export {
-  // constants
-  LOCALE_PLACEHOLDER,
-
   // error
   IntorError,
   IntorErrorCode,
@@ -17,6 +14,7 @@ export {
 
   // messages
   mergeMessages,
+  type MergeMessagesEvent,
   type MessagesReader,
   type MessagesReaders,
 

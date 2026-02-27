@@ -7,8 +7,6 @@ export { IntorError, IntorErrorCode } from "./error";
 // utils
 export {
   deepMerge,
-  type PlainObject,
-  type DeepMergeOverrideEvent,
   resolveLoaderOptions,
   parseCookieHeader,
   // normalizers
@@ -30,6 +28,7 @@ export {
   loadRemoteMessages,
   // merge-messages
   mergeMessages,
+  type MergeMessagesEvent,
   // utils
   isValidMessages,
   nestObjectFromPath,
