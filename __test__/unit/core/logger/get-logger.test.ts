@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 import { logry } from "logry";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { getLogger } from "../../../../src/core/logger/get-logger";
@@ -34,14 +33,13 @@ describe("getLogger", () => {
     vi.clearAllMocks();
   });
 
-  it("uses default format/render configs when no preset", () => {
+  it("applies default format/render configs when no preset", () => {
     getLogger({ id: "a" });
     expect(logry).toHaveBeenCalledWith(
       expect.objectContaining({
         id: "a",
         formatConfig: { timestamp: { withDate: false } },
         renderConfig: {
-          timestamp: {},
           id: { visible: true, prefix: "<", suffix: ">" },
           meta: { lineBreaksAfter: 1 },
         },
@@ -49,26 +47,12 @@ describe("getLogger", () => {
     );
   });
 
-  it("does not apply default configs when preset provided", () => {
+  it("does not apply default configs when preset is provided", () => {
     getLogger({ id: "b", preset: "minimal" });
     const callArg = (logry as any).mock.calls[0][0];
     expect(callArg.formatConfig).toBeUndefined();
     expect(callArg.renderConfig).toBeUndefined();
     expect(callArg.preset).toBe("minimal");
-  });
-
-  it("uses custom format/render configs over defaults", () => {
-    getLogger({
-      id: "c",
-      formatConfig: { custom: true } as any,
-      renderConfig: { custom: true } as any,
-    });
-    expect(logry).toHaveBeenCalledWith(
-      expect.objectContaining({
-        formatConfig: { custom: true },
-        renderConfig: { custom: true },
-      }),
-    );
   });
 
   it("returns same logger instance for same id", () => {
@@ -78,7 +62,7 @@ describe("getLogger", () => {
     expect(logry).toHaveBeenCalledTimes(1);
   });
 
-  it("uses default id when not provided", () => {
+  it("uses 'default' id when not provided", () => {
     getLogger({} as any);
     expect(logry).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -99,7 +83,7 @@ describe("getLogger", () => {
     );
   });
 
-  it("triggers soft LRU cleanup when pool size exceeds 1000", () => {
+  it("triggers soft cleanup when pool size exceeds threshold", () => {
     for (let i = 0; i < 1001; i++) {
       pool.set(`key-${i}`, { dummy: true });
     }

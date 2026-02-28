@@ -8,15 +8,28 @@ export type {
   IntorRawConfig,
   IntorResolvedConfig,
   IntorConfig,
+
   // loader
   LoaderOptions,
+  ServerLoaderOptions,
+  ClientLoaderOptions,
+  LocalLoader,
+  RemoteLoader,
   RemoteHeaders,
+
   // translator
   TranslatorOptions,
+
   // routing
+  RoutingRawOptions,
   RoutingResolvedOptions,
+  RoutingStructuredOptions,
+  RoutingFlatOptions,
+
   // cookie
+  CookieRawOptions,
   CookieResolvedOptions,
+
   // logger
   LoggerOptions,
 } from "./types";

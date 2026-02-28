@@ -6,6 +6,7 @@ import { buildCookieString } from "../../../../../src/client/shared/utils/build-
 const baseCookie: CookieResolvedOptions = {
   persist: true,
   name: "intor.locale",
+  domain: undefined,
   path: "/",
   maxAge: 10,
   httpOnly: false,

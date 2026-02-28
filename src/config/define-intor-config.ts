@@ -1,5 +1,5 @@
 import type { IntorRawConfig } from "../config";
-import type { IntorResolvedConfig } from "./types/intor-config";
+import type { IntorConfig } from "./types/intor-config";
 import { resolveCookieOptions } from "../config/resolvers/resolve-cookie-options";
 import { resolveFallbackLocales } from "../config/resolvers/resolve-fallback-locales";
 import { resolveRoutingOptions } from "../config/resolvers/resolve-routing-options";
@@ -22,7 +22,7 @@ import { validateSupportedLocales } from "../config/validators/validate-supporte
  *
  * @public
  */
-export const defineIntorConfig = (config: IntorRawConfig) => {
+export const defineIntorConfig = (config: IntorRawConfig): IntorConfig => {
   // -----------------------------------------------------------------------------
   // Validators
   // -----------------------------------------------------------------------------
@@ -60,5 +60,5 @@ export const defineIntorConfig = (config: IntorRawConfig) => {
     logger: { id, ...config.logger },
     ...(config.client !== undefined ? { client: config.client } : {}),
     ...(config.server !== undefined ? { server: config.server } : {}),
-  } satisfies IntorResolvedConfig;
+  };
 };

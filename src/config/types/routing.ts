@@ -4,7 +4,11 @@ import type {
   LocalePathPrefix,
 } from "../../core";
 
-// Structure routing options
+/**
+ * Structured routing configuration.
+ *
+ * @public
+ */
 export type RoutingStructuredOptions = {
   /** Base URL path for routing. Defaults to "/" */
   basePath?: string;
@@ -51,10 +55,34 @@ export type RoutingStructuredOptions = {
   };
 };
 
-// Routing raw options
+/**
+ * Flat (shortcut) routing configuration.
+ *
+ * @public
+ */
+export interface RoutingFlatOptions {
+  basePath?: string;
+  localePrefix?: LocalePathPrefix;
+  queryKey?: string; // (shared)
+  localeSources?: RoutingLocaleSignal[];
+  firstVisit?: NonNullable<RoutingStructuredOptions["inbound"]>["firstVisit"];
+  localeCarrier?: RoutingLocaleCarrier;
+  host?: NonNullable<RoutingStructuredOptions["outbound"]>["host"];
+  forceFullReload?: boolean;
+}
+
+/**
+ * User-provided routing configuration.
+ *
+ * @public
+ */
 export type RoutingRawOptions = RoutingStructuredOptions & RoutingFlatOptions;
 
-// Routing resolved options
+/**
+ * Fully normalized routing configuration used at runtime.
+ *
+ * @public
+ */
 export type RoutingResolvedOptions = {
   basePath: string;
   localePrefix: LocalePathPrefix;
@@ -77,17 +105,3 @@ export type RoutingResolvedOptions = {
     forceFullReload: boolean;
   };
 };
-
-// ---------------------------------------------------------------------------
-// Flat (shortcut) routing options
-// ---------------------------------------------------------------------------
-export interface RoutingFlatOptions {
-  basePath?: string;
-  localePrefix?: LocalePathPrefix;
-  queryKey?: string; // (shared)
-  localeSources?: RoutingLocaleSignal[];
-  firstVisit?: NonNullable<RoutingStructuredOptions["inbound"]>["firstVisit"];
-  localeCarrier?: RoutingLocaleCarrier;
-  host?: NonNullable<RoutingStructuredOptions["outbound"]>["host"];
-  forceFullReload?: boolean;
-}

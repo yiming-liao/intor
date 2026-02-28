@@ -1,4 +1,8 @@
-/** HTTP headers used for remote message loading. */
+/**
+ * HTTP headers used for remote loading.
+ *
+ * @public
+ */
 export interface RemoteHeaders {
   /** Authorization header (e.g. Bearer token). */
   authorization?: string;
@@ -8,8 +12,12 @@ export interface RemoteHeaders {
   [key: string]: string | undefined;
 }
 
-/** Local message loader options. */
-interface LocalLoader {
+/**
+ * Local loader configuration.
+ *
+ * @public
+ */
+export interface LocalLoader {
   /** Use local filesystem-based message loading. */
   mode: "local";
   /** Namespaces to load for all routes. */
@@ -20,7 +28,11 @@ interface LocalLoader {
   rootDir?: string;
 }
 
-/** Remote message loader options. */
+/**
+ * Remote loader configuration.
+ *
+ * @public
+ */
 export interface RemoteLoader {
   /** Use remote API-based message loading. */
   mode: "remote";
@@ -34,8 +46,23 @@ export interface RemoteLoader {
   headers?: RemoteHeaders;
 }
 
-// Loader options (Local / Remote)
+/**
+ * Loader configuration.
+ *
+ * @public
+ */
 export type LoaderOptions = LocalLoader | RemoteLoader;
 
+/**
+ * Server-side loader configuration.
+ *
+ * @public
+ */
 export type ServerLoaderOptions = LoaderOptions;
+
+/**
+ * Client-side loader configuration.
+ *
+ * @public
+ */
 export type ClientLoaderOptions = Omit<RemoteLoader, "mode">;

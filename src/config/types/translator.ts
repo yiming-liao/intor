@@ -1,9 +1,12 @@
-import type { TranslateConfig } from "intor-translator";
-
-// Translator options
+/**
+ * Translator behavior configuration.
+ *
+ * @public
+ */
 export type TranslatorOptions = {
   /** Message displayed while a translation is loading. */
-  loadingMessage?: TranslateConfig["loadingMessage"];
+  loadingMessage?: string;
+
   /** Message displayed when a translation key is missing. */
-  missingMessage?: TranslateConfig["missingMessage"];
+  missingMessage?: string;
 };

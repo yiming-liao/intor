@@ -7,7 +7,6 @@ import type {
 import type { LoggerOptions } from "./logger";
 import type { RoutingRawOptions, RoutingResolvedOptions } from "./routing";
 import type { TranslatorOptions } from "./translator";
-import type { defineIntorConfig } from "../define-intor-config";
 import type {
   FallbackLocalesMap,
   Locale,
@@ -52,7 +51,9 @@ export type IntorRawConfig = {
 };
 
 /**
- * Fully resolved configuration after validation and normalization.
+ * Fully normalized Intor configuration used at runtime.
+ *
+ * @public
  */
 export type IntorResolvedConfig = {
   readonly id: string;
@@ -82,9 +83,10 @@ export type IntorResolvedConfig = {
 /**
  * Runtime-ready Intor configuration.
  *
- * This type represents the validated and normalized configuration
+ * This is the public configuration contract used by all Intor APIs
+ * at runtime. It represents the validated and normalized result
  * returned by `defineIntorConfig`.
  *
  * @public
  */
-export type IntorConfig = ReturnType<typeof defineIntorConfig>;
+export type IntorConfig = IntorResolvedConfig;

@@ -31,7 +31,28 @@ export {
 
   // types
   type IntorRawConfig,
+  type IntorResolvedConfig,
   type IntorConfig,
+
+  // types (loader)
+  type LoaderOptions,
+  type ServerLoaderOptions,
+  type ClientLoaderOptions,
+  type LocalLoader,
+  type RemoteLoader,
+  type RemoteHeaders,
+  // types (translator)
+  type TranslatorOptions,
+  // types (translator)
+  type RoutingRawOptions,
+  type RoutingResolvedOptions,
+  type RoutingStructuredOptions,
+  type RoutingFlatOptions,
+  // types (cookie)
+  type CookieRawOptions,
+  type CookieResolvedOptions,
+  // types (logger)
+  type LoggerOptions,
 } from "../src/config";
 
 // routing

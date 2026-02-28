@@ -7,7 +7,6 @@ const DEFAULT_FORMAT_CONFIG: FormatConfig = {
   timestamp: { withDate: false },
 };
 const DEFAULT_RENDER_CONFIG: RenderConfig = {
-  timestamp: {},
   id: { visible: true, prefix: "<", suffix: ">" },
   meta: { lineBreaksAfter: 1 },
 };
@@ -19,40 +18,34 @@ const DEFAULT_RENDER_CONFIG: RenderConfig = {
  */
 export function getLogger({
   id = "default",
-  formatConfig,
-  renderConfig,
   preset,
   ...options
-}: LoggerOptions & { scope?: string }): Logger {
-  const shouldUseDefault = preset === undefined;
-  const resolvedFormatConfig =
-    formatConfig ?? (shouldUseDefault ? DEFAULT_FORMAT_CONFIG : undefined);
-  const resolvedRenderConfig =
-    renderConfig ?? (shouldUseDefault ? DEFAULT_RENDER_CONFIG : undefined);
-
+}: LoggerOptions): Logger {
   const pool = getGlobalLoggerPool();
 
-  let logger = pool.get(id);
+  const existing = pool.get(id);
+  if (existing) return existing;
 
-  if (!logger) {
-    logger = logry({
-      id,
-      ...(resolvedFormatConfig !== undefined
-        ? { formatConfig: resolvedFormatConfig }
-        : {}),
-      ...(resolvedRenderConfig !== undefined
-        ? { renderConfig: resolvedRenderConfig }
-        : {}),
-      ...(preset !== undefined ? { preset } : {}),
-      ...options,
-    });
+  const baseConfig =
+    preset === undefined
+      ? {
+          formatConfig: DEFAULT_FORMAT_CONFIG,
+          renderConfig: DEFAULT_RENDER_CONFIG,
+        }
+      : { preset };
 
-    pool.set(id, logger);
+  const logger = logry({
+    id,
+    ...baseConfig,
+    ...options,
+  });
 
-    // Soft LRU: keep pool size under control
-    if (pool.size > 1000) {
-      const keys = [...pool.keys()];
-      for (const key of keys.slice(0, 200)) pool.delete(key);
+  pool.set(id, logger);
+
+  // Soft LRU: keep pool size under control
+  if (pool.size > 1000) {
+    for (const key of [...pool.keys()].slice(0, 200)) {
+      pool.delete(key);
     }
   }
 
