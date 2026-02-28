@@ -2,7 +2,11 @@
 export { loadRemoteMessages } from "./load-remote-messages";
 
 // merge-messages
-export { mergeMessages, type MergeMessagesEvent } from "./merge-messages";
+export {
+  mergeMessages,
+  type MergeMessagesOptions,
+  type MergeMessagesEvent,
+} from "./merge-messages";
 
 // utils
 export { isValidMessages, nestObjectFromPath } from "./utils";

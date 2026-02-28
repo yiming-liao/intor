@@ -1,6 +1,8 @@
 // intor (core)
 
+//--------------------------------------------------------------
 // core
+//--------------------------------------------------------------
 export {
   // error
   type IntorErrorOptions,
@@ -11,9 +13,12 @@ export {
   // locale,
   matchLocale,
 
-  // messages
+  // messages (merge-messages)
   mergeMessages,
+  type MergeMessagesOptions,
   type MergeMessagesEvent,
+
+  // messages (types)
   type MessagesReader,
   type MessagesReaders,
   type MessagesLoader,
@@ -32,7 +37,9 @@ export {
   type LocalePathPrefix,
 } from "../src/core";
 
+//--------------------------------------------------------------
 // config
+//--------------------------------------------------------------
 export {
   defineIntorConfig,
 
@@ -66,7 +73,9 @@ export {
   type LoggerOptions,
 } from "../src/config";
 
+//--------------------------------------------------------------
 // routing
+//--------------------------------------------------------------
 export {
   // pathname
   localizePathname,
@@ -80,14 +89,20 @@ export {
   resolveInboundFromRequest,
 } from "../src/routing";
 
+//--------------------------------------------------------------
 // client
+//--------------------------------------------------------------
 export { getClientLocale } from "../src/client";
 
+//--------------------------------------------------------------
 // intor-translator
+//--------------------------------------------------------------
 export {
   Translator,
+
   // plugin
   type TranslatorPlugin,
+
   // translation pipeline
   type TranslateContext,
   type TranslateHook,
@@ -96,6 +111,7 @@ export {
   type FormatHandler,
   type LoadingHandler,
   type MissingHandler,
+
   // types
   type LocaleMessages,
   type MessageObject,

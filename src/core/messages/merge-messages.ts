@@ -1,7 +1,7 @@
 import type { IntorConfig } from "../../config";
 import type { Locale, LocaleMessages } from "intor-translator";
 import { getLogger } from "../logger";
-import { deepMerge, type DeepMergeOverrideEvent } from "../utils";
+import { deepMerge } from "../utils";
 
 /**
  * Event emitted during message merging when a value is added or overridden.
@@ -10,9 +10,23 @@ import { deepMerge, type DeepMergeOverrideEvent } from "../utils";
  *
  * @public
  */
-export type MergeMessagesEvent = DeepMergeOverrideEvent;
+export interface MergeMessagesEvent {
+  /** Dot-separated property path. */
+  path: string;
+  /** Previous value before merge. */
+  prev: unknown;
+  /** Next value after merge. */
+  next: unknown;
+  /** Type of change. */
+  kind: "add" | "override";
+}
 
-interface MergeMessagesOptions {
+/**
+ * Options controlling merge behavior and event reporting.
+ *
+ * @public
+ */
+export interface MergeMessagesOptions {
   config: IntorConfig;
   locale: Locale;
   /** Optional hook for tooling; suppresses runtime logging when provided. */
