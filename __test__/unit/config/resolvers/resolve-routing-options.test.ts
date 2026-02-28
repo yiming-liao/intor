@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { DEFAULT_ROUTING_OPTIONS } from "../../../../src/config/constants";
 import { resolveRoutingOptions } from "../../../../src/config/resolvers/resolve-routing-options";
+import { DEFAULT_ROUTING_OPTIONS } from "../../../../src/config";
 
 describe("resolveRoutingOptions", () => {
-  it("returns default routing options when raw is undefined", () => {
+  it("enforces invariants when raw is undefined", () => {
     const resolved = resolveRoutingOptions();
-    expect(resolved).toEqual(DEFAULT_ROUTING_OPTIONS);
+    expect(resolved.basePath).toBe("/");
   });
 
   it("projects flat shortcuts into structured options", () => {
@@ -84,5 +84,30 @@ describe("resolveRoutingOptions", () => {
   it("overrides default basePath when basePath is provided in raw options", () => {
     const resolved = resolveRoutingOptions({ basePath: "/app" });
     expect(resolved.basePath).toBe("/app");
+  });
+
+  it("normalizes basePath without leading slash", () => {
+    const resolved = resolveRoutingOptions({ basePath: "app" });
+    expect(resolved.basePath).toBe("/app");
+  });
+
+  it("normalizes basePath with trailing slash", () => {
+    const resolved = resolveRoutingOptions({ basePath: "/app/" });
+    expect(resolved.basePath).toBe("/app");
+  });
+
+  it("normalizes basePath with duplicate slashes", () => {
+    const resolved = resolveRoutingOptions({ basePath: "//app//" });
+    expect(resolved.basePath).toBe("/app");
+  });
+
+  it("does not mutate DEFAULT_ROUTING_OPTIONS", () => {
+    const before = { ...DEFAULT_ROUTING_OPTIONS };
+    resolveRoutingOptions({ basePath: "/app" });
+    expect(DEFAULT_ROUTING_OPTIONS).toEqual(before);
+  });
+
+  it("default basePath is normalized", () => {
+    expect(DEFAULT_ROUTING_OPTIONS.basePath).toBe("/");
   });
 });

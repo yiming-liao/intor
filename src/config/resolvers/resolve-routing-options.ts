@@ -4,7 +4,7 @@ import type {
   RoutingResolvedOptions,
   RoutingStructuredOptions,
 } from "../types/routing";
-import { deepMerge } from "../../core";
+import { deepMerge, normalizePathname } from "../../core";
 import { DEFAULT_ROUTING_OPTIONS } from "../constants";
 
 /**
@@ -17,13 +17,32 @@ import { DEFAULT_ROUTING_OPTIONS } from "../constants";
 export function resolveRoutingOptions(
   raw?: RoutingRawOptions,
 ): RoutingResolvedOptions {
-  if (!raw) return DEFAULT_ROUTING_OPTIONS;
-
+  if (!raw) {
+    return enforceRoutingInvariants(DEFAULT_ROUTING_OPTIONS);
+  }
   const projectedFromFlat = projectFlatToStructured(raw);
   const structuredOverrides = stripFlatShortcuts(raw);
   const defined = deepMerge(projectedFromFlat, structuredOverrides);
+  const merged = deepMerge(DEFAULT_ROUTING_OPTIONS, defined);
+  return enforceRoutingInvariants(merged);
+}
 
-  return deepMerge(DEFAULT_ROUTING_OPTIONS, defined);
+/**
+ * Enforces runtime invariants for routing configuration.
+ *
+ * Invariants:
+ * - basePath is normalized
+ * - basePath always starts with "/"
+ * - root basePath is represented as "/"
+ */
+function enforceRoutingInvariants(
+  routing: RoutingResolvedOptions,
+): RoutingResolvedOptions {
+  const normalizedBase =
+    routing.basePath && routing.basePath !== "/"
+      ? normalizePathname(routing.basePath)
+      : "/";
+  return { ...routing, basePath: normalizedBase };
 }
 
 /** Assigns a value to the target only if it is explicitly defined. */
