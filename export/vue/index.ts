@@ -1,5 +1,7 @@
 // intor / vue
 
+export * from "../types";
+
 export {
   // contexts
   IntorProvider,

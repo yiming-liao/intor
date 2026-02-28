@@ -1,3 +1,9 @@
 // intor / edge
 
-export { getTranslator, type GetTranslatorParams } from "../../src/edge";
+export * from "../types";
+
+export {
+  // helpers
+  getTranslator,
+  type GetTranslatorParams,
+} from "../../src/edge";

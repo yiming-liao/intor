@@ -50,7 +50,7 @@ export const createRefetchMessages = ({
         ...(concurrency !== undefined ? { concurrency } : {}),
         fetch: globalThis.fetch,
         url,
-        ...(headers !== undefined ? { headers: headers } : {}),
+        ...(headers !== undefined ? { headers } : {}),
         signal: currentController.signal,
         loggerOptions: config.logger,
       });

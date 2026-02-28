@@ -1,83 +1,26 @@
 // intor (core)
 
+export * from "./types";
+
 //--------------------------------------------------------------
 // core
 //--------------------------------------------------------------
 export {
   // error
-  type IntorErrorOptions,
   IntorError,
   INTOR_ERROR_CODE,
-  type IntorErrorCode,
 
   // locale,
   matchLocale,
 
   // messages (merge-messages)
   mergeMessages,
-  type MergeMessagesOptions,
-  type MergeMessagesEvent,
-
-  // messages (types)
-  type MessagesReader,
-  type MessagesReaders,
-  type MessagesLoader,
-
-  // types (generated)
-  type INTOR_GENERATED_KEY,
-  type GenConfigKeys,
-  type GeneratedConfigKeys,
-  type HasGen,
-  type GenConfig,
-  type SafeExtract,
-  type FallbackConfig,
-  type GenMessages,
-  type GenLocale,
-  type GenReplacements,
-  type GenRich,
-
-  // types (routing)
-  type RoutingLocaleCarrier,
-  type RoutingLocaleSignal,
-  type RoutingLocaleSource,
-  type LocalePathPrefix,
 } from "../src/core";
 
 //--------------------------------------------------------------
 // config
 //--------------------------------------------------------------
-export {
-  defineIntorConfig,
-
-  // types
-  type IntorRawConfig,
-  type IntorResolvedConfig,
-  type IntorConfig,
-
-  // types (loader)
-  type LoaderOptions,
-  type ServerLoaderOptions,
-  type ClientLoaderOptions,
-  type LocalLoader,
-  type RemoteLoader,
-  type RemoteHeaders,
-
-  // types (translator)
-  type TranslatorOptions,
-
-  // types (translator)
-  type RoutingRawOptions,
-  type RoutingResolvedOptions,
-  type RoutingStructuredOptions,
-  type RoutingFlatOptions,
-
-  // types (cookie)
-  type CookieRawOptions,
-  type CookieResolvedOptions,
-
-  // types (logger)
-  type LoggerOptions,
-} from "../src/config";
+export { defineIntorConfig } from "../src/config";
 
 //--------------------------------------------------------------
 // routing
@@ -85,11 +28,6 @@ export {
 export {
   // pathname
   localizePathname,
-  type LocalizedPathname,
-
-  // inbound
-  type InboundResult,
-  type InboundContext,
 
   // helper
   resolveInboundFromRequest,
@@ -99,27 +37,3 @@ export {
 // client
 //--------------------------------------------------------------
 export { getClientLocale } from "../src/client";
-
-//--------------------------------------------------------------
-// intor-translator
-//--------------------------------------------------------------
-export {
-  Translator,
-
-  // plugin
-  type TranslatorPlugin,
-
-  // translation pipeline
-  type TranslateContext,
-  type TranslateHook,
-  type TranslateHandlers,
-  type HandlerContext,
-  type FormatHandler,
-  type LoadingHandler,
-  type MissingHandler,
-
-  // types
-  type LocaleMessages,
-  type MessageObject,
-  type MessageValue,
-} from "intor-translator";

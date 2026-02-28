@@ -1,5 +1,7 @@
 // intor / react
 
+export * from "../types";
+
 export {
   // provider
   IntorProvider,

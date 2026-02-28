@@ -70,6 +70,7 @@ export {
 //--------------------------------------------------------------
 export {
   createHtmlRenderer,
+  type TagRenderer,
   type TagRenderers,
   type HtmlTagRenderers,
 } from "./render";

@@ -1,5 +1,7 @@
 // intor / next
 
+export * from "../types";
+
 export {
   Link,
   useRouter,

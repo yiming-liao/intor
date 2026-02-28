@@ -1,5 +1,7 @@
 // intor / svelte
 
+export * from "../types";
+
 export {
   // provider
   createIntorStore,

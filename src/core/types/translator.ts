@@ -14,12 +14,12 @@ import {
   type ScopedReplacement,
 } from "intor-translator";
 
-type FallbackIfNever<T, Fallback> = [T] extends [never] ? Fallback : T;
-
 /**
  * Base translator interface.
  *
  * This type represents the minimal, framework-independent translator contract.
+ *
+ * @public
  */
 export type BaseTranslator<
   M extends LocaleMessages,
@@ -48,10 +48,13 @@ export type BaseTranslator<
   >(
     key?: K | (string & {}),
     replacements?: R | Replacement,
-  ) => FallbackIfNever<
+  ) => [
     PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>,
-    string
-  >;
+  ] extends [never]
+    ? string
+    : PK extends string
+      ? ScopedValue<M, PK, K>
+      : LocalizedValue<M, K>;
 
   /** Resolve a localized value and apply rich tag renderers. */
   tRich: <

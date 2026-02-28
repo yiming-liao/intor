@@ -5,41 +5,411 @@
 ```ts
 
 import type { FallbackLocalesMap } from 'intor-translator';
-import { FormatConfig } from 'logry';
+import { FormatHandler } from 'intor-translator';
+import { HandlerContext } from 'intor-translator';
 import { JSX } from 'react/jsx-runtime';
 import type { LinkProps as LinkProps_2 } from 'next/link';
-import type { Locale } from 'intor-translator';
+import { LoadingHandler } from 'intor-translator';
+import { Locale } from 'intor-translator';
 import { LocaleMessages } from 'intor-translator';
-import { LogryLevel } from 'logry';
-import { LogryPreset } from 'logry';
+import { LocalizedKey } from 'intor-translator';
+import { LocalizedReplacement } from 'intor-translator';
+import { LocalizedRich } from 'intor-translator';
+import { LocalizedValue } from 'intor-translator';
+import type { LogryLevel } from 'logry';
+import type { LogryPreset } from 'logry';
+import { MessageObject } from 'intor-translator';
+import { MessageValue } from 'intor-translator';
+import { MissingHandler } from 'intor-translator';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { NormalizeConfig } from 'logry';
-import { PrintConfig } from 'logry';
 import * as React_2 from 'react';
 import type { RedirectType } from 'next/navigation';
-import { RenderConfig } from 'logry';
-import type { Replacement } from 'intor-translator';
-import type { Rich } from 'intor-translator';
-import type { TranslateConfig } from 'intor-translator';
+import { Replacement } from 'intor-translator';
+import { Rich } from 'intor-translator';
+import { ScopedKey } from 'intor-translator';
+import { ScopedReplacement } from 'intor-translator';
+import { ScopedRich } from 'intor-translator';
+import { ScopedValue } from 'intor-translator';
+import { TranslateContext } from 'intor-translator';
+import { TranslateHandlers } from 'intor-translator';
+import { TranslateHook } from 'intor-translator';
+import { Translator } from 'intor-translator';
+import { TranslatorPlugin } from 'intor-translator';
 import { useRouter as useRouter_2 } from 'next/navigation';
 
-// Warning: (ae-forgotten-export) The symbol "IntorConfig" needs to be exported by the entry point index.d.ts
-//
+// @public
+export type BaseTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined> = {
+    messages: M;
+    locale: Locale<M>;
+    hasKey: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>>(key?: K | (string & {}), targetLocale?: Locale<M>) => boolean;
+    t: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, R extends Replacement = LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), replacements?: R | Replacement) => [
+    PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>
+    ] extends [never] ? string : PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>;
+    tRich: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers, replacements?: RE | Replacement) => string;
+};
+
+// @public
+export type ClientLoaderOptions = Omit<RemoteLoader, "mode">;
+
+// @public
+export type CookieRawOptions = {
+    persist?: boolean;
+    name?: string;
+    domain?: string;
+    path?: string;
+    maxAge?: number;
+    httpOnly?: boolean;
+    secure?: boolean;
+    sameSite?: "lax" | "strict" | "none";
+};
+
+// @public
+export type CookieResolvedOptions = Required<Omit<CookieRawOptions, "domain">> & {
+    domain: string | undefined;
+};
+
 // @public
 export function createIntorHandler(config: IntorConfig): (request: NextRequest) => NextResponse<unknown>;
 
-// Warning: (ae-forgotten-export) The symbol "GenConfigKeys" needs to be exported by the entry point index.d.ts
+// @public
+export type FallbackConfig = {
+    Locales: Locale;
+    Messages: LocaleMessages;
+    Replacements: Replacement;
+    Rich: Rich;
+};
+
+export { FormatHandler }
+
+// @public
+export type GenConfig<CK extends GenConfigKeys> = HasGen extends true ? CK extends GeneratedConfigKeys ? SafeExtract<IntorGeneratedTypes[CK]> : FallbackConfig : FallbackConfig;
+
+// @public
+export type GenConfigKeys = HasGen extends true ? [GeneratedConfigKeys] extends [never] ? string : GeneratedConfigKeys : string;
+
+// @public
+export type GeneratedConfigKeys = HasGen extends true ? Exclude<keyof IntorGeneratedTypes, INTOR_GENERATED_KEY> : never;
+
+// @public (undocumented)
+export type GenLocale<CK extends GenConfigKeys> = GenConfig<CK>["Locales"];
+
+// @public (undocumented)
+export type GenMessages<CK extends GenConfigKeys> = GenConfig<CK>["Messages"];
+
+// @public (undocumented)
+export type GenReplacements<CK extends GenConfigKeys> = GenConfig<CK>["Replacements"];
+
+// @public (undocumented)
+export type GenRich<CK extends GenConfigKeys> = GenConfig<CK>["Rich"];
+
+export { HandlerContext }
+
+// @public
+export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes ? true : false;
+
+// @public
+export type HtmlTagRenderers<RichShape = Rich> = TagRenderers<string, RichShape>;
+
+// @public
+export type InboundContext = Omit<InboundResult, "shouldRedirect">;
+
+// @public
+export interface InboundResult {
+    locale: Locale;
+    localeSource: RoutingLocaleSource;
+    pathname: string;
+    shouldRedirect: boolean;
+}
+
+// @public
+export const INTOR_ERROR_CODE: {
+    readonly CONFIG_INVALID_ID: "INTOR_CONFIG_INVALID_ID";
+    readonly CONFIG_MISSING_SUPPORTED_LOCALES: "INTOR_CONFIG_MISSING_SUPPORTED_LOCALES";
+    readonly CONFIG_UNSUPPORTED_DEFAULT_LOCALE: "INTOR_CONFIG_UNSUPPORTED_DEFAULT_LOCALE";
+};
+
+// @public
+export type INTOR_GENERATED_KEY = "__intor_generated__";
+
+// @public
+export type IntorConfig = IntorResolvedConfig;
+
+// @public
+export class IntorError extends Error {
+    constructor(input: IntorErrorOptions);
+    // (undocumented)
+    readonly code?: IntorErrorCode;
+    // (undocumented)
+    readonly id?: string;
+}
+
+// @public
+export type IntorErrorCode = (typeof INTOR_ERROR_CODE)[keyof typeof INTOR_ERROR_CODE];
+
+// @public
+export interface IntorErrorOptions {
+    // (undocumented)
+    code?: IntorErrorCode;
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    message: string;
+}
+
+// @public
+export type IntorRawConfig = {
+    readonly id?: string;
+    readonly messages?: LocaleMessages;
+    readonly defaultLocale: Locale;
+    readonly supportedLocales: readonly Locale[];
+    readonly fallbackLocales?: FallbackLocalesMap;
+    readonly translator?: TranslatorOptions;
+    readonly routing?: RoutingRawOptions;
+    readonly cookie?: CookieRawOptions;
+    readonly loader?: LoaderOptions;
+    readonly server?: {
+        loader?: ServerLoaderOptions;
+    };
+    readonly client?: {
+        loader?: ClientLoaderOptions;
+    };
+    readonly logger?: Omit<LoggerOptions, "id">;
+};
+
+// @public
+export type IntorResolvedConfig = {
+    readonly id: string;
+    readonly messages?: LocaleMessages;
+    readonly defaultLocale: Locale;
+    readonly supportedLocales: readonly Locale[];
+    readonly fallbackLocales: FallbackLocalesMap;
+    readonly translator?: TranslatorOptions;
+    readonly routing: RoutingResolvedOptions;
+    readonly cookie: CookieResolvedOptions;
+    readonly loader?: LoaderOptions;
+    readonly server?: {
+        loader?: ServerLoaderOptions;
+    };
+    readonly client?: {
+        loader?: ClientLoaderOptions;
+    };
+    readonly logger: LoggerOptions;
+};
+
 // Warning: (ae-forgotten-export) The symbol "LinkProps" needs to be exported by the entry point index.d.ts
 //
 // @public
 export const Link: <CK extends GenConfigKeys = "__default__">(input: LinkProps<CK>) => JSX.Element;
 
 // @public
+export type LoaderOptions = LocalLoader | RemoteLoader;
+
+export { LoadingHandler }
+
+export { LocaleMessages }
+
+// @public
+export type LocalePathPrefix = "none" | "all" | "except-default";
+
+// @public
+export interface LocalizedPathname {
+    canonicalPathname: string;
+    pathname: string;
+    templatedPathname: string;
+}
+
+// @public
+export interface LocalLoader {
+    concurrency?: number;
+    mode: "local";
+    namespaces?: string[];
+    rootDir?: string;
+}
+
+// @public
+export type LoggerOptions = {
+    id: string;
+    level?: LogryLevel;
+    preset?: LogryPreset;
+};
+
+// @public
+export interface MergeMessagesEvent {
+    kind: "add" | "override";
+    next: unknown;
+    path: string;
+    prev: unknown;
+}
+
+// @public
+export interface MergeMessagesOptions {
+    // (undocumented)
+    config: IntorConfig;
+    // (undocumented)
+    locale: Locale;
+    onEvent?: (event: MergeMessagesEvent) => void;
+}
+
+export { MessageObject }
+
+// @public
+export type MessagesLoader = (config: IntorConfig, locale: string) => Promise<LocaleMessages>;
+
+// @public
+export type MessagesReader = (filePath: string) => Promise<unknown>;
+
+// @public
+export type MessagesReaders = Record<string, MessagesReader>;
+
+export { MessageValue }
+
+export { MissingHandler }
+
+// @public
 export const redirect: <CK extends GenConfigKeys = "__default__">(config: IntorConfig, url: string, options?: {
     locale?: GenLocale<CK>;
     type?: RedirectType;
 }) => Promise<never>;
+
+// @public
+export interface RemoteHeaders {
+    "x-api-key"?: string;
+    [key: string]: string | undefined;
+    authorization?: string;
+}
+
+// @public
+export interface RemoteLoader {
+    concurrency?: number;
+    headers?: RemoteHeaders;
+    mode: "remote";
+    namespaces?: string[];
+    url: string;
+}
+
+// @public
+export interface RoutingFlatOptions {
+    // (undocumented)
+    basePath?: string;
+    // (undocumented)
+    firstVisit?: NonNullable<RoutingStructuredOptions["inbound"]>["firstVisit"];
+    // (undocumented)
+    forceFullReload?: boolean;
+    // (undocumented)
+    host?: NonNullable<RoutingStructuredOptions["outbound"]>["host"];
+    // (undocumented)
+    localeCarrier?: RoutingLocaleCarrier;
+    // (undocumented)
+    localePrefix?: LocalePathPrefix;
+    // (undocumented)
+    localeSources?: RoutingLocaleSignal[];
+    // (undocumented)
+    queryKey?: string;
+}
+
+// @public
+export type RoutingLocaleCarrier = "path" | "host" | "query";
+
+// @public
+export type RoutingLocaleSignal = RoutingLocaleCarrier | "cookie" | "detected";
+
+// @public
+export type RoutingLocaleSource = RoutingLocaleSignal | "default";
+
+// @public
+export type RoutingRawOptions = RoutingStructuredOptions & RoutingFlatOptions;
+
+// @public
+export type RoutingResolvedOptions = {
+    basePath: string;
+    localePrefix: LocalePathPrefix;
+    inbound: {
+        localeSources: RoutingLocaleSignal[];
+        queryKey: string;
+        firstVisit: {
+            localeSource: "default" | "browser";
+            redirect: boolean;
+            persist: boolean;
+        };
+    };
+    outbound: {
+        localeCarrier: RoutingLocaleCarrier;
+        queryKey: string;
+        host: {
+            map: Record<string, string>;
+            default?: string;
+        };
+        forceFullReload: boolean;
+    };
+};
+
+// @public
+export type RoutingStructuredOptions = {
+    basePath?: string;
+    localePrefix?: LocalePathPrefix;
+    inbound?: {
+        localeSources?: RoutingLocaleSignal[];
+        queryKey?: string;
+        firstVisit?: {
+            localeSource?: "default" | "browser";
+            redirect?: boolean;
+            persist?: boolean;
+        };
+    };
+    outbound?: {
+        localeCarrier?: RoutingLocaleCarrier;
+        queryKey?: string;
+        host?: {
+            map: Record<string, string>;
+            default?: string;
+        };
+        forceFullReload?: boolean;
+    };
+};
+
+// @public
+export type RuntimeFetch = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
+
+// @public
+export type SafeExtract<T> = T extends {
+    Locales: infer L extends string;
+    Messages: Record<"{locale}", infer M extends LocaleMessages[string]>;
+    Replacements: infer RE;
+    Rich: infer RI;
+} ? {
+    Locales: L;
+    Messages: Record<L, M>;
+    Replacements: RE;
+    Rich: RI;
+} : FallbackConfig;
+
+// @public
+export type ServerLoaderOptions = LoaderOptions;
+
+// @public
+export type TagRenderer<Output = string> = ((children: Output[]) => Output) | Output;
+
+// @public
+export type TagRenderers<Output = string, RichShape = Rich> = {
+    [K in keyof RichShape]: TagRenderer<Output>;
+} & Record<string, TagRenderer<Output>>;
+
+export { TranslateContext }
+
+export { TranslateHandlers }
+
+export { TranslateHook }
+
+export { Translator }
+
+// @public
+export type TranslatorOptions = {
+    loadingMessage?: string;
+    missingMessage?: string;
+};
+
+export { TranslatorPlugin }
 
 // @public
 export function useRouter(): {
@@ -59,7 +429,6 @@ export function useRouter(): {
 
 // Warnings were encountered during analysis:
 //
-// src/adapters/next/redirect.ts:19:15 - (ae-forgotten-export) The symbol "GenLocale" needs to be exported by the entry point index.d.ts
 // src/adapters/next/use-router.ts:21:26 - (ae-forgotten-export) The symbol "PushOptions" needs to be exported by the entry point index.d.ts
 // src/adapters/next/use-router.ts:42:55 - (ae-forgotten-export) The symbol "ReplaceOptions" needs to be exported by the entry point index.d.ts
 // src/adapters/next/use-router.ts:59:58 - (ae-forgotten-export) The symbol "PrefetchOptions" needs to be exported by the entry point index.d.ts

@@ -1,5 +1,7 @@
 // intor / next / server
 
+export * from "../../types";
+
 export {
   intor,
   getLocale,

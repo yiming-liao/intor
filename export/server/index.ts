@@ -1,5 +1,7 @@
 // intor / server
 
+export * from "../types";
+
 export {
   // intor
   intor,
