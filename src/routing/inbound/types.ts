@@ -1,6 +1,14 @@
 import type { RoutingLocaleSource } from "../../core";
 import type { Locale } from "intor-translator";
 
+/**
+ * Result of inbound locale resolution.
+ *
+ * Represents the full routing decision produced by
+ * inbound resolution, including redirect requirement.
+ *
+ * @public
+ */
 export interface InboundResult {
   /** Resolved locale */
   locale: Locale;

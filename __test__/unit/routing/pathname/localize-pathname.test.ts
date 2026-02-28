@@ -5,79 +5,88 @@ import { localizePathname } from "../../../../src/routing/pathname/localize-path
 
 const createConfig = (
   overrides?: Partial<IntorResolvedConfig>,
-): IntorResolvedConfig =>
-  ({
-    defaultLocale: "en-US",
-    supportedLocales: ["en-US", "zh-TW"],
-    routing: {
-      basePath: "/app",
-      localePrefix: "all",
-      ...overrides?.routing,
-    },
+): IntorResolvedConfig => {
+  const baseConfig = {
+    defaultLocale: "en",
+    supportedLocales: ["en", "zh"],
+    routing: { basePath: "/app", localePrefix: "all" },
+  };
+  return {
+    ...baseConfig,
     ...overrides,
-  }) as IntorResolvedConfig;
+    routing: { ...baseConfig.routing, ...overrides?.routing },
+  } as IntorResolvedConfig;
+};
 
 describe("localizePathname", () => {
-  it("canonicalizes, standardizes, and localizes a pathname (prefix: all)", () => {
-    const config = createConfig();
-    const result = localizePathname("/app/en-US/about", config, "en-US");
-    expect(result).toEqual({
-      pathname: "/app/en-US/about",
-      unprefixedPathname: "/about",
-      templatedPathname: "/app/{locale}/about",
+  describe("prefix: all", () => {
+    it("round-trips existing localized path", () => {
+      const config = createConfig();
+      const result = localizePathname("/app/en/about", config, "en");
+      expect(result.canonicalPathname).toBe("/about");
+      expect(result.templatedPathname).toBe("/app/{locale}/about");
+      expect(result.pathname).toBe("/app/en/about");
+    });
+
+    it("rebinds to a different locale", () => {
+      const config = createConfig();
+      const result = localizePathname("/app/en/about", config, "zh");
+      expect(result.pathname).toBe("/app/zh/about");
+    });
+
+    it("handles root path", () => {
+      const config = createConfig();
+      const result = localizePathname("/app/en", config, "en");
+      expect(result.canonicalPathname).toBe("/");
+      expect(result.templatedPathname).toBe("/app/{locale}");
+      expect(result.pathname).toBe("/app/en");
     });
   });
 
-  it("replaces locale when a different locale is provided", () => {
-    const config = createConfig();
-    const result = localizePathname("/app/en-US/about", config, "zh-TW");
-    expect(result.pathname).toBe("/app/zh-TW/about");
-  });
-
-  it("handles pathname without an existing locale prefix", () => {
-    const config = createConfig();
-    const result = localizePathname("/app/about", config, "en-US");
-    expect(result).toEqual({
-      pathname: "/app/en-US/about",
-      unprefixedPathname: "/about",
-      templatedPathname: "/app/{locale}/about",
+  describe("prefix: none", () => {
+    it("removes locale segment", () => {
+      const config = createConfig({
+        routing: { localePrefix: "none" } as any,
+      });
+      const result = localizePathname("/app/en/about", config, "en");
+      expect(result.pathname).toBe("/app/about");
+      expect(result.templatedPathname).toBe("/app/{locale}/about");
     });
-  });
 
-  it('omits locale prefix when routing.prefix is "none"', () => {
-    const config = createConfig({
-      routing: {
-        basePath: "/app",
-        localePrefix: "none",
-      } as any,
-    });
-    const result = localizePathname("/app/en-US/about", config, "en-US");
-    expect(result).toEqual({
-      pathname: "/app/about",
-      unprefixedPathname: "/about",
-      templatedPathname: "/app/{locale}/about",
+    it("root stays valid", () => {
+      const config = createConfig({
+        routing: { localePrefix: "none" } as any,
+      });
+      const result = localizePathname("/app/en", config, "en");
+      expect(result.pathname).toBe("/app");
     });
   });
 
-  it('omits locale prefix for default locale when prefix is "except-default"', () => {
-    const config = createConfig({
-      routing: {
-        basePath: "/app",
-        localePrefix: "except-default",
-      } as any,
+  describe("prefix: except-default", () => {
+    it("removes default locale", () => {
+      const config = createConfig({
+        routing: { localePrefix: "except-default" } as any,
+      });
+      const result = localizePathname("/app/en/about", config, "en");
+      expect(result.pathname).toBe("/app/about");
     });
-    const result = localizePathname("/app/en-US/about", config, "en-US");
-    expect(result.pathname).toBe("/app/about");
+
+    it("keeps non-default locale", () => {
+      const config = createConfig({
+        routing: { localePrefix: "except-default" } as any,
+      });
+      const result = localizePathname("/app/about", config, "zh");
+      expect(result.pathname).toBe("/app/zh/about");
+    });
   });
 
-  it('keeps locale prefix for non-default locale when prefix is "except-default"', () => {
-    const config = createConfig({
-      routing: {
-        basePath: "/app",
-        localePrefix: "except-default",
-      } as any,
+  describe("without basePath", () => {
+    it("works when basePath is root", () => {
+      const config = createConfig({
+        routing: { basePath: "/", localePrefix: "all" } as any,
+      });
+      const result = localizePathname("/en/about", config, "zh");
+      expect(result.pathname).toBe("/zh/about");
     });
-    const result = localizePathname("/app/about", config, "zh-TW");
-    expect(result.pathname).toBe("/app/zh-TW/about");
   });
 });

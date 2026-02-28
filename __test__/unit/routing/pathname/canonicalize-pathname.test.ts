@@ -7,7 +7,7 @@ const createConfig = (
   overrides?: Partial<IntorResolvedConfig>,
 ): IntorResolvedConfig =>
   ({
-    supportedLocales: ["en-US", "zh-TW"],
+    supportedLocales: ["en", "zh"],
     routing: {
       basePath: "",
       prefix: "all",
@@ -16,95 +16,69 @@ const createConfig = (
   }) as IntorResolvedConfig;
 
 describe("canonicalizePathname", () => {
-  it("normalizes the pathname", () => {
+  it("normalizes pathname", () => {
     const config = createConfig();
-    const result = canonicalizePathname("///about///", config);
-    expect(result).toBe("/about");
+    expect(canonicalizePathname("///about///", config)).toBe("/about");
   });
 
-  it("strips basePath from pathname", () => {
-    const config = createConfig({
-      routing: {
-        basePath: "/app",
-        prefix: "all",
-      } as any,
-    });
-    const result = canonicalizePathname("/app/about", config);
-    expect(result).toBe("/about");
-  });
-
-  it("returns '/' when pathname equals basePath", () => {
-    const config = createConfig({
-      routing: {
-        basePath: "/app",
-        prefix: "all",
-      } as any,
-    });
-    const result = canonicalizePathname("/app", config);
-    expect(result).toBe("/");
-  });
-
-  it("detects and strips leading locale segment", () => {
+  it("returns '/' for root pathname", () => {
     const config = createConfig();
-    const result = canonicalizePathname("/en-US/about", config);
-    expect(result).toBe("/about");
+    expect(canonicalizePathname("/", config)).toBe("/");
   });
 
-  it("strips both basePath and locale segment", () => {
+  it("strips basePath", () => {
     const config = createConfig({
-      routing: {
-        basePath: "/app",
-        prefix: "all",
-      } as any,
+      routing: { basePath: "/app", prefix: "all" } as any,
     });
-    const result = canonicalizePathname("/app/zh-TW/about", config);
-    expect(result).toBe("/about");
+    expect(canonicalizePathname("/app/about", config)).toBe("/about");
+    expect(canonicalizePathname("/app", config)).toBe("/");
+    expect(canonicalizePathname("/app/", config)).toBe("/");
   });
 
-  it("returns '/' when only locale segment is present", () => {
+  it("does not strip basePath on partial match", () => {
+    const config = createConfig({
+      routing: { basePath: "/app", prefix: "all" } as any,
+    });
+    expect(canonicalizePathname("/app2/about", config)).toBe("/app2/about");
+  });
+
+  it("treats basePath '/' as no basePath", () => {
+    const config = createConfig({
+      routing: { basePath: "/", prefix: "all" } as any,
+    });
+    expect(canonicalizePathname("/en/about", config)).toBe("/about");
+  });
+
+  it("strips supported locale segment", () => {
     const config = createConfig();
-    const result = canonicalizePathname("/en-US", config);
-    expect(result).toBe("/");
+    expect(canonicalizePathname("/en/about", config)).toBe("/about");
+    expect(canonicalizePathname("/en", config)).toBe("/");
   });
 
   it("does not strip unsupported locale-like segment", () => {
     const config = createConfig();
-    const result = canonicalizePathname("/fr/about", config);
-    expect(result).toBe("/fr/about");
+    expect(canonicalizePathname("/fr/about", config)).toBe("/fr/about");
   });
 
-  it("detects and strips locale placeholder segment", () => {
+  it("strips locale placeholder segment", () => {
     const config = createConfig();
-    const result = canonicalizePathname("/{locale}/about", config);
-    expect(result).toBe("/about");
+    expect(canonicalizePathname("/{locale}/about", config)).toBe("/about");
+    expect(canonicalizePathname("/{locale}", config)).toBe("/");
   });
 
-  it("strips both basePath and locale placeholder segment", () => {
+  it("does not strip placeholder if not first segment", () => {
+    const config = createConfig();
+    expect(canonicalizePathname("/about/{locale}", config)).toBe(
+      "/about/{locale}",
+    );
+    expect(canonicalizePathname("/{lang}/about", config)).toBe("/{lang}/about");
+  });
+
+  it("strips both basePath and locale/placeholder", () => {
     const config = createConfig({
-      routing: {
-        basePath: "/app",
-        prefix: "all",
-      } as any,
+      routing: { basePath: "/app", prefix: "all" } as any,
     });
-    const result = canonicalizePathname("/app/{locale}/about", config);
-    expect(result).toBe("/about");
-  });
-
-  it("returns '/' when only locale placeholder is present", () => {
-    const config = createConfig();
-    const result = canonicalizePathname("/{locale}", config);
-    expect(result).toBe("/");
-  });
-
-  it("does not strip placeholder-like segment if it is not the locale placeholder", () => {
-    const config = createConfig();
-    const result = canonicalizePathname("/{lang}/about", config);
-    expect(result).toBe("/{lang}/about");
-  });
-
-  it("does not strip locale placeholder if it is not the first segment", () => {
-    const config = createConfig();
-    const result = canonicalizePathname("/about/{locale}", config);
-    expect(result).toBe("/about/{locale}");
+    expect(canonicalizePathname("/app/zh/about", config)).toBe("/about");
+    expect(canonicalizePathname("/app/{locale}/about", config)).toBe("/about");
   });
 });

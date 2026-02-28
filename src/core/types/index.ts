@@ -21,9 +21,9 @@ export type { BaseTranslator } from "./translator";
 
 // routing
 export type {
+  RoutingLocaleCarrier,
   RoutingLocaleSignal,
   RoutingLocaleSource,
-  RoutingLocaleCarrier,
   LocalePathPrefix,
 } from "./routing";
 

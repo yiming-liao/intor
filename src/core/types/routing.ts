@@ -1,56 +1,51 @@
 /**
- * URL carriers that can directly carry locale information.
+ * URL carriers that can directly encode locale information.
  *
- * A carrier represents a structural part of the URL where
- * the locale is encoded and can be round-tripped between
- * inbound resolution and outbound navigation.
+ * Represents structural parts of the URL where a locale
+ * can be embedded and round-tripped during routing.
  *
  * @example
- *```plain
+ * ```text
  * path  -> /en/about
  * query -> ?lang=en
  * host  -> en.example.com
  * ```
+ *
+ * @public
  */
 export type RoutingLocaleCarrier = "path" | "host" | "query";
 
 /**
- * Locale resolution signals used by inbound routing configuration.
+ * Signals considered during inbound locale resolution.
  *
- * A signal represents a candidate input that may influence
- * the active locale during resolution.
+ * Includes URL carriers and non-URL hints such as cookies
+ * or environment-based detection.
  *
- * Signals include:
- * - URL carriers (path / query / host), which are structural parts of the URL
- * - Non-URL hints (cookie / detected), which provide persisted or
- *   environment-based information
+ * Signals are evaluated deterministically according to configuration order.
  *
- * Signals are ordered by configuration and evaluated
- * deterministically during locale resolution.
+ * @public
  */
 export type RoutingLocaleSignal = RoutingLocaleCarrier | "cookie" | "detected";
 
 /**
- * Final locale source label returned by resolution.
+ * Final source label describing how the locale was resolved.
  *
- * Includes all possible resolution signals plus the
- * invariant fallback `"default"`.
+ * Includes all resolution signals plus the fallback `"default"`,
+ * which indicates no configured signal matched.
  *
- * `"default"` indicates that no configured signal
- * produced a supported locale.
+ * @public
  */
 export type RoutingLocaleSource = RoutingLocaleSignal | "default";
 
 /**
  * Controls how the locale is prefixed in URL pathnames.
  *
- * This option defines whether the locale appears in the path,
- * and under what conditions.
+ * Applies only when the locale is carried in the path.
  *
- * Applicable only when the locale is carried in the path.
+ * - "none"           → Never prefix
+ * - "all"            → Always prefix
+ * - "except-default" → Prefix except for the default locale
  *
- * - "none"           → No locale prefix is applied
- * - "all"            → Locale prefix is always applied
- * - "except-default" → Locale prefix is applied except for the default locale
+ * @public
  */
 export type LocalePathPrefix = "none" | "all" | "except-default";

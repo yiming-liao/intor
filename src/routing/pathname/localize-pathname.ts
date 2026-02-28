@@ -8,26 +8,19 @@ import { standardizePathname } from "./standardize-pathname";
  *
  * Contains pathname representations at different
  * stages of the localization pipeline.
+ *
+ * @public
  */
 export interface LocalizedPathname {
-  /**
-   * Final, locale-resolved pathname ready for consumption.
-   *
-   * @example
-   * ```ts
-   * // e.g. pathname: "/app/en-US/about"
-   * ```
-   */
-  pathname: string;
   /**
    * Pathname with routing-specific prefixes removed.
    *
    * @example
    * ```ts
-   * // e.g. unprefixedPathname: "/about"
+   * // e.g. canonicalPathname: "/about"
    * ```
    */
-  unprefixedPathname: string;
+  canonicalPathname: string;
   /**
    * Pathname template with a locale placeholder.
    *
@@ -37,6 +30,17 @@ export interface LocalizedPathname {
    * ```
    */
   templatedPathname: string;
+  /**
+   * Primary locale-aware pathname.
+   *
+   * This is the value most consumers should use.
+   *
+   * @example
+   * ```ts
+   * // e.g. pathname: "/app/en-US/about"
+   * ```
+   */
+  pathname: string;
 }
 
 /**
@@ -51,7 +55,7 @@ export interface LocalizedPathname {
  * localizePathname("/app/en-US/about", config, "en-US");
  * // => {
  * //   pathname: '/app/en-US/about'
- * //   unprefixedPathname: '/about',
+ * //   canonicalPathname: '/about',
  * //   templatedPathname: '/app/{locale}/about',
  * // }
  * ```
@@ -61,20 +65,24 @@ export interface LocalizedPathname {
 export const localizePathname = (
   rawPathname: string,
   config: IntorConfig,
-  locale?: string,
+  locale: string,
 ): LocalizedPathname => {
   // 1. Canonicalize: normalize and remove routing-specific prefixes
-  const canonicalized = canonicalizePathname(rawPathname, config);
+  const canonicalPathname = canonicalizePathname(rawPathname, config);
 
   // 2. Standardize: convert to internal pathname shape with locale placeholder
-  const standardized = standardizePathname(canonicalized, config);
+  const standardizedPathname = standardizePathname(canonicalPathname, config);
 
   // 3. Materialize: apply routing rules to produce the final pathname
-  const materialized = materializePathname(standardized, config, locale);
+  const materializedPathname = materializePathname(
+    standardizedPathname,
+    config,
+    locale,
+  );
 
   return {
-    pathname: materialized,
-    unprefixedPathname: canonicalized,
-    templatedPathname: standardized,
+    canonicalPathname,
+    templatedPathname: standardizedPathname,
+    pathname: materializedPathname,
   };
 };

@@ -3,61 +3,35 @@ import { describe, it, expect } from "vitest";
 import { standardizePathname } from "../../../../src/routing/pathname/standardize-pathname";
 
 describe("standardizePathname", () => {
-  const config = {
-    routing: {
-      basePath: "/app",
-    },
-    prefixPlaceHolder: "{locale}",
+  const withBasePath = {
+    routing: { basePath: "/app" },
   } as unknown as IntorResolvedConfig;
 
-  it("should concatenate basePath, prefixPlaceHolder, and pathname correctly", () => {
-    const result = standardizePathname("home", config);
-    expect(result).toBe("/app/{locale}/home");
+  const rootBasePath = {
+    routing: { basePath: "/" },
+  } as unknown as IntorResolvedConfig;
+
+  it("prepends basePath and locale placeholder to non-root canonical", () => {
+    expect(standardizePathname("/home", withBasePath)).toBe(
+      "/app/{locale}/home",
+    );
   });
 
-  it("should handle empty pathname", () => {
-    const result = standardizePathname("", config);
-    expect(result).toBe("/app/{locale}");
+  it("handles nested canonical paths", () => {
+    expect(standardizePathname("/a/b/c", withBasePath)).toBe(
+      "/app/{locale}/a/b/c",
+    );
   });
 
-  it("should handle empty basePath", () => {
-    const result = standardizePathname("home", {
-      ...config,
-      routing: { basePath: "" },
-    } as unknown as IntorResolvedConfig);
-    expect(result).toBe("/{locale}/home");
+  it("handles root canonical with non-root basePath", () => {
+    expect(standardizePathname("/", withBasePath)).toBe("/app/{locale}");
   });
 
-  it("should remove trailing slashes from the standardized pathname", () => {
-    const result = standardizePathname("home/", config);
-    expect(result).toBe("/app/{locale}/home");
+  it("handles non-root canonical with root basePath", () => {
+    expect(standardizePathname("/home", rootBasePath)).toBe("/{locale}/home");
   });
 
-  it("should handle when pathname is an absolute path", () => {
-    const result = standardizePathname("/home", config);
-    expect(result).toBe("/app/{locale}/home");
-  });
-
-  it("should return basePath + prefixPlaceHolder if pathname is empty or undefined", () => {
-    const result = standardizePathname("", config);
-    expect(result).toBe("/app/{locale}");
-  });
-
-  it("should normalize pathnames with redundant slashes correctly", () => {
-    const result = standardizePathname("///home///", config);
-    expect(result).toBe("/app/{locale}/home");
-  });
-
-  it("should return only basePath + prefix when pathname is '/'", () => {
-    const result = standardizePathname("/", config);
-    expect(result).toBe("/app/{locale}");
-  });
-
-  it("should handle segments that all start with slashes", () => {
-    const result = standardizePathname("/home/", {
-      routing: { basePath: "/app/" },
-      prefixPlaceHolder: "/{locale}/",
-    } as unknown as IntorResolvedConfig);
-    expect(result).toBe("/app/{locale}/home");
+  it("handles root canonical with root basePath", () => {
+    expect(standardizePathname("/", rootBasePath)).toBe("/{locale}");
   });
 });

@@ -1,16 +1,16 @@
 /**
- * Normalize a raw pathname string to ensure consistent formatting.
+ * Normalizes a raw pathname string into a consistent structural form.
  *
- * - Trims leading and trailing whitespace (code points ≤ 32).
- * - Collapses consecutive slashes into a single slash.
- * - Ensures a single leading slash and removes redundant trailing slashes.
- * - Optionally removes the leading slash.
- * - Avoids intermediate array allocations for performance.
+ * Canonical guarantees:
+ * - Leading and trailing whitespace (code points ≤ 32) are trimmed
+ * - Consecutive slashes are collapsed into a single slash
+ * - The result always starts with a single "/"
+ * - Redundant trailing slashes are removed
+ * - The root path is represented as "/"
+ *
+ * This function is deterministic and allocation-minimized.
  */
-export const normalizePathname = (
-  rawPathname: string,
-  options: { removeLeadingSlash?: boolean } = {},
-): string => {
+export const normalizePathname = (rawPathname: string): string => {
   const length = rawPathname.length;
   let start = 0;
   let end = length - 1;
@@ -36,11 +36,6 @@ export const normalizePathname = (
       result += hasSlash || result === "" ? "/" + char : char;
       hasSlash = false;
     }
-  }
-
-  // If the result has a leading slash and we want to remove it, do so
-  if (options.removeLeadingSlash && result.startsWith("/")) {
-    result = result.slice(1);
   }
 
   return result || "/";

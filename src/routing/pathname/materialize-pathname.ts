@@ -1,54 +1,57 @@
 import type { IntorResolvedConfig } from "../../config";
-import { normalizePathname, LOCALE_PLACEHOLDER } from "../../core";
+import { LOCALE_PLACEHOLDER } from "../../core";
 
 /**
- * Materializes a standardized pathname by applying
- * the configured locale prefix behavior.
+ * Materializes a standardized pathname into a concrete, locale-aware URL.
+ *
+ * This function resolves the `{locale}` placeholder according to the
+ * configured `localePrefix` strategy and produces the final pathname.
+ *
+ * Behavior:
+ * - "all": always injects the locale segment
+ * - "except-default": injects the locale unless it equals `defaultLocale`
+ * - "none": removes the locale placeholder entirely
+ *
+ * Invariants:
+ * - `standardizedPathname` must be produced by `standardizePathname`
+ * - The pathname must contain exactly one `{locale}` placeholder
+ * - The placeholder must appear as the first path segment
+ *
+ * This function performs structural transformation only.
+ * It does not normalize or sanitize the resulting pathname.
  *
  * @example
  * ```ts
  * // config.routing.localePrefix: "all"
- * materializePathname("/app/{locale}/about", config, "en-US");
- * // => /app/en-US/about
+ * materializePathname("/app/{locale}/about", config, "en");
+ * // => /app/en/about
  *
  * // config.routing.localePrefix: "none"
- * materializePathname("/app/{locale}/about", config, "en-US");
+ * materializePathname("/app/{locale}/about", config, "en");
  * // => /app/about
  * ```
  */
 export const materializePathname = (
   standardizedPathname: string,
   config: IntorResolvedConfig,
-  locale?: string,
+  locale: string,
 ): string => {
   const { localePrefix } = config.routing;
 
-  if (localePrefix !== "none" && !locale) {
-    throw new Error(
-      'No locale when using localePrefix "all", "except-default"',
-    );
-  }
+  const removeLocale = () => {
+    const result = standardizedPathname.replace(`/${LOCALE_PLACEHOLDER}`, "");
+    return result === "" ? "/" : result;
+  };
 
-  // localePrefix: "all"
-  if (localePrefix === "all") {
-    return normalizePathname(
-      standardizedPathname.replaceAll(LOCALE_PLACEHOLDER, locale!),
-    );
-  }
-
-  // localePrefix: "except-default"
-  if (localePrefix === "except-default") {
-    return locale === config.defaultLocale
-      ? normalizePathname(
-          standardizedPathname.replaceAll(`/${LOCALE_PLACEHOLDER}`, ""),
-        )
-      : normalizePathname(
-          standardizedPathname.replaceAll(LOCALE_PLACEHOLDER, locale!),
-        );
-  }
+  const injectLocale = () =>
+    standardizedPathname.replace(LOCALE_PLACEHOLDER, locale);
 
   // localePrefix: "none"
-  return normalizePathname(
-    standardizedPathname.replaceAll(`/${LOCALE_PLACEHOLDER}`, ""),
-  );
+  if (localePrefix === "none") return removeLocale();
+
+  // localePrefix: "all"
+  if (localePrefix === "all") return injectLocale();
+
+  // localePrefix: "except-default"
+  return locale === config.defaultLocale ? removeLocale() : injectLocale();
 };

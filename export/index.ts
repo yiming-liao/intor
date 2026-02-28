@@ -48,25 +48,34 @@ export {
   type LocalLoader,
   type RemoteLoader,
   type RemoteHeaders,
+
   // types (translator)
   type TranslatorOptions,
+
   // types (translator)
   type RoutingRawOptions,
   type RoutingResolvedOptions,
   type RoutingStructuredOptions,
   type RoutingFlatOptions,
+
   // types (cookie)
   type CookieRawOptions,
   type CookieResolvedOptions,
+
   // types (logger)
   type LoggerOptions,
 } from "../src/config";
 
 // routing
 export {
+  // pathname
   localizePathname,
+  type LocalizedPathname,
+
+  // inbound
   type InboundResult,
   type InboundContext,
+
   // helper
   resolveInboundFromRequest,
 } from "../src/routing";

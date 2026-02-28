@@ -1,34 +1,42 @@
 import type { IntorResolvedConfig } from "../../config";
-import { normalizePathname, LOCALE_PLACEHOLDER } from "../../core";
+import { LOCALE_PLACEHOLDER } from "../../core";
 
 /**
- * Standardizes a canonical pathname into an internal routing template
- * by applying the base path and injecting a locale placeholder.
+ * Standardizes a canonical pathname into an internal routing template.
+ *
+ * Standardized representation:
+ * - Prepends the deployment prefix (`basePath`) if defined
+ * - Injects the `{locale}` placeholder as the first path segment
+ * - Preserves the canonical pathname structure
+ *
+ * Input must be a canonical pathname.
+ *
+ * Output is an internal routing template and
+ * is not a locale-resolved URL.
  *
  * @example
  * ```ts
  * // config.routing.basePath: "/app",
- * // config.routing.prefix: "all"
  * standardizePathname("/about", config);
  * // => "/app/{locale}/about"
  * ```
  */
 export const standardizePathname = (
-  canonicalizedPathname: string,
+  canonicalPathname: string,
   config: IntorResolvedConfig,
 ): string => {
-  const { basePath } = config.routing;
+  const { routing } = config;
 
-  // Normalize each segment before join to avoid redundant slashes
-  const parts = [
-    normalizePathname(basePath),
-    LOCALE_PLACEHOLDER,
-    normalizePathname(canonicalizedPathname),
-  ];
+  const basePath =
+    routing.basePath && routing.basePath !== "/" ? routing.basePath : "";
 
-  // Avoid double slashes between segments
-  const standardizedPathname = parts.join("/").replaceAll(/\/{2,}/g, "/");
+  if (canonicalPathname === "/") {
+    return basePath
+      ? `${basePath}/${LOCALE_PLACEHOLDER}`
+      : `/${LOCALE_PLACEHOLDER}`;
+  }
 
-  // Final normalization to ensure leading slash, no trailing
-  return normalizePathname(standardizedPathname);
+  return basePath
+    ? `${basePath}/${LOCALE_PLACEHOLDER}${canonicalPathname}`
+    : `/${LOCALE_PLACEHOLDER}${canonicalPathname}`;
 };

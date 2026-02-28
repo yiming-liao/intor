@@ -62,32 +62,4 @@ describe("normalizePathname", () => {
     // @ts-expect-error: deliberately passing invalid type
     expect(() => normalizePathname(null)).toThrow(TypeError);
   });
-
-  it("should remove the leading slash if the option is set", () => {
-    expect(normalizePathname("/foo/bar", { removeLeadingSlash: true })).toBe(
-      "foo/bar",
-    );
-  });
-
-  it("should not remove the leading slash if the option is not set", () => {
-    expect(normalizePathname("/foo/bar", { removeLeadingSlash: false })).toBe(
-      "/foo/bar",
-    );
-  });
-
-  it("should normalize and remove the leading slash if the option is set", () => {
-    expect(
-      normalizePathname("/foo///bar//baz/", { removeLeadingSlash: true }),
-    ).toBe("foo/bar/baz");
-  });
-
-  it("should return '/' for empty pathname with removeLeadingSlash option", () => {
-    expect(normalizePathname("", { removeLeadingSlash: true })).toBe("/");
-  });
-
-  it("should handle leading slash in already normalized pathname with removeLeadingSlash", () => {
-    expect(
-      normalizePathname("/foo/bar/baz", { removeLeadingSlash: true }),
-    ).toBe("foo/bar/baz");
-  });
 });
