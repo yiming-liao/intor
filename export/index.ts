@@ -23,12 +23,18 @@ export {
   type MessagesReaders,
   type MessagesLoader,
 
-  // types
-  type TypedConfigKeys,
-  type TypedMessages,
-  type TypedLocale,
-  type TypedReplacements,
-  type TypedRich,
+  // types (generated)
+  type INTOR_GENERATED_KEY,
+  type GenConfigKeys,
+  type GeneratedConfigKeys,
+  type HasGen,
+  type GenConfig,
+  type SafeExtract,
+  type FallbackConfig,
+  type GenMessages,
+  type GenLocale,
+  type GenReplacements,
+  type GenRich,
 
   // types (routing)
   type RoutingLocaleCarrier,

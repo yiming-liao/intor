@@ -90,18 +90,19 @@ export type {
   // generated
   INTOR_GENERATED_KEY,
   GenConfigKeys,
+  GeneratedConfigKeys,
+  HasGen,
+
+  // generated (config)
   GenConfig,
+  SafeExtract,
+  FallbackConfig,
+
+  // generated (derived)
   GenMessages,
   GenLocale,
   GenReplacements,
   GenRich,
-
-  // generated (public api)
-  TypedConfigKeys,
-  TypedMessages,
-  TypedLocale,
-  TypedReplacements,
-  TypedRich,
 
   // translator
   BaseTranslator,

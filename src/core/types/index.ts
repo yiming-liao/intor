@@ -2,21 +2,22 @@
 export type {
   INTOR_GENERATED_KEY,
   GenConfigKeys,
+  GeneratedConfigKeys,
+  HasGen,
+
+  // config
   GenConfig,
+  SafeExtract,
+  FallbackConfig,
+
+  // derived
   GenMessages,
   GenLocale,
   GenReplacements,
   GenRich,
-
-  // public api
-  TypedConfigKeys,
-  TypedMessages,
-  TypedLocale,
-  TypedReplacements,
-  TypedRich,
 } from "./generated";
 
-// translator-instance
+// translator
 export type { BaseTranslator } from "./translator";
 
 // routing

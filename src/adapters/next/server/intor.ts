@@ -1,5 +1,5 @@
 import type { IntorConfig } from "../../../config";
-import type { TypedConfigKeys } from "../../../core";
+import type { GenConfigKeys } from "../../../core";
 import type { IntorValue } from "../../../server";
 import { intor as intorCore, type IntorOptions } from "intor/server";
 import { getLocale } from "./get-locale";
@@ -12,7 +12,7 @@ import { getLocale } from "./get-locale";
  *
  * @public
  */
-export async function intor<CK extends TypedConfigKeys = "__default__">(
+export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorConfig,
   options?: Omit<IntorOptions, "fetch">,
 ): Promise<IntorValue<CK>> {

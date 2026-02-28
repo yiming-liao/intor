@@ -7,10 +7,10 @@ import type {
 } from "intor-translator";
 import {
   createTRich,
-  type TypedConfigKeys,
-  type TypedMessages,
-  type TypedReplacements,
-  type TypedRich,
+  type GenConfigKeys,
+  type GenMessages,
+  type GenReplacements,
+  type GenRich,
   type MessagesReaders,
   type RuntimeFetch,
   type BaseTranslator,
@@ -39,14 +39,14 @@ export interface GetTranslatorParams {
  * @public
  */
 export async function getTranslator<
-  CK extends TypedConfigKeys = "__default__",
-  ReplacementShape = TypedReplacements<CK>,
-  RichShape = TypedRich<CK>,
-  PK extends LocalizedPreKey<TypedMessages<CK>> | undefined = undefined,
+  CK extends GenConfigKeys = "__default__",
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorConfig,
   params: GetTranslatorParams & { preKey?: PK },
-): Promise<BaseTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>> {
+): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
   const {
     locale,
     loader,
@@ -75,5 +75,5 @@ export async function getTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-  } as BaseTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>;
+  } as BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }

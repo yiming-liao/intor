@@ -1,9 +1,9 @@
 import type { IntorConfig } from "../../../config";
 import type {
-  TypedConfigKeys,
-  TypedMessages,
-  TypedReplacements,
-  TypedRich,
+  GenConfigKeys,
+  GenMessages,
+  GenReplacements,
+  GenRich,
   BaseTranslator,
 } from "../../../core";
 import type { LocalizedPreKey } from "intor-translator";
@@ -21,14 +21,14 @@ import { getLocale } from "./get-locale";
  * @public
  */
 export async function getTranslator<
-  CK extends TypedConfigKeys = "__default__",
-  ReplacementShape = TypedReplacements<CK>,
-  RichShape = TypedRich<CK>,
-  PK extends LocalizedPreKey<TypedMessages<CK>> | undefined = undefined,
+  CK extends GenConfigKeys = "__default__",
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorConfig,
   params?: Omit<GetTranslatorParams, "locale"> & { preKey?: PK },
-): Promise<BaseTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>> {
+): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
   const locale = await getLocale(config);
 
   return getTranslatorCore(config, { locale, ...(params ?? {}) });

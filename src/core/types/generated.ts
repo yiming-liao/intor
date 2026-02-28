@@ -1,4 +1,3 @@
-import type { LOCALE_PLACEHOLDER } from "../constants";
 import type {
   Locale,
   LocaleMessages,
@@ -8,11 +7,13 @@ import type {
 import "./generated-registry";
 
 /* ============================================================
- * Generated-aware type system (Stable vFinal)
+ * Generated-aware type system
  * ============================================================ */
 
 /**
  * Sentinel key injected by CLI when generated types exist.
+ *
+ * @public
  */
 export type INTOR_GENERATED_KEY = "__intor_generated__";
 
@@ -20,8 +21,10 @@ export type INTOR_GENERATED_KEY = "__intor_generated__";
  * Detect generation mode.
  *
  * This works in both source and declaration emit environments.
+ *
+ * @public
  */
-type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes
+export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes
   ? true
   : false;
 
@@ -30,8 +33,10 @@ type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes
  *
  * - Works even if IntorGeneratedTypes is empty.
  * - Prevents keyof widening issues.
+ *
+ * @public
  */
-type GeneratedConfigKeys = HasGen extends true
+export type GeneratedConfigKeys = HasGen extends true
   ? Exclude<keyof IntorGeneratedTypes, INTOR_GENERATED_KEY>
   : never;
 
@@ -40,6 +45,8 @@ type GeneratedConfigKeys = HasGen extends true
  *
  * - Never resolves to `never`.
  * - Falls back to `string` safely.
+ *
+ * @public
  */
 export type GenConfigKeys = HasGen extends true
   ? [GeneratedConfigKeys] extends [never]
@@ -49,8 +56,10 @@ export type GenConfigKeys = HasGen extends true
 
 /**
  * Fallback configuration shape (non-generated mode).
+ *
+ * @public
  */
-type FallbackConfig = {
+export type FallbackConfig = {
   Locales: Locale;
   Messages: LocaleMessages;
   Replacements: Replacement;
@@ -62,13 +71,12 @@ type FallbackConfig = {
  *
  * - Never leaks `never` to public API.
  * - Handles malformed generated types defensively.
+ *
+ * @public
  */
-type SafeExtract<T> = T extends {
+export type SafeExtract<T> = T extends {
   Locales: infer L extends string;
-  Messages: Record<
-    typeof LOCALE_PLACEHOLDER,
-    infer M extends LocaleMessages[string]
-  >;
+  Messages: Record<"{locale}", infer M extends LocaleMessages[string]>;
   Replacements: infer RE;
   Rich: infer RI;
 }
@@ -86,6 +94,8 @@ type SafeExtract<T> = T extends {
  * - Never returns `never`.
  * - Fully declaration-safe.
  * - Stable under generic distribution.
+ *
+ * @public
  */
 export type GenConfig<CK extends GenConfigKeys> = HasGen extends true
   ? CK extends GeneratedConfigKeys
@@ -97,29 +107,15 @@ export type GenConfig<CK extends GenConfigKeys> = HasGen extends true
  * Derived helpers
  * ============================================================ */
 
+/** @public */
 export type GenMessages<CK extends GenConfigKeys> = GenConfig<CK>["Messages"];
 
+/** @public */
 export type GenLocale<CK extends GenConfigKeys> = GenConfig<CK>["Locales"];
 
+/** @public */
 export type GenReplacements<CK extends GenConfigKeys> =
   GenConfig<CK>["Replacements"];
 
+/** @public */
 export type GenRich<CK extends GenConfigKeys> = GenConfig<CK>["Rich"];
-
-/* ============================================================
- * Public API
- * ============================================================ */
-/** @public */
-export type TypedConfigKeys = GenConfigKeys;
-
-/** @public */
-export type TypedMessages<CK extends TypedConfigKeys> = GenMessages<CK>;
-
-/** @public */
-export type TypedLocale<CK extends TypedConfigKeys> = GenLocale<CK>;
-
-/** @public */
-export type TypedReplacements<CK extends TypedConfigKeys> = GenReplacements<CK>;
-
-/** @public */
-export type TypedRich<CK extends TypedConfigKeys> = GenRich<CK>;

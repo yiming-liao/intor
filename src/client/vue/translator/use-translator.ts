@@ -1,9 +1,9 @@
 import type { VueTranslator } from "./types";
 import type {
-  TypedConfigKeys,
-  TypedMessages,
-  TypedReplacements,
-  TypedRich,
+  GenConfigKeys,
+  GenMessages,
+  GenReplacements,
+  GenRich,
 } from "../../../core";
 import type { LocalizedPreKey } from "intor-translator";
 import { computed } from "vue";
@@ -16,13 +16,13 @@ import { createTRich } from "./create-t-rich";
  * @public
  */
 export function useTranslator<
-  CK extends TypedConfigKeys = "__default__",
-  ReplacementShape = TypedReplacements<CK>,
-  RichShape = TypedRich<CK>,
-  PK extends LocalizedPreKey<TypedMessages<CK>> | undefined = undefined,
+  CK extends GenConfigKeys = "__default__",
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): VueTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK> {
+): VueTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const intor = injectIntorContext();
   const translator = intor.value.translator;
   const scoped = computed(() => translator.value.scoped(preKey));
@@ -37,5 +37,5 @@ export function useTranslator<
     t: (...args: Parameters<typeof scoped.value.t>) => scoped.value.t(...args),
     tRich: (...args: Parameters<ReturnType<typeof createTRich>>) =>
       createTRich(scoped.value.t)(...args),
-  } as VueTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>;
+  } as VueTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }

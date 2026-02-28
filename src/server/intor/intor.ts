@@ -1,6 +1,6 @@
 import type { IntorOptions, IntorValue } from "./types";
 import type { IntorConfig } from "../../config";
-import { getLogger, type TypedConfigKeys } from "../../core";
+import { getLogger, type GenConfigKeys } from "../../core";
 import { initTranslator } from "../translator";
 
 /**
@@ -11,7 +11,7 @@ import { initTranslator } from "../translator";
  *
  * @public
  */
-export async function intor<CK extends TypedConfigKeys = "__default__">(
+export async function intor<CK extends GenConfigKeys = "__default__">(
   config: IntorConfig,
   locale: string,
   options?: IntorOptions,

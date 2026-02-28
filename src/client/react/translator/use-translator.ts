@@ -1,9 +1,9 @@
 import type { ReactTranslator } from "./types";
 import type {
-  TypedConfigKeys,
-  TypedMessages,
-  TypedReplacements,
-  TypedRich,
+  GenConfigKeys,
+  GenMessages,
+  GenReplacements,
+  GenRich,
 } from "../../../core";
 import type { LocalizedPreKey } from "intor-translator";
 import { useIntorContext } from "../provider";
@@ -15,13 +15,13 @@ import { createTRich } from "./create-t-rich";
  * @public
  */
 export function useTranslator<
-  CK extends TypedConfigKeys = "__default__",
-  ReplacementShape = TypedReplacements<CK>,
-  RichShape = TypedRich<CK>,
-  PK extends LocalizedPreKey<TypedMessages<CK>> | undefined = undefined,
+  CK extends GenConfigKeys = "__default__",
+  ReplacementShape = GenReplacements<CK>,
+  RichShape = GenRich<CK>,
+  PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): ReactTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK> {
+): ReactTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK> {
   const { translator, setLocale } = useIntorContext();
   const scoped = translator.scoped(preKey);
 
@@ -33,5 +33,5 @@ export function useTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
-  } as ReactTranslator<TypedMessages<CK>, ReplacementShape, RichShape, PK>;
+  } as ReactTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }
