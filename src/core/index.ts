@@ -2,7 +2,12 @@
 export { LOCALE_PLACEHOLDER, INTOR_HEADERS } from "./constants";
 
 // error
-export { IntorError, INTOR_ERROR_CODE, type IntorErrorCode } from "./error";
+export {
+  type IntorErrorOptions,
+  IntorError,
+  INTOR_ERROR_CODE,
+  type IntorErrorCode,
+} from "./error";
 
 // utils
 export {

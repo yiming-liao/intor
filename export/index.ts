@@ -3,6 +3,7 @@
 // core
 export {
   // error
+  type IntorErrorOptions,
   IntorError,
   INTOR_ERROR_CODE,
   type IntorErrorCode,
@@ -23,6 +24,12 @@ export {
   type TypedLocale,
   type TypedReplacements,
   type TypedRich,
+
+  // types (routing)
+  type RoutingLocaleCarrier,
+  type RoutingLocaleSignal,
+  type RoutingLocaleSource,
+  type LocalePathPrefix,
 } from "../src/core";
 
 // config
@@ -58,6 +65,7 @@ export {
 // routing
 export {
   localizePathname,
+  type InboundResult,
   type InboundContext,
   // helper
   resolveInboundFromRequest,

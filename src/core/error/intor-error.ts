@@ -1,10 +1,21 @@
-interface IntorErrorOptions {
+/**
+ * Initialization options for creating an IntorError.
+ *
+ * Defines the structured data used to construct a framework-level error.
+ *
+ * @public
+ */
+export interface IntorErrorOptions {
   message: string;
   code?: IntorErrorCode;
   id?: string;
 }
 
 /**
+ * Framework-level error used by Intor.
+ *
+ * Extends the native Error with optional structured metadata.
+ *
  * @public
  */
 export class IntorError extends Error {
@@ -19,10 +30,13 @@ export class IntorError extends Error {
     if (code) this.code = code;
 
     Object.setPrototypeOf(this, new.target.prototype); // Fix prototype
+    if (Error.captureStackTrace) Error.captureStackTrace(this, IntorError);
   }
 }
 
 /**
+ * Built-in error codes used by Intor.
+ *
  * @public
  */
 export const INTOR_ERROR_CODE = {
@@ -32,6 +46,8 @@ export const INTOR_ERROR_CODE = {
 } as const;
 
 /**
+ * Union of all built-in Intor error codes.
+ *
  * @public
  */
 export type IntorErrorCode =

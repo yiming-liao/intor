@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { IntorError, INTOR_ERROR_CODE } from "../../../../src/core/error";
 
 describe("IntorError", () => {
@@ -40,19 +40,27 @@ describe("IntorError", () => {
     expect(error.id).toBeUndefined();
   });
 
-  it("should not include id in the message if id is undefined", () => {
-    const error = new IntorError({
-      message: "Fallback message only",
-    });
-    expect(error.message).toBe("Fallback message only");
-    expect(error.id).toBeUndefined();
-  });
-
   it("should not include id in the message if id is not provided", () => {
     const error = new IntorError({
       message: "Missing required locale",
     });
     expect(error.message).toBe("Missing required locale");
     expect(error.id).toBeUndefined();
+  });
+
+  it("should call Error.captureStackTrace when available", () => {
+    const spy = vi.spyOn(Error, "captureStackTrace");
+    new IntorError({ message: "Stack test" });
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it("should not throw if Error.captureStackTrace is unavailable", () => {
+    const original = (Error as any).captureStackTrace;
+    (Error as any).captureStackTrace = undefined;
+    expect(() => {
+      new IntorError({ message: "No captureStackTrace" });
+    }).not.toThrow();
+    (Error as any).captureStackTrace = original;
   });
 });
