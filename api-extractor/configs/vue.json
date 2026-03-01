@@ -1,9 +1,5 @@
 {
   "extends": "../base.json",
-
   "mainEntryPointFilePath": "../../dist/types/export/vue/index.d.ts",
-
-  "apiReport": {
-    "reportFileName": "vue"
-  }
+  "apiReport": { "reportFileName": "vue" }
 }

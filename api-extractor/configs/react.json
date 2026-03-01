@@ -1,9 +1,5 @@
 {
   "extends": "../base.json",
-
   "mainEntryPointFilePath": "../../dist/types/export/react/index.d.ts",
-
-  "apiReport": {
-    "reportFileName": "react"
-  }
+  "apiReport": { "reportFileName": "react" }
 }

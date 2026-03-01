@@ -1,9 +1,5 @@
 {
   "extends": "../base.json",
-
   "mainEntryPointFilePath": "../../dist/types/export/next/server/index.d.ts",
-
-  "apiReport": {
-    "reportFileName": "next-server"
-  }
+  "apiReport": { "reportFileName": "next-server" }
 }

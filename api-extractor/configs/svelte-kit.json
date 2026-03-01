@@ -1,9 +1,5 @@
 {
   "extends": "../base.json",
-
   "mainEntryPointFilePath": "../../dist/types/export/svelte-kit/index.d.ts",
-
-  "apiReport": {
-    "reportFileName": "svelte-kit"
-  }
+  "apiReport": { "reportFileName": "svelte-kit" }
 }

@@ -19,5 +19,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-#
-temp/
+# api-extractor
+api-extractor/temp/
