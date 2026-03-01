@@ -177,7 +177,7 @@ describe("IntorProvider (vue) — full coverage", () => {
       },
       locale: "en",
       handlers: { a: true },
-      plugins: { b: true },
+      hooks: { b: true },
     });
     const ctx = getCtx();
     ctx.translator.value;
@@ -187,7 +187,7 @@ describe("IntorProvider (vue) — full coverage", () => {
         loadingMessage: "loading",
         missingMessage: "missing",
         handlers: { a: true },
-        plugins: { b: true },
+        hooks: { b: true },
       }),
     );
   });

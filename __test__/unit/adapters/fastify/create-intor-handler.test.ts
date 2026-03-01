@@ -177,17 +177,17 @@ describe("createIntorHandler (Fastify)", () => {
     );
   });
 
-  it("forwards loader, readers, handlers and plugins to getTranslator", async () => {
+  it("forwards loader, readers, handlers and hooks to getTranslator", async () => {
     const loader = { mode: "runtime" } as any;
     const readers = { json: vi.fn() } as any;
     const handlers = { loadingHandler: vi.fn() } as any;
-    const plugins = [vi.fn()] as any;
+    const hooks = [vi.fn()] as any;
     mockInbound("en");
     const handler = createIntorHandler(config, {
       loader,
       readers,
       handlers,
-      plugins,
+      hooks,
     });
     await handler(request as FastifyRequest);
     expect(getTranslator).toHaveBeenCalledWith(
@@ -198,7 +198,7 @@ describe("createIntorHandler (Fastify)", () => {
         loader,
         readers,
         handlers,
-        plugins,
+        hooks,
       }),
     );
   });

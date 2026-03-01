@@ -117,27 +117,27 @@ describe("edge initTranslator", () => {
     expect("headers" in call).toBe(false);
   });
 
-  it("forwards handlers and plugins when provided", async () => {
+  it("forwards handlers and hooks when provided", async () => {
     const handlers = { formatHandler: vi.fn() };
-    const plugins = [{ name: "p", run: vi.fn() }];
+    const hooks = [{ name: "p", run: vi.fn() }];
     await initTranslator({ ...baseConfig } as any, "en", {
       fetch: vi.fn(),
       handlers,
-      plugins,
+      hooks,
     });
     expect(createTranslator).toHaveBeenCalledWith(
       expect.objectContaining({
         handlers,
-        plugins,
+        hooks,
       }),
     );
   });
 
-  it("does not forward handlers/plugins when undefined", async () => {
+  it("does not forward handlers/hooks when undefined", async () => {
     await initTranslator({ ...baseConfig } as any, "en", { fetch: vi.fn() });
     const call = (createTranslator as any).mock.calls[0][0];
     expect("handlers" in call).toBe(false);
-    expect("plugins" in call).toBe(false);
+    expect("hooks" in call).toBe(false);
   });
 
   it("uses empty array when no fallbackLocales defined for locale", async () => {

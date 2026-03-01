@@ -46,19 +46,19 @@ describe("getTranslator()", () => {
     expect(result.tRich).toBe("rich");
   });
 
-  it("forwards loader, readers, handlers, plugins when defined", async () => {
+  it("forwards loader, readers, handlers, hooks when defined", async () => {
     mockInitTranslator();
     vi.spyOn(coreModule, "createTRich").mockReturnValue("rich" as any);
     const loader = vi.fn();
     const readers = {};
     const handlers = {};
-    const plugins = [{}];
+    const hooks = [{}] as any;
     await getTranslator({ supportedLocales: ["en"] } as any, {
       locale: "en",
       loader,
       readers,
       handlers,
-      plugins,
+      hooks,
       allowCacheWrite: true,
     });
     expect(translatorModule.initTranslator).toHaveBeenCalledWith(
@@ -68,7 +68,7 @@ describe("getTranslator()", () => {
         loader,
         readers,
         handlers,
-        plugins,
+        hooks,
         allowCacheWrite: true,
       }),
     );
@@ -84,7 +84,7 @@ describe("getTranslator()", () => {
         loader: undefined,
         readers: undefined,
         handlers: undefined,
-        plugins: undefined,
+        hooks: undefined,
       } as any,
     );
     const callOptions = (translatorModule.initTranslator as any).mock
@@ -92,7 +92,7 @@ describe("getTranslator()", () => {
     expect("loader" in callOptions).toBe(false);
     expect("readers" in callOptions).toBe(false);
     expect("handlers" in callOptions).toBe(false);
-    expect("plugins" in callOptions).toBe(false);
+    expect("hooks" in callOptions).toBe(false);
   });
 
   it("uses provided fetch instead of global fetch", async () => {

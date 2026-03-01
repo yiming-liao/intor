@@ -37,7 +37,7 @@ const intorFastifyPluginImpl: FastifyPluginCallback<
     loader,
     readers,
     handlers,
-    plugins,
+    hooks,
     shortcuts = true,
   } = options;
 
@@ -62,7 +62,7 @@ const intorFastifyPluginImpl: FastifyPluginCallback<
       ...(loader !== undefined ? { loader } : {}),
       ...(readers !== undefined ? { readers } : {}),
       ...(handlers !== undefined ? { handlers } : {}),
-      ...(plugins !== undefined ? { plugins } : {}),
+      ...(hooks !== undefined ? { hooks } : {}),
       shortcuts,
     }),
   );

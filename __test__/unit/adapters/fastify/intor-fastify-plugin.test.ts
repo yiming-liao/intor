@@ -65,17 +65,17 @@ describe("intorFastifyPlugin", () => {
     const loader = {} as any;
     const readers = { json: vi.fn() };
     const handlers = { loadingHandler: vi.fn() };
-    const plugins = [] as any;
+    const hooks = [] as any;
     intorFastifyPlugin(
       fastify,
-      { config, loader, readers, handlers, plugins },
+      { config, loader, readers, handlers, hooks },
       done,
     );
     expect(createIntorHandler).toHaveBeenCalledWith(config, {
       loader,
       readers,
       handlers,
-      plugins,
+      hooks,
       shortcuts: true,
     });
   });

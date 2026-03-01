@@ -129,9 +129,9 @@ describe("createIntorHandler (Hono)", () => {
     expect(c.set).not.toHaveBeenCalledWith("locale", expect.anything());
   });
 
-  it("forwards handlers and plugins", async () => {
+  it("forwards handlers and hooks", async () => {
     const handlers = { loadingHandler: vi.fn() };
-    const plugins = [vi.fn()];
+    const hooks = [vi.fn()];
     (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
     (parseCookieHeader as any).mockReturnValue({});
     (resolveInbound as any).mockReturnValue({
@@ -144,14 +144,14 @@ describe("createIntorHandler (Hono)", () => {
       t: vi.fn(),
       tRich: vi.fn(),
     });
-    const handler = createIntorHandler(config, { handlers, plugins } as any);
+    const handler = createIntorHandler(config, { handlers, hooks } as any);
     await handler(c as Context, next);
     expect(getTranslator).toHaveBeenCalledWith(
       config,
       expect.objectContaining({
         locale: "en",
         handlers,
-        plugins,
+        hooks,
       }),
     );
   });

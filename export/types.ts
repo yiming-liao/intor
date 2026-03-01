@@ -93,9 +93,6 @@ export type {
 export type {
   Translator,
 
-  // plugin
-  TranslatorPlugin,
-
   // translation pipeline
   TranslateContext,
   TranslateHook,

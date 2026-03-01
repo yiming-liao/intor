@@ -117,7 +117,7 @@
     "api:check": "tsx scripts/api-extractor/check.ts"
   },
   "dependencies": {
-    "intor-translator": "^1.4.15",
+    "intor-translator": "^1.5.0",
     "logry": "2.1.6",
     "p-limit": "7.2.0"
   },

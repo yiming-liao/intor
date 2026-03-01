@@ -55,14 +55,14 @@ export function createIntorHandler(
     // --------------------------------------------------
     request.intor = { locale, localeSource, pathname };
 
-    const { loader, handlers, plugins, readers } = options ?? {};
+    const { loader, handlers, hooks, readers } = options ?? {};
     const { hasKey, t, tRich } = await getTranslator(config, {
       locale,
       ...(loader !== undefined ? { loader } : {}),
       ...(readers !== undefined ? { readers } : {}),
       allowCacheWrite: true,
       ...(handlers !== undefined ? { handlers } : {}),
-      ...(plugins !== undefined ? { plugins } : {}),
+      ...(hooks !== undefined ? { hooks } : {}),
     });
 
     // DX shortcuts (enabled by default)

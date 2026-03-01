@@ -4,7 +4,6 @@ import type {
   Translator,
   TranslateHook,
   TranslateHandlers,
-  TranslatorPlugin,
 } from "intor-translator";
 import type * as React from "react";
 
@@ -23,7 +22,7 @@ export interface IntorValue {
   isLoading?: boolean;
   onLocaleChange?: (newLocale: string) => Promise<void> | void;
   handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
+  hooks?: TranslateHook[];
 }
 
 /**

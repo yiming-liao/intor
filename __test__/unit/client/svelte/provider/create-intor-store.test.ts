@@ -127,14 +127,14 @@ describe("Svelte Intor Store", () => {
       },
       locale: "en",
       handlers: { test: true },
-      plugins: [{ name: "plugin" }],
+      hooks: [{ name: "hook" }],
     } as any);
     let translator: any;
     stores.translator.subscribe((t) => (translator = t))();
     expect(translator.__translatorArgs.loadingMessage).toBe("Loading...");
     expect(translator.__translatorArgs.missingMessage).toBe("Missing");
     expect(translator.__translatorArgs.handlers).toEqual({ test: true });
-    expect(translator.__translatorArgs.plugins).toEqual([{ name: "plugin" }]);
+    expect(translator.__translatorArgs.hooks).toEqual([{ name: "hook" }]);
   });
 
   it("calls side effects and setContext", async () => {

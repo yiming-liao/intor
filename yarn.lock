@@ -3985,12 +3985,12 @@ internal-slot@^1.1.0:
     hasown "^2.0.2"
     side-channel "^1.1.0"
 
-intor-translator@^1.4.15:
-  version "1.4.15"
-  resolved "https://registry.yarnpkg.com/intor-translator/-/intor-translator-1.4.15.tgz#1c49a58652067e77a4b544cd78f60fdaf4b889ac"
-  integrity sha512-dw4Fl7A6sKDvSqD5aH7XQlPlhld2TC+0BFVQWmboiBnYZod48FvDCe2R9Jh+JSbwr9zM91+lRqfZj3JHKzZqSw==
+intor-translator@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/intor-translator/-/intor-translator-1.5.0.tgz#0d438c6a4adefde171eaa0680e498f30cf72156a"
+  integrity sha512-LTZc655hsldORt5t6+B3zRvKh6oz4KIsl5xVGAi+gd0D2sUpl4ULj/YQM7Zwmxkd2y+Q4wgn0Y9ON3P7WeZQ/g==
   dependencies:
-    rura "^1.0.8"
+    rura "^1.1.3"
 
 ipaddr.js@^2.1.0:
   version "2.3.0"
@@ -5935,10 +5935,10 @@ rura@1.0.7:
   resolved "https://registry.yarnpkg.com/rura/-/rura-1.0.7.tgz#56e6e96a2d7ef2435fcb6c38bf6116ebda4e2ba6"
   integrity sha512-hVx4AcnfooACe+VsuFbQGFU2jBTs6UKKq0HdozsIPehFVK5FM1lJLtccZeqXQ6k62XQI+cndsw1HuQzKQBugSQ==
 
-rura@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/rura/-/rura-1.0.8.tgz#71cec3088802335d270a7dbe3dd11bab70fd1412"
-  integrity sha512-J5GB5/o7HX204Zx70Mk7utUKifpZglYlmLhNara/2ougEZb4zz3u7HfPDIqnfPSfhCfzyyrsKzXr4QqGRUHjPA==
+rura@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/rura/-/rura-1.1.3.tgz#b121c2b9255923a3b12a4113573ee885b4fb8eb2"
+  integrity sha512-gbMwK7JPc3hg8picOHjz4NCLKbgTrmddyN9X2G3dwfX5yH9k5DvfVawXrb1nlr6k5KF8O0O/kLqfE7Aj4luHBw==
 
 sade@^1.8.1:
   version "1.8.1"

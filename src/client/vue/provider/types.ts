@@ -4,7 +4,6 @@ import type {
   Translator,
   TranslateHook,
   TranslateHandlers,
-  TranslatorPlugin,
 } from "intor-translator";
 import type { ComputedRef, Ref } from "vue";
 
@@ -23,7 +22,7 @@ export interface IntorValue {
   isLoading?: Ref<boolean>;
   onLocaleChange?: (newLocale: string) => Promise<void> | void;
   handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
+  hooks?: TranslateHook[];
 }
 
 /**

@@ -16,7 +16,7 @@ export function buildIntorStores({
   locale: initialLocale,
   messages,
   handlers,
-  plugins,
+  hooks,
   onLocaleChange,
   isLoading: externalIsLoading,
 }: IntorValue) {
@@ -70,7 +70,7 @@ export function buildIntorStores({
         ...(loadingMessage !== undefined ? { loadingMessage } : {}),
         ...(missingMessage !== undefined ? { missingMessage } : {}),
         ...(handlers !== undefined ? { handlers } : {}),
-        ...(plugins !== undefined ? { plugins } : {}),
+        ...(hooks !== undefined ? { hooks } : {}),
       }),
   );
 

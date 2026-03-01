@@ -77,25 +77,25 @@ describe("initTranslator()", () => {
     );
   });
 
-  it("forwards handlers and plugins when defined", async () => {
+  it("forwards handlers and hooks when defined", async () => {
     vi.spyOn(coreModule, "resolveLoaderOptions").mockReturnValue(undefined);
     const handlers = {} as any;
-    const plugins = [{ name: "p", run: vi.fn() }];
-    await initTranslator(config, "en", { fetch, handlers, plugins });
+    const hooks = [{ name: "p", run: vi.fn() }];
+    await initTranslator(config, "en", { fetch, handlers, hooks });
     expect(coreModule.createTranslator).toHaveBeenCalledWith(
       expect.objectContaining({
         handlers,
-        plugins,
+        hooks,
       }),
     );
   });
 
-  it("does not forward handlers/plugins when undefined", async () => {
+  it("does not forward handlers/hooks when undefined", async () => {
     vi.spyOn(coreModule, "resolveLoaderOptions").mockReturnValue(undefined);
     await initTranslator(config, "en", { fetch });
     const call = (coreModule.createTranslator as any).mock.calls[0][0];
     expect("handlers" in call).toBe(false);
-    expect("plugins" in call).toBe(false);
+    expect("hooks" in call).toBe(false);
   });
 
   it("forwards readers and allowCacheWrite to loadMessages", async () => {

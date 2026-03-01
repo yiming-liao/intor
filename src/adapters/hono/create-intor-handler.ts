@@ -51,11 +51,11 @@ export function createIntorHandler(
     // --------------------------------------------------
     c.set("intor", { locale, localeSource, pathname });
 
-    const { handlers, plugins } = options ?? {};
+    const { handlers, hooks } = options ?? {};
     const { hasKey, t, tRich } = await getTranslator(config, {
       locale,
       ...(handlers !== undefined ? { handlers } : {}),
-      ...(plugins !== undefined ? { plugins } : {}),
+      ...(hooks !== undefined ? { hooks } : {}),
     });
 
     // DX shortcuts (enabled by default)

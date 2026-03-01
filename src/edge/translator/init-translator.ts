@@ -24,7 +24,7 @@ export async function initTranslator(
   options: InitTranslatorOptions,
 ): Promise<Translator<LocaleMessages>> {
   const { loader } = config;
-  const { fetch, handlers, plugins } = options;
+  const { fetch, handlers, hooks } = options;
 
   // Load messages
   let messages: LocaleMessages = {};
@@ -49,6 +49,6 @@ export async function initTranslator(
     locale,
     messages,
     ...(handlers !== undefined ? { handlers } : {}),
-    ...(plugins !== undefined ? { plugins } : {}),
+    ...(hooks !== undefined ? { hooks } : {}),
   });
 }

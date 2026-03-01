@@ -49,31 +49,31 @@ describe("edge getTranslator", () => {
     );
   });
 
-  it("forwards handlers and plugins when provided", async () => {
+  it("forwards handlers and hooks when provided", async () => {
     const config = {} as any;
     const handlers = { formatHandler: vi.fn() };
-    const plugins = [{ name: "test", run: vi.fn() }];
+    const hooks = [{ name: "test", run: vi.fn() }];
     await getTranslator(config, {
       locale: "en",
       handlers,
-      plugins,
+      hooks,
     });
     expect(translatorModule.initTranslator).toHaveBeenCalledWith(
       config,
       "en",
       expect.objectContaining({
         handlers,
-        plugins,
+        hooks,
       }),
     );
   });
 
-  it("does not forward handlers/plugins when undefined", async () => {
+  it("does not forward handlers/hooks when undefined", async () => {
     const config = {} as any;
     await getTranslator(config, { locale: "en" });
     const callArgs = (translatorModule.initTranslator as any).mock.calls[0][2];
     expect("handlers" in callArgs).toBe(false);
-    expect("plugins" in callArgs).toBe(false);
+    expect("hooks" in callArgs).toBe(false);
   });
 
   it("calls scoped with preKey", async () => {

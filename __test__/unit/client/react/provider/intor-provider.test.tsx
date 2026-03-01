@@ -195,7 +195,7 @@ describe("IntorProvider", () => {
       },
     };
     const handlers = {} as any;
-    const plugins = {} as any;
+    const hooks = {} as any;
     let ctx: any;
     function Consumer() {
       ctx = React.useContext(IntorContext);
@@ -208,7 +208,7 @@ describe("IntorProvider", () => {
           locale: "en",
           messages: null as any,
           handlers,
-          plugins,
+          hooks,
         }}
       >
         <Consumer />
@@ -218,7 +218,7 @@ describe("IntorProvider", () => {
       loadingMessage: "loading...",
       missingMessage: "missing...",
       handlers,
-      plugins,
+      hooks,
     });
   });
 

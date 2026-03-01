@@ -4,7 +4,6 @@ import type {
   LocaleMessages,
   TranslateHandlers,
   TranslateHook,
-  TranslatorPlugin,
 } from "intor-translator";
 import { Translator } from "intor-translator";
 import { mergeMessages } from "../../core/messages/merge-messages";
@@ -14,7 +13,7 @@ export interface CreateTranslatorParams {
   locale: Locale;
   messages: LocaleMessages;
   handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
+  hooks?: TranslateHook[];
 }
 
 /**
@@ -22,12 +21,12 @@ export interface CreateTranslatorParams {
  *
  * - Merges static config messages with runtime-loaded messages
  * - Initializes a Translator bound to a specific locale
- * - Injects fallback rules, handlers, and plugins from config
+ * - Injects fallback rules, handlers, and hooks from config
  */
 export function createTranslator(
   params: CreateTranslatorParams,
 ): Translator<LocaleMessages> {
-  const { config, locale, messages, handlers, plugins } = params;
+  const { config, locale, messages, handlers, hooks } = params;
 
   // Merge static config messages with runtime-loaded messages
   const finalMessages = mergeMessages(config.messages, messages, {
@@ -44,7 +43,7 @@ export function createTranslator(
     ...(loadingMessage !== undefined ? { loadingMessage } : {}),
     ...(missingMessage !== undefined ? { missingMessage } : {}),
     ...(handlers !== undefined ? { handlers } : {}),
-    ...(plugins !== undefined ? { plugins } : {}),
+    ...(hooks !== undefined ? { hooks } : {}),
   });
 
   return translator;

@@ -3,7 +3,6 @@ import type {
   LocalizedPreKey,
   TranslateHandlers,
   TranslateHook,
-  TranslatorPlugin,
 } from "intor-translator";
 import {
   createTRich,
@@ -30,7 +29,7 @@ export interface GetTranslatorParams {
   allowCacheWrite?: boolean;
   fetch?: RuntimeFetch;
   handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
+  hooks?: TranslateHook[];
 }
 
 /**
@@ -54,7 +53,7 @@ export async function getTranslator<
     allowCacheWrite = false,
     fetch = globalThis.fetch,
     handlers,
-    plugins,
+    hooks,
     preKey,
   } = params;
 
@@ -65,7 +64,7 @@ export async function getTranslator<
     allowCacheWrite,
     fetch,
     ...(handlers !== undefined ? { handlers } : {}),
-    ...(plugins !== undefined ? { plugins } : {}),
+    ...(hooks !== undefined ? { hooks } : {}),
   });
   const scoped = translator.scoped(preKey);
 

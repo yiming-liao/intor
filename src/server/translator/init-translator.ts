@@ -31,7 +31,7 @@ export async function initTranslator(
     allowCacheWrite = false,
     fetch,
     handlers,
-    plugins,
+    hooks,
   } = options;
 
   const loaderOptions = resolveLoaderOptions(config, "server");
@@ -57,6 +57,6 @@ export async function initTranslator(
     locale,
     messages,
     ...(handlers !== undefined ? { handlers } : {}),
-    ...(plugins !== undefined ? { plugins } : {}),
+    ...(hooks !== undefined ? { hooks } : {}),
   });
 }

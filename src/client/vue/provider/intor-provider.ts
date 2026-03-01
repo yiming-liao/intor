@@ -74,7 +74,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
     // ---------------------------------------------------------------------------
     const { loadingMessage, missingMessage } =
       props.value.config.translator ?? {};
-    const { handlers, plugins } = props.value;
+    const { handlers, hooks } = props.value;
 
     const translator = computed(() => {
       return new Translator<LocaleMessages>({
@@ -85,7 +85,7 @@ export const IntorProvider = defineComponent<IntorProviderProps>({
         ...(loadingMessage !== undefined ? { loadingMessage } : {}),
         ...(missingMessage !== undefined ? { missingMessage } : {}),
         ...(handlers !== undefined ? { handlers } : {}),
-        ...(plugins !== undefined ? { plugins } : {}),
+        ...(hooks !== undefined ? { hooks } : {}),
       });
     });
 

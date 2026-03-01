@@ -3,7 +3,6 @@ import type {
   LocalizedPreKey,
   TranslateHandlers,
   TranslateHook,
-  TranslatorPlugin,
 } from "intor-translator";
 import {
   createTRich,
@@ -25,7 +24,7 @@ export interface GetTranslatorParams {
   locale: string;
   fetch?: RuntimeFetch;
   handlers?: TranslateHandlers;
-  plugins?: (TranslatorPlugin | TranslateHook)[];
+  hooks?: TranslateHook[];
 }
 
 /**
@@ -42,19 +41,13 @@ export async function getTranslator<
   config: IntorConfig,
   params: GetTranslatorParams & { preKey?: PK },
 ): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
-  const {
-    locale,
-    fetch = globalThis.fetch,
-    preKey,
-    handlers,
-    plugins,
-  } = params;
+  const { locale, fetch = globalThis.fetch, preKey, handlers, hooks } = params;
 
   // Initialize a locale-bound translator snapshot with messages loaded
   const translator = await initTranslator(config, locale, {
     fetch,
     ...(handlers !== undefined ? { handlers } : {}),
-    ...(plugins !== undefined ? { plugins } : {}),
+    ...(hooks !== undefined ? { hooks } : {}),
   });
   const scoped = translator.scoped(preKey);
 

@@ -15,7 +15,7 @@ import { getClientLocale } from "intor";
 export function useIntor(
   config: IntorConfig,
   loader: MessagesLoader,
-): Omit<IntorValue, "handlers" | "plugins"> {
+): Omit<IntorValue, "handlers" | "hooks"> {
   // ---------------------------------------------------------------------------
   // Initial locale
   // ---------------------------------------------------------------------------

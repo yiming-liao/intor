@@ -25,7 +25,7 @@ export function IntorProvider({
     locale: initialLocale,
     messages,
     handlers,
-    plugins,
+    hooks,
     onLocaleChange,
     isLoading: externalIsLoading,
   },
@@ -81,7 +81,7 @@ export function IntorProvider({
       ...(loadingMessage !== undefined ? { loadingMessage } : {}),
       ...(missingMessage !== undefined ? { missingMessage } : {}),
       ...(handlers !== undefined ? { handlers } : {}),
-      ...(plugins !== undefined ? { plugins } : {}),
+      ...(hooks !== undefined ? { hooks } : {}),
     });
   }, [
     effectiveMessages,
@@ -91,7 +91,7 @@ export function IntorProvider({
     loadingMessage,
     missingMessage,
     handlers,
-    plugins,
+    hooks,
   ]);
 
   // ---------------------------------------------------------------------------

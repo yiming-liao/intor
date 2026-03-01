@@ -72,8 +72,8 @@ describe("createTranslator defensive branches", () => {
     );
   });
 
-  it("forwards plugins when provided", () => {
-    const plugins = [{ name: "test", run: vi.fn() }];
+  it("forwards hooks when provided", () => {
+    const hooks = [{ name: "test", run: vi.fn() }];
     createTranslator({
       config: {
         messages: {},
@@ -82,14 +82,12 @@ describe("createTranslator defensive branches", () => {
       } as any,
       locale: "en",
       messages: {},
-      plugins,
+      hooks,
     });
-    expect(Translator).toHaveBeenCalledWith(
-      expect.objectContaining({ plugins }),
-    );
+    expect(Translator).toHaveBeenCalledWith(expect.objectContaining({ hooks }));
   });
 
-  it("does not forward handlers or plugins when undefined", () => {
+  it("does not forward handlers or hooks when undefined", () => {
     createTranslator({
       config: {
         messages: {},
@@ -101,7 +99,7 @@ describe("createTranslator defensive branches", () => {
     });
     const call = (Translator as any).mock.calls[0][0];
     expect("handlers" in call).toBe(false);
-    expect("plugins" in call).toBe(false);
+    expect("hooks" in call).toBe(false);
   });
 
   it("handles undefined config.translator safely", () => {
