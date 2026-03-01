@@ -17,32 +17,19 @@ jobs:
         node-version: [20, 22]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
 
-      - name: Install
-        run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile
 
-      - name: Type Check
-        run: yarn type
-
-      - name: Lint
-        run: yarn lint
-
-      - name: Build
-        run: yarn build
-
-      - name: Test
-        run: yarn test --coverage
-
-      - name: Test Types
-        run: yarn test:types
-
-      - name: API Surface Check
-        run: yarn api:check
+      - run: yarn type
+      - run: yarn lint
+      - run: yarn build
+      - run: yarn build:types
+      - run: yarn api:check
+      - run: yarn test --coverage
+      - run: yarn test:types
