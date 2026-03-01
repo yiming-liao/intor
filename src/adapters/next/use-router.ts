@@ -4,11 +4,6 @@ import { executeNavigation } from "../../client";
 import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react/internal` via Rollup alias at build time.
 import { resolveOutbound, type OutboundResult } from "../../routing";
 
-type NextRouter = ReturnType<typeof useNextRouter>;
-type PushOptions = Parameters<NextRouter["push"]>[1];
-type ReplaceOptions = Parameters<NextRouter["replace"]>[1];
-type PrefetchOptions = Parameters<NextRouter["prefetch"]>[1];
-
 /**
  * Locale-aware router hook for the current execution context.
  *
@@ -39,7 +34,9 @@ export function useRouter() {
   // --------------------------------------------------
   function push<CK extends GenConfigKeys = "__default__">(
     href: string,
-    options?: PushOptions & { locale?: GenLocale<CK> },
+    options?: Parameters<ReturnType<typeof useNextRouter>["push"]>[1] & {
+      locale?: GenLocale<CK>;
+    },
   ) {
     const outboundResult = resolve(href, options?.locale);
     execute(outboundResult);
@@ -56,7 +53,9 @@ export function useRouter() {
   // --------------------------------------------------
   function replace<CK extends GenConfigKeys = "__default__">(
     href: string,
-    options?: ReplaceOptions & { locale?: GenLocale<CK> },
+    options?: Parameters<ReturnType<typeof useNextRouter>["replace"]>[1] & {
+      locale?: GenLocale<CK>;
+    },
   ) {
     const outboundResult = resolve(href, options?.locale);
     execute(outboundResult);
@@ -73,7 +72,9 @@ export function useRouter() {
   // --------------------------------------------------
   function prefetch<CK extends GenConfigKeys = "__default__">(
     href: string,
-    options?: PrefetchOptions & { locale?: GenLocale<CK> },
+    options?: Parameters<ReturnType<typeof useNextRouter>["prefetch"]>[1] & {
+      locale?: GenLocale<CK>;
+    },
   ) {
     const outboundResult = resolve(href, options?.locale);
     if (outboundResult.kind !== "client") return;

@@ -1,6 +1,6 @@
 // intor / vue
 
-export * from "../types";
+export * from "../shared-types";
 
 export {
   // contexts
@@ -11,6 +11,10 @@ export {
   // translator
   useTranslator,
   Trans,
+  type VueTranslator,
+
+  // render
+  type VueTagRenderers,
 
   // helpers
   useIntor,

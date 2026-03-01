@@ -1,6 +1,6 @@
 // intor / svelte-kit
 
-export * from "../types";
+export * from "../shared-types";
 
 export {
   createIntorHandler,

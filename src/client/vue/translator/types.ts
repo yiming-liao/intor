@@ -14,6 +14,14 @@ import {
   type ScopedRich,
 } from "intor-translator";
 
+/**
+ * Vue-specific translator interface.
+ *
+ * Extends `BaseTranslator` with runtime state
+ * and rich message rendering tailored for Vue.
+ *
+ * @public
+ */
 export type VueTranslator<
   M extends LocaleMessages,
   ReplacementShape = Replacement,

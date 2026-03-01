@@ -1,6 +1,6 @@
 // intor / next
 
-export * from "../types";
+export * from "../shared-types";
 
 export {
   Link,

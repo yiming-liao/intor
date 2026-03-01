@@ -106,15 +106,17 @@
   "scripts": {
     "type": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint",
-    "lint:debug": "eslint --debug",
     "test": "vitest",
     "test:types": "tsx scripts/test-types.ts",
     "test:check": "tsx scripts/check-test-structure.ts",
     "knip": "knip --config .config/knip.config.ts",
+    "clean": "rm -rf dist",
     "build": "tsx scripts/build.ts",
-    "prepublishOnly": "yarn build",
+    "build:types": "tsc -p tsconfig.build.json && tsc-alias tsconfig.build.json --outDir dist/types",
+    "build:release": "yarn clean && yarn build && yarn build:types && yarn api:build",
     "api:build": "tsx scripts/api-extractor/build.ts",
-    "api:check": "tsx scripts/api-extractor/check.ts"
+    "api:check": "tsx scripts/api-extractor/check.ts",
+    "prepublishOnly": "yarn build:release"
   },
   "dependencies": {
     "intor-translator": "^1.5.0",

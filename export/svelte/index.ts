@@ -1,6 +1,6 @@
 // intor / svelte
 
-export * from "../types";
+export * from "../shared-types";
 
 export {
   // provider
@@ -10,6 +10,7 @@ export {
 
   // translator
   useTranslator,
+  type SvelteTranslator,
 } from "../../src/client/svelte";
 
 // Re-bind the Svelte component with an explicit type so tsc can generate

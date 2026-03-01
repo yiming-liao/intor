@@ -1,6 +1,6 @@
 // intor / react
 
-export * from "../types";
+export * from "../shared-types";
 
 export {
   // provider
@@ -10,6 +10,10 @@ export {
 
   // translator
   useTranslator,
+  type ReactTranslator,
+
+  // render
+  type ReactTagRenderers,
 
   // helpers
   useIntor,

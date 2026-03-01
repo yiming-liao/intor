@@ -9,20 +9,6 @@ import { executeNavigation } from "../../client";
 import { useIntorContext } from "../../client/react"; // NOTE: Internal imports are rewritten to `intor/react/internal` via Rollup alias at build time.
 import { resolveOutbound } from "../../routing";
 
-type LinkProps<CK extends GenConfigKeys = "__default__"> =
-  React.PropsWithChildren<
-    Omit<NextLinkProps, "href"> &
-      Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
-        href?: string;
-        /**
-         * Optional locale override for this navigation.
-         *
-         * When omitted, the locale is resolved from the current execution context.
-         */
-        locale?: GenLocale<CK>;
-      }
-  >;
-
 /**
  * Render a locale-aware link for the current execution context.
  *
@@ -37,7 +23,18 @@ export const Link = <CK extends GenConfigKeys = "__default__">({
   children,
   onClick,
   ...props
-}: LinkProps<CK>) => {
+}: React.PropsWithChildren<
+  Omit<NextLinkProps, "href"> &
+    Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+      href?: string;
+      /**
+       * Optional locale override for this navigation.
+       *
+       * When omitted, the locale is resolved from the current execution context.
+       */
+      locale?: GenLocale<CK>;
+    }
+>) => {
   const { config, locale: currentLocale, setLocale } = useIntorContext();
   const currentPathname = usePathname();
 

@@ -7,7 +7,10 @@ export {
 } from "./provider";
 
 // translator
-export { useTranslator } from "./translator";
+export { useTranslator, type ReactTranslator } from "./translator";
+
+// render
+export type { ReactTagRenderers } from "./render";
 
 // helpers
 export { useIntor } from "./helpers";

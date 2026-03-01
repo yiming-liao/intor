@@ -1,6 +1,6 @@
 // intor / server
 
-export * from "../types";
+export * from "../shared-types";
 
 export {
   // intor

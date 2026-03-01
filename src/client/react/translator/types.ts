@@ -14,6 +14,14 @@ import {
   type ScopedRich,
 } from "intor-translator";
 
+/**
+ * React-specific translator interface.
+ *
+ * Extends `BaseTranslator` with runtime state
+ * and rich message rendering tailored for React.
+ *
+ * @public
+ */
 export type ReactTranslator<
   M extends LocaleMessages,
   ReplacementShape = Replacement,

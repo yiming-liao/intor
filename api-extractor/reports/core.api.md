@@ -29,7 +29,6 @@ import { TranslateContext } from 'intor-translator';
 import { TranslateHandlers } from 'intor-translator';
 import { TranslateHook } from 'intor-translator';
 import { Translator } from 'intor-translator';
-import { TranslatorPlugin } from 'intor-translator';
 
 // @public
 export type BaseTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined> = {
@@ -405,8 +404,6 @@ export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
 };
-
-export { TranslatorPlugin }
 
 // (No @packageDocumentation comment for this package)
 

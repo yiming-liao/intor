@@ -5,9 +5,6 @@
 ```ts
 
 import type { FallbackLocalesMap } from 'intor-translator';
-import { FormatHandler } from 'intor-translator';
-import { HandlerContext } from 'intor-translator';
-import { LoadingHandler } from 'intor-translator';
 import { Locale } from 'intor-translator';
 import { LocaleMessages } from 'intor-translator';
 import { LocalizedKey } from 'intor-translator';
@@ -17,20 +14,14 @@ import { LocalizedRich } from 'intor-translator';
 import { LocalizedValue } from 'intor-translator';
 import type { LogryLevel } from 'logry';
 import type { LogryPreset } from 'logry';
-import { MessageObject } from 'intor-translator';
-import { MessageValue } from 'intor-translator';
-import { MissingHandler } from 'intor-translator';
 import { Replacement } from 'intor-translator';
 import { Rich } from 'intor-translator';
 import { ScopedKey } from 'intor-translator';
 import { ScopedReplacement } from 'intor-translator';
 import { ScopedRich } from 'intor-translator';
 import { ScopedValue } from 'intor-translator';
-import { TranslateContext } from 'intor-translator';
-import { TranslateHandlers } from 'intor-translator';
-import { TranslateHook } from 'intor-translator';
-import { Translator } from 'intor-translator';
-import { TranslatorPlugin } from 'intor-translator';
+import type { TranslateHandlers } from 'intor-translator';
+import type { TranslateHook } from 'intor-translator';
 
 // @public
 export type BaseTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined> = {
@@ -71,8 +62,6 @@ export type FallbackConfig = {
     Rich: Rich;
 };
 
-export { FormatHandler }
-
 // @public
 export type GenConfig<CK extends GenConfigKeys> = HasGen extends true ? CK extends GeneratedConfigKeys ? SafeExtract<IntorGeneratedTypes[CK]> : FallbackConfig : FallbackConfig;
 
@@ -97,14 +86,28 @@ export type GenRich<CK extends GenConfigKeys> = GenConfig<CK>["Rich"];
 // @public
 export const getLocale: <CK extends GenConfigKeys = "__default__">(config: IntorConfig) => Promise<GenLocale<CK>>;
 
-// Warning: (ae-forgotten-export) The symbol "GetTranslatorParams" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function getTranslator<CK extends GenConfigKeys = "__default__", ReplacementShape = GenReplacements<CK>, RichShape = GenRich<CK>, PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined>(config: IntorConfig, params?: Omit<GetTranslatorParams, "locale"> & {
     preKey?: PK;
 }): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>>;
 
-export { HandlerContext }
+// @public
+export interface GetTranslatorParams {
+    // (undocumented)
+    allowCacheWrite?: boolean;
+    // (undocumented)
+    fetch?: RuntimeFetch;
+    // (undocumented)
+    handlers?: TranslateHandlers;
+    // (undocumented)
+    hooks?: TranslateHook[];
+    // (undocumented)
+    loader?: MessagesLoader;
+    // (undocumented)
+    locale: string;
+    // (undocumented)
+    readers?: MessagesReaders;
+}
 
 // @public
 export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes ? true : false;
@@ -113,28 +116,7 @@ export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes ? tru
 export type HtmlTagRenderers<RichShape = Rich> = TagRenderers<string, RichShape>;
 
 // @public
-export type InboundContext = Omit<InboundResult, "shouldRedirect">;
-
-// @public
-export interface InboundResult {
-    locale: Locale;
-    localeSource: RoutingLocaleSource;
-    pathname: string;
-    shouldRedirect: boolean;
-}
-
-// Warning: (ae-forgotten-export) The symbol "IntorOptions" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "IntorValue" needs to be exported by the entry point index.d.ts
-//
-// @public
 export function intor<CK extends GenConfigKeys = "__default__">(config: IntorConfig, options?: Omit<IntorOptions, "fetch">): Promise<IntorValue<CK>>;
-
-// @public
-export const INTOR_ERROR_CODE: {
-    readonly CONFIG_INVALID_ID: "INTOR_CONFIG_INVALID_ID";
-    readonly CONFIG_MISSING_SUPPORTED_LOCALES: "INTOR_CONFIG_MISSING_SUPPORTED_LOCALES";
-    readonly CONFIG_UNSUPPORTED_DEFAULT_LOCALE: "INTOR_CONFIG_UNSUPPORTED_DEFAULT_LOCALE";
-};
 
 // @public
 export type INTOR_GENERATED_KEY = "__intor_generated__";
@@ -143,25 +125,13 @@ export type INTOR_GENERATED_KEY = "__intor_generated__";
 export type IntorConfig = IntorResolvedConfig;
 
 // @public
-export class IntorError extends Error {
-    constructor(input: IntorErrorOptions);
+export interface IntorOptions {
     // (undocumented)
-    readonly code?: IntorErrorCode;
+    allowCacheWrite?: boolean;
     // (undocumented)
-    readonly id?: string;
-}
-
-// @public
-export type IntorErrorCode = (typeof INTOR_ERROR_CODE)[keyof typeof INTOR_ERROR_CODE];
-
-// @public
-export interface IntorErrorOptions {
+    fetch?: RuntimeFetch;
     // (undocumented)
-    code?: IntorErrorCode;
-    // (undocumented)
-    id?: string;
-    // (undocumented)
-    message: string;
+    readers?: MessagesReaders;
 }
 
 // @public
@@ -205,21 +175,20 @@ export type IntorResolvedConfig = {
 };
 
 // @public
+export interface IntorValue<CK extends GenConfigKeys = "__default__"> {
+    // (undocumented)
+    config: IntorConfig;
+    // (undocumented)
+    locale: GenLocale<CK>;
+    // (undocumented)
+    messages: Readonly<GenMessages<CK>>;
+}
+
+// @public
 export type LoaderOptions = LocalLoader | RemoteLoader;
-
-export { LoadingHandler }
-
-export { LocaleMessages }
 
 // @public
 export type LocalePathPrefix = "none" | "all" | "except-default";
-
-// @public
-export interface LocalizedPathname {
-    canonicalPathname: string;
-    pathname: string;
-    templatedPathname: string;
-}
 
 // @public
 export interface LocalLoader {
@@ -237,25 +206,6 @@ export type LoggerOptions = {
 };
 
 // @public
-export interface MergeMessagesEvent {
-    kind: "add" | "override";
-    next: unknown;
-    path: string;
-    prev: unknown;
-}
-
-// @public
-export interface MergeMessagesOptions {
-    // (undocumented)
-    config: IntorConfig;
-    // (undocumented)
-    locale: Locale;
-    onEvent?: (event: MergeMessagesEvent) => void;
-}
-
-export { MessageObject }
-
-// @public
 export type MessagesLoader = (config: IntorConfig, locale: string) => Promise<LocaleMessages>;
 
 // @public
@@ -263,10 +213,6 @@ export type MessagesReader = (filePath: string) => Promise<unknown>;
 
 // @public
 export type MessagesReaders = Record<string, MessagesReader>;
-
-export { MessageValue }
-
-export { MissingHandler }
 
 // @public
 export interface RemoteHeaders {
@@ -391,21 +337,11 @@ export type TagRenderers<Output = string, RichShape = Rich> = {
     [K in keyof RichShape]: TagRenderer<Output>;
 } & Record<string, TagRenderer<Output>>;
 
-export { TranslateContext }
-
-export { TranslateHandlers }
-
-export { TranslateHook }
-
-export { Translator }
-
 // @public
 export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
 };
-
-export { TranslatorPlugin }
 
 // (No @packageDocumentation comment for this package)
 

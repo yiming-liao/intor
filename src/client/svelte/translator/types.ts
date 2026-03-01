@@ -7,6 +7,14 @@ import {
 } from "intor-translator";
 import { type Readable, type Writable } from "svelte/store";
 
+/**
+ * Svelte-specific translator interface.
+ *
+ * Extends `BaseTranslator` with runtime state
+ * and rich message rendering tailored for Svelte.
+ *
+ * @public
+ */
 export type SvelteTranslator<
   M extends LocaleMessages,
   ReplacementShape = Replacement,

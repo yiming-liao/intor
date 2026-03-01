@@ -8,4 +8,4 @@ export {
 } from "./provider";
 
 // translator
-export { useTranslator } from "./translator";
+export { useTranslator, type SvelteTranslator } from "./translator";

@@ -4,24 +4,15 @@
 // core
 //--------------------------------------------------------------
 export type {
-  // error
-  IntorErrorOptions,
-  IntorError,
-  INTOR_ERROR_CODE,
-  IntorErrorCode,
-
-  // messages (merge-messages)
-  MergeMessagesOptions,
-  MergeMessagesEvent,
-  // messages (types)
-  MessagesReader,
-  MessagesReaders,
-  MessagesLoader,
-
   // render
   TagRenderer,
   TagRenderers,
   HtmlTagRenderers,
+
+  // messages (types)
+  MessagesReader,
+  MessagesReaders,
+  MessagesLoader,
 
   // types (generated)
   INTOR_GENERATED_KEY,
@@ -74,36 +65,3 @@ export type {
   // types (logger)
   LoggerOptions,
 } from "../src/config";
-
-//--------------------------------------------------------------
-// routing
-//--------------------------------------------------------------
-export type {
-  // pathname
-  LocalizedPathname,
-
-  // inbound
-  InboundResult,
-  InboundContext,
-} from "../src/routing";
-
-//--------------------------------------------------------------
-// intor-translator
-//--------------------------------------------------------------
-export type {
-  Translator,
-
-  // translation pipeline
-  TranslateContext,
-  TranslateHook,
-  TranslateHandlers,
-  HandlerContext,
-  FormatHandler,
-  LoadingHandler,
-  MissingHandler,
-
-  // types
-  LocaleMessages,
-  MessageObject,
-  MessageValue,
-} from "intor-translator";

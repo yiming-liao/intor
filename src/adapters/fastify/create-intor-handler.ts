@@ -1,6 +1,6 @@
 import type { IntorResolvedConfig } from "../../config";
-import type { GetTranslatorParams } from "../../server";
 import type { FastifyRequest } from "fastify";
+import type { GetTranslatorParams } from "intor/server";
 import { getTranslator } from "intor/server";
 import { normalizeQuery, parseCookieHeader } from "../../core";
 import { resolveInbound, getLocaleFromAcceptLanguage } from "../../routing";

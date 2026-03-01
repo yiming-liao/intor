@@ -1,6 +1,6 @@
 // intor / edge
 
-export * from "../types";
+export * from "../shared-types";
 
 export {
   // helpers

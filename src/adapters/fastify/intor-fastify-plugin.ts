@@ -1,10 +1,18 @@
 import type { IntorConfig } from "../../config";
-import type { GetTranslatorParams } from "../../server";
 import type { FastifyInstance, FastifyPluginCallback } from "fastify";
+import type { GetTranslatorParams } from "intor/server";
 import fp from "fastify-plugin";
 import { createIntorHandler } from "./create-intor-handler";
 
-interface IntorFastifyPluginOptions
+/**
+ * Options for registering the Intor Fastify plugin.
+ *
+ * Extends server-side translator initialization options,
+ * excluding properties that are automatically resolved per request.
+ *
+ * @public
+ */
+export interface IntorFastifyPluginOptions
   extends Omit<GetTranslatorParams, "locale" | "fetch" | "allowCacheWrite"> {
   config: IntorConfig;
 
