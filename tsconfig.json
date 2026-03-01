@@ -13,6 +13,6 @@
       "intor/*": ["./export/*"]
     }
   },
-  "include": ["src", "export", "__test__", "dist", "scripts"],
+  "include": ["src", "export", "__test__", "scripts"],
   "exclude": ["__test__/types/**/*.ts"]
 }
