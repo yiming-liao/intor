@@ -3,8 +3,11 @@ node_modules/
 
 # build output
 dist/
-coverage/
+dist-types/
 .rollup.cache
+
+# test
+coverage/
 
 # misc
 .DS_Store
@@ -20,4 +23,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 # api-extractor
-api-extractor/temp/
+**/api-extractor/temp/

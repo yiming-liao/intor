@@ -1,0 +1,75 @@
+{
+  "name": "intor-translator",
+  "version": "1.5.0",
+  "description": "The Intor translation engine",
+  "author": {
+    "name": "Yiming Liao",
+    "email": "yimingliao.official@gmail.com",
+    "url": "https://github.com/yiming-liao"
+  },
+  "homepage": "https://github.com/yiming-liao/intor-translator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yiming-liao/intor-translator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yiming-liao/intor-translator/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/yiming-liao"
+  },
+  "keywords": [
+    "i18n",
+    "internationalization",
+    "translation",
+    "typescript",
+    "type-safe",
+    "i18n engine",
+    "translator",
+    "intor"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./internal": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/internal/index.js",
+      "require": "./dist/internal/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "type": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest",
+    "test:types": "tsx scripts/test-types.ts",
+    "clean": "rm -rf dist dist-types",
+    "build": "tsup",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:release": "yarn clean && yarn build && yarn build:types && yarn api:build",
+    "api:check": "api-extractor run -c api-extractor/index.json",
+    "api:build": "api-extractor run -c api-extractor/index.json --local",
+    "prepublishOnly": "yarn build:release",
+    "bench:runtime": "tsx bench/runtime/index.ts",
+    "examples:html": "vite --config examples/html/vite.config.ts"
+  },
+  "dependencies": {
+    "rura": "^1.1.3"
+  }
+}

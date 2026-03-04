@@ -1,25 +1,24 @@
 import js from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
-import { typescriptConfig } from "./.config/eslint/typescript.mjs";
-import { importConfig } from "./.config/eslint/import.mjs";
-import { unicornConfig } from "./.config/eslint/unicorn.mjs";
-import { unusedImportsConfig } from "./.config/eslint/unused-imports.mjs";
-import { reactConfig } from "./.config/eslint/react.mjs";
 import prettierPlugin from "eslint-plugin-prettier";
+import { importConfig } from "./eslint/import.mjs";
+import { reactConfig } from "./eslint/react.mjs";
+import { typescriptConfig } from "./eslint/typescript.mjs";
+import { unicornConfig } from "./eslint/unicorn.mjs";
+import { unusedImportsConfig } from "./eslint/unused-imports.mjs";
 
 const eslintConfig = defineConfig([
   globalIgnores([
     ".yarn/**",
-    ".config/**",
-    ".rollup.cache/**",
-    "dist",
-    "scripts",
-    "coverage",
-    "examples",
-    "bench",
-    "__test__/types/**/*.ts",
-    "vitest*.ts",
-    "eslint.config.mjs",
+    "**/.rollup.cache/**",
+    "**/dist/**",
+    "**/scripts/**",
+    "**/coverage/**",
+    "**/bench/**",
+    "**/examples/**",
+    "**/__test__/types/**",
+    "**/vitest*.ts",
+    "**/tsup.config.ts",
   ]),
 
   // JS
@@ -34,7 +33,7 @@ const eslintConfig = defineConfig([
     settings: {
       "import/resolver": {
         typescript: {
-          project: ["./tsconfig.json"],
+          project: ["./packages/*/tsconfig.json"],
           noWarnOnMultipleProjects: true,
         },
       },
@@ -43,7 +42,8 @@ const eslintConfig = defineConfig([
 
   // Prettier
   {
-    files: ["src/**/*.{ts}"],
+    files: ["packages/*/**/*.{ts,tsx,js,jsx}"],
+    ignores: ["**/*.d.ts"],
     plugins: { prettier: prettierPlugin },
     rules: { "prettier/prettier": "warn" },
   },

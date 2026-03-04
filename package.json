@@ -1,176 +1,74 @@
 {
-  "name": "intor",
-  "version": "2.5.0",
-  "description": "The i18n library for modern JavaScript",
-  "author": "Yiming Liao",
-  "homepage": "https://intor.dev",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yiming-liao/intor"
-  },
-  "bugs": {
-    "url": "https://github.com/yiming-liao/intor/issues"
-  },
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/yiming-liao"
-  },
-  "keywords": [
-    "i18n",
-    "internationalization",
-    "typescript",
-    "type-safe",
-    "i18n-cli",
-    "framework-agnostic",
-    "ssr",
-    "runtime",
-    "node",
-    "edge"
+  "name": "intor-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "license": "MIT",
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/types/export/index.d.ts",
-      "import": "./dist/core/export/index.js",
-      "require": "./dist/core/export/index.js"
-    },
-    "./internal": {
-      "types": "./dist/types/export/internal/index.d.ts",
-      "import": "./dist/core/export/internal/index.js"
-    },
-    "./server": {
-      "types": "./dist/types/export/server/index.d.ts",
-      "import": "./dist/core/export/server/index.js"
-    },
-    "./edge": {
-      "types": "./dist/types/export/edge/index.d.ts",
-      "import": "./dist/core/export/edge/index.js"
-    },
-    "./react": {
-      "types": "./dist/types/export/react/index.d.ts",
-      "import": "./dist/react/export/react/index.js"
-    },
-    "./react/internal": {
-      "types": "./dist/types/export/react/internal/index.d.ts",
-      "import": "./dist/react/export/react/internal/index.js"
-    },
-    "./vue": {
-      "types": "./dist/types/export/vue/index.d.ts",
-      "import": "./dist/vue/export/vue/index.js"
-    },
-    "./svelte": {
-      "types": "./dist/types/export/svelte/index.d.ts",
-      "import": "./dist/svelte/export/svelte/index.js"
-    },
-    "./svelte/internal": {
-      "types": "./dist/types/export/svelte/internal/index.d.ts",
-      "import": "./dist/svelte/export/svelte/internal/index.js"
-    },
-    "./next": {
-      "types": "./dist/types/export/next/index.d.ts",
-      "import": "./dist/next/export/next/index.js"
-    },
-    "./next/server": {
-      "types": "./dist/types/export/next/server/index.d.ts",
-      "import": "./dist/next/export/next/server/index.js"
-    },
-    "./svelte-kit": {
-      "types": "./dist/types/export/svelte-kit/index.d.ts",
-      "import": "./dist/svelte-kit/export/svelte-kit/index.js"
-    },
-    "./express": {
-      "types": "./dist/types/export/express/index.d.ts",
-      "import": "./dist/express/export/express/index.js"
-    },
-    "./fastify": {
-      "types": "./dist/types/export/fastify/index.d.ts",
-      "import": "./dist/fastify/export/fastify/index.js"
-    },
-    "./hono": {
-      "types": "./dist/types/export/hono/index.d.ts",
-      "import": "./dist/hono/export/hono/index.js"
-    }
-  },
-  "main": "./dist/core/export/index.js",
-  "module": "./dist/core/export/index.js",
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
-  "sideEffects": false,
+  "packageManager": "yarn@1.22.22",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.0.0"
   },
   "scripts": {
-    "type": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint",
-    "test": "vitest",
-    "test:types": "tsx scripts/test-types.ts",
-    "test:check": "tsx scripts/check-test-structure.ts",
-    "knip": "knip --config .config/knip.config.ts",
-    "clean": "rm -rf dist",
-    "build": "tsx scripts/build.ts",
-    "build:types": "tsc -p tsconfig.build.json && tsc-alias tsconfig.build.json --outDir dist/types",
-    "build:release": "yarn clean && yarn build && yarn build:types && yarn api:build",
-    "api:build": "tsx scripts/api-extractor/build.ts",
-    "api:check": "tsx scripts/api-extractor/check.ts",
-    "prepublishOnly": "yarn build:release"
-  },
-  "dependencies": {
-    "intor-translator": "^1.5.0",
-    "logry": "2.1.6",
-    "p-limit": "7.2.0"
+    "type": "yarn workspaces run type",
+    "lint": "yarn eslint",
+    "test": "yarn workspaces run test run",
+    "test:types": "yarn workspaces run test:types",
+    "clean": "yarn workspaces run clean",
+    "build": "yarn workspaces run build",
+    "build:types": "yarn workspaces run build:types",
+    "build:release": "yarn workspaces run build:release",
+    "api:check": "yarn workspaces run api:check",
+    "ci": "yarn type && yarn lint && yarn build && yarn build:types && yarn api:check && yarn test && yarn test:types"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.57.6",
-    "@rollup/plugin-alias": "6.0.0",
-    "@rollup/pluginutils": "5.3.0",
-    "@sveltejs/kit": "2.50.1",
-    "@testing-library/dom": "10.4.1",
-    "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "16.3.1",
-    "@types/express": "5.0.6",
-    "@types/node": "24.10.1",
-    "@types/react": "19.0.0",
-    "@types/react-dom": "19.0.0",
-    "@vitejs/plugin-react": "5.1.2",
-    "@vitest/coverage-v8": "4.0.16",
+    "@rollup/plugin-alias": "^6.0.0",
+    "@rollup/pluginutils": "^5.3.0",
+    "@sveltejs/kit": "^2.50.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "@vitest/coverage-v8": "^4.0.16",
     "@vue/test-utils": "^2.4.6",
-    "eslint": "9.39.2",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-import-resolver-typescript": "4.4.4",
-    "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-prettier": "5.5.4",
-    "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "7.0.1",
-    "eslint-plugin-unicorn": "62.0.0",
-    "eslint-plugin-unused-imports": "4.1.4",
+    "eslint": "^9.39.2",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-unicorn": "^62.0.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "fastify": "^5.7.4",
     "fastify-plugin": "^5.1.0",
     "hono": "^4.11.8",
-    "jsdom": "27.3.0",
-    "knip": "5.69.1",
-    "magic-string": "0.30.21",
-    "next": "16.0.3",
-    "prettier": "3.6.2",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "remark": "15.0.1",
-    "remark-gfm": "4.0.1",
-    "rollup": "4.53.3",
-    "rollup-plugin-copy": "3.5.0",
+    "intl-messageformat": "^11.1.2",
+    "jsdom": "^27.3.0",
+    "knip": "^5.69.1",
+    "magic-string": "^0.30.21",
+    "next": "^16.0.3",
+    "prettier": "^3.6.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
+    "rollup": "^4.53.3",
+    "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-esbuild": "^6.2.1",
-    "svelte": "5.46.1",
-    "tsc-alias": "1.8.16",
-    "tsd": "0.33.0",
+    "svelte": "^5.46.1",
+    "tsc-alias": "^1.8.16",
+    "tsd": "^0.33.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
-    "typescript": "5.8.3",
+    "typescript": "^5.4.0",
     "typescript-eslint": "^8.56.1",
-    "vite": "7.3.0",
-    "vite-tsconfig-paths": "6.0.3",
-    "vitest": "4.0.16",
-    "vue": "3.5.26"
+    "vite": "^7.3.0",
+    "vite-tsconfig-paths": "^6.0.3",
+    "vitest": "^4.0.16",
+    "vue": "^3.5.26"
   }
 }

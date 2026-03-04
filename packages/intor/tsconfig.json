@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "incremental": true,
+    "noEmit": true,
+
+    "jsx": "react-jsx",
+    "lib": ["dom", "esnext"],
+    "types": ["node"],
+
+    "paths": {
+      "intor": ["./export/index.ts"],
+      "intor/*": ["./export/*"]
+    }
+  },
+  "include": ["src", "export", "__test__", "scripts"],
+  "exclude": ["__test__/types"]
+}

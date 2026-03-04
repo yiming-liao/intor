@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic Example | intor-translator</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <h1></h1>
+
+    <div>
+      <button data-locale="en-US">en-US</button>
+      <button data-locale="zh-TW">zh-TW</button>
+    </div>
+
+    <script type="module">
+      import { Translator } from "https://cdn.jsdelivr.net/npm/intor-translator/+esm";
+
+      const translator = new Translator({
+        locale: "en-US",
+        messages: {
+          "en-US": { hello: "Hello world" },
+          "zh-TW": { hello: "你好，世界" },
+        },
+      });
+
+      const h1 = document.querySelector("h1");
+
+      const render = () => {
+        const message = translator.t("hello");
+        h1.textContent = message;
+      };
+
+      render();
+
+      /**
+       * Switch locale dynamically.
+       */
+      document.querySelectorAll("button[data-locale]").forEach((button) => {
+        const { locale } = button.dataset;
+        button.addEventListener("click", () => {
+          translator.setLocale(locale);
+          render();
+        });
+      });
+    </script>
+  </body>
+</html>

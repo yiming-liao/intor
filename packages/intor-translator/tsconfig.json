@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "incremental": true,
+    "noEmit": true,
+
+    "types": ["node"]
+  },
+  "include": ["src", "export", "__test__", "scripts"],
+  "exclude": ["__test__/types"]
+}

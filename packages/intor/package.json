@@ -1,0 +1,160 @@
+{
+  "name": "intor",
+  "version": "2.5.0",
+  "description": "The i18n library for modern JavaScript",
+  "author": "Yiming Liao",
+  "homepage": "https://intor.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yiming-liao/intor"
+  },
+  "bugs": {
+    "url": "https://github.com/yiming-liao/intor/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/yiming-liao"
+  },
+  "keywords": [
+    "i18n",
+    "internationalization",
+    "typescript",
+    "type-safe",
+    "i18n-cli",
+    "framework-agnostic",
+    "ssr",
+    "runtime",
+    "node",
+    "edge"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types/export/index.d.ts",
+      "import": "./dist/core/export/index.js",
+      "require": "./dist/core/export/index.js"
+    },
+    "./internal": {
+      "types": "./dist/types/export/internal/index.d.ts",
+      "import": "./dist/core/export/internal/index.js"
+    },
+    "./server": {
+      "types": "./dist/types/export/server/index.d.ts",
+      "import": "./dist/core/export/server/index.js"
+    },
+    "./edge": {
+      "types": "./dist/types/export/edge/index.d.ts",
+      "import": "./dist/core/export/edge/index.js"
+    },
+    "./react": {
+      "types": "./dist/types/export/react/index.d.ts",
+      "import": "./dist/react/export/react/index.js"
+    },
+    "./react/internal": {
+      "types": "./dist/types/export/react/internal/index.d.ts",
+      "import": "./dist/react/export/react/internal/index.js"
+    },
+    "./vue": {
+      "types": "./dist/types/export/vue/index.d.ts",
+      "import": "./dist/vue/export/vue/index.js"
+    },
+    "./svelte": {
+      "types": "./dist/types/export/svelte/index.d.ts",
+      "import": "./dist/svelte/export/svelte/index.js"
+    },
+    "./svelte/internal": {
+      "types": "./dist/types/export/svelte/internal/index.d.ts",
+      "import": "./dist/svelte/export/svelte/internal/index.js"
+    },
+    "./next": {
+      "types": "./dist/types/export/next/index.d.ts",
+      "import": "./dist/next/export/next/index.js"
+    },
+    "./next/server": {
+      "types": "./dist/types/export/next/server/index.d.ts",
+      "import": "./dist/next/export/next/server/index.js"
+    },
+    "./svelte-kit": {
+      "types": "./dist/types/export/svelte-kit/index.d.ts",
+      "import": "./dist/svelte-kit/export/svelte-kit/index.js"
+    },
+    "./express": {
+      "types": "./dist/types/export/express/index.d.ts",
+      "import": "./dist/express/export/express/index.js"
+    },
+    "./fastify": {
+      "types": "./dist/types/export/fastify/index.d.ts",
+      "import": "./dist/fastify/export/fastify/index.js"
+    },
+    "./hono": {
+      "types": "./dist/types/export/hono/index.d.ts",
+      "import": "./dist/hono/export/hono/index.js"
+    }
+  },
+  "main": "./dist/core/export/index.js",
+  "module": "./dist/core/export/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "type": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest",
+    "test:types": "tsx scripts/test-types.ts",
+    "test:check": "tsx scripts/check-test-structure.ts",
+    "clean": "rm -rf dist",
+    "build": "tsx scripts/build.ts",
+    "build:types": "tsc -p tsconfig.build.json && tsc-alias tsconfig.build.json --outDir dist/types",
+    "build:release": "yarn clean && yarn build && yarn build:types && yarn api:build",
+    "api:build": "tsx scripts/api-extractor/build.ts",
+    "api:check": "tsx scripts/api-extractor/check.ts",
+    "prepublishOnly": "yarn build:release"
+  },
+  "dependencies": {
+    "intor-translator": "workspace:*",
+    "logry": "2.1.6",
+    "p-limit": "7.2.0"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "vue": "^3",
+    "svelte": "^5",
+    "next": "^16",
+    "@sveltejs/kit": "^2",
+    "hono": "^4",
+    "fastify": "^5",
+    "fastify-plugin": "^5"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    },
+    "@sveltejs/kit": {
+      "optional": true
+    },
+    "hono": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "fastify": {
+      "optional": true
+    },
+    "fastify-plugin": {
+      "optional": true
+    }
+  }
+}
