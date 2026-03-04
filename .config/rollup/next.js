@@ -1,5 +1,5 @@
 // @ts-check
-import typescript from "@rollup/plugin-typescript";
+import esbuild from "rollup-plugin-esbuild";
 import alias from "@rollup/plugin-alias";
 import package_ from "../../package.json" with { type: "json" };
 import { preserveDirectives } from "./plugins/preserve-directives.js";
@@ -46,7 +46,12 @@ export default [
           { find: "../../client/react", replacement: "intor/react/internal" },
         ],
       }),
-      typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
+      esbuild({
+        target: "es2022",
+        tsconfig: false,
+        sourceMap: false,
+        platform: "neutral",
+      }),
       preserveDirectives(),
       fileSizeSummary(),
     ],

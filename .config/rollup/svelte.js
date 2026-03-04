@@ -1,5 +1,5 @@
 // @ts-check
-import typescript from "@rollup/plugin-typescript";
+import esbuild from "rollup-plugin-esbuild";
 import package_ from "../../package.json" with { type: "json" };
 import { fileSizeSummary } from "./plugins/file-size-summary.js";
 import copy from "rollup-plugin-copy";
@@ -28,7 +28,12 @@ export default [
       warn(warning);
     },
     plugins: [
-      typescript({ tsconfig: "./tsconfig.json", exclude: ["**/__test__/**"] }),
+      esbuild({
+        target: "es2022",
+        tsconfig: false,
+        sourceMap: false,
+        platform: "neutral",
+      }),
       // Keep Svelte provider as source file (compiled by consumer)
       copy({
         targets: [

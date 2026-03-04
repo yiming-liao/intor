@@ -126,7 +126,6 @@
   "devDependencies": {
     "@microsoft/api-extractor": "^7.57.6",
     "@rollup/plugin-alias": "6.0.0",
-    "@rollup/plugin-typescript": "12.3.0",
     "@rollup/pluginutils": "5.3.0",
     "@sveltejs/kit": "2.50.1",
     "@testing-library/dom": "10.4.1",
@@ -162,6 +161,7 @@
     "remark-gfm": "4.0.1",
     "rollup": "4.53.3",
     "rollup-plugin-copy": "3.5.0",
+    "rollup-plugin-esbuild": "^6.2.1",
     "svelte": "5.46.1",
     "tsc-alias": "1.8.16",
     "tsd": "0.33.0",
