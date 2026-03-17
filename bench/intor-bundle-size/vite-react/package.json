@@ -4,10 +4,10 @@
   "scripts": {
     "build": "vite build",
     "measure": "tsx measure.ts",
-    "bench": "yarn build && yarn measure"
+    "bench": "pnpm build && pnpm measure"
   },
   "dependencies": {
-    "intor": "^2.4.12",
+    "intor": "workspace:*",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
