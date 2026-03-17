@@ -23,7 +23,7 @@ describe("resolveOutbound", () => {
       destination: "/about",
       isExternal: false,
     });
-    (decideStrategy as any).mockReturnValue("navigate");
+    (decideStrategy as any).mockReturnValue("client");
     const config = {} as any;
     resolveOutbound(config, "en", "/home", { destination: "/about" });
     expect(determineTarget).toHaveBeenCalledWith(config, "en", "/home", {
@@ -31,16 +31,20 @@ describe("resolveOutbound", () => {
     });
   });
 
-  it("calls decideStrategy with resolved target", () => {
+  it("calls decideStrategy with resolved target and currentLocale", () => {
     const mockTarget = {
       locale: "en",
       destination: "/about",
       isExternal: false,
     };
     (determineTarget as any).mockReturnValue(mockTarget);
-    (decideStrategy as any).mockReturnValue("redirect");
+    (decideStrategy as any).mockReturnValue("client");
     resolveOutbound({} as any, "en", "/home", {});
-    expect(decideStrategy).toHaveBeenCalledWith(expect.anything(), mockTarget);
+    expect(decideStrategy).toHaveBeenCalledWith(
+      expect.anything(),
+      mockTarget,
+      "en",
+    );
   });
 
   it("returns correct OutboundResult structure", () => {
@@ -49,12 +53,12 @@ describe("resolveOutbound", () => {
       destination: "/zh/about",
       isExternal: false,
     });
-    (decideStrategy as any).mockReturnValue("navigate");
+    (decideStrategy as any).mockReturnValue("reload");
     const result = resolveOutbound({} as any, "en", "/home", { locale: "zh" });
     expect(result).toEqual({
       locale: "zh",
       destination: "/zh/about",
-      kind: "navigate",
+      kind: "reload",
     });
   });
 });

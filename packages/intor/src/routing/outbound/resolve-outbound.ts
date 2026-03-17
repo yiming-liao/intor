@@ -29,7 +29,7 @@ export function resolveOutbound(
   // --------------------------------------------------
   // Decide outbound strategy
   // --------------------------------------------------
-  const strategy = decideStrategy(config, target);
+  const strategy = decideStrategy(config, target, currentLocale);
 
   return {
     locale: target.locale,

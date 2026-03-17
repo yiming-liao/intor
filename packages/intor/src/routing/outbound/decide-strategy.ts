@@ -10,11 +10,18 @@ export type OutboundStrategy = "external" | "client" | "reload";
 export function decideStrategy(
   config: IntorResolvedConfig,
   target: OutboundTarget,
+  currentLocale: string,
 ): OutboundStrategy {
   // External destinations are always handled by the browser
   if (target.isExternal) {
     return "external";
   }
 
-  return shouldFullReload(config) ? "reload" : "client";
+  const isLocaleChange = target.locale !== currentLocale;
+
+  if (isLocaleChange && shouldFullReload(config)) {
+    return "reload";
+  }
+
+  return "client";
 }

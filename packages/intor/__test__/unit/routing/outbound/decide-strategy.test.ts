@@ -13,33 +13,59 @@ describe("decideStrategy", () => {
   });
 
   it("returns 'external' when target.isExternal is true", () => {
-    const result = decideStrategy({} as any, {
-      locale: "en",
-      destination: "https://google.com",
-      isExternal: true,
-    });
+    const result = decideStrategy(
+      {} as any,
+      {
+        locale: "en",
+        destination: "https://google.com",
+        isExternal: true,
+      },
+      "en",
+    );
     expect(result).toBe("external");
     expect(shouldFullReload).not.toHaveBeenCalled();
   });
 
-  it("returns 'reload' when not external and shouldFullReload is true", () => {
+  it("returns 'client' when locale does not change", () => {
+    const result = decideStrategy(
+      {} as any,
+      {
+        locale: "en",
+        destination: "/about",
+        isExternal: false,
+      },
+      "en",
+    );
+    expect(result).toBe("client");
+    expect(shouldFullReload).not.toHaveBeenCalled();
+  });
+
+  it("returns 'reload' when locale changes and shouldFullReload is true", () => {
     (shouldFullReload as any).mockReturnValue(true);
-    const result = decideStrategy({} as any, {
-      locale: "en",
-      destination: "/about",
-      isExternal: false,
-    });
+    const result = decideStrategy(
+      {} as any,
+      {
+        locale: "fr",
+        destination: "/fr/about",
+        isExternal: false,
+      },
+      "en",
+    );
     expect(shouldFullReload).toHaveBeenCalled();
     expect(result).toBe("reload");
   });
 
-  it("returns 'client' when not external and shouldFullReload is false", () => {
+  it("returns 'client' when locale changes but shouldFullReload is false", () => {
     (shouldFullReload as any).mockReturnValue(false);
-    const result = decideStrategy({} as any, {
-      locale: "en",
-      destination: "/about",
-      isExternal: false,
-    });
+    const result = decideStrategy(
+      {} as any,
+      {
+        locale: "fr",
+        destination: "/fr/about",
+        isExternal: false,
+      },
+      "en",
+    );
     expect(shouldFullReload).toHaveBeenCalled();
     expect(result).toBe("client");
   });
