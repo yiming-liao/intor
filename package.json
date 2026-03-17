@@ -13,10 +13,11 @@
     "build:types": "pnpm -r build:types",
     "build:release": "pnpm -r build:release",
     "api:check": "pnpm -r api:check",
-    "ci": "pnpm type && pnpm lint && pnpm build && pnpm build:types && pnpm api:check && pnpm test && pnpm test:types"
+    "ci": "pnpm build && pnpm build:types && pnpm type && pnpm lint && pnpm api:check && pnpm test && pnpm test:types",
+    "ci:clean": "pnpm -r clean && rm -rf node_modules && pnpm install --frozen-lockfile --strict-peer-dependencies && pnpm dedupe --check && pnpm run ci"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^9.39.4",
     "@microsoft/api-extractor": "^7.57.6",
     "@rollup/plugin-alias": "^6.0.0",
     "@rollup/pluginutils": "^5.3.0",
@@ -62,7 +63,7 @@
     "tsx": "^4.21.0",
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.0",
+    "vite": "^8.0.0",
     "vite-tsconfig-paths": "^6.0.3",
     "vitest": "^4.0.16",
     "vue": "^3.5.26"
