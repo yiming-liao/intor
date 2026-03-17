@@ -41,7 +41,7 @@ export async function collectFileEntries({
     // -------------------------------------------------------------------------
     // Read directory entries
     // -------------------------------------------------------------------------
-    let entries: Dirent[] = [];
+    let entries: Dirent[];
     try {
       entries = await readdir(currentDir, { withFileTypes: true });
     } catch {
