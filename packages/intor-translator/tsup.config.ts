@@ -5,7 +5,8 @@ export default defineConfig({
   outDir: "dist",
   format: ["cjs", "esm"],
   external: ["rura"],
-  dts: false,
+  dts: true,
   treeshake: true,
   clean: true,
+  tsconfig: "./tsconfig.build.json",
 });

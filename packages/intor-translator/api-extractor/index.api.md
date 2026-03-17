@@ -4,8 +4,8 @@
 
 ```ts
 
+import * as rura from 'rura';
 import { RuraHookSync } from 'rura';
-import { RuraResult } from 'rura';
 
 // @public
 export type ASTNode = TextNode | TagNode | RawNode;
@@ -40,14 +40,14 @@ export interface BaseTranslatorOptions<M = unknown> {
 // @public
 export class CoreTranslator<M = unknown, ReplacementShape = unknown> extends BaseTranslator<M> {
     constructor(options: CoreTranslatorOptions<M>);
-    getHooks(): RuraHookSync<TranslateContext, MessageValue>[];
+    getHooks(): rura.RuraHookSync<TranslateContext, MessageValue>[];
     hasKey: <K extends LocalizedKey<M>>(key: K, targetLocale?: Locale<M>) => boolean;
     logHooks(): void;
     protected pipeline: {
-        use: (hook: RuraHookSync<TranslateContext, MessageValue>) => any;
-        getHooks: () => RuraHookSync<TranslateContext, MessageValue>[];
+        use: (hook: rura.RuraHookSync<TranslateContext, MessageValue>) => any;
+        getHooks: () => rura.RuraHookSync<TranslateContext, MessageValue>[];
         logHooks: () => void;
-        run: (ctx: TranslateContext) => RuraResult<TranslateContext, MessageValue>;
+        run: (ctx: TranslateContext) => rura.RuraResult<TranslateContext, MessageValue>;
     };
     t: <K extends LocalizedKey<M> = LocalizedKey<M>>(key: K, replacements?: LocalizedReplacement<ReplacementShape, K>) => LocalizedValue<M, K>;
     protected translateConfig: TranslateConfig<M>;
@@ -257,5 +257,7 @@ export type TranslatorOptions<M> = CoreTranslatorOptions<M>;
 
 // @public
 export type Value<M, K extends string> = K extends `${infer Head}.${infer Tail}` ? Head extends keyof M ? Value<M[Head], Tail> : never : K extends keyof M ? M[K] : never;
+
+// (No @packageDocumentation comment for this package)
 
 ```

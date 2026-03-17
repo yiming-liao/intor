@@ -38,7 +38,7 @@
       "require": "./dist/index.cjs"
     },
     "./internal": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/internal/index.d.ts",
       "import": "./dist/internal/index.js",
       "require": "./dist/internal/index.cjs"
     }
@@ -59,10 +59,9 @@
     "type": "tsc -p tsconfig.json --noEmit",
     "test": "vitest",
     "test:types": "tsx scripts/test-types.ts",
-    "clean": "rm -rf dist dist-types",
+    "clean": "rm -rf dist",
     "build": "tsup",
-    "build:types": "tsc -p tsconfig.build.json",
-    "build:release": "pnpm clean && pnpm build && pnpm build:types && pnpm api:build",
+    "build:release": "pnpm clean && pnpm build && pnpm api:build",
     "api:check": "api-extractor run -c api-extractor/index.json",
     "api:build": "api-extractor run -c api-extractor/index.json --local",
     "prepublishOnly": "pnpm build:release",
