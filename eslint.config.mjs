@@ -9,7 +9,6 @@ import { unusedImportsConfig } from "./eslint/unused-imports.mjs";
 
 const eslintConfig = defineConfig([
   globalIgnores([
-    ".yarn/**",
     "**/.rollup.cache/**",
     "**/dist/**",
     "**/scripts/**",
@@ -21,7 +20,6 @@ const eslintConfig = defineConfig([
     "**/tsup.config.ts",
   ]),
 
-  // JS
   js.configs.recommended,
   ...typescriptConfig,
   ...unicornConfig,

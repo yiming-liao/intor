@@ -1,26 +1,22 @@
 {
   "name": "intor-monorepo",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "packageManager": "yarn@1.22.22",
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
-    "type": "yarn workspaces run type",
-    "lint": "yarn eslint",
-    "test": "yarn workspaces run test run",
-    "test:types": "yarn workspaces run test:types",
-    "clean": "yarn workspaces run clean",
-    "build": "yarn workspaces run build",
-    "build:types": "yarn workspaces run build:types",
-    "build:release": "yarn workspaces run build:release",
-    "api:check": "yarn workspaces run api:check",
-    "ci": "yarn type && yarn lint && yarn build && yarn build:types && yarn api:check && yarn test && yarn test:types"
+    "type": "pnpm -r type",
+    "lint": "pnpm eslint",
+    "test": "pnpm -r test run",
+    "test:types": "pnpm -r test:types",
+    "clean": "pnpm -r clean",
+    "build": "pnpm -r build",
+    "build:types": "pnpm -r build:types",
+    "build:release": "pnpm -r build:release",
+    "api:check": "pnpm -r api:check",
+    "ci": "pnpm type && pnpm lint && pnpm build && pnpm build:types && pnpm api:check && pnpm test && pnpm test:types"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@microsoft/api-extractor": "^7.57.6",
     "@rollup/plugin-alias": "^6.0.0",
     "@rollup/pluginutils": "^5.3.0",
@@ -70,5 +66,7 @@
     "vite-tsconfig-paths": "^6.0.3",
     "vitest": "^4.0.16",
     "vue": "^3.5.26"
-  }
+  },
+  "packageManager": "pnpm@10.32.0",
+  "private": true
 }

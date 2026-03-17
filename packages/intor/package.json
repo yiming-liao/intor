@@ -111,10 +111,10 @@
     "clean": "rm -rf dist",
     "build": "tsx scripts/build.ts",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias tsconfig.build.json --outDir dist/types",
-    "build:release": "yarn clean && yarn build && yarn build:types && yarn api:build",
+    "build:release": "pnpm clean && pnpm build && pnpm build:types && pnpm api:build",
     "api:build": "tsx scripts/api-extractor/build.ts",
     "api:check": "tsx scripts/api-extractor/check.ts",
-    "prepublishOnly": "yarn build:release"
+    "prepublishOnly": "pnpm build:release"
   },
   "dependencies": {
     "intor-translator": "workspace:*",
@@ -138,6 +138,9 @@
     "vue": {
       "optional": true
     },
+    "svelte": {
+      "optional": true
+    },
     "next": {
       "optional": true
     },
@@ -145,9 +148,6 @@
       "optional": true
     },
     "hono": {
-      "optional": true
-    },
-    "svelte": {
       "optional": true
     },
     "fastify": {
