@@ -7,13 +7,14 @@
     "email": "yimingliao.official@gmail.com",
     "url": "https://github.com/yiming-liao"
   },
-  "homepage": "https://github.com/yiming-liao/intor-translator#readme",
+  "homepage": "https://intor.dev",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yiming-liao/intor-translator.git"
+    "url": "https://github.com/yiming-liao/intor",
+    "directory": "packages/intor-translator"
   },
   "bugs": {
-    "url": "https://github.com/yiming-liao/intor-translator/issues"
+    "url": "https://github.com/yiming-liao/intor/issues"
   },
   "funding": {
     "type": "github",
