@@ -1,0 +1,56 @@
+{
+  "name": "intor-cli",
+  "version": "0.0.21",
+  "description": "The Intor CLI",
+  "author": "Yiming Liao",
+  "homepage": "https://github.com/yiming-liao/intor-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yiming-liao/intor-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/yiming-liao/intor-cli/issues"
+  },
+  "keywords": [
+    "intor",
+    "i18n",
+    "cli"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "intor": "tsx src/cli/index.ts",
+    "type": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest"
+  },
+  "bin": {
+    "intor": "src/cli/index.ts"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.0.0",
+    "@intor/reader-json5": "^0.1.1",
+    "@intor/reader-md": "^0.1.5",
+    "@intor/reader-toml": "^0.1.1",
+    "@intor/reader-yaml": "^0.1.2",
+    "cac": "6.7.14",
+    "fast-glob": "3.3.3",
+    "intor": "workspace:*",
+    "intor-translator": "workspace:*",
+    "logry": "2.1.6",
+    "ora": "9.0.0",
+    "picocolors": "1.1.1",
+    "ts-morph": "27.0.2",
+    "tsx": "4.21.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
