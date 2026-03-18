@@ -18,6 +18,7 @@ const eslintConfig = defineConfig([
     "**/__test__/types/**",
     "**/vitest*.ts",
     "**/tsup.config.ts",
+    "**/playground/",
   ]),
 
   js.configs.recommended,

@@ -1,13 +1,11 @@
-import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react()],
+  resolve: { tsconfigPaths: true },
   test: {
     include: ["**/*.test.{ts,tsx}"],
     coverage: {
-      include: ["src/**/*.ts"],
+      include: ["src/**/*.{ts,tsx}"],
       exclude: [
         "src/**/index.ts",
         "src/**/types.ts",

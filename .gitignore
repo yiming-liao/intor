@@ -24,3 +24,12 @@ yarn-error.log*
 
 # api-extractor
 **/api-extractor/temp/
+
+# vhs
+validate.tape
+
+# intor generated
+.intor
+
+# intor-cli
+playground
