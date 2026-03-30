@@ -197,6 +197,9 @@ export type LoaderOptions = LocalLoader | RemoteLoader;
 
 export { LoadingHandler }
 
+// @public
+export const LOCALE_PLACEHOLDER = "{locale}";
+
 export { LocaleMessages }
 
 // @public

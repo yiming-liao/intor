@@ -19,6 +19,9 @@ export {
   mergeMessages,
   type MergeMessagesOptions,
   type MergeMessagesEvent,
+
+  // constants
+  LOCALE_PLACEHOLDER,
 } from "../src/core";
 
 //--------------------------------------------------------------
