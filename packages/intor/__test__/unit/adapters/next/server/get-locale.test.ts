@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { headers, cookies } from "next/headers";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { INTOR_HEADER_KEYS } from "../../../../../src/adapters/next/header-keys";
 import { getLocale } from "../../../../../src/adapters/next/server/get-locale";
-import { INTOR_HEADERS, matchLocale } from "../../../../../src/core";
+import { matchLocale } from "../../../../../src/core";
 
 vi.mock("next/headers", () => ({ headers: vi.fn(), cookies: vi.fn() }));
 vi.mock("../../../../../src/core", async (original) => {
@@ -23,7 +24,9 @@ describe("getLocale (Next adapter)", () => {
 
   it("returns locale from inbound header when present", async () => {
     (headers as any).mockResolvedValue({
-      get: vi.fn((key: string) => (key === INTOR_HEADERS.LOCALE ? "fr" : null)),
+      get: vi.fn((key: string) =>
+        key === INTOR_HEADER_KEYS.LOCALE ? "fr" : null,
+      ),
     });
     const result = await getLocale(config);
     expect(result).toBe("fr");

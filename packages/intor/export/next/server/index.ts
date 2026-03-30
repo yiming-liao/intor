@@ -6,6 +6,7 @@ export {
   intor,
   getLocale,
   getTranslator,
+  readIntorUrlState,
 } from "../../../src/adapters/next/server";
 
 export type {

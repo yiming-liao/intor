@@ -215,6 +215,13 @@ export type MessagesReader = (filePath: string) => Promise<unknown>;
 export type MessagesReaders = Record<string, MessagesReader>;
 
 // @public
+export function readIntorUrlState(): Promise<{
+    locale: string | null;
+    pathname: string;
+    search: string;
+}>;
+
+// @public
 export interface RemoteHeaders {
     "x-api-key"?: string;
     [key: string]: string | undefined;

@@ -2,7 +2,7 @@
 import type { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createIntorHandler } from "../../../../src/adapters/next/create-intor-handler";
-import { INTOR_HEADERS } from "../../../../src/core";
+import { INTOR_HEADER_KEYS } from "../../../../src/adapters/next/header-keys";
 import {
   getLocaleFromAcceptLanguage,
   resolveInbound,
@@ -85,7 +85,7 @@ describe("createIntorHandler (Next.js)", () => {
     const handler = createIntorHandler(config);
     const response = handler(request as NextRequest);
     expect(response.status).toBe(307);
-    expect(response.headers.get(INTOR_HEADERS.REDIRECTED)).toBe("1");
+    expect(response.headers.get(INTOR_HEADER_KEYS.REDIRECTED)).toBe("1");
   });
 
   it("returns next response when shouldRedirect is false", () => {
@@ -111,14 +111,16 @@ describe("createIntorHandler (Next.js)", () => {
     });
     const handler = createIntorHandler(config);
     const response = handler(request as NextRequest);
-    expect(response.headers.get(INTOR_HEADERS.LOCALE)).toBe("fr");
-    expect(response.headers.get(INTOR_HEADERS.LOCALE_SOURCE)).toBe("cookie");
-    expect(response.headers.get(INTOR_HEADERS.PATHNAME)).toBe("/fr");
+    expect(response.headers.get(INTOR_HEADER_KEYS.LOCALE)).toBe("fr");
+    expect(response.headers.get(INTOR_HEADER_KEYS.LOCALE_SOURCE)).toBe(
+      "cookie",
+    );
+    expect(response.headers.get(INTOR_HEADER_KEYS.PATHNAME)).toBe("/fr");
   });
 
   it("passes hasRedirected=true when header is set", () => {
     (request.headers as any).get = vi.fn((key: string) =>
-      key === INTOR_HEADERS.REDIRECTED ? "1" : undefined,
+      key === INTOR_HEADER_KEYS.REDIRECTED ? "1" : undefined,
     );
     (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
     (resolveInbound as any).mockReturnValue({
@@ -191,7 +193,7 @@ describe("createIntorHandler (Next.js)", () => {
     });
     const handler = createIntorHandler(config);
     const response = handler(request as NextRequest);
-    expect(response.headers.get(INTOR_HEADERS.SEARCH)).toBe("?page=2");
+    expect(response.headers.get(INTOR_HEADER_KEYS.SEARCH)).toBe("?page=2");
   });
 
   it("preserves search params on redirect", () => {
@@ -220,7 +222,7 @@ describe("createIntorHandler (Next.js)", () => {
     });
     const handler = createIntorHandler(config);
     const response = handler(request as NextRequest);
-    expect(response.headers.get(INTOR_HEADERS.SEARCH)).toBe("");
+    expect(response.headers.get(INTOR_HEADER_KEYS.SEARCH)).toBe("");
   });
 
   it("redirect without query does not append ?", () => {

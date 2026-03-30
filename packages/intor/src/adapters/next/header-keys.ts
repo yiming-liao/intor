@@ -1,4 +1,4 @@
-export const INTOR_HEADERS = {
+export const INTOR_HEADER_KEYS = {
   LOCALE: "x-intor-locale",
   LOCALE_SOURCE: "x-intor-locale-source",
   PATHNAME: "x-intor-pathname",

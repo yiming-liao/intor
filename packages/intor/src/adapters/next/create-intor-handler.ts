@@ -1,8 +1,9 @@
 import type { IntorConfig } from "../../config";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { INTOR_HEADERS, normalizeQuery } from "../../core";
+import { normalizeQuery } from "../../core";
 import { getLocaleFromAcceptLanguage, resolveInbound } from "../../routing";
+import { INTOR_HEADER_KEYS } from "./header-keys";
 
 /**
  * Resolves locale-aware routing for the current execution context.
@@ -30,7 +31,8 @@ export function createIntorHandler(config: IntorConfig) {
     );
 
     // Check whether this navigation flow has already redirected
-    const hasRedirected = request.headers.get(INTOR_HEADERS.REDIRECTED) === "1";
+    const hasRedirected =
+      request.headers.get(INTOR_HEADER_KEYS.REDIRECTED) === "1";
 
     // ----------------------------------------------------------
     // Resolve inbound routing decision (pure computation)
@@ -65,12 +67,12 @@ export function createIntorHandler(config: IntorConfig) {
     // ----------------------------------------------------------
     // Attach routing metadata to response headers
     // ----------------------------------------------------------
-    response.headers.set(INTOR_HEADERS.LOCALE, locale);
-    response.headers.set(INTOR_HEADERS.LOCALE_SOURCE, localeSource);
-    response.headers.set(INTOR_HEADERS.PATHNAME, pathname);
-    response.headers.set(INTOR_HEADERS.SEARCH, search);
+    response.headers.set(INTOR_HEADER_KEYS.LOCALE, locale);
+    response.headers.set(INTOR_HEADER_KEYS.LOCALE_SOURCE, localeSource);
+    response.headers.set(INTOR_HEADER_KEYS.PATHNAME, pathname);
+    response.headers.set(INTOR_HEADER_KEYS.SEARCH, search);
     // Mark redirect to prevent infinite loops in this flow
-    if (shouldRedirect) response.headers.set(INTOR_HEADERS.REDIRECTED, "1");
+    if (shouldRedirect) response.headers.set(INTOR_HEADER_KEYS.REDIRECTED, "1");
 
     return response;
   };
