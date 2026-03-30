@@ -15,7 +15,12 @@ import { getLocaleFromAcceptLanguage, resolveInbound } from "../../routing";
  */
 export function createIntorHandler(config: IntorConfig) {
   return function intorHandler(request: NextRequest) {
-    const { host, searchParams, pathname: rawPathname } = request.nextUrl;
+    const {
+      host,
+      searchParams,
+      pathname: rawPathname,
+      search,
+    } = request.nextUrl;
 
     // Locale from Accept-Language header
     const acceptLanguageHeader = request.headers.get("accept-language");
@@ -49,7 +54,10 @@ export function createIntorHandler(config: IntorConfig) {
     // Prepare Next.js response (redirect or pass-through)
     // ----------------------------------------------------------
     const url = request.nextUrl.clone();
-    url.pathname = pathname;
+    if (shouldRedirect) {
+      url.pathname = pathname;
+      url.search = search;
+    }
     const response = shouldRedirect
       ? NextResponse.redirect(url)
       : NextResponse.next();
@@ -60,6 +68,7 @@ export function createIntorHandler(config: IntorConfig) {
     response.headers.set(INTOR_HEADERS.LOCALE, locale);
     response.headers.set(INTOR_HEADERS.LOCALE_SOURCE, localeSource);
     response.headers.set(INTOR_HEADERS.PATHNAME, pathname);
+    response.headers.set(INTOR_HEADERS.SEARCH, search);
     // Mark redirect to prevent infinite loops in this flow
     if (shouldRedirect) response.headers.set(INTOR_HEADERS.REDIRECTED, "1");
 

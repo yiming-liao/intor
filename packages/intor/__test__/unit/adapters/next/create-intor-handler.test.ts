@@ -32,6 +32,7 @@ describe("createIntorHandler (Next.js)", () => {
       nextUrl: {
         host: "example.com",
         pathname: url.pathname,
+        search: url.search,
         searchParams: url.searchParams,
         clone: () => new URL(url.toString()),
       },
@@ -177,5 +178,63 @@ describe("createIntorHandler (Next.js)", () => {
       }),
       expect.any(Object),
     );
+  });
+
+  it("attaches search header", () => {
+    request = createMockRequest("/", { page: "2" });
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    const response = handler(request as NextRequest);
+    expect(response.headers.get(INTOR_HEADERS.SEARCH)).toBe("?page=2");
+  });
+
+  it("preserves search params on redirect", () => {
+    request = createMockRequest("/", { page: "2" });
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/fr",
+      shouldRedirect: true,
+    });
+    const handler = createIntorHandler(config);
+    const response = handler(request as NextRequest);
+    const location = response.headers.get("location");
+    expect(location).toContain("/fr?page=2");
+  });
+
+  it("attaches empty search when no query", () => {
+    request = createMockRequest("/");
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/",
+      shouldRedirect: false,
+    });
+    const handler = createIntorHandler(config);
+    const response = handler(request as NextRequest);
+    expect(response.headers.get(INTOR_HEADERS.SEARCH)).toBe("");
+  });
+
+  it("redirect without query does not append ?", () => {
+    request = createMockRequest("/");
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/fr",
+      shouldRedirect: true,
+    });
+    const handler = createIntorHandler(config);
+    const response = handler(request as NextRequest);
+    const location = response.headers.get("location");
+    expect(location).toBe("https://example.com/fr");
   });
 });
