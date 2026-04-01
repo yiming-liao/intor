@@ -54,7 +54,7 @@ export {
 } from "../src/message";
 
 // formatter
-export type { IntlFormatter } from "../src/formatter";
+export type { IntlFormatter, FormatDefaults } from "../src/formatter";
 
 // types
 export type {

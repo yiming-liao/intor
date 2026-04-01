@@ -38,7 +38,7 @@ describe("createFormatter", () => {
     const formatter = createFormatter({ getLocale: () => "en-US" });
 
     expect(formatter.number(1000)).toBe("1,000");
-    expect(getNumberFormatter).toHaveBeenCalledWith("en-US", undefined);
+    expect(getNumberFormatter).toHaveBeenCalledWith("en-US", {});
     expect(format).toHaveBeenCalledWith(1000);
   });
 
@@ -103,8 +103,8 @@ describe("createFormatter", () => {
     locale = "de-DE";
 
     expect(formatter.number(1000)).toBe("1.000");
-    expect(getNumberFormatter).toHaveBeenNthCalledWith(1, "en-US", undefined);
-    expect(getNumberFormatter).toHaveBeenNthCalledWith(2, "de-DE", undefined);
+    expect(getNumberFormatter).toHaveBeenNthCalledWith(1, "en-US", {});
+    expect(getNumberFormatter).toHaveBeenNthCalledWith(2, "de-DE", {});
   });
 
   it("merges currency options while preserving the forced currency style", () => {
@@ -251,5 +251,185 @@ describe("createFormatter", () => {
       style: "long",
     });
     expect(format).toHaveBeenCalledWith(values);
+  });
+
+  it("merges number defaults and call-site options", () => {
+    const format = vi.fn().mockReturnValue("12,345.67");
+    const getDateTimeFormatter = vi.fn();
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn().mockReturnValue({ format });
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({
+      getLocale: () => "en-US",
+      formatDefaults: {
+        number: { minimumFractionDigits: 0, maximumFractionDigits: 1 },
+      },
+    });
+
+    formatter.number(12345.67, {
+      maximumFractionDigits: 2,
+    });
+
+    expect(getNumberFormatter).toHaveBeenCalledWith("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+  });
+
+  it("falls back to formatDefaults.currencyCode", () => {
+    const format = vi.fn().mockReturnValue("$500");
+    const getDateTimeFormatter = vi.fn();
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn().mockReturnValue({ format });
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({
+      getLocale: () => "en-US",
+      formatDefaults: {
+        currencyCode: "USD",
+        currency: { maximumFractionDigits: 0 },
+      },
+    });
+
+    expect(formatter.currency(499.9)).toBe("$500");
+    expect(getNumberFormatter).toHaveBeenCalledWith("en-US", {
+      maximumFractionDigits: 0,
+      style: "currency",
+      currency: "USD",
+    });
+  });
+
+  it("throws when currency and formatDefaults.currencyCode are missing", () => {
+    const getDateTimeFormatter = vi.fn();
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn();
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({ getLocale: () => "en-US" });
+
+    expect(() => formatter.currency(1000)).toThrow(
+      "[intor-translator] currency is required",
+    );
+  });
+
+  it("uses formatDefaults.timeZone for date formatting", () => {
+    const value = new Date("2026-04-01T00:00:00.000Z");
+    const format = vi.fn().mockReturnValue("April 1, 2026");
+    const getDateTimeFormatter = vi.fn().mockReturnValue({ format });
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn();
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({
+      getLocale: () => "en-US",
+      formatDefaults: {
+        date: { dateStyle: "long" },
+        timeZone: "UTC",
+      },
+    });
+
+    formatter.date(value);
+
+    expect(getDateTimeFormatter).toHaveBeenCalledWith("en-US", {
+      dateStyle: "long",
+      timeZone: "UTC",
+    });
+  });
+
+  it("merges relative time and list defaults", () => {
+    const relativeFormat = vi.fn().mockReturnValue("yesterday");
+    const listFormat = vi.fn().mockReturnValue("A, B, and C");
+    const getDateTimeFormatter = vi.fn();
+    const getListFormatter = vi.fn().mockReturnValue({ format: listFormat });
+    const getNumberFormatter = vi.fn();
+    const getRelativeTimeFormatter = vi
+      .fn()
+      .mockReturnValue({ format: relativeFormat });
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({
+      getLocale: () => "en-US",
+      formatDefaults: {
+        relativeTime: { numeric: "always", style: "long" },
+        list: { type: "conjunction", style: "long" },
+      },
+    });
+
+    formatter.relativeTime(-1, "day", { numeric: "auto" });
+    formatter.list(["A", "B", "C"], { style: "short" });
+
+    expect(getRelativeTimeFormatter).toHaveBeenCalledWith("en-US", {
+      numeric: "auto",
+      style: "long",
+    });
+    expect(getListFormatter).toHaveBeenCalledWith("en-US", {
+      type: "conjunction",
+      style: "short",
+    });
   });
 });

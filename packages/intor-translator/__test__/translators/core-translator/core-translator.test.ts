@@ -98,4 +98,24 @@ describe("CoreTranslator", () => {
 
     expect(translator.format.number(1000)).toBe("1.000");
   });
+
+  it("applies formatDefaults to formatter helpers", () => {
+    const t = new CoreTranslator({
+      messages,
+      locale,
+      formatDefaults: {
+        timeZone: "UTC",
+        number: { maximumFractionDigits: 1 },
+        date: { dateStyle: "long" },
+        currencyCode: "USD",
+        currency: { maximumFractionDigits: 0 },
+      },
+    });
+
+    expect(t.format.number(12345.67)).toBe("12,345.7");
+    expect(t.format.currency(499.9)).toBe("$500");
+    expect(t.format.date(new Date("2026-04-01T00:00:00.000Z"))).toBe(
+      "April 1, 2026",
+    );
+  });
 });

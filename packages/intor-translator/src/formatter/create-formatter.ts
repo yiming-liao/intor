@@ -1,4 +1,4 @@
-import type { IntlFormatter } from "./types";
+import type { FormatDefaults, IntlFormatter } from "./types";
 import { createDateTimeFormatter } from "./date/create-date-time-formatter";
 import { createListFormatter } from "./list/create-list-formatter";
 import { createNumberFormatter } from "./number/create-number-formatter";
@@ -9,8 +9,10 @@ import { createRelativeTimeFormatter } from "./relative-time/create-relative-tim
  */
 export function createFormatter({
   getLocale,
+  formatDefaults,
 }: {
   getLocale: () => string;
+  formatDefaults?: FormatDefaults;
 }): IntlFormatter {
   const getDateTimeFormatter = createDateTimeFormatter();
   const getListFormatter = createListFormatter();
@@ -19,27 +21,49 @@ export function createFormatter({
 
   return {
     number(value, options) {
-      return getNumberFormatter(getLocale(), options).format(value);
+      return getNumberFormatter(getLocale(), {
+        ...formatDefaults?.number,
+        ...options,
+      }).format(value);
     },
 
     currency(value, currency, options) {
+      const resolvedCurrency = currency ?? formatDefaults?.currencyCode;
+      if (!resolvedCurrency) {
+        throw new Error("[intor-translator] currency is required");
+      }
+
       return getNumberFormatter(getLocale(), {
+        ...formatDefaults?.number,
+        ...formatDefaults?.currency,
         ...options,
         style: "currency",
-        currency,
+        currency: resolvedCurrency,
       }).format(value);
     },
 
     date(value, options) {
-      return getDateTimeFormatter(getLocale(), options).format(value);
+      return getDateTimeFormatter(getLocale(), {
+        ...formatDefaults?.date,
+        ...(formatDefaults?.timeZone
+          ? { timeZone: formatDefaults.timeZone }
+          : {}),
+        ...options,
+      }).format(value);
     },
 
     relativeTime(value, unit, options) {
-      return getRelativeTimeFormatter(getLocale(), options).format(value, unit);
+      return getRelativeTimeFormatter(getLocale(), {
+        ...formatDefaults?.relativeTime,
+        ...options,
+      }).format(value, unit);
     },
 
     list(values, options) {
-      return getListFormatter(getLocale(), options).format(values);
+      return getListFormatter(getLocale(), {
+        ...formatDefaults?.list,
+        ...options,
+      }).format(values);
     },
   };
 }

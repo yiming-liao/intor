@@ -1,3 +1,3 @@
 export { createFormatter } from "./create-formatter";
 
-export type { IntlFormatter } from "./types";
+export type { IntlFormatter, FormatDefaults } from "./types";

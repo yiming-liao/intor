@@ -57,6 +57,7 @@ export class CoreTranslator<M = unknown, ReplacementShape = unknown> extends Bas
 
 // @public
 export interface CoreTranslatorOptions<M> extends BaseTranslatorOptions<M>, TranslateConfig<M> {
+    formatDefaults?: FormatDefaults;
     hooks?: Array<TranslateHook>;
 }
 
@@ -68,6 +69,22 @@ export type ExpandPath<K extends PropertyKey, V, IncludeSelf extends boolean = t
 
 // @public
 export type FallbackLocalesMap<L extends string = string> = Partial<Record<L, L[]>>;
+
+// @public
+export interface FormatDefaults {
+    // (undocumented)
+    currency?: Omit<Intl.NumberFormatOptions, "style" | "currency">;
+    currencyCode?: string;
+    // (undocumented)
+    date?: Intl.DateTimeFormatOptions;
+    // (undocumented)
+    list?: Intl.ListFormatOptions;
+    // (undocumented)
+    number?: Intl.NumberFormatOptions;
+    // (undocumented)
+    relativeTime?: Intl.RelativeTimeFormatOptions;
+    timeZone?: string;
+}
 
 // @public
 export type FormatHandler = (ctx: HandlerContext & {
@@ -91,7 +108,7 @@ export type IfMessageObject<T> = T extends MessageObject ? T : never;
 // @public
 export interface IntlFormatter {
     // (undocumented)
-    currency(value: number | bigint, currency: string, options?: Omit<Intl.NumberFormatOptions, "style" | "currency">): string;
+    currency(value: number | bigint, currency?: string, options?: Omit<Intl.NumberFormatOptions, "style" | "currency">): string;
     // (undocumented)
     date(value: Date | number, options?: Intl.DateTimeFormatOptions): string;
     // (undocumented)

@@ -42,6 +42,10 @@ tsx examples/format/list.ts
 ```
 
 ```bash
+tsx examples/format/defaults.ts
+```
+
+```bash
 tsx examples/render-rich-message.ts
 ```
 

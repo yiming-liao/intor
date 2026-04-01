@@ -42,7 +42,14 @@ export class CoreTranslator<
   public readonly format: IntlFormatter;
 
   constructor(options: CoreTranslatorOptions<M>) {
-    const { locale, messages, isLoading, hooks, ...translateConfig } = options;
+    const {
+      locale,
+      messages,
+      isLoading,
+      hooks,
+      formatDefaults,
+      ...translateConfig
+    } = options;
     super({
       locale,
       ...(messages !== undefined && { messages }),
@@ -51,6 +58,7 @@ export class CoreTranslator<
     this.translateConfig = translateConfig;
     this.format = createFormatter({
       getLocale: () => this.locale,
+      ...(formatDefaults !== undefined && { formatDefaults }),
     });
     if (hooks) for (const hook of hooks) this.use(hook);
   }
