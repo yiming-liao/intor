@@ -39,6 +39,11 @@ npx tsx examples/format/relative-time.ts
 
 ```bash
 npx tsx examples/format/list.ts
+
+```
+
+```bash
+npx tsx examples/format/display-name.ts
 ```
 
 ```bash

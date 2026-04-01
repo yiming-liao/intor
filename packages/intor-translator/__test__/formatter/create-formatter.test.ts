@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createFormatter } from "../../src/formatter";
 import * as createDateTimeFormatterModule from "../../src/formatter/date/create-date-time-formatter";
+import * as createDisplayNamesModule from "../../src/formatter/display-name/create-display-names";
 import * as createListFormatterModule from "../../src/formatter/list/create-list-formatter";
 import * as createNumberFormatterModule from "../../src/formatter/number/create-number-formatter";
 import * as createPluralRulesModule from "../../src/formatter/plural/create-plural-rules";
 import * as createRelativeTimeFormatterModule from "../../src/formatter/relative-time/create-relative-time-formatter";
 
+vi.mock("../../src/formatter/display-name/create-display-names");
 vi.mock("../../src/formatter/date/create-date-time-formatter");
 vi.mock("../../src/formatter/list/create-list-formatter");
 vi.mock("../../src/formatter/number/create-number-formatter");
@@ -286,6 +288,108 @@ describe("createFormatter", () => {
       style: "long",
     });
     expect(format).toHaveBeenCalledWith(values);
+  });
+
+  it("formats display names with the active locale", () => {
+    const of = vi.fn().mockReturnValue("United States");
+    const getDateTimeFormatter = vi.fn();
+    const getDisplayNames = vi.fn().mockReturnValue({ of });
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn();
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(createDisplayNamesModule.createDisplayNames).mockReturnValue(
+      getDisplayNames,
+    );
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({ getLocale: () => "en-US" });
+
+    expect(formatter.displayName("US", { type: "region" })).toBe(
+      "United States",
+    );
+    expect(getDisplayNames).toHaveBeenCalledWith("en-US", { type: "region" });
+    expect(of).toHaveBeenCalledWith("US");
+  });
+
+  it("merges display name defaults and call-site options", () => {
+    const of = vi.fn().mockReturnValue("American English");
+    const getDateTimeFormatter = vi.fn();
+    const getDisplayNames = vi.fn().mockReturnValue({ of });
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn();
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(createDisplayNamesModule.createDisplayNames).mockReturnValue(
+      getDisplayNames,
+    );
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({
+      getLocale: () => "en-US",
+      formatDefaults: {
+        displayName: { type: "language", languageDisplay: "standard" },
+      },
+    });
+
+    formatter.displayName("en-US", { languageDisplay: "dialect" });
+
+    expect(getDisplayNames).toHaveBeenCalledWith("en-US", {
+      type: "language",
+      languageDisplay: "dialect",
+    });
+  });
+
+  it("throws when display name type is missing", () => {
+    const getDateTimeFormatter = vi.fn();
+    const getDisplayNames = vi.fn();
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn();
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(createDisplayNamesModule.createDisplayNames).mockReturnValue(
+      getDisplayNames,
+    );
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({ getLocale: () => "en-US" });
+
+    expect(() => formatter.displayName("US")).toThrow(
+      "[intor-translator] displayName type is required",
+    );
   });
 
   it("merges number defaults and call-site options", () => {

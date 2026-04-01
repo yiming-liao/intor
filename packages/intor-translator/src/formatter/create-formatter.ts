@@ -1,5 +1,6 @@
 import type { FormatDefaults, IntlFormatter } from "./types";
 import { createDateTimeFormatter } from "./date/create-date-time-formatter";
+import { createDisplayNames } from "./display-name/create-display-names";
 import { createListFormatter } from "./list/create-list-formatter";
 import { createNumberFormatter } from "./number/create-number-formatter";
 import { createPluralRules } from "./plural/create-plural-rules";
@@ -17,9 +18,10 @@ export function createFormatter({
 }): IntlFormatter {
   const getDateTimeFormatter = createDateTimeFormatter();
   const getListFormatter = createListFormatter();
-  const getNumberFormatter = createNumberFormatter();
-  const getPluralRules = createPluralRules();
   const getRelativeTimeFormatter = createRelativeTimeFormatter();
+  const getNumberFormatter = createNumberFormatter();
+  const getDisplayNames = createDisplayNames();
+  const getPluralRules = createPluralRules();
 
   return {
     number(value, options) {
@@ -64,6 +66,20 @@ export function createFormatter({
         ...formatDefaults?.list,
         ...options,
       }).format(values);
+    },
+
+    displayName(value, options) {
+      const resolvedOptions: Partial<Intl.DisplayNamesOptions> = {
+        ...formatDefaults?.displayName,
+        ...options,
+      };
+      if (!resolvedOptions.type) {
+        throw new Error("[intor-translator] displayName type is required");
+      }
+      return getDisplayNames(
+        getLocale(),
+        resolvedOptions as Intl.DisplayNamesOptions,
+      ).of(value);
     },
 
     plural(value, options) {

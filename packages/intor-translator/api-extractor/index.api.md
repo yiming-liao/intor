@@ -78,6 +78,8 @@ export interface FormatDefaults {
     // (undocumented)
     date?: Intl.DateTimeFormatOptions;
     // (undocumented)
+    displayName?: Partial<Intl.DisplayNamesOptions>;
+    // (undocumented)
     list?: Intl.ListFormatOptions;
     // (undocumented)
     number?: Intl.NumberFormatOptions;
@@ -113,6 +115,8 @@ export interface IntlFormatter {
     currency(value: number | bigint, currency?: string, options?: Omit<Intl.NumberFormatOptions, "style" | "currency">): string;
     // (undocumented)
     date(value: Date | number, options?: Intl.DateTimeFormatOptions): string;
+    // (undocumented)
+    displayName(value: string, options?: Partial<Intl.DisplayNamesOptions>): string | undefined;
     // (undocumented)
     list(values: Iterable<string>, options?: Intl.ListFormatOptions): string;
     // (undocumented)
