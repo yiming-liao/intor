@@ -176,6 +176,7 @@ describe("IntorProvider (vue) — full coverage", () => {
         translator: {
           loadingMessage: "loading",
           missingMessage: "missing",
+          formatDefaults: { timeZone: "UTC" },
         },
       },
       locale: "en",
@@ -189,6 +190,7 @@ describe("IntorProvider (vue) — full coverage", () => {
       expect.objectContaining({
         loadingMessage: "loading",
         missingMessage: "missing",
+        formatDefaults: { timeZone: "UTC" },
         handlers: { a: true },
         hooks: { b: true },
       }),
@@ -210,6 +212,7 @@ describe("IntorProvider (vue) — full coverage", () => {
       expect.not.objectContaining({
         loadingMessage: expect.anything(),
         missingMessage: expect.anything(),
+        formatDefaults: expect.anything(),
       }),
     );
   });

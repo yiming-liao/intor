@@ -193,6 +193,7 @@ describe("IntorProvider", () => {
       translator: {
         loadingMessage: "loading...",
         missingMessage: "missing...",
+        formatDefaults: { timeZone: "UTC" },
       },
     };
     const handlers = {} as any;
@@ -218,6 +219,7 @@ describe("IntorProvider", () => {
     expect(ctx.translator.__translatorArgs).toMatchObject({
       loadingMessage: "loading...",
       missingMessage: "missing...",
+      formatDefaults: { timeZone: "UTC" },
       handlers,
       hooks,
     });

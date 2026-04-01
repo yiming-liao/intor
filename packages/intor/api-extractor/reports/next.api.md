@@ -5,6 +5,7 @@
 ```ts
 
 import type { FallbackLocalesMap } from 'intor-translator';
+import type { FormatDefaults } from 'intor-translator';
 import { IntlFormatter } from 'intor-translator';
 import { JSX } from 'react/jsx-runtime';
 import type { LinkProps } from 'next/link';
@@ -313,6 +314,7 @@ export type TagRenderers<Output = string, RichShape = Rich> = {
 export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
+    formatDefaults?: FormatDefaults;
 };
 
 // @public

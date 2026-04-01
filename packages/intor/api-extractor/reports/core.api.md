@@ -5,6 +5,7 @@
 ```ts
 
 import type { FallbackLocalesMap } from 'intor-translator';
+import type { FormatDefaults } from 'intor-translator';
 import { FormatHandler } from 'intor-translator';
 import { HandlerContext } from 'intor-translator';
 import { IntlFormatter } from 'intor-translator';
@@ -408,6 +409,7 @@ export { Translator }
 export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
+    formatDefaults?: FormatDefaults;
 };
 
 // (No @packageDocumentation comment for this package)

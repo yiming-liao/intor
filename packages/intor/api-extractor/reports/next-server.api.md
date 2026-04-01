@@ -5,6 +5,7 @@
 ```ts
 
 import type { FallbackLocalesMap } from 'intor-translator';
+import type { FormatDefaults } from 'intor-translator';
 import { IntlFormatter } from 'intor-translator';
 import { Locale } from 'intor-translator';
 import { LocaleMessages } from 'intor-translator';
@@ -350,6 +351,7 @@ export type TagRenderers<Output = string, RichShape = Rich> = {
 export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
+    formatDefaults?: FormatDefaults;
 };
 
 // (No @packageDocumentation comment for this package)

@@ -125,6 +125,7 @@ describe("Svelte Intor Store", () => {
         translator: {
           loadingMessage: "Loading...",
           missingMessage: "Missing",
+          formatDefaults: { timeZone: "UTC" },
         },
       },
       locale: "en",
@@ -135,6 +136,9 @@ describe("Svelte Intor Store", () => {
     stores.translator.subscribe((t) => (translator = t))();
     expect(translator.__translatorArgs.loadingMessage).toBe("Loading...");
     expect(translator.__translatorArgs.missingMessage).toBe("Missing");
+    expect(translator.__translatorArgs.formatDefaults).toEqual({
+      timeZone: "UTC",
+    });
     expect(translator.__translatorArgs.handlers).toEqual({ test: true });
     expect(translator.__translatorArgs.hooks).toEqual([{ name: "hook" }]);
   });
@@ -187,5 +191,6 @@ describe("Svelte Intor Store", () => {
     stores.translator.subscribe((t) => (translator = t))();
     expect(translator.__translatorArgs.loadingMessage).toBeUndefined();
     expect(translator.__translatorArgs.missingMessage).toBeUndefined();
+    expect(translator.__translatorArgs.formatDefaults).toBeUndefined();
   });
 });

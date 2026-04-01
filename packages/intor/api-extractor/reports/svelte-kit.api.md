@@ -5,6 +5,7 @@
 ```ts
 
 import type { FallbackLocalesMap } from 'intor-translator';
+import type { FormatDefaults } from 'intor-translator';
 import { goto } from '$app/navigation';
 import type { Handle } from '@sveltejs/kit';
 import { IntlFormatter } from 'intor-translator';
@@ -296,6 +297,7 @@ export type TagRenderers<Output = string, RichShape = Rich> = {
 export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
+    formatDefaults?: FormatDefaults;
 };
 
 // @public

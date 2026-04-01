@@ -17,13 +17,17 @@ describe("createTranslator defensive branches", () => {
     vi.clearAllMocks();
   });
 
-  it("forwards loadingMessage and missingMessage when defined", () => {
+  it("forwards loadingMessage, missingMessage, and formatDefaults when defined", () => {
     const config = {
       messages: {},
       fallbackLocales: {},
       translator: {
         loadingMessage: "Loading...",
         missingMessage: "Missing!",
+        formatDefaults: {
+          timeZone: "UTC",
+          number: { maximumFractionDigits: 1 },
+        },
       },
     } as any;
     createTranslator({
@@ -35,11 +39,15 @@ describe("createTranslator defensive branches", () => {
       expect.objectContaining({
         loadingMessage: "Loading...",
         missingMessage: "Missing!",
+        formatDefaults: {
+          timeZone: "UTC",
+          number: { maximumFractionDigits: 1 },
+        },
       }),
     );
   });
 
-  it("does not forward loadingMessage and missingMessage when undefined", () => {
+  it("does not forward loadingMessage, missingMessage, and formatDefaults when undefined", () => {
     const config = {
       messages: {},
       fallbackLocales: {},
@@ -53,6 +61,7 @@ describe("createTranslator defensive branches", () => {
     const call = (Translator as any).mock.calls[0][0];
     expect("loadingMessage" in call).toBe(false);
     expect("missingMessage" in call).toBe(false);
+    expect("formatDefaults" in call).toBe(false);
   });
 
   it("forwards handlers when provided", () => {
@@ -114,5 +123,6 @@ describe("createTranslator defensive branches", () => {
     const call = (Translator as any).mock.calls[0][0];
     expect("loadingMessage" in call).toBe(false);
     expect("missingMessage" in call).toBe(false);
+    expect("formatDefaults" in call).toBe(false);
   });
 });

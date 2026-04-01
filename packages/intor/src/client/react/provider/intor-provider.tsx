@@ -70,7 +70,8 @@ export function IntorProvider({
   // -----------------------------------------------------------------------------
   // Translator
   // -----------------------------------------------------------------------------
-  const { loadingMessage, missingMessage } = config.translator ?? {};
+  const { loadingMessage, missingMessage, formatDefaults } =
+    config.translator ?? {};
 
   const translator = React.useMemo(() => {
     return new Translator<LocaleMessages>({
@@ -82,6 +83,7 @@ export function IntorProvider({
       ...(missingMessage !== undefined ? { missingMessage } : {}),
       ...(handlers !== undefined ? { handlers } : {}),
       ...(hooks !== undefined ? { hooks } : {}),
+      ...(formatDefaults !== undefined ? { formatDefaults } : {}),
     });
   }, [
     effectiveMessages,
@@ -92,6 +94,7 @@ export function IntorProvider({
     missingMessage,
     handlers,
     hooks,
+    formatDefaults,
   ]);
 
   // ---------------------------------------------------------------------------

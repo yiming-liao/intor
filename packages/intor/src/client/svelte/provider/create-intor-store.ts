@@ -57,7 +57,8 @@ export function buildIntorStores({
   // ---------------------------------------------------------------------------
   // Translator
   // ---------------------------------------------------------------------------
-  const { loadingMessage, missingMessage } = config.translator ?? {};
+  const { loadingMessage, missingMessage, formatDefaults } =
+    config.translator ?? {};
 
   const translator = derived(
     [effectiveMessages, locale, effectiveIsLoading],
@@ -71,6 +72,7 @@ export function buildIntorStores({
         ...(missingMessage !== undefined ? { missingMessage } : {}),
         ...(handlers !== undefined ? { handlers } : {}),
         ...(hooks !== undefined ? { hooks } : {}),
+        ...(formatDefaults !== undefined ? { formatDefaults } : {}),
       }),
   );
 

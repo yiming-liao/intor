@@ -34,7 +34,8 @@ export function createTranslator(
     locale,
   });
 
-  const { loadingMessage, missingMessage } = config.translator ?? {};
+  const { loadingMessage, missingMessage, formatDefaults } =
+    config.translator ?? {};
 
   const translator = new Translator<LocaleMessages>({
     locale,
@@ -44,6 +45,7 @@ export function createTranslator(
     ...(missingMessage !== undefined ? { missingMessage } : {}),
     ...(handlers !== undefined ? { handlers } : {}),
     ...(hooks !== undefined ? { hooks } : {}),
+    ...(formatDefaults !== undefined ? { formatDefaults } : {}),
   });
 
   return translator;
