@@ -20,9 +20,19 @@ vi.mock("../../../../../src/core", async () => {
 
 describe("Svelte useTranslator", () => {
   it("returns fully reactive scoped translator API", () => {
+    const formatMock = {
+      number: vi.fn().mockReturnValue("1,000"),
+      currency: vi.fn().mockReturnValue("$1,000.00"),
+      date: vi.fn().mockReturnValue("Apr 1, 2026"),
+      relativeTime: vi.fn().mockReturnValue("2 hours ago"),
+      list: vi.fn().mockReturnValue("A, B, and C"),
+      plural: vi.fn().mockReturnValue("one"),
+    };
+
     const scopedMock = {
       hasKey: vi.fn(),
       t: vi.fn(),
+      format: formatMock,
     };
 
     const translatorStore = writable({
@@ -77,6 +87,25 @@ describe("Svelte useTranslator", () => {
     const tFn = get(result.t);
     tFn("b");
     expect(scopedMock.t).toHaveBeenCalledWith("b");
+
+    expect(result.format.number(1000)).toBe("1,000");
+    expect(formatMock.number).toHaveBeenCalledWith(1000, undefined);
+
+    expect(result.format.currency(1000, "USD")).toBe("$1,000.00");
+    expect(formatMock.currency).toHaveBeenCalledWith(1000, "USD", undefined);
+
+    const date = new Date("2026-04-01T00:00:00.000Z");
+    expect(result.format.date(date)).toBe("Apr 1, 2026");
+    expect(formatMock.date).toHaveBeenCalledWith(date, undefined);
+
+    expect(result.format.relativeTime(-2, "hour")).toBe("2 hours ago");
+    expect(formatMock.relativeTime).toHaveBeenCalledWith(-2, "hour", undefined);
+
+    expect(result.format.list(["A", "B", "C"])).toBe("A, B, and C");
+    expect(formatMock.list).toHaveBeenCalledWith(["A", "B", "C"], undefined);
+
+    expect(result.format.plural(1)).toBe("one");
+    expect(formatMock.plural).toHaveBeenCalledWith(1, undefined);
 
     const tRichFn = get(result.tRich);
     tRichFn("c");

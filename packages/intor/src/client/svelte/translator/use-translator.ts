@@ -32,6 +32,7 @@ export function useTranslator<
     date: (v, o) => get(scoped).format.date(v, o),
     relativeTime: (v, unit, o) => get(scoped).format.relativeTime(v, unit, o),
     list: (vs, o) => get(scoped).format.list(vs, o),
+    plural: (vs, o) => get(scoped).format.plural(vs, o),
   };
 
   return {
