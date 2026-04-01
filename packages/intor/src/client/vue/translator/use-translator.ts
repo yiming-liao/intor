@@ -5,9 +5,9 @@ import type {
   GenReplacements,
   GenRich,
 } from "../../../core";
-import type { LocalizedPreKey } from "intor-translator";
+import type { IntlFormatter, LocalizedPreKey } from "intor-translator";
 import { computed } from "vue";
-import { injectIntorContext } from "..//provider";
+import { injectIntorContext } from "../provider";
 import { createTRich } from "./create-t-rich";
 
 /**
@@ -27,6 +27,14 @@ export function useTranslator<
   const translator = intor.value.translator;
   const scoped = computed(() => translator.value.scoped(preKey));
 
+  const format: IntlFormatter = {
+    number: (v, o) => scoped.value.format.number(v, o),
+    currency: (v, c, o) => scoped.value.format.currency(v, c, o),
+    date: (v, o) => scoped.value.format.date(v, o),
+    relativeTime: (v, u, o) => scoped.value.format.relativeTime(v, u, o),
+    list: (vs, o) => scoped.value.format.list(vs, o),
+  };
+
   return {
     messages: computed(() => translator.value.messages),
     locale: computed(() => translator.value.locale),
@@ -37,5 +45,6 @@ export function useTranslator<
     t: (...args: Parameters<typeof scoped.value.t>) => scoped.value.t(...args),
     tRich: (...args: Parameters<ReturnType<typeof createTRich>>) =>
       createTRich(scoped.value.t)(...args),
+    format,
   } as VueTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }

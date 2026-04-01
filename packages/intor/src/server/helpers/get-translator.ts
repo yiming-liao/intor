@@ -74,5 +74,6 @@ export async function getTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
+    format: scoped.format,
   } as BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }

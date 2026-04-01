@@ -12,6 +12,7 @@ import {
   type Rich,
   type ScopedRich,
   type ScopedReplacement,
+  type IntlFormatter,
 } from "intor-translator";
 
 /**
@@ -70,4 +71,7 @@ export type BaseTranslator<
     tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers,
     replacements?: RE | Replacement,
   ) => string;
+
+  /** Locale-aware formatting helpers. */
+  format: IntlFormatter;
 };

@@ -33,5 +33,6 @@ export function useTranslator<
     hasKey: scoped.hasKey,
     t: scoped.t,
     tRich: createTRich(scoped.t),
+    format: scoped.format,
   } as ReactTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
 }

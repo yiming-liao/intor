@@ -47,4 +47,7 @@ export type SvelteTranslator<
 
   /** Resolve a localized value and apply rich tag renderers. */
   tRich: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK>["tRich"]>;
+
+  /** Formatting helpers. */
+  format: BaseTranslator<M, ReplacementShape, RichShape, PK>["format"];
 };

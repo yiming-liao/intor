@@ -10,6 +10,7 @@ import type { ComputedRef } from 'vue';
 import { DefineComponent } from 'vue';
 import { ExtractPropTypes } from 'vue';
 import type { FallbackLocalesMap } from 'intor-translator';
+import { IntlFormatter } from 'intor-translator';
 import { Locale } from 'intor-translator';
 import { LocaleMessages } from 'intor-translator';
 import { LocalizedKey } from 'intor-translator';
@@ -43,6 +44,7 @@ export type BaseTranslator<M extends LocaleMessages, ReplacementShape = Replacem
     PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>
     ] extends [never] ? string : PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>;
     tRich: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers, replacements?: RE | Replacement) => string;
+    format: IntlFormatter;
 };
 
 // @public
