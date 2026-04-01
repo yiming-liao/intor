@@ -22,6 +22,26 @@ tsx examples/hook.ts
 ```
 
 ```bash
+tsx examples/format/number.ts
+```
+
+```bash
+tsx examples/format/currency.ts
+```
+
+```bash
+tsx examples/format/date.ts
+```
+
+```bash
+tsx examples/format/relative-time.ts
+```
+
+```bash
+tsx examples/format/list.ts
+```
+
+```bash
 tsx examples/render-rich-message.ts
 ```
 
