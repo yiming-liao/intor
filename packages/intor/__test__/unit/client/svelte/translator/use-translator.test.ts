@@ -26,6 +26,7 @@ describe("Svelte useTranslator", () => {
       date: vi.fn().mockReturnValue("Apr 1, 2026"),
       relativeTime: vi.fn().mockReturnValue("2 hours ago"),
       list: vi.fn().mockReturnValue("A, B, and C"),
+      displayName: vi.fn().mockReturnValue("United States"),
       plural: vi.fn().mockReturnValue("one"),
     };
 
@@ -103,6 +104,13 @@ describe("Svelte useTranslator", () => {
 
     expect(result.format.list(["A", "B", "C"])).toBe("A, B, and C");
     expect(formatMock.list).toHaveBeenCalledWith(["A", "B", "C"], undefined);
+
+    expect(result.format.displayName("US", { type: "region" })).toBe(
+      "United States",
+    );
+    expect(formatMock.displayName).toHaveBeenCalledWith("US", {
+      type: "region",
+    });
 
     expect(result.format.plural(1)).toBe("one");
     expect(formatMock.plural).toHaveBeenCalledWith(1, undefined);
