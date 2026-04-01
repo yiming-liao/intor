@@ -10,43 +10,47 @@ Runnable examples executed in a Node.js environment using `tsx`,
 demonstrating programmatic usage of the translator APIs.
 
 ```bash
-tsx examples/basic.ts
+npx tsx examples/basic.ts
 ```
 
 ```bash
-tsx examples/handler.ts
+npx tsx examples/handler.ts
 ```
 
 ```bash
-tsx examples/hook.ts
+npx tsx examples/hook.ts
 ```
 
 ```bash
-tsx examples/format/number.ts
+npx tsx examples/format/number.ts
 ```
 
 ```bash
-tsx examples/format/currency.ts
+npx tsx examples/format/currency.ts
 ```
 
 ```bash
-tsx examples/format/date.ts
+npx tsx examples/format/date.ts
 ```
 
 ```bash
-tsx examples/format/relative-time.ts
+npx tsx examples/format/relative-time.ts
 ```
 
 ```bash
-tsx examples/format/list.ts
+npx tsx examples/format/list.ts
 ```
 
 ```bash
-tsx examples/format/defaults.ts
+npx tsx examples/format/plural.ts
 ```
 
 ```bash
-tsx examples/render-rich-message.ts
+npx tsx examples/format/defaults.ts
+```
+
+```bash
+npx tsx examples/render-rich-message.ts
 ```
 
 ### HTML

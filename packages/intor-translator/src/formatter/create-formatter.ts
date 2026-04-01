@@ -2,6 +2,7 @@ import type { FormatDefaults, IntlFormatter } from "./types";
 import { createDateTimeFormatter } from "./date/create-date-time-formatter";
 import { createListFormatter } from "./list/create-list-formatter";
 import { createNumberFormatter } from "./number/create-number-formatter";
+import { createPluralRules } from "./plural/create-plural-rules";
 import { createRelativeTimeFormatter } from "./relative-time/create-relative-time-formatter";
 
 /**
@@ -17,6 +18,7 @@ export function createFormatter({
   const getDateTimeFormatter = createDateTimeFormatter();
   const getListFormatter = createListFormatter();
   const getNumberFormatter = createNumberFormatter();
+  const getPluralRules = createPluralRules();
   const getRelativeTimeFormatter = createRelativeTimeFormatter();
 
   return {
@@ -32,9 +34,7 @@ export function createFormatter({
       if (!resolvedCurrency) {
         throw new Error("[intor-translator] currency is required");
       }
-
       return getNumberFormatter(getLocale(), {
-        ...formatDefaults?.number,
         ...formatDefaults?.currency,
         ...options,
         style: "currency",
@@ -64,6 +64,13 @@ export function createFormatter({
         ...formatDefaults?.list,
         ...options,
       }).format(values);
+    },
+
+    plural(value, options) {
+      return getPluralRules(getLocale(), {
+        ...formatDefaults?.plural,
+        ...options,
+      }).select(value);
     },
   };
 }

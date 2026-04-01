@@ -17,6 +17,7 @@ export interface IntlFormatter {
     options?: Intl.RelativeTimeFormatOptions,
   ): string;
   list(values: Iterable<string>, options?: Intl.ListFormatOptions): string;
+  plural(value: number, options?: Intl.PluralRulesOptions): Intl.LDMLPluralRule;
 }
 
 /**
@@ -32,6 +33,7 @@ export interface FormatDefaults {
   currency?: Omit<Intl.NumberFormatOptions, "style" | "currency">;
   relativeTime?: Intl.RelativeTimeFormatOptions;
   list?: Intl.ListFormatOptions;
+  plural?: Intl.PluralRulesOptions;
   /** Fallback currency code when `format.currency(...)` is called without `currency`. */
   currencyCode?: string;
   /** Global fallback time zone (typically used by `format.date(...)`). */

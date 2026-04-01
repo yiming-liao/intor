@@ -91,6 +91,7 @@ describe("CoreTranslator", () => {
   it("exposes locale-aware formatting helpers", () => {
     expect(translator.format.number(1000)).toBe("1,000");
     expect(translator.format.currency(1000, "USD")).toBe("$1,000.00");
+    expect(translator.format.plural(1)).toBe("one");
   });
 
   it("keeps format helpers in sync with locale updates", () => {
@@ -109,6 +110,7 @@ describe("CoreTranslator", () => {
         date: { dateStyle: "long" },
         currencyCode: "USD",
         currency: { maximumFractionDigits: 0 },
+        plural: { type: "ordinal" },
       },
     });
 
@@ -117,5 +119,6 @@ describe("CoreTranslator", () => {
     expect(t.format.date(new Date("2026-04-01T00:00:00.000Z"))).toBe(
       "April 1, 2026",
     );
+    expect(t.format.plural(2)).toBe("two");
   });
 });

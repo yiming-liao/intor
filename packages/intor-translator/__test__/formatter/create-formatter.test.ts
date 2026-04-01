@@ -3,11 +3,13 @@ import { createFormatter } from "../../src/formatter";
 import * as createDateTimeFormatterModule from "../../src/formatter/date/create-date-time-formatter";
 import * as createListFormatterModule from "../../src/formatter/list/create-list-formatter";
 import * as createNumberFormatterModule from "../../src/formatter/number/create-number-formatter";
+import * as createPluralRulesModule from "../../src/formatter/plural/create-plural-rules";
 import * as createRelativeTimeFormatterModule from "../../src/formatter/relative-time/create-relative-time-formatter";
 
 vi.mock("../../src/formatter/date/create-date-time-formatter");
 vi.mock("../../src/formatter/list/create-list-formatter");
 vi.mock("../../src/formatter/number/create-number-formatter");
+vi.mock("../../src/formatter/plural/create-plural-rules");
 vi.mock("../../src/formatter/relative-time/create-relative-time-formatter");
 
 describe("createFormatter", () => {
@@ -217,6 +219,39 @@ describe("createFormatter", () => {
     expect(format).toHaveBeenCalledWith(-2, "hour");
   });
 
+  it("selects plural categories with the active locale", () => {
+    const select = vi.fn().mockReturnValue("one");
+    const getDateTimeFormatter = vi.fn();
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn();
+    const getPluralRules = vi.fn().mockReturnValue({ select });
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(createPluralRulesModule.createPluralRules).mockReturnValue(
+      getPluralRules,
+    );
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({ getLocale: () => "en-US" });
+
+    expect(formatter.plural(1, { type: "cardinal" })).toBe("one");
+    expect(getPluralRules).toHaveBeenCalledWith("en-US", {
+      type: "cardinal",
+    });
+    expect(select).toHaveBeenCalledWith(1);
+  });
+
   it("formats lists with the active locale", () => {
     const format = vi.fn().mockReturnValue("A, B, and C");
     const getDateTimeFormatter = vi.fn();
@@ -321,6 +356,42 @@ describe("createFormatter", () => {
     expect(formatter.currency(499.9)).toBe("$500");
     expect(getNumberFormatter).toHaveBeenCalledWith("en-US", {
       maximumFractionDigits: 0,
+      style: "currency",
+      currency: "USD",
+    });
+  });
+
+  it("does not inherit number defaults in currency formatting", () => {
+    const format = vi.fn().mockReturnValue("$499.90");
+    const getDateTimeFormatter = vi.fn();
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn().mockReturnValue({ format });
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({
+      getLocale: () => "en-US",
+      formatDefaults: {
+        number: { maximumFractionDigits: 0 },
+        currencyCode: "USD",
+      },
+    });
+
+    formatter.currency(499.9);
+
+    expect(getNumberFormatter).toHaveBeenCalledWith("en-US", {
       style: "currency",
       currency: "USD",
     });
@@ -431,5 +502,53 @@ describe("createFormatter", () => {
       type: "conjunction",
       style: "short",
     });
+  });
+
+  it("merges plural defaults and call-site options", () => {
+    const select = vi.fn().mockReturnValue("few");
+    const getDateTimeFormatter = vi.fn();
+    const getListFormatter = vi.fn();
+    const getNumberFormatter = vi.fn();
+    const getPluralRules = vi.fn().mockReturnValue({ select });
+    const getRelativeTimeFormatter = vi.fn();
+
+    vi.mocked(
+      createDateTimeFormatterModule.createDateTimeFormatter,
+    ).mockReturnValue(getDateTimeFormatter);
+    vi.mocked(createListFormatterModule.createListFormatter).mockReturnValue(
+      getListFormatter,
+    );
+    vi.mocked(
+      createNumberFormatterModule.createNumberFormatter,
+    ).mockReturnValue(getNumberFormatter);
+    vi.mocked(createPluralRulesModule.createPluralRules).mockReturnValue(
+      getPluralRules,
+    );
+    vi.mocked(
+      createRelativeTimeFormatterModule.createRelativeTimeFormatter,
+    ).mockReturnValue(getRelativeTimeFormatter);
+
+    const formatter = createFormatter({
+      getLocale: () => "en-US",
+      formatDefaults: {
+        plural: {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+          type: "cardinal",
+        },
+      },
+    });
+
+    formatter.plural(2, {
+      maximumFractionDigits: 2,
+      type: "ordinal",
+    });
+
+    expect(getPluralRules).toHaveBeenCalledWith("en-US", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 2,
+      type: "ordinal",
+    });
+    expect(select).toHaveBeenCalledWith(2);
   });
 });

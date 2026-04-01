@@ -82,6 +82,8 @@ export interface FormatDefaults {
     // (undocumented)
     number?: Intl.NumberFormatOptions;
     // (undocumented)
+    plural?: Intl.PluralRulesOptions;
+    // (undocumented)
     relativeTime?: Intl.RelativeTimeFormatOptions;
     timeZone?: string;
 }
@@ -115,6 +117,8 @@ export interface IntlFormatter {
     list(values: Iterable<string>, options?: Intl.ListFormatOptions): string;
     // (undocumented)
     number(value: number | bigint, options?: Intl.NumberFormatOptions): string;
+    // (undocumented)
+    plural(value: number, options?: Intl.PluralRulesOptions): Intl.LDMLPluralRule;
     // (undocumented)
     relativeTime(value: number, unit: Intl.RelativeTimeFormatUnit, options?: Intl.RelativeTimeFormatOptions): string;
 }
