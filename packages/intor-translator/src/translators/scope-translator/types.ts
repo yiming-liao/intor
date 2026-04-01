@@ -1,3 +1,4 @@
+import type { IntlFormatter } from "../../formatter";
 import type {
   Locale,
   LocalizedKey,
@@ -32,6 +33,8 @@ export type ScopeTranslatorMethods<
   PK extends string | undefined = undefined,
   K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
 > = {
+  format: IntlFormatter;
+
   hasKey: (key?: K, targetLocale?: Locale<M>) => boolean;
 
   t: <Key extends K>(

@@ -33,6 +33,9 @@ export class ScopeTranslator<
     ? ScopeTranslatorMethods<M, ReplacementShape, PK>
     : ScopeTranslatorMethods<M, ReplacementShape> {
     return {
+      /** Locale-aware formatting helpers. */
+      format: this.format,
+
       /** Checks whether a translation key exists. */
       hasKey: (key?: string, targetLocale?: Locale<M>): boolean => {
         const fullKey = getFullKey(preKey, key);

@@ -53,6 +53,9 @@ export {
   type Attributes,
 } from "../src/message";
 
+// formatter
+export type { IntlFormatter } from "../src/formatter";
+
 // types
 export type {
   // locale

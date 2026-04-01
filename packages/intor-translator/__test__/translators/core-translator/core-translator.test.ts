@@ -87,4 +87,15 @@ describe("CoreTranslator", () => {
       }),
     );
   });
+
+  it("exposes locale-aware formatting helpers", () => {
+    expect(translator.format.number(1000)).toBe("1,000");
+    expect(translator.format.currency(1000, "USD")).toBe("$1,000.00");
+  });
+
+  it("keeps format helpers in sync with locale updates", () => {
+    translator.setLocale("de-DE" as any);
+
+    expect(translator.format.number(1000)).toBe("1.000");
+  });
 });

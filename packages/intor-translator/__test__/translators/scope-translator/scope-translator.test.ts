@@ -21,6 +21,7 @@ describe("ScopeTranslator", () => {
 
   it("returns scoped translator with hasKey and t", () => {
     const scoped = translator.scoped("nested");
+    expect(typeof scoped.format.number).toBe("function");
     expect(typeof scoped.hasKey).toBe("function");
     expect(typeof scoped.t).toBe("function");
   });

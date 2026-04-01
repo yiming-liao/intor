@@ -1,4 +1,5 @@
 import type { CoreTranslatorOptions } from "./types";
+import type { IntlFormatter } from "../../formatter";
 import type {
   Locale,
   LocaleMessages,
@@ -8,6 +9,7 @@ import type {
   MessageValue,
 } from "../../types";
 import { rura } from "rura";
+import { createFormatter } from "../../formatter";
 import {
   DEFAULT_HOOKS,
   type TranslateConfig,
@@ -36,6 +38,8 @@ export class CoreTranslator<
     [...DEFAULT_HOOKS],
     { name: "Intor Translator" },
   );
+  /** Locale-aware formatting helpers. */
+  public readonly format: IntlFormatter;
 
   constructor(options: CoreTranslatorOptions<M>) {
     const { locale, messages, isLoading, hooks, ...translateConfig } = options;
@@ -45,6 +49,9 @@ export class CoreTranslator<
       ...(isLoading !== undefined && { isLoading }),
     });
     this.translateConfig = translateConfig;
+    this.format = createFormatter({
+      getLocale: () => this.locale,
+    });
     if (hooks) for (const hook of hooks) this.use(hook);
   }
 

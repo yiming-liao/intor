@@ -40,6 +40,7 @@ export interface BaseTranslatorOptions<M = unknown> {
 // @public
 export class CoreTranslator<M = unknown, ReplacementShape = unknown> extends BaseTranslator<M> {
     constructor(options: CoreTranslatorOptions<M>);
+    readonly format: IntlFormatter;
     getHooks(): rura.RuraHookSync<TranslateContext, MessageValue>[];
     hasKey: <K extends LocalizedKey<M>>(key: K, targetLocale?: Locale<M>) => boolean;
     logHooks(): void;
@@ -86,6 +87,20 @@ export type IfLocaleMessages<T, Then, Else> = T extends LocaleMessages ? Then : 
 
 // @public
 export type IfMessageObject<T> = T extends MessageObject ? T : never;
+
+// @public
+export interface IntlFormatter {
+    // (undocumented)
+    currency(value: number | bigint, currency: string, options?: Omit<Intl.NumberFormatOptions, "style" | "currency">): string;
+    // (undocumented)
+    date(value: Date | number, options?: Intl.DateTimeFormatOptions): string;
+    // (undocumented)
+    list(values: Iterable<string>, options?: Intl.ListFormatOptions): string;
+    // (undocumented)
+    number(value: number | bigint, options?: Intl.NumberFormatOptions): string;
+    // (undocumented)
+    relativeTime(value: number, unit: Intl.RelativeTimeFormatUnit, options?: Intl.RelativeTimeFormatOptions): string;
+}
 
 // @public
 export type IsAny<T> = 0 extends 1 & T ? true : false;
@@ -248,6 +263,7 @@ export class Translator<M = unknown, ReplacementShape = unknown> extends CoreTra
 
 // @public
 export type TranslatorMethods<M = unknown, ReplacementShape = unknown, PK extends string | undefined = undefined, K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>> = {
+    format: IntlFormatter;
     hasKey: (key?: K, targetLocale?: Locale<M>) => boolean;
     t: <Key extends K>(key?: Key, replacements?: ScopedReplacement<ReplacementShape, PK, K>) => PK extends string ? ScopedValue<M, PK, Key> : LocalizedValue<M, Key>;
 };
