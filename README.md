@@ -19,8 +19,3 @@ The i18n library for modern JavaScript
 #### [![Documentation ↗](https://img.shields.io/badge/%20Documentation%20%F0%9F%93%9A%20-3e668c?style=for-the-badge)](https://intor.dev)
 
 </div>
-
-> [!NOTE]  
-> Intor is evolving toward long-term stability.  
-> **v3 will be the first fully stable release.**  
-> _Current: v2.x · v3 in development._
