@@ -1,13 +1,13 @@
 import { dim, green, red, yellow } from "./render";
 
-type Logger = {
+export interface Logger {
   header: (message?: string, options?: LogOptions) => void;
   log: (message?: string, options?: LogOptions) => void;
   footer: (message?: string, options?: LogOptions) => void;
   process: (tag: ProcessTag, message: string) => void;
   ok: (message?: string) => void;
   error: (message?: string) => void;
-};
+}
 
 const noop = () => {};
 const noopLogger: Logger = {
@@ -19,12 +19,12 @@ const noopLogger: Logger = {
   error: noop,
 };
 
-type LogOptions = {
+interface LogOptions {
   prefix?: string;
   kind?: "process";
   lineBreakBefore?: number;
   lineBreakAfter?: number;
-};
+}
 
 const SPACER = dim("│  ");
 const log = console.log;
@@ -76,10 +76,10 @@ export function createLogger(enabled = true): Logger {
 
 // Format process log
 type ProcessTag = "ok" | "warn" | "skip" | "load";
-type TagStyle = {
+interface TagStyle {
   color?: (s: string) => string;
   dimMessage?: boolean;
-};
+}
 const TAG_STYLES: Record<string, TagStyle> = {
   ok: { color: green },
   warn: { color: yellow },

@@ -1,129 +1,164 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import fs from "node:fs";
-import fg from "fast-glob";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import path from "node:path";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { discoverConfigs } from "../../../../src/core/discover-configs/discover-configs";
-import { isIntorResolvedConfig } from "../../../../src/core/discover-configs/is-intor-resolved-config";
-import { loadModule } from "../../../../src/core/discover-configs/load-module";
+import { resolveConfigModule } from "../../../../src/core/discover-configs/resolve-config-module";
+import { globFiles } from "../../../../src/infrastructure/glob-files";
+import { createLogger } from "../../../../src/logger";
+import { br } from "../../../../src/render";
 
-vi.mock("fast-glob", () => ({
-  default: vi.fn(),
+vi.mock("../../../../src/infrastructure/glob-files", () => ({
+  globFiles: vi.fn(),
 }));
 
-vi.mock("../../../../src/core/scan-logger", () => ({
-  createLogger: () => () => {},
+vi.mock("../../../../src/core/discover-configs/resolve-config-module", () => ({
+  resolveConfigModule: vi.fn(),
 }));
 
-vi.mock(
-  "../../../../src/core/discover-configs/is-intor-resolved-config",
-  () => ({
-    isIntorResolvedConfig: vi.fn(),
-  }),
-);
+vi.mock("../../../../src/logger", () => ({
+  createLogger: vi.fn(),
+}));
 
-vi.mock("../../../../src/core/discover-configs/load-module", () => ({
-  loadModule: vi.fn(),
+vi.mock("../../../../src/render", () => ({
+  br: vi.fn(),
+  yellow: (v: unknown) => String(v),
 }));
 
 describe("discoverConfigs", () => {
+  const logger = {
+    header: vi.fn(),
+    footer: vi.fn(),
+    process: vi.fn(),
+    log: vi.fn(),
+    ok: vi.fn(),
+    error: vi.fn(),
+  } as any;
+
   beforeEach(() => {
+    vi.restoreAllMocks();
     vi.clearAllMocks();
+    vi.mocked(createLogger).mockReturnValue(logger);
+    vi.spyOn(process, "cwd").mockReturnValue("/repo");
   });
 
-  it("returns empty array when no files are found", async () => {
-    vi.mocked(fg).mockResolvedValue([]);
+  it("returns [] and warns when no candidate files are found", async () => {
+    vi.mocked(globFiles).mockResolvedValue([]);
     const result = await discoverConfigs();
     expect(result).toEqual([]);
+    expect(createLogger).toHaveBeenCalledWith(false);
+    expect(logger.process).toHaveBeenCalledWith(
+      "warn",
+      "no Intor config discovered",
+    );
+    expect(logger.footer).toHaveBeenCalled();
+    expect(br).not.toHaveBeenCalled();
   });
 
-  it("skips files that cannot be read", async () => {
-    vi.mocked(fg).mockResolvedValue(["a.ts"]);
+  it("calls br when debug=true", async () => {
+    vi.mocked(globFiles).mockResolvedValue([]);
+    await discoverConfigs(true);
+    expect(br).toHaveBeenCalledTimes(1);
+    expect(createLogger).toHaveBeenCalledWith(true);
+  });
+
+  it("skips unreadable files", async () => {
+    vi.mocked(globFiles).mockResolvedValue(["a.ts"]);
     vi.spyOn(fs.promises, "readFile").mockRejectedValue(new Error("fail"));
     const result = await discoverConfigs();
     expect(result).toEqual([]);
+    expect(logger.process).toHaveBeenCalledWith("warn", "failed to read a.ts");
+    expect(resolveConfigModule).not.toHaveBeenCalled();
   });
 
-  it("skips files without defineIntorConfig", async () => {
-    vi.mocked(fg).mockResolvedValue(["a.ts"]);
-    vi.mocked(fs.promises.readFile).mockResolvedValue("export const x = 1");
+  it("skips files without defineIntorConfig marker", async () => {
+    vi.mocked(globFiles).mockResolvedValue(["a.ts"]);
+    vi.spyOn(fs.promises, "readFile").mockResolvedValue("export const x = 1");
     const result = await discoverConfigs();
     expect(result).toEqual([]);
-  });
-
-  it("collects valid IntorResolvedConfig exports", async () => {
-    vi.mocked(fg).mockResolvedValue(["a.ts"]);
-    vi.spyOn(fs.promises, "readFile").mockResolvedValue(
-      "export const config = defineIntorConfig({})",
+    expect(logger.process).toHaveBeenCalledWith(
+      "skip",
+      "a.ts (missing defineIntorConfig)",
     );
-    vi.mocked(isIntorResolvedConfig).mockReturnValue(true);
-    vi.mocked(loadModule).mockResolvedValue({
-      config: { id: "my-intor", defaultLocale: "en", supportedLocales: ["en"] },
-    });
-    const result = await discoverConfigs();
-    expect(result).toHaveLength(1);
-    expect(result[0]?.config.id).toBe("my-intor");
+    expect(resolveConfigModule).not.toHaveBeenCalled();
   });
 
-  it("returns empty array when no usable Intor config export is found", async () => {
-    vi.mocked(fg).mockResolvedValue(["a.ts"]);
-    vi.spyOn(fs.promises, "readFile").mockResolvedValue("export const x = {}");
-    vi.mocked(isIntorResolvedConfig).mockReturnValue(false);
-    vi.mocked(loadModule).mockResolvedValue({ x: {} });
-    const result = await discoverConfigs();
-    expect(result).toEqual([]);
-  });
-
-  it("handles import failure gracefully", async () => {
-    vi.mocked(fg).mockResolvedValue(["a.ts"]);
+  it("loads marked files and forwards params to resolveConfigModule", async () => {
+    vi.mocked(globFiles).mockResolvedValue(["src/a.ts"]);
     vi.spyOn(fs.promises, "readFile").mockResolvedValue(
-      "export const config = defineIntorConfig({})",
+      "defineIntorConfig({})",
     );
-    vi.mocked(loadModule).mockRejectedValue(new Error("import failed"));
-    const result = await discoverConfigs();
-    expect(result).toEqual([]);
-  });
-
-  it("ignores duplicate config ids across files", async () => {
-    vi.mocked(fg).mockResolvedValue(["a.ts", "b.ts"]);
-    vi.spyOn(fs.promises, "readFile").mockResolvedValue(
-      "export const config = defineIntorConfig({})",
-    );
-    vi.mocked(isIntorResolvedConfig).mockReturnValue(true);
-    vi.mocked(loadModule)
-      .mockResolvedValueOnce({
+    vi.mocked(resolveConfigModule).mockResolvedValue([
+      {
+        filePath: "/repo/src/a.ts",
         config: {
-          id: "my-intor",
+          id: "id-a",
           defaultLocale: "en",
           supportedLocales: ["en"],
-        },
-      })
-      .mockResolvedValueOnce({
-        config: {
-          id: "my-intor",
-          defaultLocale: "en",
-          supportedLocales: ["en"],
-        },
-      });
+        } as any,
+      },
+    ]);
     const result = await discoverConfigs();
+    expect(resolveConfigModule).toHaveBeenCalledTimes(1);
+    expect(resolveConfigModule).toHaveBeenCalledWith({
+      ids: expect.any(Set),
+      absPath: path.resolve("/repo", "src/a.ts"),
+      relPath: "src/a.ts",
+      logger,
+    });
     expect(result).toHaveLength(1);
-    expect(result[0]?.config.id).toBe("my-intor");
+    expect(result[0]?.filePath).toBe("/repo/src/a.ts");
   });
 
-  it("skips non-Intor exports and continues scanning other exports", async () => {
-    vi.mocked(fg).mockResolvedValue(["a.ts"]);
+  it("returns entries sorted by filePath", async () => {
+    vi.mocked(globFiles).mockResolvedValue(["b.ts", "a.ts"]);
     vi.spyOn(fs.promises, "readFile").mockResolvedValue(
-      "export const foo = {}; export const config = defineIntorConfig({})",
+      "defineIntorConfig({})",
     );
-    vi.mocked(isIntorResolvedConfig).mockImplementation(
-      (v) => (v as any)?.id === "my-intor",
-    );
-    vi.mocked(loadModule).mockResolvedValue({
-      foo: {},
-      config: { id: "my-intor", defaultLocale: "en", supportedLocales: ["en"] },
-    });
+    vi.mocked(resolveConfigModule)
+      .mockResolvedValueOnce([
+        {
+          filePath: "/repo/b.ts",
+          config: {
+            id: "b",
+            defaultLocale: "en",
+            supportedLocales: ["en"],
+          } as any,
+        },
+      ])
+      .mockResolvedValueOnce([
+        {
+          filePath: "/repo/a.ts",
+          config: {
+            id: "a",
+            defaultLocale: "en",
+            supportedLocales: ["en"],
+          } as any,
+        },
+      ]);
     const result = await discoverConfigs();
-    expect(result).toHaveLength(1);
-    expect(result[0]?.config.id).toBe("my-intor");
+    expect(result.map((r) => r.filePath)).toEqual(["/repo/a.ts", "/repo/b.ts"]);
+  });
+
+  it("does not emit no-discovered warning when at least one config is resolved", async () => {
+    vi.mocked(globFiles).mockResolvedValue(["a.ts"]);
+    vi.spyOn(fs.promises, "readFile").mockResolvedValue(
+      "defineIntorConfig({})",
+    );
+    vi.mocked(resolveConfigModule).mockResolvedValue([
+      {
+        filePath: "/repo/a.ts",
+        config: {
+          id: "a",
+          defaultLocale: "en",
+          supportedLocales: ["en"],
+        } as any,
+      },
+    ]);
+    await discoverConfigs();
+    expect(logger.process).not.toHaveBeenCalledWith(
+      "warn",
+      "no Intor config discovered",
+    );
   });
 });

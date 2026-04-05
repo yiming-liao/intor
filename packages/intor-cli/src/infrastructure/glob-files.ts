@@ -10,16 +10,16 @@ const DEFAULT_IGNORE = [
   "**/*.test-d.ts",
 ];
 
-interface ScanFilesOptions {
+interface GlobFilesOptions {
   patterns?: string[];
   ignore?: string[];
   cwd?: string;
 }
 
-export async function scanFiles({
+export async function globFiles({
   patterns = DEFAULT_PATTERNS,
   ignore = DEFAULT_IGNORE,
   cwd = process.cwd(),
-}: ScanFilesOptions = {}) {
-  return fg(patterns, { ignore, cwd });
+}: GlobFilesOptions = {}): Promise<string[]> {
+  return (await fg(patterns, { ignore, cwd })).sort();
 }
