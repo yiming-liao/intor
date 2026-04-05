@@ -33,18 +33,18 @@ export function registerGenerateCommand(cli: CAC) {
           "debug" | "messageFile" | "messageFiles" | "ext" | "reader"
         >,
       ) => {
-        const { debug, messageFile, messageFiles, ...readerOptions } = options;
+        const { debug, messageFile, messageFiles, ...rawReaderOptions } =
+          options;
 
         const result = normalizeMessageFiles(messageFile, messageFiles);
-        const { exts, customReaders } = normalizeReaderOptions(readerOptions);
+        const readerOptions = normalizeReaderOptions(rawReaderOptions);
 
         try {
           await generate({
-            ...(debug !== undefined ? { debug } : {}),
             messageSource: result,
-            ...(exts !== undefined ? { exts } : {}),
-            ...(customReaders !== undefined ? { customReaders } : {}),
+            ...(debug !== undefined ? { debug } : {}),
             toolVersion: VERSION,
+            ...readerOptions,
           });
         } catch (error) {
           console.error(error instanceof Error ? error.message : error);

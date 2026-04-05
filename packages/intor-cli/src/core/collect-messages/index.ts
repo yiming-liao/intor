@@ -1,3 +1,3 @@
-export { collectRuntimeMessages } from "./collect-runtime-messages";
-export { collectOtherLocaleMessages } from "./collect-other-locale-messages";
+export { collectMessages } from "./collect-messages";
+export { collectNonDefaultLocaleMessages } from "./collect-non-default-locale-messages";
 export type { ReaderOptions, MergeOverrides } from "./types";

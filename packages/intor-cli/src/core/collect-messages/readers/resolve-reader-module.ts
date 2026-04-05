@@ -2,22 +2,26 @@ import type { MessagesReader } from "intor";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+interface ResolveMessagesReaderParams {
+  filePath: string;
+  loadModule?: (filePath: string) => Promise<unknown>;
+}
+
 /**
  * Resolve a MessagesReader from a module path.
  *
  * Resolution order:
  * 1. Default export
- * 2. First exported function (fallback)
+ * 2. First exported function
  */
-export async function resolveMessagesReader(
-  filePath?: string,
-): Promise<MessagesReader | undefined> {
-  if (!filePath) return;
-
+export async function resolveReaderModule({
+  filePath,
+  loadModule = (filePath: string) => import(filePath),
+}: ResolveMessagesReaderParams): Promise<MessagesReader> {
   const absolutePath = path.resolve(process.cwd(), filePath);
 
   // ----------------------------------------------------------------------
-  // Ensure the file exists before attempting dynamic import
+  // Validate reader module path
   // ----------------------------------------------------------------------
   try {
     await fs.access(absolutePath);
@@ -26,10 +30,9 @@ export async function resolveMessagesReader(
   }
 
   // ----------------------------------------------------------------------
-  // Resolve reader module exports
+  // Load module exports
   // ----------------------------------------------------------------------
-  // Dynamically import the reader module
-  const moduleExports = (await import(absolutePath)) as unknown;
+  const moduleExports = await loadModule(absolutePath);
 
   let reader: unknown;
 
@@ -57,11 +60,11 @@ export async function resolveMessagesReader(
   }
 
   // ----------------------------------------------------------------------
-  // Validate resolved reader
+  // Validate resolved export
   // ----------------------------------------------------------------------
   if (typeof reader !== "function") {
     throw new Error(
-      `[intor] No function export found in reader module: ${filePath}`,
+      `[intor-cli] No function export found in reader module: ${filePath}`,
     );
   }
 

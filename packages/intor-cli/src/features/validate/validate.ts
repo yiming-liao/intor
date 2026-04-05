@@ -5,7 +5,7 @@ import type {
 } from "./types";
 import { features } from "../../constants";
 import { discoverConfigs, readSchema } from "../../core";
-import { collectOtherLocaleMessages } from "../../core";
+import { collectNonDefaultLocaleMessages } from "../../core";
 import { renderMissingConfigSchema, renderTitle } from "../../render";
 import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
@@ -13,11 +13,10 @@ import { collectMissingRequirements } from "./missing/collect-missing-requiremen
 import { renderConfigSummary } from "./render-config-summary";
 
 export async function validate({
-  exts = [],
-  customReaders,
   format = "human",
   output,
   debug,
+  ...readerOptions
 }: ValidateOptions) {
   const isHuman = format === "human";
   renderTitle(features.validate.title, isHuman);
@@ -48,10 +47,10 @@ export async function validate({
       // Load all non-default locale messages
       // -------------------------------------------------------------------
       if (isHuman) spinner.start();
-      const localeMessages = await collectOtherLocaleMessages(config, {
-        ...(exts !== undefined ? { exts } : {}),
-        ...(customReaders !== undefined ? { customReaders } : {}),
-      });
+      const localeMessages = await collectNonDefaultLocaleMessages(
+        config,
+        readerOptions,
+      );
       if (isHuman) spinner.stop();
 
       // -------------------------------------------------------------------

@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 import { features } from "../../constants";
 import {
   discoverConfigs,
-  collectRuntimeMessages,
+  collectMessages,
   inferShapes,
   writeTypes,
   writeSchema,
@@ -23,10 +23,9 @@ import { validateMessageSource } from "./utils/validate-message-source";
 
 export async function generate({
   messageSource = { mode: "none" },
-  exts = [],
-  customReaders,
   debug = false,
   toolVersion,
+  ...readerOptions
 }: GenerateOptions) {
   renderTitle(features.generate.title);
   const start = performance.now();
@@ -70,13 +69,10 @@ export async function generate({
         // ----------------------------------------------------------
         // Runtime mode (default)
         // ----------------------------------------------------------
-        const result = await collectRuntimeMessages(
-          config,
+        const result = await collectMessages(
           config.defaultLocale,
-          {
-            ...(exts !== undefined ? { exts } : {}),
-            ...(customReaders !== undefined ? { customReaders } : {}),
-          },
+          config,
+          readerOptions,
         );
         messages = result.messages;
         overrides = result.overrides.filter((o) => o.kind === "override");

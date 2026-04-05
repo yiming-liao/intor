@@ -31,17 +31,16 @@ export function registerValidateCommand(cli: CAC) {
           "debug" | "ext" | "reader" | "format" | "output"
         >,
       ) => {
-        const { debug, format, output, ...readerOptions } = options;
+        const { debug, format, output, ...rawReaderOptions } = options;
 
-        const { exts, customReaders } = normalizeReaderOptions(readerOptions);
+        const readerOptions = normalizeReaderOptions(rawReaderOptions);
 
         try {
           await validate({
             ...(debug !== undefined ? { debug } : {}),
             ...(format !== undefined ? { format } : {}),
             ...(output !== undefined ? { output } : {}),
-            ...(exts !== undefined ? { exts } : {}),
-            ...(customReaders !== undefined ? { customReaders } : {}),
+            ...readerOptions,
           });
         } catch (error) {
           console.error(error instanceof Error ? error.message : error);

@@ -3,8 +3,8 @@ export { discoverConfigs, type ConfigEntry } from "./discover-configs";
 
 // collect-messages
 export {
-  collectRuntimeMessages,
-  collectOtherLocaleMessages,
+  collectMessages,
+  collectNonDefaultLocaleMessages,
   type ReaderOptions,
   type MergeOverrides,
 } from "./collect-messages";

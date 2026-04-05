@@ -6,7 +6,7 @@ export interface ReaderOptions {
   customReaders?: Record<string, string>; // {ext, customReaderFilePath}
 }
 
-export interface CollectRuntimeMessagesResult {
+export interface CollectMessagesResult {
   messages: LocaleMessages;
   overrides: MergeOverrides[];
 }

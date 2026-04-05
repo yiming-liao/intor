@@ -1,4 +1,4 @@
-import type { ExtraExt } from "../../core/constants";
+import type { ExtraExt } from "../../constants";
 import type { MessagesReader, MessagesReaders } from "intor";
 import { json5Reader } from "@intor/reader-json5";
 import { mdReader } from "@intor/reader-md";
