@@ -1,0 +1,57 @@
+{
+  "name": "@intor/reader-toml",
+  "version": "0.1.1",
+  "description": "TOML reader for intor",
+  "author": {
+    "name": "Yiming Liao",
+    "email": "yimingliao.official@gmail.com",
+    "url": "https://github.com/yiming-liao"
+  },
+  "homepage": "https://intor.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yiming-liao/intor",
+    "directory": "packages/readers/toml"
+  },
+  "bugs": {
+    "url": "https://github.com/yiming-liao/intor/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/yiming-liao"
+  },
+  "keywords": [
+    "intor"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "type": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest",
+    "build": "pnpm tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5"
+  },
+  "peerDependencies": {
+    "intor": "workspace:*"
+  }
+}

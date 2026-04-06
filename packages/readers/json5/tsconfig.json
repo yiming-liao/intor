@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "incremental": true,
+    "noEmit": true,
+
+    "types": ["node"]
+  },
+  "include": ["index.ts", "__test__"]
+}
