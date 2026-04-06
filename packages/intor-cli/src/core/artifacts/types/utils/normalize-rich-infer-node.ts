@@ -1,4 +1,4 @@
-import type { InferNode } from "../../../../infer-shape";
+import type { InferNode } from "../../../infer-shape";
 
 /**
  * Normalize inferred rich schema before type emission.

@@ -1,4 +1,4 @@
-import type { InferNode } from "../../../../infer-shape";
+import type { InferNode } from "../../../infer-shape";
 import { indent } from "./indent";
 
 export function renderInferNode(node: InferNode, indentLevel = 4): string {

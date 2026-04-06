@@ -1,6 +1,6 @@
 import type { InferNode } from "../../../../../../src/core";
 import { describe, it, expect } from "vitest";
-import { normalizeRichInferNode } from "../../../../../../src/core/artifacts/types/build/utils/normalize-rich-infer-node";
+import { normalizeRichInferNode } from "../../../../../../src/core/artifacts/types/utils/normalize-rich-infer-node";
 
 describe("normalizeRichInferNode()", () => {
   it("normalizes `none` to `record` (rich leaf presence)", () => {

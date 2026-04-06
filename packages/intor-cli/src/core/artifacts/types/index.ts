@@ -1,2 +1,1 @@
-export { buildTypes } from "./build";
-export { writeTypes } from "./write-types";
+export { buildTypes } from "./build-types";

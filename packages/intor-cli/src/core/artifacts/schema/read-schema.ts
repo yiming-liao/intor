@@ -1,10 +1,9 @@
 import type { GeneratedSchema } from "../types";
 import fs from "node:fs/promises";
-import path from "node:path";
-import { DEFAULT_OUT_DIR, DEFAULT_SCHEMA_FILE_NAME } from "../../constants";
+import { DEFAULT_SCHEMA_FILE_PATH } from "../../constants";
 
 export async function readSchema(): Promise<GeneratedSchema> {
-  const filePath = path.join(DEFAULT_OUT_DIR, DEFAULT_SCHEMA_FILE_NAME);
+  const filePath = DEFAULT_SCHEMA_FILE_PATH;
 
   let raw: string;
 

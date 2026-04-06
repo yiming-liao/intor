@@ -7,12 +7,13 @@ import {
   discoverConfigs,
   collectMessages,
   inferShapes,
-  writeTypes,
-  writeSchema,
   DEFAULT_OUT_DIR,
+  DEFAULT_TYPES_FILE_PATH,
+  DEFAULT_SCHEMA_FILE_PATH,
   buildTypes,
   buildSchema,
 } from "../../core";
+import { ensureDirAndWriteFile } from "../../infrastructure";
 import { br, renderConfigs, renderTitle } from "../../render";
 import { spinner } from "../shared/spinner";
 import { toRelativePath } from "../shared/to-relative-path";
@@ -24,7 +25,7 @@ import { validateMessageSource } from "./utils/validate-message-source";
 export async function generate({
   messageSource = { mode: "none" },
   debug = false,
-  toolVersion,
+  toolVersion = "unknown",
   ...readerOptions
 }: GenerateOptions) {
   renderTitle(features.generate.title);
@@ -93,8 +94,8 @@ export async function generate({
 
     // Write files
     spinner.start();
-    await writeTypes(generatedTypes);
-    await writeSchema(generatedSchema);
+    await ensureDirAndWriteFile(DEFAULT_TYPES_FILE_PATH, generatedTypes);
+    await ensureDirAndWriteFile(DEFAULT_SCHEMA_FILE_PATH, generatedSchema);
     spinner.stop();
 
     const duration = performance.now() - start;

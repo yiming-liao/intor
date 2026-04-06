@@ -1,5 +1,5 @@
-export { buildTypes, writeTypes } from "./types/index";
+export { buildTypes } from "./types/index";
 
-export { buildSchema, writeSchema, readSchema } from "./schema";
+export { buildSchema, readSchema } from "./schema";
 
 export type { GeneratedSchema, SchemaEntry } from "./types";

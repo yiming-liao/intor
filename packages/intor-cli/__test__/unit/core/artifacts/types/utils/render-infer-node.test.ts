@@ -1,6 +1,6 @@
-import type { InferNode } from "../../../../../../../src/core/infer-shape";
+import type { InferNode } from "../../../../../../src/core/infer-shape";
 import { describe, it, expect } from "vitest";
-import { renderInferNode } from "../../../../../../../src/core/artifacts/types/build/utils/render-infer-node";
+import { renderInferNode } from "../../../../../../src/core/artifacts/types/utils/render-infer-node";
 
 describe("renderInferNode", () => {
   it("renders none as unknown", () => {

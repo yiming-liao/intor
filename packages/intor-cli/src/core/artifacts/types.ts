@@ -6,7 +6,6 @@ import type { InferredShapes } from "../infer-shape";
 export interface GeneratedSchema {
   version: number;
   toolVersion?: string;
-  generatedAt: string;
   entries: SchemaEntry[];
 }
 
