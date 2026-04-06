@@ -17,7 +17,6 @@ describe("inferObject", () => {
     const result = inferObject(
       { greeting: "hello", title: "world" },
       inferChild,
-      "messages",
     );
     expect(result).toEqual({
       kind: "object",
@@ -32,7 +31,6 @@ describe("inferObject", () => {
     const result = inferObject(
       { greeting: "hello", __intor_kind: "markdown" },
       inferChild,
-      "messages",
     );
     expect(result).toEqual({
       kind: "object",
@@ -40,23 +38,24 @@ describe("inferObject", () => {
     });
   });
 
-  it("skips content key outside of messages mode", () => {
+  it("keeps content key when it is not internal metadata", () => {
     const result = inferObject(
       { content: "markdown text", greeting: "hello" },
       inferChild,
-      "replacements",
     );
     expect(result).toEqual({
       kind: "object",
-      properties: { greeting: { kind: "primitive", type: "string" } },
+      properties: {
+        content: { kind: "primitive", type: "string" },
+        greeting: { kind: "primitive", type: "string" },
+      },
     });
   });
 
-  it("returns none if all children are skipped or non-semantic", () => {
+  it("returns none if all children are internal metadata or non-semantic", () => {
     const result = inferObject(
-      { __intor_kind: "markdown", content: "markdown text" },
+      { __intor_kind: "markdown", __intor_flags: "x" },
       inferChild,
-      "replacements",
     );
     expect(result).toEqual({ kind: "none" });
   });
@@ -69,7 +68,6 @@ describe("inferObject", () => {
     const result = inferObject(
       { visible: "ok", hidden: "skip-me" },
       inferChild,
-      "messages",
     );
     expect(result).toEqual({
       kind: "object",

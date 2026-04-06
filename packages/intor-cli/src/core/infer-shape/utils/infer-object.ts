@@ -1,6 +1,6 @@
 import type { InferNode } from "../types";
 import type { MessageObject, MessageValue } from "intor";
-import { shouldSkipKey } from "./should-skip-key";
+import { INTOR_PREFIX } from "intor/internal";
 
 /**
  * Infer an object-like semantic node by aggregating inferred children.
@@ -13,12 +13,11 @@ import { shouldSkipKey } from "./should-skip-key";
 export function inferObject(
   value: MessageObject,
   inferChild: (value: MessageValue) => InferNode,
-  mode: "messages" | "replacements" | "rich",
 ): InferNode {
   const properties: Record<string, InferNode> = {};
 
   for (const [key, val] of Object.entries(value)) {
-    if (shouldSkipKey(key, mode)) continue;
+    if (key.startsWith(INTOR_PREFIX)) continue;
 
     const child = inferChild(val);
 

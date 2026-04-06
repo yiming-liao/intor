@@ -47,7 +47,7 @@ function inferValue(value: MessageValue): InferNode {
   // Object values
   // ----------------------------------------------------------------------
   if (isMessageObject(value)) {
-    const result = inferObject(value, inferValue, "messages");
+    const result = inferObject(value, inferValue);
 
     // empty object → fallback record
     if (result.kind === "none") {

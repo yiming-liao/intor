@@ -3,6 +3,7 @@ import type { MessageObject, MessageValue } from "intor";
 import { tokenize, type Token } from "intor-translator/internal";
 import { inferObject } from "./utils/infer-object";
 import { isMessageObject } from "./utils/is-message-object";
+import { isMdContainer, omitMdPayload } from "./utils/markdown";
 
 /**
  * Infer the semantic shape of rich tags from a message object.
@@ -53,7 +54,12 @@ function inferValue(value: MessageValue): InferNode {
   // Object values (delegate aggregation & pruning)
   // ----------------------------------------------------------------------
   if (isMessageObject(value)) {
-    return inferObject(value, inferValue, "rich");
+    // Markdown payload should not participate in rich-tag inference.
+    if (isMdContainer(value)) {
+      return inferObject(omitMdPayload(value), inferValue);
+    }
+
+    return inferObject(value, inferValue);
   }
 
   // Fallback

@@ -106,6 +106,42 @@ describe("inferReplacementsShape", () => {
     expect(result).toEqual({ kind: "none" });
   });
 
+  it("infers replacements from generic content key", () => {
+    const result = inferReplacementsShape({
+      content: "hello {name}",
+    });
+    expect(result).toEqual({
+      kind: "object",
+      properties: {
+        content: {
+          kind: "object",
+          properties: {
+            name: { kind: "primitive", type: "string" },
+          },
+        },
+      },
+    });
+  });
+
+  it("ignores markdown payload object but keeps semantic sibling keys", () => {
+    const result = inferReplacementsShape({
+      __intor_kind: "markdown",
+      content: "hello {name}",
+      greeting: "hi {user}",
+    });
+    expect(result).toEqual({
+      kind: "object",
+      properties: {
+        greeting: {
+          kind: "object",
+          properties: {
+            user: { kind: "primitive", type: "string" },
+          },
+        },
+      },
+    });
+  });
+
   it("returns none for unsupported value type", () => {
     inferReplacementsShape({ a: Symbol("x") as unknown as string });
   });

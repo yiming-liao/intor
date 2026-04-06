@@ -123,15 +123,27 @@ describe("inferRichShape", () => {
     expect(result).toEqual({ kind: "none" });
   });
 
-  it("ignores markdown content payload entirely", () => {
+  it("infers rich tags from generic content key", () => {
     const result = inferRichShape({
       content: "<a>markdown</a><b>ignored</b>",
     });
-    expect(result).toEqual({ kind: "none" });
+    expect(result).toEqual({
+      kind: "object",
+      properties: {
+        content: {
+          kind: "object",
+          properties: {
+            a: { kind: "none" },
+            b: { kind: "none" },
+          },
+        },
+      },
+    });
   });
 
-  it("handles mixed markdown and rich-capable keys correctly", () => {
+  it("ignores markdown payload object but infers other keys", () => {
     const result = inferRichShape({
+      __intor_kind: "markdown",
       content: "<a>markdown</a>",
       greeting: "<em>Hello</em>",
     });
@@ -146,6 +158,14 @@ describe("inferRichShape", () => {
         },
       },
     });
+  });
+
+  it("returns none for pure markdown payload object", () => {
+    const result = inferRichShape({
+      __intor_kind: "markdown",
+      content: "<a>markdown</a>",
+    });
+    expect(result).toEqual({ kind: "none" });
   });
 
   it("returns none for unsupported value types", () => {

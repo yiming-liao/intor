@@ -3,6 +3,7 @@ import type { MessageObject, MessageValue } from "intor";
 import { extractInterpolationNames } from "./utils/extract-interpolation-names";
 import { inferObject } from "./utils/infer-object";
 import { isMessageObject } from "./utils/is-message-object";
+import { isMdContainer, omitMdPayload } from "./utils/markdown";
 
 /**
  * Infer the semantic shape of interpolation replacements from a message object.
@@ -50,7 +51,12 @@ function inferValue(value: MessageValue): InferNode {
   // Object values (delegate aggregation & pruning)
   // ----------------------------------------------------------------------
   if (isMessageObject(value)) {
-    return inferObject(value, inferValue, "replacements");
+    // Markdown payload should not participate in replacement inference.
+    if (isMdContainer(value)) {
+      return inferObject(omitMdPayload(value), inferValue);
+    }
+
+    return inferObject(value, inferValue);
   }
 
   // Fallback
