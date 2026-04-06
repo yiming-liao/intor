@@ -1,8 +1,9 @@
 import type { CheckOptions, CheckReport } from "./types";
 import { features } from "../../constants";
-import { extractUsages, readSchema } from "../../core";
+import { extractUsages } from "../../core";
 import { loadSourceFiles } from "../../core/scan";
 import { renderTitle } from "../../render";
+import { prepareSchema } from "../shared/prepare-schema";
 import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
 import { buildScopeUsages } from "./build-scoped-usages";
@@ -19,17 +20,12 @@ export async function check({
   renderTitle(features.check.title, isHuman);
 
   try {
-    // Read generated schema
+    // ---------------------------------------------------------------------
+    // Prepares and validates generated schema
+    // ---------------------------------------------------------------------
     if (isHuman) spinner.start();
-    const schema = await readSchema();
+    const { schemaEntries, defaultEntry } = await prepareSchema();
     if (isHuman) spinner.stop();
-
-    const firstEntry = schema.entries.at(0);
-    if (!firstEntry) {
-      throw new Error(
-        "No generated config schema found. Run `intor generate` first.",
-      );
-    }
 
     // Load source files
     const sourceFiles = loadSourceFiles(tsconfigPath, debug);
@@ -52,19 +48,16 @@ export async function check({
       ...(debug !== undefined ? { debug } : {}),
     });
 
-    // Use first config's id as default key
-    const defaultConfigKey = firstEntry.id;
-
     const report: CheckReport = { configs: [] };
 
     // Per-config processing
-    for (const config of schema.entries) {
+    for (const config of schemaEntries) {
       const configKey = config.id;
 
       // per-config usages
       const scopedUsages = buildScopeUsages({
         usages,
-        defaultConfigKey,
+        defaultConfigKey: defaultEntry.id,
         configKey,
       });
 

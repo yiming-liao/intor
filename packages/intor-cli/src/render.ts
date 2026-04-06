@@ -43,15 +43,3 @@ export function renderConfigs(configEntries: ConfigEntry[], enabled = true) {
   // Log footer
   logger.footer("", { lineBreakBefore: 1 });
 }
-
-// Render schema-not-found message for config
-export function renderMissingConfigSchema(configId: string, enabled = true) {
-  if (!enabled) return;
-  const logger = createLogger();
-
-  br();
-  logger.error(
-    cyan(configId) +
-      `: schema not found, run ${italic("intor generate")} and retry`,
-  );
-}

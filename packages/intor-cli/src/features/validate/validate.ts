@@ -4,9 +4,10 @@ import type {
   ValidateOptions,
 } from "./types";
 import { features } from "../../constants";
-import { discoverConfigs, readSchema } from "../../core";
+import { discoverConfigs } from "../../core";
 import { collectNonDefaultLocaleMessages } from "../../core";
-import { renderMissingConfigSchema, renderTitle } from "../../render";
+import { renderTitle } from "../../render";
+import { prepareSchema } from "../shared/prepare-schema";
 import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
 import { collectMissingRequirements } from "./missing/collect-missing-requirements";
@@ -29,18 +30,18 @@ export async function validate({
 
   try {
     // ---------------------------------------------------------------------
-    // Read generated schema
+    // Prepares and validates generated schema
     // ---------------------------------------------------------------------
-    const schema = await readSchema();
+    if (isHuman) spinner.start();
+    const ids = configEntries.map((e) => e.config.id);
+    const { schemaEntries } = await prepareSchema(ids);
+    if (isHuman) spinner.stop();
+
     const report: MissingReport = {};
 
     // Per-config processing
     for (const { config } of configEntries) {
-      const schemaConfig = schema.entries.find((c) => c.id === config.id);
-      if (!schemaConfig) {
-        renderMissingConfigSchema(config.id, isHuman);
-        continue;
-      }
+      const schemaConfig = schemaEntries.find((c) => c.id === config.id)!;
       const { shapes } = schemaConfig;
 
       // -------------------------------------------------------------------
