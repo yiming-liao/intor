@@ -4,5 +4,5 @@
     "incremental": true,
     "noEmit": true
   },
-  "include": ["src", "export", "__test__", "scripts"]
+  "include": ["src", "__test__", "playground"]
 }

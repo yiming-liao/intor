@@ -1,13 +1,13 @@
 import type { CheckOptions, CheckReport } from "./types";
 import { features } from "../../constants";
 import { extractUsages } from "../../core";
-import { loadSourceFiles } from "../../core/scan";
 import { renderTitle } from "../../render";
 import { prepareSchema } from "../shared/prepare-schema";
 import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
 import { buildScopeUsages } from "./build-scoped-usages";
 import { collectDiagnostics, groupDiagnostics } from "./diagnostics";
+import { loadSourceFiles } from "./load-source-files";
 import { renderConfigSummary } from "./render-config-summary";
 
 export async function check({
@@ -27,7 +27,9 @@ export async function check({
     const { schemaEntries, defaultEntry } = await prepareSchema();
     if (isHuman) spinner.stop();
 
-    // Load source files
+    // ---------------------------------------------------------------------------
+    // Load source files from a tsconfig
+    // ---------------------------------------------------------------------------
     const sourceFiles = loadSourceFiles(tsconfigPath, debug);
     if (sourceFiles.length === 0) {
       throw new Error(
@@ -42,7 +44,9 @@ export async function check({
       );
     }
 
+    // ---------------------------------------------------------------------------
     // Extract usages from source files
+    // ---------------------------------------------------------------------------
     const usages = extractUsages({
       sourceFiles,
       ...(debug !== undefined ? { debug } : {}),
@@ -50,7 +54,9 @@ export async function check({
 
     const report: CheckReport = { configs: [] };
 
+    // ---------------------------------------------------------------------------
     // Per-config processing
+    // ---------------------------------------------------------------------------
     for (const config of schemaEntries) {
       const configKey = config.id;
 
