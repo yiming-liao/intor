@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ExtractedUsages } from "../../../../src/core";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { buildScopeUsages } from "../../../../src/features/check/build-scoped-usages";
 import { dedupePreKeyUsages } from "../../../../src/features/check/dedupe-pre-key-usages";
+import { filterUsagesByConfig } from "../../../../src/features/check/filter-usages-by-config";
 
 vi.mock("../../../../src/features/check/dedupe-pre-key-usages", () => ({
   dedupePreKeyUsages: vi.fn(),
 }));
 
-describe("buildScopeUsages", () => {
+describe("filterUsagesByConfig", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -35,7 +35,7 @@ describe("buildScopeUsages", () => {
       ],
     };
     vi.mocked(dedupePreKeyUsages).mockImplementation((v) => v);
-    const result = buildScopeUsages({
+    const result = filterUsagesByConfig({
       usages,
       defaultConfigKey: "a",
       configKey: "a",
@@ -61,7 +61,7 @@ describe("buildScopeUsages", () => {
       trans: [],
     };
     vi.mocked(dedupePreKeyUsages).mockImplementation((v) => v);
-    const result = buildScopeUsages({
+    const result = filterUsagesByConfig({
       usages,
       defaultConfigKey: "default",
       configKey: "default",
@@ -79,7 +79,7 @@ describe("buildScopeUsages", () => {
       trans: [],
     };
     vi.mocked(dedupePreKeyUsages).mockImplementation((v) => v);
-    const result = buildScopeUsages({
+    const result = filterUsagesByConfig({
       usages,
       defaultConfigKey: "a",
       configKey: "b",

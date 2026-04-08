@@ -1,20 +1,27 @@
-import type { CheckOptions, CheckReport } from "./types";
+import type { Diagnostic } from "./diagnostics";
 import { features } from "../../constants";
 import { extractUsages } from "../../core";
 import { renderTitle } from "../../render";
 import { prepareSchema } from "../shared/prepare-schema";
 import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
-import { buildScopeUsages } from "./build-scoped-usages";
 import { collectDiagnostics, groupDiagnostics } from "./diagnostics";
+import { filterUsagesByConfig } from "./filter-usages-by-config";
 import { loadSourceFiles } from "./load-source-files";
 import { renderConfigSummary } from "./render-config-summary";
+
+export interface CheckOptions {
+  tsconfigPath?: string;
+  format?: "human" | "json";
+  output?: string;
+  debug?: boolean;
+}
 
 export async function check({
   tsconfigPath = "tsconfig.json",
   format = "human",
   output,
-  debug,
+  debug = false,
 }: CheckOptions) {
   const isHuman = format === "human";
   renderTitle(features.check.title, isHuman);
@@ -53,27 +60,30 @@ export async function check({
     });
 
     // ---------------------------------------------------------------------------
-    // Collect dianostics
+    // Collect diagnostics per config
     // ---------------------------------------------------------------------------
-    const report: CheckReport = { configs: [] };
+    const report: {
+      configs: Array<{ id: string; diagnostics: Diagnostic[] }>;
+    } = { configs: [] };
 
-    for (const config of schemaEntries) {
-      const configKey = config.id;
-
-      // per-config usages
-      const scopedUsages = buildScopeUsages({
+    for (const { id, shapes } of schemaEntries) {
+      const scopedUsages = filterUsagesByConfig({
         usages,
         defaultConfigKey: defaultEntry.id,
-        configKey,
+        configKey: id,
       });
+      const diagnostics = collectDiagnostics(shapes, scopedUsages);
 
-      // Diagnostic
-      const diagnostics = collectDiagnostics(config.shapes, scopedUsages);
-      report.configs.push({ id: config.id, diagnostics });
-      renderConfigSummary(config.id, groupDiagnostics(diagnostics), isHuman);
+      // Render a grouped human summary for the current config.
+      const grouped = groupDiagnostics(diagnostics);
+      renderConfigSummary(id, grouped, isHuman);
+
+      report.configs.push({ id, diagnostics });
     }
 
-    // JSON output
+    // ---------------------------------------------------------------------------
+    // Write JSON report when requested
+    // ---------------------------------------------------------------------------
     if (format === "json") await writeJsonReport(report, output);
   } catch (error) {
     if (isHuman) spinner.stop();

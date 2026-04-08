@@ -15,11 +15,9 @@ export function dedupePreKeyUsages(usages: PreKeyUsage[]): PreKeyUsage[] {
   return usages.filter((u) => {
     const sig = [u.factory, u.configKey, u.preKey, u.file, u.line].join("|");
 
-    if (seen.has(sig)) {
-      return false;
-    } else {
-      seen.add(sig);
-      return true;
-    }
+    if (seen.has(sig)) return false;
+
+    seen.add(sig);
+    return true;
   });
 }

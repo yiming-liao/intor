@@ -73,7 +73,7 @@ describe("dedupePreKeyUsages", () => {
     expect(result).toHaveLength(2);
   });
 
-  it("does not deduplicate when preKey is undefined", () => {
+  it("deduplicates undefined preKeys from the same factory call", () => {
     const usages: PreKeyUsage[] = [
       {
         factory: "useTranslator",

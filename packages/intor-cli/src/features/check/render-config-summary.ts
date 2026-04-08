@@ -1,4 +1,4 @@
-import type { DiagnosticGroup } from "./diagnostics/types";
+import type { DiagnosticGroup } from "./diagnostics";
 import { createLogger } from "../../logger";
 import { dim, gray, cyan, yellow, br } from "../../render";
 import { toRelativePath } from "../shared/to-relative-path";
@@ -12,37 +12,47 @@ export function renderConfigSummary(
   const logger = createLogger();
   br();
 
+  // Render the empty state when no problems are found
   if (grouped.length === 0) {
     logger.ok(`${cyan(configId)}: no problems found`);
     return;
   }
 
-  // Log header
+  // ---------------------------------------------------------------------------
+  // Render the summary header
+  // ---------------------------------------------------------------------------
   logger.header(
     `${cyan(configId)}: ${yellow(grouped.length)} problem group(s)`,
     { lineBreakAfter: 1 },
   );
 
-  // Print groups
+  // ---------------------------------------------------------------------------
+  // Render each grouped diagnostic
+  // ---------------------------------------------------------------------------
   for (let i = 0; i < grouped.length; i++) {
     const group = grouped[i];
     if (!group) continue;
     const { origin, messageKey, problems, file, lines } = group;
 
+    // [title]
     // e.g. hello (t)
     logger.log(`${messageKey} (${origin})`);
 
+    // [issues]
     // e.g.
     // - replacements missing: name
     // - rich tags missing: a
     for (const v of problems) logger.log(gray(`  - ${v}`));
 
+    // [location]
     // e.g. ⚲ examples/extract-test.tsx:7
     logger.log(dim(`  ⚲ ${toRelativePath(file)}:${lines.join(",")}`));
 
-    if (i + 1 !== grouped.length) logger.log();
+    if (i + 1 !== grouped.length) logger.log(); // line breaks for non-last
   }
 
-  // Log footer
+  // ---------------------------------------------------------------------------
+  // Render the summary footer
+  // ---------------------------------------------------------------------------
   logger.footer("", { lineBreakBefore: 1 });
 }
