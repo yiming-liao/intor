@@ -3,7 +3,7 @@ import type { SourceFile } from "ts-morph";
 import { extractStaticObjectKeys } from "./utils/extract-static-object-keys";
 import { getObjectArg } from "./utils/get-object-arg";
 import { isStaticStringLiteral } from "./utils/is-static-string-literal";
-import { walkTranslatorMethodCalls } from "./utils/walk-translator-method-calls";
+import { walkTranslatorMethodCalls } from "./walkers/walk-translator-method-calls";
 
 /**
  * Collect static rich tag usages from translator method calls
@@ -19,7 +19,10 @@ export function collectRichUsages(
     sourceFile,
     translatorBindingMap,
     ({ sourceFile, translatorUsage, call, localName }) => {
-      if (translatorUsage.method !== "tRich") return;
+      const { configKey, factory, method } = translatorUsage;
+
+      // Only collect rich-tag-aware translator methods
+      if (method !== "tRich") return;
 
       const firstArg = call.getArguments()[0];
       if (!isStaticStringLiteral(firstArg)) return;
@@ -39,12 +42,10 @@ export function collectRichUsages(
       // Resolve source location for diagnostics
       const pos = sourceFile.getLineAndColumnAtPos(richArg.getStart());
 
-      const configKey = translatorUsage.configKey;
-
       richUsages.push({
         ...(configKey !== undefined ? { configKey } : {}),
-        factory: translatorUsage.factory,
-        method: translatorUsage.method,
+        factory,
+        method,
         localName,
         key: firstArg.getLiteralText(),
         rich: keys,

@@ -3,12 +3,14 @@ import { Project } from "ts-morph";
 import { describe, it, expect } from "vitest";
 import { collectRichUsages } from "../../../../../src/core/extract-usages/collectors";
 
+const project = new Project({
+  useInMemoryFileSystem: true,
+  compilerOptions: { target: 99 },
+});
+let fileId = 0;
+
 function getSourceFile(code: string) {
-  const project = new Project({
-    useInMemoryFileSystem: true,
-    compilerOptions: { target: 99 },
-  });
-  return project.createSourceFile("test.ts", code);
+  return project.createSourceFile(`test-${fileId++}.ts`, `export {};\n${code}`);
 }
 
 describe("collectRichUsages", () => {
@@ -26,6 +28,41 @@ describe("collectRichUsages", () => {
       localName: "tRich",
       key: "hello",
       rich: ["bold", "italic"],
+    });
+  });
+
+  it("collects rich tag keys from template-literal translation keys", () => {
+    const sourceFile = getSourceFile(`
+      const { tRich } = useTranslator();
+      tRich(\`hello\`, { bold: "<b />" });
+    `);
+    const translatorBindingMap: TranslatorBindingMap = new Map([
+      ["tRich", { factory: "useTranslator", method: "tRich" }],
+    ]);
+    const result = collectRichUsages(sourceFile, translatorBindingMap);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      key: "hello",
+      rich: ["bold"],
+    });
+  });
+
+  it("includes configKey from the translator binding", () => {
+    const sourceFile = getSourceFile(`
+      const { tRich } = useTranslator();
+      tRich("hello", { bold: "<b />" });
+    `);
+    const translatorBindingMap: TranslatorBindingMap = new Map([
+      [
+        "tRich",
+        { factory: "useTranslator", method: "tRich", configKey: "common" },
+      ],
+    ]);
+    const result = collectRichUsages(sourceFile, translatorBindingMap);
+    expect(result[0]).toMatchObject({
+      key: "hello",
+      configKey: "common",
+      rich: ["bold"],
     });
   });
 

@@ -6,6 +6,7 @@ import { extractUsagesFromSourceFile } from "./extract-usages-from-source-file";
 
 /** Check whether a file-level extraction produced any meaningful usage */
 const isEmpty = (u: ExtractedUsages) =>
+  u.preKey.length === 0 &&
   u.key.length === 0 &&
   u.replacement.length === 0 &&
   u.rich.length === 0 &&
@@ -49,9 +50,9 @@ export function extractUsages({
     // ---------------------------------------------------------------------------
     // File-level extraction (pure analysis, no side effects)
     // ---------------------------------------------------------------------------
-    const partialUsages = extractUsagesFromSourceFile(sourceFile);
+    const extractedUsages = extractUsagesFromSourceFile(sourceFile);
 
-    if (isEmpty(partialUsages)) {
+    if (isEmpty(extractedUsages)) {
       logger.process("skip", sourceFile.getFilePath());
       continue;
     }
@@ -62,11 +63,11 @@ export function extractUsages({
     // ---------------------------------------------------------------------------
     // Merge file-level results into the project-level result
     // ---------------------------------------------------------------------------
-    result.preKey.push(...partialUsages.preKey);
-    result.key.push(...partialUsages.key);
-    result.replacement.push(...partialUsages.replacement);
-    result.rich.push(...partialUsages.rich);
-    result.trans.push(...partialUsages.trans);
+    result.preKey.push(...extractedUsages.preKey);
+    result.key.push(...extractedUsages.key);
+    result.replacement.push(...extractedUsages.replacement);
+    result.rich.push(...extractedUsages.rich);
+    result.trans.push(...extractedUsages.trans);
   }
 
   logger.footer(

@@ -4,12 +4,14 @@ import { describe, it, expect } from "vitest";
 import { collectReplacementUsages } from "../../../../../src/core/extract-usages/collectors";
 import { TRANSLATOR_METHOD } from "../../../../../src/core/extract-usages/translator-registry";
 
+const project = new Project({
+  useInMemoryFileSystem: true,
+  compilerOptions: { target: 99 },
+});
+let fileId = 0;
+
 function getSourceFile(code: string) {
-  const project = new Project({
-    useInMemoryFileSystem: true,
-    compilerOptions: { target: 99 },
-  });
-  return project.createSourceFile("test.ts", code);
+  return project.createSourceFile(`test-${fileId++}.ts`, `export {};\n${code}`);
 }
 
 describe("collectReplacementUsages", () => {
@@ -30,6 +32,22 @@ describe("collectReplacementUsages", () => {
     });
   });
 
+  it("collects replacement keys from template-literal translation keys", () => {
+    const sourceFile = getSourceFile(`
+      const { t } = useTranslator();
+      t(\`hello\`, { name: "world" });
+    `);
+    const translatorBindingMap: TranslatorBindingMap = new Map([
+      ["t", { factory: "useTranslator", method: TRANSLATOR_METHOD.t }],
+    ]);
+    const result = collectReplacementUsages(sourceFile, translatorBindingMap);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      key: "hello",
+      replacements: ["name"],
+    });
+  });
+
   it("collects replacement keys from tRich() calls", () => {
     const sourceFile = getSourceFile(`
       const { tRich } = useTranslator();
@@ -45,6 +63,29 @@ describe("collectReplacementUsages", () => {
       localName: "tRich",
       key: "welcome",
       replacements: ["user", "age"],
+    });
+  });
+
+  it("includes configKey from the translator binding", () => {
+    const sourceFile = getSourceFile(`
+      const { t } = useTranslator();
+      t("hello", { name: "world" });
+    `);
+    const translatorBindingMap: TranslatorBindingMap = new Map([
+      [
+        "t",
+        {
+          factory: "useTranslator",
+          method: TRANSLATOR_METHOD.t,
+          configKey: "common",
+        },
+      ],
+    ]);
+    const result = collectReplacementUsages(sourceFile, translatorBindingMap);
+    expect(result[0]).toMatchObject({
+      key: "hello",
+      configKey: "common",
+      replacements: ["name"],
     });
   });
 

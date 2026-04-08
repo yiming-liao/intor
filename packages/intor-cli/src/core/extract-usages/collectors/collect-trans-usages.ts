@@ -1,6 +1,7 @@
 import type { TransUsage } from "../types";
 import type { SourceFile } from "ts-morph";
 import { Node, SyntaxKind } from "ts-morph";
+import { getIntorImportLocalNames } from "./utils/get-intor-import-local-names";
 import { isStaticStringLiteral } from "./utils/is-static-string-literal";
 
 const COMPONENT_NAME = "Trans";
@@ -12,6 +13,11 @@ const KEY_PROPERTY_NAME = "i18nKey";
  */
 export function collectTransUsages(sourceFile: SourceFile): TransUsage[] {
   const usages: TransUsage[] = [];
+  const transComponentNames = getIntorImportLocalNames(
+    sourceFile,
+    COMPONENT_NAME,
+  );
+  if (transComponentNames.size === 0) return usages;
 
   sourceFile.forEachDescendant((node) => {
     // ------------------------------------------------------------
@@ -25,7 +31,7 @@ export function collectTransUsages(sourceFile: SourceFile): TransUsage[] {
     }
 
     const tagName = node.getTagNameNode()?.getText();
-    if (tagName !== COMPONENT_NAME) return;
+    if (!tagName || !transComponentNames.has(tagName)) return;
 
     // ------------------------------------------------------------
     // Resolve i18nKey attribute
@@ -52,9 +58,7 @@ export function collectTransUsages(sourceFile: SourceFile): TransUsage[] {
     if (!isStaticStringLiteral(expr)) return;
     const literal = expr;
 
-    // ------------------------------------------------------------
-    // Source location
-    // ------------------------------------------------------------
+    // Resolve source location for diagnostics
     const pos = sourceFile.getLineAndColumnAtPos(literal.getStart());
 
     usages.push({

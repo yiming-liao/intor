@@ -7,9 +7,6 @@ import {
 } from "../../../../src/core/extract-usages";
 import { extractUsagesFromSourceFile } from "../../../../src/core/extract-usages/extract-usages-from-source-file";
 
-// --------------------------------------------------
-// Mocks
-// --------------------------------------------------
 vi.mock(
   "../../../../src/core/extract-usages/extract-usages-from-source-file",
   () => ({
@@ -25,9 +22,6 @@ vi.mock("../../../../src/core/scan/scan-logger", () => ({
   }),
 }));
 
-// --------------------------------------------------
-// Helpers
-// --------------------------------------------------
 const mockSourceFile = (path: string) =>
   ({ getFilePath: () => path }) as SourceFile;
 
@@ -39,9 +33,6 @@ const empty: ExtractedUsages = {
   trans: [],
 };
 
-// --------------------------------------------------
-// Tests
-// --------------------------------------------------
 describe("extractUsages", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -84,6 +75,25 @@ describe("extractUsages", () => {
     expect(result.replacement).toHaveLength(1);
     expect(result.rich).toHaveLength(1);
     expect(result.trans).toHaveLength(2);
+  });
+
+  it("keeps preKey-only extraction results", () => {
+    const files = [mockSourceFile("a.ts")];
+    vi.mocked(extractUsagesFromSourceFile).mockReturnValue({
+      preKey: [{ preKey: "home" } as any],
+      key: [],
+      replacement: [],
+      rich: [],
+      trans: [],
+    });
+    const result = extractUsages({ sourceFiles: files });
+    expect(result).toEqual({
+      preKey: [{ preKey: "home" }],
+      key: [],
+      replacement: [],
+      rich: [],
+      trans: [],
+    });
   });
 
   it("does not change behavior when debug flag is enabled", () => {

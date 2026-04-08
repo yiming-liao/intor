@@ -16,6 +16,9 @@ import {
   collectTransUsages,
 } from "./collectors";
 
+/**
+ * Attach resolved preKey values to extracted usages by local name.
+ */
 function attachPreKey<T extends { localName: string; preKey?: string }>(
   usages: T[],
   preKeyMap: PreKeyMap,

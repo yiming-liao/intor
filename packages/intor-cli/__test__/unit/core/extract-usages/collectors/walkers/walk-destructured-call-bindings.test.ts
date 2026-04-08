@@ -1,6 +1,6 @@
 import { Project } from "ts-morph";
 import { describe, it, expect, vi } from "vitest";
-import { walkTranslatorBindings } from "../../../../../../src/core/extract-usages/collectors/utils/walk-translator-bindings";
+import { walkDestructuredCallBindings } from "../../../../../../src/core/extract-usages/collectors/walkers/walk-destructured-call-bindings";
 
 function createSourceFile(code: string) {
   const project = new Project({
@@ -17,7 +17,7 @@ describe("walkTranslatorBindings", () => {
       const { t } = useTranslator();
     `);
     const visitor = vi.fn();
-    walkTranslatorBindings(sourceFile, visitor);
+    walkDestructuredCallBindings(sourceFile, visitor);
     expect(visitor).toHaveBeenCalledTimes(1);
     const ctx = visitor.mock.calls[0]?.[0];
     expect(ctx.call.getText()).toBe("useTranslator()");
@@ -29,7 +29,7 @@ describe("walkTranslatorBindings", () => {
       const { t } = await useTranslator();
     `);
     const visitor = vi.fn();
-    walkTranslatorBindings(sourceFile, visitor);
+    walkDestructuredCallBindings(sourceFile, visitor);
     expect(visitor).toHaveBeenCalledTimes(1);
     expect(visitor.mock.calls[0]?.[0].call.getText()).toBe("useTranslator()");
   });
@@ -39,7 +39,7 @@ describe("walkTranslatorBindings", () => {
       const translator = useTranslator();
     `);
     const visitor = vi.fn();
-    walkTranslatorBindings(sourceFile, visitor);
+    walkDestructuredCallBindings(sourceFile, visitor);
     expect(visitor).not.toHaveBeenCalled();
   });
 
@@ -48,7 +48,7 @@ describe("walkTranslatorBindings", () => {
       let t;
     `);
     const visitor = vi.fn();
-    walkTranslatorBindings(sourceFile, visitor);
+    walkDestructuredCallBindings(sourceFile, visitor);
     expect(visitor).not.toHaveBeenCalled();
   });
 
@@ -57,7 +57,7 @@ describe("walkTranslatorBindings", () => {
       const { t } = translator;
     `);
     const visitor = vi.fn();
-    walkTranslatorBindings(sourceFile, visitor);
+    walkDestructuredCallBindings(sourceFile, visitor);
     expect(visitor).not.toHaveBeenCalled();
   });
 
@@ -67,7 +67,7 @@ describe("walkTranslatorBindings", () => {
       const { hasKey } = getTranslator();
     `);
     const visitor = vi.fn();
-    walkTranslatorBindings(sourceFile, visitor);
+    walkDestructuredCallBindings(sourceFile, visitor);
     expect(visitor).toHaveBeenCalledTimes(2);
     expect(visitor.mock.calls[0]?.[0].binding.getText()).toBe("{ t }");
     expect(visitor.mock.calls[1]?.[0].binding.getText()).toBe("{ hasKey }");

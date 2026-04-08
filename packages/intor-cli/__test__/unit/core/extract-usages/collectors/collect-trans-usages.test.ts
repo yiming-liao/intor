@@ -18,7 +18,7 @@ function collectFromCode(code: string) {
 describe("collectTransUsages", () => {
   it("collects static i18nKey from <Trans /> (string literal)", () => {
     const usages = collectFromCode(`
-      import { Trans } from "intor/react";  export function App() {
+      import { Trans } from "intor/vue";  export function App() {
         return <Trans i18nKey="home.title" />;
       }
     `);
@@ -31,6 +31,7 @@ describe("collectTransUsages", () => {
 
   it("collects static i18nKey from <Trans></Trans> (JSX expression)", () => {
     const usages = collectFromCode(`
+      import { Trans } from "intor/vue";
       export function App() {
         return (
           <Trans i18nKey={"profile.name"}>
@@ -45,6 +46,7 @@ describe("collectTransUsages", () => {
 
   it("ignores <Trans /> with dynamic i18nKey", () => {
     const usages = collectFromCode(`
+      import { Trans } from "intor/vue";
       const key = "home.title";  export function App() {
         return <Trans i18nKey={key} />;
       }
@@ -54,8 +56,29 @@ describe("collectTransUsages", () => {
 
   it("ignores <Trans /> without i18nKey", () => {
     const usages = collectFromCode(`
+      import { Trans } from "intor/vue";
       export function App() {
         return <Trans />;
+      }
+    `);
+    expect(usages).toHaveLength(0);
+  });
+
+  it("ignores <Trans /> with an i18nKey attribute but no initializer", () => {
+    const usages = collectFromCode(`
+      import { Trans } from "intor/vue";
+      export function App() {
+        return <Trans i18nKey />;
+      }
+    `);
+    expect(usages).toHaveLength(0);
+  });
+
+  it("ignores <Trans /> with an empty JSX expression i18nKey", () => {
+    const usages = collectFromCode(`
+      import { Trans } from "intor/vue";
+      export function App() {
+        return <Trans i18nKey={} />;
       }
     `);
     expect(usages).toHaveLength(0);
@@ -70,8 +93,40 @@ describe("collectTransUsages", () => {
     expect(usages).toHaveLength(0);
   });
 
+  it("ignores Trans components imported from non-Intor modules", () => {
+    const usages = collectFromCode(`
+      import { Trans } from "./ui";
+      export function App() {
+        return <Trans i18nKey="home.title" />;
+      }
+    `);
+    expect(usages).toHaveLength(0);
+  });
+
+  it("collects aliased Intor Trans imports", () => {
+    const usages = collectFromCode(`
+      import { Trans as IntorTrans } from "intor/vue";
+      export function App() {
+        return <IntorTrans i18nKey="home.title" />;
+      }
+    `);
+    expect(usages).toHaveLength(1);
+    expect(usages[0]?.key).toBe("home.title");
+  });
+
+  it("ignores member-expression JSX tags", () => {
+    const usages = collectFromCode(`
+      import * as Intor from "intor/vue";
+      export function App() {
+        return <Intor.Trans i18nKey="home.title" />;
+      }
+    `);
+    expect(usages).toHaveLength(0);
+  });
+
   it("collects multiple <Trans /> usages in the same file", () => {
     const usages = collectFromCode(`
+      import { Trans } from "intor/vue";
       export function App() {
         return (
           <>
@@ -89,6 +144,7 @@ describe("collectTransUsages", () => {
 
   it("records correct source location", () => {
     const usages = collectFromCode(`
+      import { Trans } from "intor/vue";
       export function App() {
         return <Trans i18nKey="home.title" />;
       }

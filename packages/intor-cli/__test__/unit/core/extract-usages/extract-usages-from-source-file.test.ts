@@ -87,4 +87,26 @@ describe("extractUsagesFromSourceFile", () => {
     expect(result.preKey).toEqual([]);
     expect(result.trans).toEqual([]);
   });
+
+  it("returns preKey usages even when no other binding usages exist", () => {
+    const bindingMap = new Map([["t", {}]]);
+    const preKeyUsages = [{ localName: "t", preKey: "home" }];
+    (collectTranslatorBindings as any).mockReturnValue(bindingMap);
+    (collectKeyUsages as any).mockReturnValue([]);
+    (collectReplacementUsages as any).mockReturnValue([]);
+    (collectRichUsages as any).mockReturnValue([]);
+    (collectPreKeys as any).mockReturnValue({
+      preKeyMap: new Map([["t", "home"]]),
+      usages: preKeyUsages,
+    });
+    (collectTransUsages as any).mockReturnValue([]);
+    const result = extractUsagesFromSourceFile(mockSourceFile);
+    expect(result).toEqual({
+      preKey: preKeyUsages,
+      key: [],
+      replacement: [],
+      rich: [],
+      trans: [],
+    });
+  });
 });

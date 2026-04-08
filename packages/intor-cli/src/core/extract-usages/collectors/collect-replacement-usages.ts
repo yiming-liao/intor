@@ -4,7 +4,7 @@ import { TRANSLATOR_METHOD } from "../translator-registry";
 import { extractStaticObjectKeys } from "./utils/extract-static-object-keys";
 import { getObjectArg } from "./utils/get-object-arg";
 import { isStaticStringLiteral } from "./utils/is-static-string-literal";
-import { walkTranslatorMethodCalls } from "./utils/walk-translator-method-calls";
+import { walkTranslatorMethodCalls } from "./walkers/walk-translator-method-calls";
 
 /**
  * Collect static replacement usages from translator method calls
@@ -20,8 +20,10 @@ export function collectReplacementUsages(
     sourceFile,
     translatorBindingMap,
     ({ sourceFile, translatorUsage, call, localName }) => {
-      if (translatorUsage.method !== "t" && translatorUsage.method !== "tRich")
-        return;
+      const { configKey, factory, method } = translatorUsage;
+
+      // Only collect replacement-aware translator methods
+      if (method !== "t" && method !== "tRich") return;
 
       const firstArg = call.getArguments()[0];
       if (!isStaticStringLiteral(firstArg)) return;
@@ -31,11 +33,13 @@ export function collectReplacementUsages(
       // ----------------------------------------------------------------------
       let replacementArg: ObjectLiteralExpression | null = null;
 
-      if (translatorUsage.method === TRANSLATOR_METHOD.t) {
+      // `t(key, replacements)`
+      if (method === TRANSLATOR_METHOD.t) {
         replacementArg = getObjectArg(call, 2);
       }
 
-      if (translatorUsage.method === TRANSLATOR_METHOD.tRich) {
+      // `tRich(key, rich, replacements)`
+      if (method === TRANSLATOR_METHOD.tRich) {
         replacementArg = getObjectArg(call, 3);
       }
 
@@ -50,12 +54,10 @@ export function collectReplacementUsages(
       // Resolve source location for diagnostics
       const pos = sourceFile.getLineAndColumnAtPos(replacementArg.getStart());
 
-      const configKey = translatorUsage.configKey;
-
       replacementUsages.push({
         ...(configKey !== undefined ? { configKey } : {}),
-        factory: translatorUsage.factory,
-        method: translatorUsage.method,
+        factory,
+        method,
         localName,
         key: firstArg.getLiteralText(),
         replacements: keys,

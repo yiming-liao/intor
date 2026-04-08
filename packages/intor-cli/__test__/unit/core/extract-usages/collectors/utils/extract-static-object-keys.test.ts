@@ -55,4 +55,16 @@ describe("extractStaticObjectKeys", () => {
     const keys = extractStaticObjectKeys(obj!);
     expect(keys).toEqual(["first-name", "foo bar"]);
   });
+
+  it("ignores computed property assignment keys", () => {
+    const obj = getObjectLiteral(`
+      const key = "name";
+      const x = {
+        [key]: "John",
+        age: 20
+      };
+    `);
+    const keys = extractStaticObjectKeys(obj!);
+    expect(keys).toEqual(["age"]);
+  });
 });

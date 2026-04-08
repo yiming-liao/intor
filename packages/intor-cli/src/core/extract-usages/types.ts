@@ -5,9 +5,9 @@ import type {
 
 /** Describes a local translator binding resolved from a factory and method. */
 export interface TranslatorBinding {
-  configKey?: string;
   factory: TranslatorFactory;
   method: TranslatorMethod;
+  configKey?: string;
 }
 
 /** Map of local binding names to their translator bindings. */
@@ -22,7 +22,7 @@ interface SourceLocation {
   column: number;
 }
 
-/** Static translation prreKey usage extracted from a source file. */
+/** Static translation preKey usage extracted from a source file. */
 export interface PreKeyUsage
   extends Omit<TranslatorBinding, "method">, SourceLocation {
   localName: string;
