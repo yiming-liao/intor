@@ -35,6 +35,18 @@ function createRichUsage(partial: Partial<RichUsage>): RichUsage {
 }
 
 describe("validateMissingRich", () => {
+  it("does nothing when key path cannot be resolved", () => {
+    const diagnostics = enforceMissingRich(
+      createKeyUsage({}),
+      new Map(),
+      {
+        kind: "object",
+        properties: {},
+      },
+    );
+    expect(diagnostics).toEqual([]);
+  });
+
   it("does nothing when rich tags are provided somewhere else", () => {
     const schema: InferNode = {
       kind: "object",
@@ -110,7 +122,6 @@ describe("validateMissingRich", () => {
     );
     expect(diagnostics).toEqual([
       {
-        severity: "warn",
         origin: "t",
         messageKey: "greeting",
         code: DIAGNOSTIC_MESSAGES.RICH_MISSING.code,
@@ -146,7 +157,6 @@ describe("validateMissingRich", () => {
     );
     expect(diagnostics).toEqual([
       {
-        severity: "warn",
         origin: "t",
         messageKey: "home.greeting",
         code: DIAGNOSTIC_MESSAGES.RICH_MISSING.code,

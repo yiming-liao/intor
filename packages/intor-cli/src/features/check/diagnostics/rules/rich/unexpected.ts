@@ -1,7 +1,7 @@
 import type { RichUsage, InferNode } from "../../../../../core";
 import type { Diagnostic } from "../../types";
 import { DIAGNOSTIC_MESSAGES } from "../../messages";
-import { getSchemaNodeAtPath } from "../../utils/get-schema-node-at-path";
+import { getNodeAtPath } from "../../utils/get-node-at-path";
 import { resolveKeyPath } from "../../utils/resolve-key-path";
 
 /**
@@ -14,28 +14,29 @@ import { resolveKeyPath } from "../../utils/resolve-key-path";
  * t("hello", { name, phone })
  * ```
  */
-export function richUnused(
+export function richUnexpected(
   usage: RichUsage,
   richSchema: InferNode,
 ): Diagnostic[] {
   const { method, key, preKey, file, line, column } = usage;
 
   const keyPath = resolveKeyPath(key, preKey);
-  const schemaNode = getSchemaNodeAtPath(richSchema, keyPath);
+  if (!keyPath) return [];
+
+  const schemaNode = getNodeAtPath(richSchema, keyPath);
   if (!schemaNode || schemaNode.kind !== "object") return [];
 
   const expected = Object.keys(schemaNode.properties);
   const actual = usage.rich;
-  const extra = actual.filter((tag) => !expected.includes(tag));
+  const unexpected = actual.filter((tag) => !expected.includes(tag));
 
-  if (extra.length > 0) {
+  if (unexpected.length > 0) {
     return [
       {
-        severity: "warn",
         origin: method,
         messageKey: keyPath,
-        code: DIAGNOSTIC_MESSAGES.RICH_UNUSED.code,
-        message: DIAGNOSTIC_MESSAGES.RICH_UNUSED.message(extra),
+        code: DIAGNOSTIC_MESSAGES.RICH_UNEXPECTED.code,
+        message: DIAGNOSTIC_MESSAGES.RICH_UNEXPECTED.message(unexpected),
         file,
         line,
         column,

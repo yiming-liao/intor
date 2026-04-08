@@ -1,15 +1,17 @@
-import type { KeyUsage } from "../../../../../../../src/core/extract-usages";
+import type {
+  KeyUsage,
+  PreKeyUsage,
+} from "../../../../../../../src/core/extract-usages";
 import type { InferNode } from "../../../../../../../src/core/infer-shape";
-import type { KeyUsageLike } from "../../../../../../../src/features/check/diagnostics/rules/key/types";
 import { describe, it, expect } from "vitest";
 import { DIAGNOSTIC_MESSAGES } from "../../../../../../../src/features/check/diagnostics/messages";
-import { keyNotFound } from "../../../../../../../src/features/check/diagnostics/rules/key";
+import { preKeyNotExist } from "../../../../../../../src/features/check/diagnostics/rules/pre-key";
 
-function createUsage(partial: Partial<KeyUsage>): KeyUsageLike {
+function createUsage(partial: Partial<KeyUsage>): PreKeyUsage {
   return {
-    origin: "t",
+    factory: "useTranslator",
     localName: "t",
-    key: "",
+    preKey: "",
     file: "/test.ts",
     line: 1,
     column: 1,
@@ -17,22 +19,24 @@ function createUsage(partial: Partial<KeyUsage>): KeyUsageLike {
   };
 }
 
-describe("keyNotFound", () => {
-  it("reports warn when message key does not exist in schema", () => {
+describe("preKeyNotExist", () => {
+  it("reports warn when preKey does not exist in schema", () => {
     const schema: InferNode = {
       kind: "object",
       properties: {
         hello: { kind: "primitive", type: "string" },
       },
     };
-    const diagnostics = keyNotFound(createUsage({ key: "missing" }), schema);
+    const diagnostics = preKeyNotExist(
+      createUsage({ preKey: "missing" }),
+      schema,
+    );
     expect(diagnostics).toEqual([
       {
-        severity: "warn",
-        origin: "t",
+        origin: "useTranslator",
         messageKey: "missing",
-        code: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.code,
-        message: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.message(),
+        code: DIAGNOSTIC_MESSAGES.PRE_KEY_NOT_FOUND.code,
+        message: DIAGNOSTIC_MESSAGES.PRE_KEY_NOT_FOUND.message(),
         file: "/test.ts",
         line: 1,
         column: 1,
@@ -40,12 +44,12 @@ describe("keyNotFound", () => {
     ]);
   });
 
-  it("returns no diagnostics when no message key", () => {
-    const diagnostics = keyNotFound(createUsage({}), {} as InferNode);
+  it("returns no diagnostics when preKey is missing", () => {
+    const diagnostics = preKeyNotExist(createUsage({}), {} as InferNode);
     expect(diagnostics).toEqual([]);
   });
 
-  it("resolves key with preKey correctly", () => {
+  it("returns no diagnostics when preKey exists in schema", () => {
     const schema: InferNode = {
       kind: "object",
       properties: {
@@ -57,7 +61,7 @@ describe("keyNotFound", () => {
         },
       },
     };
-    const diagnostics = keyNotFound(
+    const diagnostics = preKeyNotExist(
       createUsage({ key: "title", preKey: "home" }),
       schema,
     );

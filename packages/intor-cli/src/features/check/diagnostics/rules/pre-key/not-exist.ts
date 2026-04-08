@@ -1,7 +1,7 @@
 import type { PreKeyUsage, InferNode } from "../../../../../core";
 import type { Diagnostic } from "../../types";
 import { DIAGNOSTIC_MESSAGES } from "../../messages";
-import { getSchemaNodeAtPath } from "../../utils/get-schema-node-at-path";
+import { getNodeAtPath } from "../../utils/get-node-at-path";
 
 /**
  * @example
@@ -13,18 +13,19 @@ import { getSchemaNodeAtPath } from "../../utils/get-schema-node-at-path";
  * useTranslator("missing")
  * ```
  */
-export function preKeyNotFound(
+export function preKeyNotExist(
   usage: PreKeyUsage,
-  messagesSchema: InferNode,
+  shape: InferNode,
 ): Diagnostic[] {
   const { factory, preKey, file, line, column } = usage;
 
   if (!preKey) return [];
 
-  if (!getSchemaNodeAtPath(messagesSchema, preKey)) {
+  const node = getNodeAtPath(shape, preKey);
+
+  if (!node) {
     return [
       {
-        severity: "warn",
         origin: factory,
         messageKey: preKey,
         code: DIAGNOSTIC_MESSAGES.PRE_KEY_NOT_FOUND.code,

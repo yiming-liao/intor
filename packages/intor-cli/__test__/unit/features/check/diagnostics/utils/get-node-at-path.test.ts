@@ -1,8 +1,8 @@
 import type { InferNode } from "../../../../../../src/core/infer-shape";
 import { describe, it, expect } from "vitest";
-import { getSchemaNodeAtPath } from "../../../../../../src/features/check/diagnostics/utils/get-schema-node-at-path";
+import { getNodeAtPath } from "../../../../../../src/features/check/diagnostics/utils/get-node-at-path";
 
-describe("getSchemaNodeAtPath", () => {
+describe("getNodeAtPath", () => {
   const schema: InferNode = {
     kind: "object",
     properties: {
@@ -22,32 +22,32 @@ describe("getSchemaNodeAtPath", () => {
   };
 
   it("returns the node for a top-level key", () => {
-    const node = getSchemaNodeAtPath(schema, "greeting");
+    const node = getNodeAtPath(schema, "greeting");
     expect(node).toEqual({ kind: "primitive", type: "string" });
   });
 
   it("returns the node for a nested key path", () => {
-    const node = getSchemaNodeAtPath(schema, "a.b.c");
+    const node = getNodeAtPath(schema, "a.b.c");
     expect(node).toEqual({ kind: "primitive", type: "number" });
   });
 
   it("returns null for a non-existing top-level key", () => {
-    const node = getSchemaNodeAtPath(schema, "missing");
+    const node = getNodeAtPath(schema, "missing");
     expect(node).toBeNull();
   });
 
   it("returns null for a non-existing nested path", () => {
-    const node = getSchemaNodeAtPath(schema, "a.b.missing");
+    const node = getNodeAtPath(schema, "a.b.missing");
     expect(node).toBeNull();
   });
 
   it("returns null when path traverses into a non-object node", () => {
-    const node = getSchemaNodeAtPath(schema, "greeting.foo");
+    const node = getNodeAtPath(schema, "greeting.foo");
     expect(node).toBeNull();
   });
 
   it("returns null for empty path", () => {
-    const node = getSchemaNodeAtPath(schema, "");
+    const node = getNodeAtPath(schema, "");
     expect(node).toBeNull();
   });
 
@@ -56,13 +56,13 @@ describe("getSchemaNodeAtPath", () => {
       kind: "primitive",
       type: "string",
     };
-    const node = getSchemaNodeAtPath(primitiveSchema, "anything");
+    const node = getNodeAtPath(primitiveSchema, "anything");
     expect(node).toBeNull();
   });
 
   it("returns null when schema is none", () => {
     const noneSchema: InferNode = { kind: "none" };
-    const node = getSchemaNodeAtPath(noneSchema, "a");
+    const node = getNodeAtPath(noneSchema, "a");
     expect(node).toBeNull();
   });
 });

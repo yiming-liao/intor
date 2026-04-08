@@ -1,1 +1,1 @@
-export { preKeyNotFound } from "./not-found";
+export { preKeyNotExist } from "./not-exist";

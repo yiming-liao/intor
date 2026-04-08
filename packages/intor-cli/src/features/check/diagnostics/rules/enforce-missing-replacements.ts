@@ -1,7 +1,7 @@
 import type { KeyUsage, ReplacementUsage, InferNode } from "../../../../core";
 import type { Diagnostic } from "../types";
 import { DIAGNOSTIC_MESSAGES } from "../messages";
-import { getSchemaNodeAtPath } from "../utils/get-schema-node-at-path";
+import { getNodeAtPath } from "../utils/get-node-at-path";
 import { resolveKeyPath } from "../utils/resolve-key-path";
 
 /**
@@ -19,28 +19,28 @@ import { resolveKeyPath } from "../utils/resolve-key-path";
 export function enforceMissingReplacements(
   usage: KeyUsage,
   replacementIndex: Map<string, ReplacementUsage[]>,
-  replacementsSchema: InferNode,
+  shape: InferNode,
 ): Diagnostic[] {
   const { method, key, preKey, file, line, column } = usage;
   const diagnostics: Diagnostic[] = [];
 
   const keyPath = resolveKeyPath(key, preKey);
+  if (!keyPath) return diagnostics;
 
   // Replacements provided elsewhere
   if (replacementIndex.has(`${usage.method}::${keyPath}`)) return diagnostics;
 
-  const schemaNode = getSchemaNodeAtPath(replacementsSchema, keyPath);
+  const node = getNodeAtPath(shape, keyPath);
 
   // No replacement schema defined
-  if (!schemaNode || schemaNode.kind !== "object") return diagnostics;
+  if (!node || node.kind !== "object") return diagnostics;
 
-  const expected: string[] = Object.keys(schemaNode.properties);
+  const expected: string[] = Object.keys(node.properties);
 
   // No required replacements
   if (expected.length === 0) return diagnostics;
 
   diagnostics.push({
-    severity: "warn",
     origin: method,
     messageKey: keyPath,
     code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,

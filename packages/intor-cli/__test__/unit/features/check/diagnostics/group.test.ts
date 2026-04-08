@@ -4,7 +4,6 @@ import { groupDiagnostics } from "../../../../../src/features/check/diagnostics"
 
 function d(partial: Partial<Diagnostic>): Diagnostic {
   return {
-    severity: "warn",
     factory: "useTranslator",
     method: "t",
     message: "msg",
@@ -33,22 +32,6 @@ describe("groupDiagnostics", () => {
       d({ line: 2, column: 1 }),
     ]);
     expect(result).toHaveLength(2);
-  });
-
-  it("upgrades severity to error if any diagnostic is error", () => {
-    const result = groupDiagnostics([
-      d({ messageKey: "x", severity: "warn" }),
-      d({ messageKey: "x", severity: "error" }),
-    ]);
-    expect(result[0]?.severity).toBe("error");
-  });
-
-  it("keeps severity warn if no error exists", () => {
-    const result = groupDiagnostics([
-      d({ messageKey: "x", severity: "warn" }),
-      d({ messageKey: "x", severity: "warn" }),
-    ]);
-    expect(result[0]?.severity).toBe("warn");
   });
 
   it("deduplicates and sorts line numbers", () => {

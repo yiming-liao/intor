@@ -17,6 +17,14 @@ function usage(): ReplacementUsage {
 }
 
 describe("replacementsNotAllowed", () => {
+  it("does nothing when key path cannot be resolved", () => {
+    const diagnostics = replacementsNotAllowed({ ...usage(), key: "" }, {
+      kind: "object",
+      properties: {},
+    });
+    expect(diagnostics).toEqual([]);
+  });
+
   it("reports replacements when schema does not allow them", () => {
     const diagnostics = replacementsNotAllowed(usage(), {
       kind: "primitive",

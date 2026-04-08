@@ -34,9 +34,10 @@ export const DIAGNOSTIC_MESSAGES = {
       `replacements missing: ${missing.join(", ")}`,
   },
 
-  REPLACEMENTS_UNUSED: {
-    code: "INTOR_REPLACEMENTS_UNUSED",
-    message: (extra: string[]) => `replacements unused: ${extra.join(", ")}`,
+  REPLACEMENTS_UNEXPECTED: {
+    code: "INTOR_REPLACEMENTS_UNEXPECTED",
+    message: (extra: string[]) =>
+      `replacements unexpected: ${extra.join(", ")}`,
   },
 
   // --------------------------------------------------
@@ -52,8 +53,8 @@ export const DIAGNOSTIC_MESSAGES = {
     message: (missing: string[]) => `rich tags missing: ${missing.join(", ")}`,
   },
 
-  RICH_UNUSED: {
-    code: "INTOR_RICH_UNUSED",
-    message: (extra: string[]) => `rich tags unused: ${extra.join(", ")}`,
+  RICH_UNEXPECTED: {
+    code: "INTOR_RICH_UNEXPECTED",
+    message: (extra: string[]) => `rich tags unexpected: ${extra.join(", ")}`,
   },
 } as const;

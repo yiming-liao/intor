@@ -6,7 +6,7 @@ import { keyEmpty } from "../../../../../../../src/features/check/diagnostics/ru
 
 function createUsage(partial: Partial<KeyUsage>): KeyUsageLike {
   return {
-    origin: "t",
+    method: "t",
     localName: "t",
     key: "",
     file: "/test.ts",
@@ -21,7 +21,6 @@ describe("keyEmpty", () => {
     const diagnostics = keyEmpty(createUsage({ key: "" }));
     expect(diagnostics).toEqual([
       {
-        severity: "warn",
         origin: "t",
         messageKey: "",
         code: DIAGNOSTIC_MESSAGES.KEY_EMPTY.code,

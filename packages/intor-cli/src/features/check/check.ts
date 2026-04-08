@@ -52,11 +52,11 @@ export async function check({
       ...(debug !== undefined ? { debug } : {}),
     });
 
+    // ---------------------------------------------------------------------------
+    // Collect dianostics
+    // ---------------------------------------------------------------------------
     const report: CheckReport = { configs: [] };
 
-    // ---------------------------------------------------------------------------
-    // Per-config processing
-    // ---------------------------------------------------------------------------
     for (const config of schemaEntries) {
       const configKey = config.id;
 

@@ -13,13 +13,12 @@ import { DIAGNOSTIC_MESSAGES } from "../../messages";
  * ```
  */
 export function keyEmpty(usage: KeyUsageLike): Diagnostic[] {
-  const { origin, key, file, line, column } = usage;
+  const { method, key, file, line, column } = usage;
 
   if (!key) {
     return [
       {
-        severity: "warn",
-        origin,
+        origin: method,
         messageKey: key,
         code: DIAGNOSTIC_MESSAGES.KEY_EMPTY.code,
         message: DIAGNOSTIC_MESSAGES.KEY_EMPTY.message(),

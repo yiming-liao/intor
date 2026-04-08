@@ -2,7 +2,7 @@ import type { ReplacementUsage } from "../../../../../../../src/core/extract-usa
 import type { InferNode } from "../../../../../../../src/core/infer-shape";
 import { describe, it, expect } from "vitest";
 import { DIAGNOSTIC_MESSAGES } from "../../../../../../../src/features/check/diagnostics/messages";
-import { replacementsMissing } from "../../../../../../../src/features/check/diagnostics/rules/replacement";
+import { replacementMissing } from "../../../../../../../src/features/check/diagnostics/rules/replacement";
 
 const schema: InferNode = {
   kind: "object",
@@ -31,8 +31,16 @@ function usage(replacements: string[]): ReplacementUsage {
 }
 
 describe("replacementsMissing", () => {
+  it("does nothing when key path cannot be resolved", () => {
+    const diagnostics = replacementMissing(
+      { ...usage(["name"]), key: "" },
+      schema,
+    );
+    expect(diagnostics).toEqual([]);
+  });
+
   it("reports missing required replacements", () => {
-    const diagnostics = replacementsMissing(usage(["name"]), schema);
+    const diagnostics = replacementMissing(usage(["name"]), schema);
     expect(diagnostics).toHaveLength(1);
     expect(diagnostics[0]?.code).toBe(
       DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,
@@ -41,12 +49,12 @@ describe("replacementsMissing", () => {
   });
 
   it("does nothing when all required replacements are provided", () => {
-    const diagnostics = replacementsMissing(usage(["name", "phone"]), schema);
+    const diagnostics = replacementMissing(usage(["name", "phone"]), schema);
     expect(diagnostics).toEqual([]);
   });
 
   it("does nothing when schema is not an object", () => {
-    const diagnostics = replacementsMissing(usage(["name"]), {
+    const diagnostics = replacementMissing(usage(["name"]), {
       kind: "primitive",
       type: "string",
     });

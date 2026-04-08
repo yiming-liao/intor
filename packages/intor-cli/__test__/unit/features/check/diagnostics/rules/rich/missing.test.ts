@@ -31,6 +31,11 @@ const schema: InferNode = {
 };
 
 describe("richMissing", () => {
+  it("does nothing when key path cannot be resolved", () => {
+    const diagnostics = richMissing({ ...usage(["a"]), key: "" }, schema);
+    expect(diagnostics).toEqual([]);
+  });
+
   it("reports missing required rich tags", () => {
     const diagnostics = richMissing(usage(["a"]), schema);
     expect(diagnostics).toHaveLength(1);

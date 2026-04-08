@@ -37,6 +37,18 @@ function createReplacementUsage(
 }
 
 describe("validateMissingReplacements", () => {
+  it("does nothing when key path cannot be resolved", () => {
+    const diagnostics = enforceMissingReplacements(
+      createKeyUsage({}),
+      new Map(),
+      {
+        kind: "object",
+        properties: {},
+      },
+    );
+    expect(diagnostics).toEqual([]);
+  });
+
   it("does nothing when replacements are provided somewhere else", () => {
     const schema: InferNode = {
       kind: "object",
@@ -120,7 +132,6 @@ describe("validateMissingReplacements", () => {
     );
     expect(diagnostics).toEqual([
       {
-        severity: "warn",
         origin: "t",
         messageKey: "greeting",
         code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,
@@ -156,7 +167,6 @@ describe("validateMissingReplacements", () => {
     );
     expect(diagnostics).toEqual([
       {
-        severity: "warn",
         origin: "t",
         messageKey: "home.greeting",
         code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,

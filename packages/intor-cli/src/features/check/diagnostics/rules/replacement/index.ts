@@ -1,3 +1,3 @@
 export { replacementsNotAllowed } from "./not-allowed";
-export { replacementsMissing } from "./missing";
-export { replacementsUnused } from "./unused";
+export { replacementMissing } from "./missing";
+export { replacementUnexpected } from "./unexpected";

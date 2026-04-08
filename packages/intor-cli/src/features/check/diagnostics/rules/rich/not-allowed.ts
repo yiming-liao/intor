@@ -1,7 +1,7 @@
 import type { RichUsage, InferNode } from "../../../../../core";
 import type { Diagnostic } from "../../types";
 import { DIAGNOSTIC_MESSAGES } from "../../messages";
-import { getSchemaNodeAtPath } from "../../utils/get-schema-node-at-path";
+import { getNodeAtPath } from "../../utils/get-node-at-path";
 import { resolveKeyPath } from "../../utils/resolve-key-path";
 
 /**
@@ -16,17 +16,18 @@ import { resolveKeyPath } from "../../utils/resolve-key-path";
  */
 export function richNotAllowed(
   usage: RichUsage,
-  richSchema: InferNode,
+  shape: InferNode,
 ): Diagnostic[] {
   const { method, key, preKey, file, line, column } = usage;
 
   const keyPath = resolveKeyPath(key, preKey);
-  const schemaNode = getSchemaNodeAtPath(richSchema, keyPath);
+  if (!keyPath) return [];
 
-  if (!schemaNode || schemaNode.kind !== "object") {
+  const node = getNodeAtPath(shape, keyPath);
+
+  if (!node || node.kind !== "object") {
     return [
       {
-        severity: "warn",
         origin: method,
         messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.RICH_NOT_ALLOWED.code,

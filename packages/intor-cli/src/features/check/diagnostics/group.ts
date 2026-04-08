@@ -7,8 +7,7 @@ export function groupDiagnostics(diagnostics: Diagnostic[]): DiagnosticGroup[] {
   const map = new Map<string, DiagnosticGroup>();
 
   for (const diagnostic of diagnostics) {
-    const { severity, origin, message, messageKey, file, line, column } =
-      diagnostic;
+    const { origin, message, messageKey, file, line, column } = diagnostic;
 
     // --------------------------------------------------
     // Grouping key
@@ -22,7 +21,6 @@ export function groupDiagnostics(diagnostics: Diagnostic[]): DiagnosticGroup[] {
     // Initialize group if not exists
     if (!map.has(groupId)) {
       map.set(groupId, {
-        severity,
         origin,
         messageKey,
         problems: [],
@@ -35,11 +33,6 @@ export function groupDiagnostics(diagnostics: Diagnostic[]): DiagnosticGroup[] {
     // Aggregate messages & lines
     group.problems.push(message);
     group.lines.push(line);
-
-    // Severity escalation (error > warn)
-    if (severity === "error") {
-      group.severity = "error";
-    }
   }
 
   // Normalize line numbers (unique + sorted)

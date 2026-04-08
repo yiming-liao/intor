@@ -7,26 +7,26 @@ import { enforceMissingReplacements } from "../../../../../src/features/check/di
 import { enforceMissingRich } from "../../../../../src/features/check/diagnostics/rules/enforce-missing-rich";
 import {
   keyEmpty,
-  keyNotFound,
+  keyNotExist,
 } from "../../../../../src/features/check/diagnostics/rules/key";
-import { preKeyNotFound } from "../../../../../src/features/check/diagnostics/rules/pre-key";
+import { preKeyNotExist } from "../../../../../src/features/check/diagnostics/rules/pre-key";
 import {
-  replacementsMissing,
+  replacementMissing,
   replacementsNotAllowed,
-  replacementsUnused,
+  replacementUnexpected,
 } from "../../../../../src/features/check/diagnostics/rules/replacement";
 import {
   richMissing,
   richNotAllowed,
-  richUnused,
+  richUnexpected,
 } from "../../../../../src/features/check/diagnostics/rules/rich";
 
 vi.mock("../../../../../src/features/check/diagnostics/rules/pre-key", () => ({
-  preKeyNotFound: vi.fn(),
+  preKeyNotExist: vi.fn(),
 }));
 
 vi.mock("../../../../../src/features/check/diagnostics/rules/key", () => ({
-  keyNotFound: vi.fn(),
+  keyNotExist: vi.fn(),
   keyEmpty: vi.fn(),
 }));
 
@@ -34,15 +34,15 @@ vi.mock(
   "../../../../../src/features/check/diagnostics/rules/replacement",
   () => ({
     replacementsNotAllowed: vi.fn(),
-    replacementsMissing: vi.fn(),
-    replacementsUnused: vi.fn(),
+    replacementMissing: vi.fn(),
+    replacementUnexpected: vi.fn(),
   }),
 );
 
 vi.mock("../../../../../src/features/check/diagnostics/rules/rich", () => ({
   richNotAllowed: vi.fn(),
   richMissing: vi.fn(),
-  richUnused: vi.fn(),
+  richUnexpected: vi.fn(),
 }));
 
 vi.mock(
@@ -73,15 +73,15 @@ describe("collectDiagnostics", () => {
 
   it("collects diagnostics from all rule groups, but enforces only on t / tRich", () => {
     const d = (id: string): Diagnostic => ({ id }) as any;
-    vi.mocked(preKeyNotFound).mockReturnValue([d("preKey")]);
-    vi.mocked(keyNotFound).mockReturnValue([d("keyNotFound")]);
+    vi.mocked(preKeyNotExist).mockReturnValue([d("preKey")]);
+    vi.mocked(keyNotExist).mockReturnValue([d("keyNotExist")]);
     vi.mocked(keyEmpty).mockReturnValue([d("keyEmpty")]);
     vi.mocked(replacementsNotAllowed).mockReturnValue([d("repNotAllowed")]);
-    vi.mocked(replacementsMissing).mockReturnValue([d("repMissing")]);
-    vi.mocked(replacementsUnused).mockReturnValue([d("repUnused")]);
+    vi.mocked(replacementMissing).mockReturnValue([d("repMissing")]);
+    vi.mocked(replacementUnexpected).mockReturnValue([d("repUnexpected")]);
     vi.mocked(richNotAllowed).mockReturnValue([d("richNotAllowed")]);
     vi.mocked(richMissing).mockReturnValue([d("richMissing")]);
-    vi.mocked(richUnused).mockReturnValue([d("richUnused")]);
+    vi.mocked(richUnexpected).mockReturnValue([d("richUnexpected")]);
     vi.mocked(enforceMissingReplacements).mockReturnValue([d("enforceRep")]);
     vi.mocked(enforceMissingRich).mockReturnValue([d("enforceRich")]);
     const usages: ExtractedUsages = {
@@ -100,21 +100,22 @@ describe("collectDiagnostics", () => {
       usages,
     );
     expect(result.map((d) => (d as any).id)).toEqual([
-      "preKey",
       // key-level rules: t
-      "keyNotFound",
+      "keyNotExist",
       "keyEmpty",
       // key-level rules: <Trans />
-      "keyNotFound",
+      "keyNotExist",
       "keyEmpty",
+      // preKey
+      "preKey",
       // replacement
       "repNotAllowed",
       "repMissing",
-      "repUnused",
+      "repUnexpected",
       // rich
       "richNotAllowed",
       "richMissing",
-      "richUnused",
+      "richUnexpected",
       // enforce (ONLY once, for t)
       "enforceRep",
       "enforceRich",

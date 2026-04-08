@@ -2,7 +2,7 @@ import type { KeyUsageLike } from "./types";
 import type { InferNode } from "../../../../../core";
 import type { Diagnostic } from "../../types";
 import { DIAGNOSTIC_MESSAGES } from "../../messages";
-import { getSchemaNodeAtPath } from "../../utils/get-schema-node-at-path";
+import { getNodeAtPath } from "../../utils/get-node-at-path";
 import { resolveKeyPath } from "../../utils/resolve-key-path";
 
 /**
@@ -15,21 +15,22 @@ import { resolveKeyPath } from "../../utils/resolve-key-path";
  * t("missing")
  * ```
  */
-export function keyNotFound(
+export function keyNotExist(
   usage: KeyUsageLike,
-  messagesSchema: InferNode,
+  shape: InferNode,
 ): Diagnostic[] {
-  const { origin, key, preKey, file, line, column } = usage;
-
-  if (!key) return [];
+  const { method, key, preKey, file, line, column } = usage;
 
   const keyPath = resolveKeyPath(key, preKey);
-  if (!getSchemaNodeAtPath(messagesSchema, keyPath)) {
+  if (!keyPath) return [];
+
+  const node = getNodeAtPath(shape, keyPath);
+
+  if (!node) {
     return [
       {
-        severity: "warn",
-        origin,
-        messageKey: key,
+        origin: method,
+        messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.code,
         message: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.message(),
         file,

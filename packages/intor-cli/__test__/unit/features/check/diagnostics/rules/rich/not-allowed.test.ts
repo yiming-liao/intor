@@ -18,6 +18,17 @@ function usage(tags: string[]): RichUsage {
 }
 
 describe("richNotAllowed", () => {
+  it("does nothing when key path cannot be resolved", () => {
+    const diagnostics = richNotAllowed(
+      { ...usage(["a"]), key: "" },
+      {
+        kind: "object",
+        properties: {},
+      } as InferNode,
+    );
+    expect(diagnostics).toEqual([]);
+  });
+
   it("reports rich tags when schema does not allow them", () => {
     const diagnostics = richNotAllowed(usage(["a"]), {
       kind: "object",

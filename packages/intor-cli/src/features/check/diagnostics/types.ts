@@ -1,5 +1,7 @@
+/* v8 ignore file */
+
 export interface Diagnostic {
-  severity: "error" | "warn";
+  /** factory / method */
   origin: string;
   messageKey: string;
   code: string;
@@ -10,7 +12,6 @@ export interface Diagnostic {
 }
 
 export interface DiagnosticGroup {
-  severity: "error" | "warn";
   origin: string;
   messageKey: string;
   problems: string[]; // list of bullet messages
