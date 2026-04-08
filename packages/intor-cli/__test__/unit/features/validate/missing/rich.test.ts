@@ -1,9 +1,9 @@
 import type { InferNode } from "../../../../../src/core";
-import type { MissingRequirements } from "../../../../../src/features/validate/missing/collect-missing-requirements";
+import type { MissingResult } from "../../../../../src/features/validate/missing/types";
 import { describe, it, expect } from "vitest";
-import { collectMissingRich } from "../../../../../src/features/validate/missing/collect-missing-rich";
+import { collectMissingRich } from "../../../../../src/features/validate/missing/rich";
 
-function createResult(): MissingRequirements {
+function createResult(): MissingResult {
   return {
     missingMessages: [],
     missingReplacements: [],
@@ -17,7 +17,6 @@ describe("collectMissingRich", () => {
     collectMissingRich(
       { kind: "none" } as InferNode,
       { title: "<a>hello</a>" },
-      "",
       result,
     );
     expect(result.missingRich).toEqual([]);
@@ -39,7 +38,7 @@ describe("collectMissingRich", () => {
       title: "plain text",
     };
     const result = createResult();
-    collectMissingRich(schema, messages, "", result);
+    collectMissingRich(schema, messages, result);
     expect(result.missingRich).toEqual([{ key: "title", tag: "a" }]);
   });
 
@@ -60,7 +59,7 @@ describe("collectMissingRich", () => {
       title: "<a>link</a><b>bold</b>",
     };
     const result = createResult();
-    collectMissingRich(schema, messages, "", result);
+    collectMissingRich(schema, messages, result);
     expect(result.missingRich).toEqual([]);
   });
 
@@ -87,7 +86,7 @@ describe("collectMissingRich", () => {
       },
     };
     const result = createResult();
-    collectMissingRich(schema, messages, "", result);
+    collectMissingRich(schema, messages, result);
     expect(result.missingRich).toEqual([
       { key: "section.title", tag: "strong" },
     ]);
@@ -109,7 +108,7 @@ describe("collectMissingRich", () => {
       title: { text: "<a>hello</a>" },
     };
     const result = createResult();
-    collectMissingRich(schema, messages, "", result);
+    collectMissingRich(schema, messages, result);
     expect(result.missingRich).toEqual([]);
   });
 
@@ -124,7 +123,43 @@ describe("collectMissingRich", () => {
       title: "<a>hello</a>",
     };
     const result = createResult();
-    collectMissingRich(schema, messages, "", result);
+    collectMissingRich(schema, messages, result);
+    expect(result.missingRich).toEqual([]);
+  });
+
+  it("does not recurse into array values", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        title: {
+          kind: "object",
+          properties: {
+            a: { kind: "none" },
+          },
+        },
+      },
+    };
+    const messages = {
+      title: [],
+    };
+    const result = createResult();
+
+    collectMissingRich(schema, messages, result);
+
+    expect(result.missingRich).toEqual([]);
+  });
+
+  it("skips undefined shape nodes", () => {
+    const schema = {
+      kind: "object",
+      properties: {
+        title: undefined,
+      },
+    } as unknown as InferNode;
+    const result = createResult();
+
+    collectMissingRich(schema, { title: "<a>hello</a>" }, result);
+
     expect(result.missingRich).toEqual([]);
   });
 });

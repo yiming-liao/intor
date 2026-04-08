@@ -1,11 +1,13 @@
+import type { MissingResult } from "./missing";
 import type { ReaderOptions } from "../../core";
-import type { MissingRequirements } from "./missing/collect-missing-requirements";
 
-export type MissingRequirementsByLocale = {
-  [locale: string]: MissingRequirements;
-};
+export interface MissingByLocale {
+  [locale: string]: MissingResult;
+}
 
-export type MissingReport = { [configId: string]: MissingRequirementsByLocale };
+export interface MissingReport {
+  [configId: string]: MissingByLocale;
+}
 
 export interface ValidateOptions extends ReaderOptions {
   format?: "human" | "json";

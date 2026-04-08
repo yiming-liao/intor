@@ -1,9 +1,9 @@
 import type { InferNode } from "../../../../../src/core";
-import type { MissingRequirements } from "../../../../../src/features/validate/missing/collect-missing-requirements";
+import type { MissingResult } from "../../../../../src/features/validate/missing/types";
 import { describe, it, expect } from "vitest";
-import { collectMissingMessages } from "../../../../../src/features/validate/missing/collect-missing-messages";
+import { collectMissingMessages } from "../../../../../src/features/validate/missing/messages";
 
-function createResult(): MissingRequirements {
+function createResult(): MissingResult {
   return {
     missingMessages: [],
     missingReplacements: [],
@@ -16,7 +16,7 @@ describe("collectMissingMessages", () => {
     const schema: InferNode = { kind: "none" };
     const messages = { a: "hello" };
     const result = createResult();
-    collectMissingMessages(schema, messages, "", result);
+    collectMissingMessages(schema, messages, result);
     expect(result.missingMessages).toEqual([]);
   });
 
@@ -32,7 +32,7 @@ describe("collectMissingMessages", () => {
       greeting: "hello",
     };
     const result = createResult();
-    collectMissingMessages(schema, messages, "", result);
+    collectMissingMessages(schema, messages, result);
     expect(result.missingMessages).toEqual(["title"]);
   });
 
@@ -55,7 +55,7 @@ describe("collectMissingMessages", () => {
       },
     };
     const result = createResult();
-    collectMissingMessages(schema, messages, "", result);
+    collectMissingMessages(schema, messages, result);
     expect(result.missingMessages).toEqual(["home.subtitle"]);
   });
 
@@ -77,7 +77,7 @@ describe("collectMissingMessages", () => {
       },
     };
     const result = createResult();
-    collectMissingMessages(schema, messages, "", result);
+    collectMissingMessages(schema, messages, result);
     expect(result.missingMessages).toEqual([]);
   });
 
@@ -93,7 +93,7 @@ describe("collectMissingMessages", () => {
       extra: "should be ignored",
     };
     const result = createResult();
-    collectMissingMessages(schema, messages, "", result);
+    collectMissingMessages(schema, messages, result);
     expect(result.missingMessages).toEqual([]);
   });
 
@@ -111,7 +111,43 @@ describe("collectMissingMessages", () => {
       },
     };
     const result = createResult();
-    collectMissingMessages(schema, messages, "", result);
+    collectMissingMessages(schema, messages, result);
+    expect(result.missingMessages).toEqual([]);
+  });
+
+  it("does not recurse into array values", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        home: {
+          kind: "object",
+          properties: {
+            title: { kind: "none" },
+          },
+        },
+      },
+    };
+    const messages = {
+      home: [],
+    };
+    const result = createResult();
+
+    collectMissingMessages(schema, messages, result);
+
+    expect(result.missingMessages).toEqual([]);
+  });
+
+  it("skips undefined shape nodes", () => {
+    const schema = {
+      kind: "object",
+      properties: {
+        greeting: undefined,
+      },
+    } as unknown as InferNode;
+    const result = createResult();
+
+    collectMissingMessages(schema, { greeting: "hello" }, result);
+
     expect(result.missingMessages).toEqual([]);
   });
 });

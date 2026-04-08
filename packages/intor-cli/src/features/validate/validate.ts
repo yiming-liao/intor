@@ -1,8 +1,4 @@
-import type {
-  MissingReport,
-  MissingRequirementsByLocale,
-  ValidateOptions,
-} from "./types";
+import type { MissingReport, MissingByLocale, ValidateOptions } from "./types";
 import { features } from "../../constants";
 import { discoverConfigs } from "../../core";
 import { collectNonDefaultLocaleMessages } from "../../core";
@@ -10,13 +6,13 @@ import { renderTitle } from "../../render";
 import { prepareSchema } from "../shared/prepare-schema";
 import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
-import { collectMissingRequirements } from "./missing/collect-missing-requirements";
+import { collectMissing } from "./missing";
 import { renderConfigSummary } from "./render-config-summary";
 
 export async function validate({
   format = "human",
   output,
-  debug,
+  debug = false,
   ...readerOptions
 }: ValidateOptions) {
   const isHuman = format === "human";
@@ -41,8 +37,7 @@ export async function validate({
 
     // Per-config processing
     for (const { config } of configEntries) {
-      const schemaConfig = schemaEntries.find((c) => c.id === config.id)!;
-      const { shapes } = schemaConfig;
+      const { shapes } = schemaEntries.find((c) => c.id === config.id)!;
 
       // -------------------------------------------------------------------
       // Load all non-default locale messages
@@ -57,12 +52,15 @@ export async function validate({
       // -------------------------------------------------------------------
       // Collect missing requirements per locale
       // -------------------------------------------------------------------
-      const missingByLocale: MissingRequirementsByLocale = {};
+      const missingByLocale: MissingByLocale = {};
+
       for (const locale of config.supportedLocales) {
         if (locale === config.defaultLocale) continue;
+
         const messages = localeMessages[locale];
         if (!messages) continue;
-        missingByLocale[locale] = collectMissingRequirements(shapes, messages);
+
+        missingByLocale[locale] = collectMissing(shapes, messages);
       }
 
       report[config.id] = missingByLocale;

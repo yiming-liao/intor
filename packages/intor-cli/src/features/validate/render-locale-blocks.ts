@@ -1,9 +1,9 @@
-import type { MissingRequirements } from "./missing/collect-missing-requirements";
+import type { MissingResult } from "./missing";
 import { createLogger } from "../../logger";
 import { dim, italic, gray } from "../../render";
 
 export function renderLocaleBlocks(
-  entries: { locale: string; missing: MissingRequirements }[],
+  entries: { locale: string; missing: MissingResult }[],
 ) {
   const logger = createLogger();
   const prefix = dim("│  ");

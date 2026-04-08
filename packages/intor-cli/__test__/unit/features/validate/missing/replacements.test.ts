@@ -1,9 +1,9 @@
 import type { InferNode } from "../../../../../src/core";
-import type { MissingRequirements } from "../../../../../src/features/validate/missing/collect-missing-requirements";
+import type { MissingResult } from "../../../../../src/features/validate/missing/types";
 import { describe, it, expect } from "vitest";
-import { collectMissingReplacements } from "../../../../../src/features/validate/missing/collect-missing-replacements";
+import { collectMissingReplacements } from "../../../../../src/features/validate/missing/replacements";
 
-function createResult(): MissingRequirements {
+function createResult(): MissingResult {
   return {
     missingMessages: [],
     missingReplacements: [],
@@ -16,7 +16,7 @@ describe("collectMissingReplacements", () => {
     const schema: InferNode = { kind: "none" };
     const messages = { greeting: "Hello {name}" };
     const result = createResult();
-    collectMissingReplacements(schema, messages, "", result);
+    collectMissingReplacements(schema, messages, result);
     expect(result.missingReplacements).toEqual([]);
   });
 
@@ -36,7 +36,7 @@ describe("collectMissingReplacements", () => {
       greeting: "Hello",
     };
     const result = createResult();
-    collectMissingReplacements(schema, messages, "", result);
+    collectMissingReplacements(schema, messages, result);
     expect(result.missingReplacements).toEqual([
       { key: "greeting", name: "name" },
     ]);
@@ -58,7 +58,7 @@ describe("collectMissingReplacements", () => {
       greeting: "Hello {name}",
     };
     const result = createResult();
-    collectMissingReplacements(schema, messages, "", result);
+    collectMissingReplacements(schema, messages, result);
     expect(result.missingReplacements).toEqual([]);
   });
 
@@ -85,7 +85,7 @@ describe("collectMissingReplacements", () => {
       },
     };
     const result = createResult();
-    collectMissingReplacements(schema, messages, "", result);
+    collectMissingReplacements(schema, messages, result);
     expect(result.missingReplacements).toEqual([
       { key: "home.title", name: "name" },
     ]);
@@ -107,7 +107,7 @@ describe("collectMissingReplacements", () => {
       count: 123,
     };
     const result = createResult();
-    collectMissingReplacements(schema, messages, "", result);
+    collectMissingReplacements(schema, messages, result);
     expect(result.missingReplacements).toEqual([]);
   });
 
@@ -122,7 +122,43 @@ describe("collectMissingReplacements", () => {
       plain: "Just text",
     };
     const result = createResult();
-    collectMissingReplacements(schema, messages, "", result);
+    collectMissingReplacements(schema, messages, result);
+    expect(result.missingReplacements).toEqual([]);
+  });
+
+  it("does not recurse into array values", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        greeting: {
+          kind: "object",
+          properties: {
+            name: { kind: "primitive", type: "string" },
+          },
+        },
+      },
+    };
+    const messages = {
+      greeting: [],
+    };
+    const result = createResult();
+
+    collectMissingReplacements(schema, messages, result);
+
+    expect(result.missingReplacements).toEqual([]);
+  });
+
+  it("skips undefined shape nodes", () => {
+    const schema = {
+      kind: "object",
+      properties: {
+        greeting: undefined,
+      },
+    } as unknown as InferNode;
+    const result = createResult();
+
+    collectMissingReplacements(schema, { greeting: "Hello {name}" }, result);
+
     expect(result.missingReplacements).toEqual([]);
   });
 });

@@ -1,12 +1,10 @@
-import type { MissingRequirementsByLocale } from "./types";
+import type { MissingByLocale } from "./types";
 import { createLogger } from "../../logger";
 import { cyan, br, yellow } from "../../render";
 import { renderLocaleBlocks } from "./render-locale-blocks";
 
 // { [locale: string]: MissingRequirements; } → { string; MissingRequirements; }[]
-function normalizeMissingByLocale(
-  missingByLocale: MissingRequirementsByLocale,
-) {
+function normalizeMissingByLocale(missingByLocale: MissingByLocale) {
   return Object.entries(missingByLocale)
     .map(([locale, missing]) => ({ locale, missing }))
     .filter(
@@ -19,7 +17,7 @@ function normalizeMissingByLocale(
 
 export function renderConfigSummary(
   configId: string,
-  missingByLocale: MissingRequirementsByLocale,
+  missingByLocale: MissingByLocale,
   enabled = true,
 ) {
   if (!enabled) return;

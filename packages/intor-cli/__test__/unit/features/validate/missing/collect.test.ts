@@ -1,16 +1,16 @@
 import type { InferredShapes } from "../../../../../src/core";
 import { describe, it, expect } from "vitest";
-import { collectMissingRequirements } from "../../../../../src/features/validate/missing/collect-missing-requirements";
+import { collectMissing } from "../../../../../src/features/validate/missing/collect";
 
-describe("collectMissingRequirements", () => {
-  it("returns empty result when schemas define no constraints", () => {
-    const schemas: InferredShapes = {
+describe("collectMissing", () => {
+  it("returns empty result when shapes define no constraints", () => {
+    const shapes: InferredShapes = {
       messages: { kind: "none" },
       replacements: { kind: "none" },
       rich: { kind: "none" },
     };
     const messages = {};
-    const result = collectMissingRequirements(schemas, messages);
+    const result = collectMissing(shapes, messages);
     expect(result).toEqual({
       missingMessages: [],
       missingReplacements: [],
@@ -19,7 +19,7 @@ describe("collectMissingRequirements", () => {
   });
 
   it("aggregates missing keys, replacements, and rich tags", () => {
-    const schemas: InferredShapes = {
+    const shapes: InferredShapes = {
       messages: {
         kind: "object",
         properties: {
@@ -52,7 +52,7 @@ describe("collectMissingRequirements", () => {
     const messages = {
       greeting: "Hello",
     };
-    const result = collectMissingRequirements(schemas, messages);
+    const result = collectMissing(shapes, messages);
     expect(result).toEqual({
       missingMessages: [],
       missingReplacements: [{ key: "greeting", name: "name" }],
@@ -61,7 +61,7 @@ describe("collectMissingRequirements", () => {
   });
 
   it("reports missing keys before other validations", () => {
-    const schemas: InferredShapes = {
+    const shapes: InferredShapes = {
       messages: {
         kind: "object",
         properties: {
@@ -72,9 +72,45 @@ describe("collectMissingRequirements", () => {
       rich: { kind: "none" },
     };
     const messages = {};
-    const result = collectMissingRequirements(schemas, messages);
+    const result = collectMissing(shapes, messages);
     expect(result.missingMessages).toEqual(["title"]);
     expect(result.missingReplacements).toEqual([]);
     expect(result.missingRich).toEqual([]);
+  });
+
+  it("ignores missing replacements and rich tags for absent messages", () => {
+    const shapes: InferredShapes = {
+      messages: { kind: "none" },
+      replacements: {
+        kind: "object",
+        properties: {
+          greeting: {
+            kind: "object",
+            properties: {
+              name: { kind: "none" },
+            },
+          },
+        },
+      },
+      rich: {
+        kind: "object",
+        properties: {
+          greeting: {
+            kind: "object",
+            properties: {
+              strong: { kind: "none" },
+            },
+          },
+        },
+      },
+    };
+
+    const result = collectMissing(shapes, {});
+
+    expect(result).toEqual({
+      missingMessages: [],
+      missingReplacements: [],
+      missingRich: [],
+    });
   });
 });
