@@ -3,6 +3,12 @@ import type { InferNode } from "../../../core";
 import type { MessageObject } from "intor";
 import { tokenize, type Token } from "intor-translator/internal";
 
+function isTagOpenToken(
+  token: Token,
+): token is Token & { type: "tag-open"; name: string } {
+  return token.type === "tag-open";
+}
+
 export function collectMissingRich(
   schema: InferNode,
   messages: MessageObject,
@@ -30,7 +36,7 @@ export function collectMissingRich(
 
       const tokens: Token[] = tokenize(value);
       const actualTags = new Set(
-        tokens.filter((t) => t.type === "tag-open").map((t) => t.name),
+        tokens.filter(isTagOpenToken).map((t) => t.name),
       );
 
       // Report any schema-required rich tags missing in the message

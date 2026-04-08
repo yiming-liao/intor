@@ -16,7 +16,8 @@ export async function collectNonDefaultLocaleMessages(
     if (locale === defaultLocale) continue;
 
     const { messages } = await collectMessages(locale, config, readerOptions);
-    if (messages[locale]) result[locale] = messages[locale];
+    const localeMessages = messages[locale];
+    if (localeMessages) result[locale] = localeMessages;
   }
 
   return result;
