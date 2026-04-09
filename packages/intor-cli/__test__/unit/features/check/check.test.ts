@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { features } from "../../../../src/constants";
-import { extractUsages } from "../../../../src/core";
+import { extractUsages, prepareSchema } from "../../../../src/core";
 import { check } from "../../../../src/features/check/check";
 import {
   collectDiagnostics,
@@ -10,24 +9,27 @@ import {
 import { filterUsagesByConfig } from "../../../../src/features/check/filter-usages-by-config";
 import { loadSourceFiles } from "../../../../src/features/check/load-source-files";
 import { renderConfigSummary } from "../../../../src/features/check/render-config-summary";
-import { prepareSchema } from "../../../../src/features/shared/prepare-schema";
-import { spinner } from "../../../../src/features/shared/spinner";
 import { writeJsonReport } from "../../../../src/infrastructure";
-import { renderTitle } from "../../../../src/render";
+import { renderTitle } from "../../../../src/shared";
+import { FEATURES } from "../../../../src/shared";
+import { spinner } from "../../../../src/shared/log/spinner";
 
 vi.mock("../../../../src/core", () => ({
   extractUsages: vi.fn(),
-}));
-
-vi.mock("../../../../src/render", () => ({
-  renderTitle: vi.fn(),
-}));
-
-vi.mock("../../../../src/features/shared/prepare-schema", () => ({
   prepareSchema: vi.fn(),
 }));
 
-vi.mock("../../../../src/features/shared/spinner", () => ({
+vi.mock("../../../../src/shared", () => ({
+  FEATURES: {
+    discover: { name: "discover", title: "Discover intor configs" },
+    generate: { name: "generate", title: "Generate types & schemas" },
+    check: { name: "check", title: "Check translation usages" },
+    validate: { name: "validate", title: "Validate messages" },
+  },
+  renderTitle: vi.fn(),
+}));
+
+vi.mock("../../../../src/shared/log/spinner", () => ({
   spinner: {
     start: vi.fn(),
     stop: vi.fn(),
@@ -92,7 +94,7 @@ describe("check", () => {
 
     await check({});
 
-    expect(renderTitle).toHaveBeenCalledWith(features.check.title, true);
+    expect(renderTitle).toHaveBeenCalledWith(FEATURES.check.title, true);
     expect(spinner.start).toHaveBeenCalledTimes(1);
     expect(spinner.stop).toHaveBeenCalledTimes(1);
     expect(loadSourceFiles).toHaveBeenCalledWith("tsconfig.json", false);
@@ -138,7 +140,7 @@ describe("check", () => {
 
     await check({ format: "json", output: "report.json", debug: true });
 
-    expect(renderTitle).toHaveBeenCalledWith(features.check.title, false);
+    expect(renderTitle).toHaveBeenCalledWith(FEATURES.check.title, false);
     expect(spinner.start).not.toHaveBeenCalled();
     expect(spinner.stop).not.toHaveBeenCalled();
     expect(loadSourceFiles).toHaveBeenCalledWith("tsconfig.json", true);

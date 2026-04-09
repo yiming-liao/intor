@@ -1,7 +1,7 @@
 import type { CliOption } from "./options";
 import type { CAC } from "cac";
-import { features } from "../../constants";
 import { discover } from "../../features";
+import { FEATURES } from "../../shared";
 import { options } from "./options";
 
 export function registerDiscoverCommand(cli: CAC) {
@@ -9,7 +9,7 @@ export function registerDiscoverCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     // Command
     // -----------------------------------------------------------------------
-    .command(features.discover.name, features.discover.title)
+    .command(FEATURES.discover.name, FEATURES.discover.title)
 
     // -----------------------------------------------------------------------
     // Options

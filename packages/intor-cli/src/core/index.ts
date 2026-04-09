@@ -34,16 +34,7 @@ export {
 export {
   buildTypes,
   buildSchema,
-  readSchema,
+  prepareSchema,
   type GeneratedSchema,
   type SchemaEntry,
 } from "./artifacts";
-
-// constants
-export {
-  DEFAULT_OUT_DIR,
-  DEFAULT_TYPES_FILE_PATH,
-  DEFAULT_SCHEMA_FILE_PATH,
-  EXTRA_EXTS,
-  type ExtraExt,
-} from "./constants";

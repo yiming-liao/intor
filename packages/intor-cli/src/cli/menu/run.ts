@@ -1,8 +1,8 @@
 import { outro, select, isCancel, intro } from "@clack/prompts";
 import pc from "picocolors";
-import { features } from "../../constants";
 import { check, discover, generate, validate } from "../../features";
-import { bold, italic } from "../../render";
+import { bold, italic } from "../../shared";
+import { FEATURES } from "../../shared";
 import { VERSION } from "../version";
 import { promptCheck } from "./prompts/prompt-check";
 import { promptDiscover } from "./prompts/prompt-discover";
@@ -33,7 +33,7 @@ export async function run() {
   const action = await select({
     message: "Select an action",
     options: [
-      ...Object.values(features).map(({ name, title }) => ({
+      ...Object.values(FEATURES).map(({ name, title }) => ({
         value: name,
         label: title,
       })),

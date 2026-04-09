@@ -1,6 +1,6 @@
 import type { ConfigEntry } from "./discover-configs";
-import type { Logger } from "../../logger";
-import { cyan } from "../../render";
+import type { Logger } from "../../shared";
+import { cyan } from "../../shared";
 import { isIntorResolvedConfig } from "./is-intor-resolved-config";
 
 interface ResolveConfigModuleParams {

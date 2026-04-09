@@ -7,3 +7,6 @@ export {
 
 // extra-exts
 export { EXTRA_EXTS, type ExtraExt } from "./extra-exts";
+
+// features
+export { FEATURES } from "./features";

@@ -5,8 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { discoverConfigs } from "../../../../src/core/discover-configs/discover-configs";
 import { resolveConfigModule } from "../../../../src/core/discover-configs/resolve-config-module";
 import { globFiles } from "../../../../src/infrastructure/glob-files";
-import { createLogger } from "../../../../src/logger";
-import { br } from "../../../../src/render";
+import { createLogger } from "../../../../src/shared";
+import { br } from "../../../../src/shared";
 
 vi.mock("../../../../src/infrastructure/glob-files", () => ({
   globFiles: vi.fn(),
@@ -16,11 +16,8 @@ vi.mock("../../../../src/core/discover-configs/resolve-config-module", () => ({
   resolveConfigModule: vi.fn(),
 }));
 
-vi.mock("../../../../src/logger", () => ({
+vi.mock("../../../../src/shared", () => ({
   createLogger: vi.fn(),
-}));
-
-vi.mock("../../../../src/render", () => ({
   br: vi.fn(),
   yellow: (v: unknown) => String(v),
 }));

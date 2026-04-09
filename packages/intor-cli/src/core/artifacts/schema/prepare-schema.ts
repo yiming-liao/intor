@@ -1,6 +1,7 @@
-import { readSchema, type SchemaEntry } from "../../core";
+import type { SchemaEntry } from "../types";
+import { readSchema } from "./read-schema";
 
-export interface PrepareSchemaEntriesResult {
+interface PrepareSchemaEntriesResult {
   /** All schema entries read from generated schema artifact. */
   schemaEntries: SchemaEntry[];
   /** The first schema entry, treated as default config scope. */

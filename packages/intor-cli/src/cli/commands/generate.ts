@@ -1,7 +1,7 @@
 import type { CliOption } from "./options";
 import type { CAC } from "cac";
-import { features } from "../../constants";
 import { generate } from "../../features";
+import { FEATURES } from "../../shared";
 import { VERSION } from "../version";
 import { options } from "./options";
 import { normalizeMessageFiles } from "./utils/normalize-message-files";
@@ -12,7 +12,7 @@ export function registerGenerateCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     // Command
     // -----------------------------------------------------------------------
-    .command(features.generate.name, features.generate.title)
+    .command(FEATURES.generate.name, FEATURES.generate.title)
 
     // -----------------------------------------------------------------------
     // Option

@@ -1,4 +1,4 @@
-export const features = {
+export const FEATURES = {
   discover: { name: "discover", title: "Discover intor configs" },
   generate: { name: "generate", title: "Generate types & schemas" },
   check: { name: "check", title: "Check translation usages" },

@@ -1,6 +1,6 @@
-import type { ConfigEntry } from "./core";
+import type { ConfigEntry } from "../../core";
 import pc from "picocolors";
-import { toRelativePath } from "./features/shared/to-relative-path";
+import { toRelativePath } from "../utils/to-relative-path";
 import { createLogger } from "./logger";
 
 // Formatting utilities

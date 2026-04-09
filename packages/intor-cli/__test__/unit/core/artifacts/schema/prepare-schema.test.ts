@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import * as core from "../../../../src/core";
-import { prepareSchema } from "../../../../src/features/shared/prepare-schema";
+import { prepareSchema } from "../../../../../src/core/artifacts/schema/prepare-schema";
+import * as readSchemaModule from "../../../../../src/core/artifacts/schema/read-schema";
 
 describe("prepareSchema", () => {
-  const readSchemaMock = vi.spyOn(core, "readSchema");
+  const readSchemaMock = vi.spyOn(readSchemaModule, "readSchema");
 
   beforeEach(() => {
     readSchemaMock.mockReset();

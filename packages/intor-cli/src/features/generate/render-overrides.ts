@@ -1,6 +1,6 @@
 import type { MergeOverrides } from "../../core";
-import { createLogger } from "../../logger";
-import { dim, gray, br, cyan } from "../../render";
+import { createLogger } from "../../shared";
+import { dim, gray, br, cyan } from "../../shared";
 
 export function renderOverrides(
   configId: string,
@@ -16,27 +16,38 @@ export function renderOverrides(
   const hasRuntimeOverStatic = runtimeOverStatic.length > 0;
   if (!hasClientOverServer && !hasRuntimeOverStatic) return;
 
-  // Log header
+  // ---------------------------------------------------------------------------
+  // Header
+  // ---------------------------------------------------------------------------
   logger.header(`Overrides for ${cyan(configId)}`, { lineBreakAfter: 1 });
 
+  // ---------------------------------------------------------------------------
+  // Body
+  // ---------------------------------------------------------------------------
   // Client overrides server
   if (hasClientOverServer) {
+    // [title]
     logger.log(gray("client > server"));
+    // e.g. - greeting | Prev: Hey → Next: Hello, how are y…
     for (const { path, prev, next } of clientOverServer) {
       logger.log(`  - ${path} ${formatDiff(prev, next)}`);
     }
-    logger.log();
+    logger.log(); // spacer
   }
 
   // Runtime overrides static
   if (hasRuntimeOverStatic) {
+    // [title]
     logger.log(gray("runtime > static"));
+    // e.g. - greeting | Prev: Hey → Next: Hello, how are y…
     for (const { path, prev, next } of runtimeOverStatic) {
       logger.log(`  - ${path} ${formatDiff(prev, next)}`);
     }
   }
 
-  // Log footer
+  // ---------------------------------------------------------------------------
+  // Footer
+  // ---------------------------------------------------------------------------
   logger.footer("", { lineBreakBefore: 1 });
 
   br();

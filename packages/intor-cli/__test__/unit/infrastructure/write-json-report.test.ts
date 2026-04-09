@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { writeFile } from "node:fs/promises";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { writeJsonReport } from "../../../src/infrastructure/write-json-report";
 
 vi.mock("node:fs/promises", () => ({

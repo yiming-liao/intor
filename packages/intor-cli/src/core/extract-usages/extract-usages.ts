@@ -1,7 +1,7 @@
 import type { ExtractedUsages } from "./types";
 import type { SourceFile } from "ts-morph";
-import { createLogger } from "../../logger";
-import { br, yellow } from "../../render";
+import { createLogger } from "../../shared";
+import { br, yellow } from "../../shared";
 import { extractUsagesFromSourceFile } from "./extract-usages-from-source-file";
 
 /** Check whether a file-level extraction produced any meaningful usage */

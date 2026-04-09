@@ -1,10 +1,10 @@
 import type { Diagnostic } from "./diagnostics";
-import { features } from "../../constants";
 import { extractUsages } from "../../core";
+import { prepareSchema } from "../../core";
 import { writeJsonReport } from "../../infrastructure";
-import { renderTitle } from "../../render";
-import { prepareSchema } from "../shared/prepare-schema";
-import { spinner } from "../shared/spinner";
+import { renderTitle } from "../../shared";
+import { FEATURES } from "../../shared";
+import { spinner } from "../../shared/log/spinner";
 import { collectDiagnostics, groupDiagnostics } from "./diagnostics";
 import { filterUsagesByConfig } from "./filter-usages-by-config";
 import { loadSourceFiles } from "./load-source-files";
@@ -24,7 +24,7 @@ export async function check({
   debug = false,
 }: CheckOptions) {
   const isHuman = format === "human";
-  renderTitle(features.check.title, isHuman);
+  renderTitle(FEATURES.check.title, isHuman);
 
   try {
     // ---------------------------------------------------------------------
@@ -56,7 +56,7 @@ export async function check({
     // ---------------------------------------------------------------------------
     const usages = extractUsages({
       sourceFiles,
-      ...(debug !== undefined ? { debug } : {}),
+      debug,
     });
 
     // ---------------------------------------------------------------------------

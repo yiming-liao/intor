@@ -18,10 +18,13 @@ function usage(): ReplacementUsage {
 
 describe("replacementsNotAllowed", () => {
   it("does nothing when key path cannot be resolved", () => {
-    const diagnostics = replacementsNotAllowed({ ...usage(), key: "" }, {
-      kind: "object",
-      properties: {},
-    });
+    const diagnostics = replacementsNotAllowed(
+      { ...usage(), key: "" },
+      {
+        kind: "object",
+        properties: {},
+      },
+    );
     expect(diagnostics).toEqual([]);
   });
 

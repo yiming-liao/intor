@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderConfigSummary } from "../../../../src/features/check/render-config-summary";
-import { toRelativePath } from "../../../../src/features/shared/to-relative-path";
-import { createLogger } from "../../../../src/logger";
-import { br, cyan, dim, gray, yellow } from "../../../../src/render";
+import { createLogger } from "../../../../src/shared";
+import {
+  br,
+  cyan,
+  dim,
+  gray,
+  yellow,
+  toRelativePath,
+} from "../../../../src/shared";
 
-vi.mock("../../../../src/logger", () => ({
+vi.mock("../../../../src/shared", () => ({
   createLogger: vi.fn(),
-}));
-
-vi.mock("../../../../src/render", () => ({
   br: vi.fn(),
   cyan: vi.fn((value: string) => value),
   dim: vi.fn((value: string) => value),
   gray: vi.fn((value: string) => value),
   yellow: vi.fn((value: string) => value),
-}));
-
-vi.mock("../../../../src/features/shared/to-relative-path", () => ({
   toRelativePath: vi.fn((value: string) => `rel/${value}`),
 }));
 

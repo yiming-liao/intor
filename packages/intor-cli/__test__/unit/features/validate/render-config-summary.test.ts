@@ -2,14 +2,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderConfigSummary } from "../../../../src/features/validate/render-config-summary";
 import { renderLocaleBlocks } from "../../../../src/features/validate/render-locale-blocks";
-import { createLogger } from "../../../../src/logger";
-import { br, cyan, yellow } from "../../../../src/render";
+import { createLogger } from "../../../../src/shared";
+import { br, cyan, yellow } from "../../../../src/shared";
 
-vi.mock("../../../../src/logger", () => ({
+vi.mock("../../../../src/shared", () => ({
   createLogger: vi.fn(),
-}));
-
-vi.mock("../../../../src/render", () => ({
   br: vi.fn(),
   cyan: vi.fn((value: string) => value),
   yellow: vi.fn((value: string) => value),

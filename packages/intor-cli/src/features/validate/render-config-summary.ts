@@ -1,6 +1,6 @@
 import type { MissingByLocale } from "./types";
-import { createLogger } from "../../logger";
-import { cyan, br, yellow } from "../../render";
+import { createLogger } from "../../shared";
+import { cyan, br, yellow } from "../../shared";
 import { renderLocaleBlocks } from "./render-locale-blocks";
 
 // { [locale: string]: MissingRequirements; } → { string; MissingRequirements; }[]

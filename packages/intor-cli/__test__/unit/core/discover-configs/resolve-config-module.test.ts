@@ -10,7 +10,7 @@ vi.mock(
   }),
 );
 
-vi.mock("../../../../src/render", () => ({ cyan: (s: string) => s }));
+vi.mock("../../../../src/shared", () => ({ cyan: (s: string) => s }));
 
 describe("resolveConfigModule", () => {
   beforeEach(() => {

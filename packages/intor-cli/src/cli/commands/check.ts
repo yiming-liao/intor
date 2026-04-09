@@ -1,7 +1,7 @@
 import type { CliOption } from "./options";
 import type { CAC } from "cac";
-import { features } from "../../constants";
 import { check } from "../../features";
+import { FEATURES } from "../../shared";
 import { options } from "./options";
 
 export function registerCheckCommand(cli: CAC) {
@@ -9,7 +9,7 @@ export function registerCheckCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     // Command
     // -----------------------------------------------------------------------
-    .command(features.check.name, features.check.title)
+    .command(FEATURES.check.name, FEATURES.check.title)
 
     // -----------------------------------------------------------------------
     // Options

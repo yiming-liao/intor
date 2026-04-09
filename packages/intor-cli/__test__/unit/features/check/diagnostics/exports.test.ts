@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { collectDiagnostics, groupDiagnostics } from "../../../../../src/features/check/diagnostics";
-import { keyEmpty, keyNotExist } from "../../../../../src/features/check/diagnostics/rules/key";
+import {
+  collectDiagnostics,
+  groupDiagnostics,
+} from "../../../../../src/features/check/diagnostics";
+import {
+  keyEmpty,
+  keyNotExist,
+} from "../../../../../src/features/check/diagnostics/rules/key";
 import { preKeyNotExist } from "../../../../../src/features/check/diagnostics/rules/pre-key";
 import {
   replacementMissing,
@@ -22,26 +28,23 @@ describe("diagnostics exports", () => {
   });
 
   it("re-exports key rules", async () => {
-    const mod = await import(
-      "../../../../../src/features/check/diagnostics/rules/key"
-    );
+    const mod =
+      await import("../../../../../src/features/check/diagnostics/rules/key");
 
     expect(mod.keyNotExist).toBe(keyNotExist);
     expect(mod.keyEmpty).toBe(keyEmpty);
   });
 
   it("re-exports the preKey rules", async () => {
-    const mod = await import(
-      "../../../../../src/features/check/diagnostics/rules/pre-key"
-    );
+    const mod =
+      await import("../../../../../src/features/check/diagnostics/rules/pre-key");
 
     expect(mod.preKeyNotExist).toBe(preKeyNotExist);
   });
 
   it("re-exports replacement rules", async () => {
-    const mod = await import(
-      "../../../../../src/features/check/diagnostics/rules/replacement"
-    );
+    const mod =
+      await import("../../../../../src/features/check/diagnostics/rules/replacement");
 
     expect(mod.replacementsNotAllowed).toBe(replacementsNotAllowed);
     expect(mod.replacementMissing).toBe(replacementMissing);
@@ -49,9 +52,8 @@ describe("diagnostics exports", () => {
   });
 
   it("re-exports rich rules", async () => {
-    const mod = await import(
-      "../../../../../src/features/check/diagnostics/rules/rich"
-    );
+    const mod =
+      await import("../../../../../src/features/check/diagnostics/rules/rich");
 
     expect(mod.richNotAllowed).toBe(richNotAllowed);
     expect(mod.richMissing).toBe(richMissing);

@@ -19,13 +19,10 @@ function usage(tags: string[]): RichUsage {
 
 describe("richNotAllowed", () => {
   it("does nothing when key path cannot be resolved", () => {
-    const diagnostics = richNotAllowed(
-      { ...usage(["a"]), key: "" },
-      {
-        kind: "object",
-        properties: {},
-      } as InferNode,
-    );
+    const diagnostics = richNotAllowed({ ...usage(["a"]), key: "" }, {
+      kind: "object",
+      properties: {},
+    } as InferNode);
     expect(diagnostics).toEqual([]);
   });
 

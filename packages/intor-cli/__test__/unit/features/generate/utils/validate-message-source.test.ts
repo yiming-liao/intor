@@ -47,6 +47,16 @@ describe("validateMessageSource", () => {
     );
   });
 
+  it("throws when single mode is used with zero configs", () => {
+    const source: MessageSource = {
+      mode: "single",
+      file: "messages.json",
+    };
+    expect(() => validateMessageSource(source, mockConfigEntries([]))).toThrow(
+      /--message-file can only be used when exactly one Intor config is found./,
+    );
+  });
+
   // ----------------------------------------------------------
   // mode: mapping
   // ----------------------------------------------------------
@@ -57,6 +67,16 @@ describe("validateMessageSource", () => {
         app: "app.json",
         admin: "admin.json",
       },
+    };
+    expect(() =>
+      validateMessageSource(source, mockConfigEntries(["app", "admin"])),
+    ).not.toThrow();
+  });
+
+  it("allows mapping mode when no files are provided", () => {
+    const source: MessageSource = {
+      mode: "mapping",
+      files: {},
     };
     expect(() =>
       validateMessageSource(source, mockConfigEntries(["app", "admin"])),
@@ -74,5 +94,14 @@ describe("validateMessageSource", () => {
     expect(() =>
       validateMessageSource(source, mockConfigEntries(["app"])),
     ).toThrow(/Unknown config id/);
+  });
+
+  it("ignores unsupported runtime source modes", () => {
+    expect(() =>
+      validateMessageSource(
+        { mode: "invalid" } as unknown as MessageSource,
+        mockConfigEntries(["app"]),
+      ),
+    ).not.toThrow();
   });
 });

@@ -1,11 +1,11 @@
 import type { MissingReport, MissingByLocale } from "./types";
-import { features } from "../../constants";
 import { discoverConfigs, type ReaderOptions } from "../../core";
 import { collectNonDefaultLocaleMessages } from "../../core";
+import { prepareSchema } from "../../core";
 import { writeJsonReport } from "../../infrastructure";
-import { renderTitle } from "../../render";
-import { prepareSchema } from "../shared/prepare-schema";
-import { spinner } from "../shared/spinner";
+import { renderTitle } from "../../shared";
+import { FEATURES } from "../../shared";
+import { spinner } from "../../shared/log/spinner";
 import { collectMissing } from "./missing";
 import { renderConfigSummary } from "./render-config-summary";
 
@@ -22,7 +22,7 @@ export async function validate({
   ...readerOptions
 }: ValidateOptions) {
   const isHuman = format === "human";
-  renderTitle(features.validate.title, isHuman);
+  renderTitle(FEATURES.validate.title, isHuman);
 
   // -----------------------------------------------------------------------
   // Discover configs from the current workspace

@@ -1,32 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { features } from "../../../../src/constants";
 import {
   collectNonDefaultLocaleMessages,
   discoverConfigs,
+  prepareSchema,
 } from "../../../../src/core";
-import { prepareSchema } from "../../../../src/features/shared/prepare-schema";
-import { spinner } from "../../../../src/features/shared/spinner";
 import { collectMissing } from "../../../../src/features/validate/missing";
 import { renderConfigSummary } from "../../../../src/features/validate/render-config-summary";
 import { validate } from "../../../../src/features/validate/validate";
 import { writeJsonReport } from "../../../../src/infrastructure";
-import { renderTitle } from "../../../../src/render";
+import { renderTitle } from "../../../../src/shared";
+import { FEATURES } from "../../../../src/shared";
+import { spinner } from "../../../../src/shared/log/spinner";
 
 vi.mock("../../../../src/core", () => ({
   discoverConfigs: vi.fn(),
   collectNonDefaultLocaleMessages: vi.fn(),
-}));
-
-vi.mock("../../../../src/render", () => ({
-  renderTitle: vi.fn(),
-}));
-
-vi.mock("../../../../src/features/shared/prepare-schema", () => ({
   prepareSchema: vi.fn(),
 }));
 
-vi.mock("../../../../src/features/shared/spinner", () => ({
+vi.mock("../../../../src/shared", () => ({
+  FEATURES: {
+    discover: { name: "discover", title: "Discover intor configs" },
+    generate: { name: "generate", title: "Generate types & schemas" },
+    check: { name: "check", title: "Check translation usages" },
+    validate: { name: "validate", title: "Validate messages" },
+  },
+  renderTitle: vi.fn(),
+}));
+
+vi.mock("../../../../src/shared/log/spinner", () => ({
   spinner: {
     start: vi.fn(),
     stop: vi.fn(),
@@ -84,7 +87,7 @@ describe("validate", () => {
 
     await validate({});
 
-    expect(renderTitle).toHaveBeenCalledWith(features.validate.title, true);
+    expect(renderTitle).toHaveBeenCalledWith(FEATURES.validate.title, true);
     expect(discoverConfigs).toHaveBeenCalledWith(false);
     expect(prepareSchema).toHaveBeenCalledWith(["web"]);
     expect(spinner.start).toHaveBeenCalledTimes(2);
@@ -132,7 +135,7 @@ describe("validate", () => {
 
     await validate({ format: "json", output: "report.json", debug: true });
 
-    expect(renderTitle).toHaveBeenCalledWith(features.validate.title, false);
+    expect(renderTitle).toHaveBeenCalledWith(FEATURES.validate.title, false);
     expect(discoverConfigs).toHaveBeenCalledWith(true);
     expect(spinner.start).not.toHaveBeenCalled();
     expect(spinner.stop).not.toHaveBeenCalled();
@@ -161,6 +164,48 @@ describe("validate", () => {
     );
   });
 
+  it("skips locales when no messages are collected for them", async () => {
+    vi.mocked(discoverConfigs).mockResolvedValue([
+      {
+        config: {
+          id: "web",
+          defaultLocale: "en",
+          supportedLocales: ["en", "zh-TW", "ja"],
+        },
+      },
+    ] as any);
+    vi.mocked(prepareSchema).mockResolvedValue({
+      schemaEntries: [{ id: "web", shapes: { messages: "m1" } }],
+    } as any);
+    vi.mocked(collectNonDefaultLocaleMessages).mockResolvedValue({
+      ja: { greeting: "こんにちは" },
+    } as any);
+    vi.mocked(collectMissing).mockReturnValue({
+      missingMessages: [],
+      missingReplacements: [],
+      missingRich: [],
+    });
+
+    await validate({});
+
+    expect(collectMissing).toHaveBeenCalledTimes(1);
+    expect(collectMissing).toHaveBeenCalledWith(
+      { messages: "m1" },
+      { greeting: "こんにちは" },
+    );
+    expect(renderConfigSummary).toHaveBeenCalledWith(
+      "web",
+      {
+        ja: {
+          missingMessages: [],
+          missingReplacements: [],
+          missingRich: [],
+        },
+      },
+      true,
+    );
+  });
+
   it("prints failures from schema preparation and exits", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     vi.mocked(discoverConfigs).mockResolvedValue([
@@ -178,6 +223,27 @@ describe("validate", () => {
 
     expect(errorSpy).toHaveBeenCalledWith("schema failed");
     expect(spinner.stop).toHaveBeenCalledTimes(1);
+
+    errorSpy.mockRestore();
+  });
+
+  it("prints non-Error failures without stopping the spinner in json mode", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(discoverConfigs).mockResolvedValue([
+      {
+        config: {
+          id: "web",
+          defaultLocale: "en",
+          supportedLocales: ["en", "zh-TW"],
+        },
+      },
+    ] as any);
+    vi.mocked(prepareSchema).mockRejectedValue("boom");
+
+    await expect(validate({ format: "json" })).rejects.toThrow("EXIT:1");
+
+    expect(errorSpy).toHaveBeenCalledWith("boom");
+    expect(spinner.stop).not.toHaveBeenCalled();
 
     errorSpy.mockRestore();
   });

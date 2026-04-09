@@ -1,7 +1,7 @@
 import type { CliOptions } from "./options/options";
 import type { CAC } from "cac";
-import { features } from "../../constants";
 import { validate } from "../../features";
+import { FEATURES } from "../../shared";
 import { options } from "./options";
 import { normalizeReaderOptions } from "./utils/normalize-reader-options";
 
@@ -10,7 +10,7 @@ export function registerValidateCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     // Command
     // -----------------------------------------------------------------------
-    .command(features.validate.name, features.validate.title)
+    .command(FEATURES.validate.name, FEATURES.validate.title)
 
     // -----------------------------------------------------------------------
     // Option

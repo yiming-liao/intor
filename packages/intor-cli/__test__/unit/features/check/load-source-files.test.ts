@@ -7,8 +7,8 @@ import {
   getSourceFiles,
   readTsConfigReferences,
 } from "../../../../src/infrastructure";
-import { createLogger } from "../../../../src/logger";
-import { br } from "../../../../src/render";
+import { createLogger } from "../../../../src/shared";
+import { br } from "../../../../src/shared";
 
 vi.mock("node:fs", () => ({
   default: {
@@ -21,11 +21,8 @@ vi.mock("../../../../src/infrastructure", () => ({
   readTsConfigReferences: vi.fn(),
 }));
 
-vi.mock("../../../../src/logger", () => ({
+vi.mock("../../../../src/shared", () => ({
   createLogger: vi.fn(),
-}));
-
-vi.mock("../../../../src/render", () => ({
   br: vi.fn(),
   yellow: (value: unknown) => String(value),
 }));

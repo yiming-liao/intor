@@ -1,4 +1,5 @@
-import type { ReaderOptions, ExtraExt } from "../../../../core";
+import type { ReaderOptions } from "../../../../core";
+import type { ExtraExt } from "../../../../shared";
 import { confirm, multiselect, text, isCancel } from "@clack/prompts";
 
 type FormatOption = ExtraExt | "custom";

@@ -2,8 +2,8 @@ import type { SourceFile } from "ts-morph";
 import fs from "node:fs";
 import path from "node:path";
 import { getSourceFiles, readTsConfigReferences } from "../../infrastructure";
-import { createLogger } from "../../logger";
-import { br, yellow } from "../../render";
+import { createLogger } from "../../shared";
+import { br, yellow } from "../../shared";
 
 /**
  * Load source files from a tsconfig.

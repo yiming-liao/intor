@@ -2,21 +2,23 @@ import type { GenerateOptions } from "./types";
 import type { SchemaEntry, MergeOverrides } from "../../core";
 import type { LocaleMessages, MessageObject } from "intor";
 import { readFile } from "node:fs/promises";
-import { features } from "../../constants";
 import {
   discoverConfigs,
   collectMessages,
   inferShapes,
-  DEFAULT_OUT_DIR,
-  DEFAULT_TYPES_FILE_PATH,
-  DEFAULT_SCHEMA_FILE_PATH,
   buildTypes,
   buildSchema,
 } from "../../core";
 import { ensureDirAndWriteFile } from "../../infrastructure";
-import { br, renderConfigs, renderTitle } from "../../render";
-import { spinner } from "../shared/spinner";
-import { toRelativePath } from "../shared/to-relative-path";
+import { br, renderConfigs, renderTitle } from "../../shared";
+import {
+  DEFAULT_OUT_DIR,
+  DEFAULT_TYPES_FILE_PATH,
+  DEFAULT_SCHEMA_FILE_PATH,
+  FEATURES,
+} from "../../shared";
+import { toRelativePath } from "../../shared";
+import { spinner } from "../../shared/log/spinner";
 import { renderOverrides } from "./render-overrides";
 import { renderSummary } from "./render-summary";
 import { resolveMessageSource } from "./utils/resolve-message-source";
@@ -28,7 +30,7 @@ export async function generate({
   toolVersion = "unknown",
   ...readerOptions
 }: GenerateOptions) {
-  renderTitle(features.generate.title);
+  renderTitle(FEATURES.generate.title);
   const start = performance.now();
 
   try {

@@ -2,8 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { type IntorResolvedConfig } from "intor";
 import { globFiles } from "../../infrastructure/glob-files";
-import { createLogger } from "../../logger";
-import { br, yellow } from "../../render";
+import { createLogger } from "../../shared";
+import { br, yellow } from "../../shared";
 import { resolveConfigModule } from "./resolve-config-module";
 
 export interface ConfigEntry {

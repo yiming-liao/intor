@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { readSchema } from "../../../../../src/core/artifacts/schema/read-schema";
-import { DEFAULT_SCHEMA_FILE_PATH } from "../../../../../src/core/constants";
+import { DEFAULT_SCHEMA_FILE_PATH } from "../../../../../src/shared";
 
 vi.mock("node:fs/promises", () => ({
   default: {

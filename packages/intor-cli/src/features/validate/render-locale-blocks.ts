@@ -1,6 +1,6 @@
 import type { MissingResult } from "./missing";
-import { createLogger } from "../../logger";
-import { dim, italic, gray } from "../../render";
+import { createLogger } from "../../shared";
+import { dim, italic, gray } from "../../shared";
 
 export function renderLocaleBlocks(
   entries: { locale: string; missing: MissingResult }[],

@@ -1,6 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+/**
+ * Ensure the target directory exists before writing a file.
+ */
 export async function ensureDirAndWriteFile(
   filePath: string,
   content: string,

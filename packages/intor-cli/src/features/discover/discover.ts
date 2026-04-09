@@ -1,13 +1,13 @@
-import { features } from "../../constants";
 import { discoverConfigs } from "../../core";
-import { br, renderConfigs, renderTitle } from "../../render";
+import { br, renderConfigs, renderTitle } from "../../shared";
+import { FEATURES } from "../../shared";
 
 export interface DiscoverOptions {
   debug?: boolean;
 }
 
 export async function discover({ debug = false }: DiscoverOptions) {
-  renderTitle(features.discover.title);
+  renderTitle(FEATURES.discover.title);
 
   const entries = await discoverConfigs(debug);
 

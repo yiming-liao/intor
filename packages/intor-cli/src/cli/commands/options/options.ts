@@ -1,4 +1,4 @@
-import type { ExtraExt } from "../../../core";
+import type { ExtraExt } from "../../../shared";
 import type { CAC } from "cac";
 
 export const options = {

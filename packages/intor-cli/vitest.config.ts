@@ -5,8 +5,14 @@ export default defineConfig({
     include: ["**/*.test.{ts,tsx}"],
     coverage: {
       include: ["src/**/*.ts"],
-      exclude: ["**/__fixtures__/**"],
+      exclude: ["src/**/index.ts", "src/**/types.ts"],
       reporter: ["lcov", "text"],
+      thresholds: {
+        global: { statements: 90, branches: 90 },
+        "src/core/**": { statements: 100, branches: 100 },
+        "src/features/**": { statements: 100, branches: 100 },
+        "src/infrastructure/**": { statements: 100, branches: 100 },
+      },
     },
   },
 });

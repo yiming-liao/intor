@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderLocaleBlocks } from "../../../../src/features/validate/render-locale-blocks";
-import { createLogger } from "../../../../src/logger";
-import { dim, gray, italic } from "../../../../src/render";
+import { createLogger } from "../../../../src/shared";
+import { dim, gray, italic } from "../../../../src/shared";
 
-vi.mock("../../../../src/logger", () => ({
+vi.mock("../../../../src/shared", () => ({
   createLogger: vi.fn(),
-}));
-
-vi.mock("../../../../src/render", () => ({
   dim: vi.fn((value: string) => value),
   gray: vi.fn((value: string) => value),
   italic: vi.fn((value: string) => value),
@@ -79,5 +76,50 @@ describe("renderLocaleBlocks", () => {
     );
 
     expect(plainBreakCalls).toHaveLength(1);
+  });
+
+  it("renders only replacements without an extra section spacer", () => {
+    renderLocaleBlocks([
+      {
+        locale: "ja",
+        missing: {
+          missingMessages: [],
+          missingReplacements: [{ key: "greeting", name: "name" }],
+          missingRich: [],
+        },
+      },
+    ]);
+
+    expect(logger.log).toHaveBeenCalledWith("Missing replacements:", {
+      prefix: "│  ",
+    });
+
+    const prefixedBlankCalls = logger.log.mock.calls.filter(
+      ([message, options]) => message === "" && options?.prefix === "│  ",
+    );
+    expect(prefixedBlankCalls).toHaveLength(2);
+  });
+
+  it("renders only rich tags without an extra section spacer", () => {
+    renderLocaleBlocks([
+      {
+        locale: "fr",
+        missing: {
+          missingMessages: [],
+          missingReplacements: [],
+          missingRich: [{ key: "link", tag: "a" }],
+        },
+      },
+    ]);
+
+    expect(logger.log).toHaveBeenCalledWith("Missing rich tags:", {
+      prefix: "│  ",
+    });
+    expect(logger.log).toHaveBeenCalledWith("  - link: a", { prefix: "│  " });
+
+    const prefixedBlankCalls = logger.log.mock.calls.filter(
+      ([message, options]) => message === "" && options?.prefix === "│  ",
+    );
+    expect(prefixedBlankCalls).toHaveLength(2);
   });
 });

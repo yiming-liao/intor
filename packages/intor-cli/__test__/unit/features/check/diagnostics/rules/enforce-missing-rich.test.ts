@@ -36,14 +36,10 @@ function createRichUsage(partial: Partial<RichUsage>): RichUsage {
 
 describe("validateMissingRich", () => {
   it("does nothing when key path cannot be resolved", () => {
-    const diagnostics = enforceMissingRich(
-      createKeyUsage({}),
-      new Map(),
-      {
-        kind: "object",
-        properties: {},
-      },
-    );
+    const diagnostics = enforceMissingRich(createKeyUsage({}), new Map(), {
+      kind: "object",
+      properties: {},
+    });
     expect(diagnostics).toEqual([]);
   });
 

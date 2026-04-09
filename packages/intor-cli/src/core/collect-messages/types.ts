@@ -1,4 +1,4 @@
-import type { ExtraExt } from "../constants";
+import type { ExtraExt } from "../../shared";
 import type { LocaleMessages, MergeMessagesEvent } from "intor";
 
 export interface ReaderOptions {

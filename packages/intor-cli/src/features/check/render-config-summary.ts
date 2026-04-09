@@ -1,7 +1,7 @@
 import type { DiagnosticGroup } from "./diagnostics";
-import { createLogger } from "../../logger";
-import { dim, gray, cyan, yellow, br } from "../../render";
-import { toRelativePath } from "../shared/to-relative-path";
+import { createLogger } from "../../shared";
+import { dim, gray, cyan, yellow, br } from "../../shared";
+import { toRelativePath } from "../../shared";
 
 export function renderConfigSummary(
   configId: string,
