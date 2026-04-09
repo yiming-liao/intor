@@ -1,6 +1,6 @@
-import type { MissingReport, MissingByLocale, ValidateOptions } from "./types";
+import type { MissingReport, MissingByLocale } from "./types";
 import { features } from "../../constants";
-import { discoverConfigs } from "../../core";
+import { discoverConfigs, type ReaderOptions } from "../../core";
 import { collectNonDefaultLocaleMessages } from "../../core";
 import { renderTitle } from "../../render";
 import { prepareSchema } from "../shared/prepare-schema";
@@ -8,6 +8,12 @@ import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
 import { collectMissing } from "./missing";
 import { renderConfigSummary } from "./render-config-summary";
+
+export interface ValidateOptions extends ReaderOptions {
+  format?: "human" | "json";
+  output?: string;
+  debug?: boolean;
+}
 
 export async function validate({
   format = "human",
@@ -50,10 +56,11 @@ export async function validate({
       if (isHuman) spinner.stop();
 
       // -------------------------------------------------------------------
-      // Collect missing requirements per locale
+      // Collect missing per locale
       // -------------------------------------------------------------------
       const missingByLocale: MissingByLocale = {};
 
+      // Per-locale processing
       for (const locale of config.supportedLocales) {
         if (locale === config.defaultLocale) continue;
 
@@ -63,10 +70,15 @@ export async function validate({
         missingByLocale[locale] = collectMissing(shapes, messages);
       }
 
-      report[config.id] = missingByLocale;
+      // Render a grouped human summary for the current config.
       renderConfigSummary(config.id, missingByLocale, isHuman);
+
+      report[config.id] = missingByLocale;
     }
 
+    // ---------------------------------------------------------------------------
+    // Write JSON report when requested
+    // ---------------------------------------------------------------------------
     if (format === "json") await writeJsonReport(report, output);
   } catch (error) {
     if (isHuman) spinner.stop();

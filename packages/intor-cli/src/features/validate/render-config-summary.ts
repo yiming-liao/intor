@@ -26,20 +26,27 @@ export function renderConfigSummary(
 
   const entries = normalizeMissingByLocale(missingByLocale);
 
+  // Render the empty state when no problems are found
   if (entries.length === 0) {
     logger.ok(`${cyan(configId)}: no problems found`);
     return;
   }
 
-  // Log header
+  // ---------------------------------------------------------------------------
+  // Render the summary header
+  // ---------------------------------------------------------------------------
   logger.header(
     `${cyan(configId)}: ${yellow(entries.length)} problem locale(s)`,
     { lineBreakAfter: 1 },
   );
 
+  // ---------------------------------------------------------------------------
   // Render locale blocks
+  // ---------------------------------------------------------------------------
   renderLocaleBlocks(entries);
 
-  // Log footer
+  // ---------------------------------------------------------------------------
+  // Render the summary footer
+  // ---------------------------------------------------------------------------
   logger.footer("", { lineBreakBefore: 1 });
 }

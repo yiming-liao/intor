@@ -10,16 +10,20 @@ export function renderLocaleBlocks(
 
   for (const [i, entry] of entries.entries()) {
     const { locale, missing } = entry;
-    const isLastLocale = i === entries.length - 1;
 
     const { missingMessages, missingReplacements, missingRich } = missing;
 
+    // ---------------------------------------------------------------------------
+    // Render the locale header
+    // ---------------------------------------------------------------------------
     logger.header(italic(locale), { prefix });
     logger.log("", { prefix });
 
     let hasPrintedSection = false;
 
-    // messages
+    // ---------------------------------------------------------------------------
+    // Render missing messages
+    // ---------------------------------------------------------------------------
     if (missingMessages.length > 0) {
       logger.log(gray("Missing messages:"), { prefix });
       for (const message of missingMessages) {
@@ -28,7 +32,9 @@ export function renderLocaleBlocks(
       hasPrintedSection = true;
     }
 
-    // replacements
+    // ---------------------------------------------------------------------------
+    // Render missing replacements
+    // ---------------------------------------------------------------------------
     if (missingReplacements.length > 0) {
       if (hasPrintedSection) logger.log("", { prefix });
       logger.log(gray("Missing replacements:"), { prefix });
@@ -38,7 +44,9 @@ export function renderLocaleBlocks(
       hasPrintedSection = true;
     }
 
-    // rich
+    // ---------------------------------------------------------------------------
+    // Render missing rich tags
+    // ---------------------------------------------------------------------------
     if (missingRich.length > 0) {
       if (hasPrintedSection) logger.log("", { prefix });
       logger.log(gray("Missing rich tags:"), { prefix });
@@ -50,7 +58,6 @@ export function renderLocaleBlocks(
     logger.log("", { prefix });
     logger.footer("", { prefix });
 
-    // locale ↔ locale spacing
-    if (!isLastLocale) logger.log();
+    if (i + 1 !== entries.length) logger.log();
   }
 }
