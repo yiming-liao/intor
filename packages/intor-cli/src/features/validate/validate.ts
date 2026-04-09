@@ -2,10 +2,10 @@ import type { MissingReport, MissingByLocale } from "./types";
 import { features } from "../../constants";
 import { discoverConfigs, type ReaderOptions } from "../../core";
 import { collectNonDefaultLocaleMessages } from "../../core";
+import { writeJsonReport } from "../../infrastructure";
 import { renderTitle } from "../../render";
 import { prepareSchema } from "../shared/prepare-schema";
 import { spinner } from "../shared/spinner";
-import { writeJsonReport } from "../shared/write-json-report";
 import { collectMissing } from "./missing";
 import { renderConfigSummary } from "./render-config-summary";
 

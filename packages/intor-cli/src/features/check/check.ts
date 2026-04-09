@@ -1,10 +1,10 @@
 import type { Diagnostic } from "./diagnostics";
 import { features } from "../../constants";
 import { extractUsages } from "../../core";
+import { writeJsonReport } from "../../infrastructure";
 import { renderTitle } from "../../render";
 import { prepareSchema } from "../shared/prepare-schema";
 import { spinner } from "../shared/spinner";
-import { writeJsonReport } from "../shared/write-json-report";
 import { collectDiagnostics, groupDiagnostics } from "./diagnostics";
 import { filterUsagesByConfig } from "./filter-usages-by-config";
 import { loadSourceFiles } from "./load-source-files";

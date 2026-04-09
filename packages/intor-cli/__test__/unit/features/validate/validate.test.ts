@@ -7,10 +7,10 @@ import {
 } from "../../../../src/core";
 import { prepareSchema } from "../../../../src/features/shared/prepare-schema";
 import { spinner } from "../../../../src/features/shared/spinner";
-import { writeJsonReport } from "../../../../src/features/shared/write-json-report";
 import { collectMissing } from "../../../../src/features/validate/missing";
 import { renderConfigSummary } from "../../../../src/features/validate/render-config-summary";
 import { validate } from "../../../../src/features/validate/validate";
+import { writeJsonReport } from "../../../../src/infrastructure";
 import { renderTitle } from "../../../../src/render";
 
 vi.mock("../../../../src/core", () => ({
@@ -33,7 +33,7 @@ vi.mock("../../../../src/features/shared/spinner", () => ({
   },
 }));
 
-vi.mock("../../../../src/features/shared/write-json-report", () => ({
+vi.mock("../../../../src/infrastructure", () => ({
   writeJsonReport: vi.fn(),
 }));
 
