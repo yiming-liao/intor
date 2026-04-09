@@ -112,14 +112,12 @@
     "type": "tsc -p tsconfig.json --noEmit",
     "test": "vitest",
     "test:types": "tsx scripts/test-types.ts",
-    "test:check": "tsx scripts/check-test-structure.ts",
     "clean": "rm -rf dist",
     "build": "tsx scripts/build.ts",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias tsconfig.build.json --outDir dist/types",
-    "build:release": "pnpm clean && pnpm build && pnpm build:types && pnpm api:build",
     "api:build": "tsx scripts/api-extractor/build.ts",
     "api:check": "tsx scripts/api-extractor/check.ts",
-    "prepublishOnly": "pnpm build:release"
+    "prepublishOnly": "pnpm clean && pnpm build && pnpm build:types"
   },
   "dependencies": {
     "intor-translator": "workspace:*",

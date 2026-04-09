@@ -8,13 +8,13 @@
     "lint": "pnpm eslint",
     "test": "pnpm -r --filter \"./packages/**\" test run",
     "test:types": "pnpm -r --filter \"./packages/**\" test:types",
-    "clean": "pnpm -r --filter \"./packages/**\" clean",
-    "build": "pnpm -r --filter \"./packages/**\" build",
-    "build:types": "pnpm -r --filter \"./packages/**\" build:types",
-    "build:release": "pnpm -r --filter \"./packages/**\" build:release",
     "api:check": "pnpm -r --filter \"./packages/**\" api:check",
-    "ci": "pnpm build && pnpm build:types && pnpm type && pnpm lint && pnpm api:check && pnpm test && pnpm test:types",
-    "ci:clean": "pnpm -r --filter \"./packages/**\" clean && rm -rf node_modules && pnpm install --frozen-lockfile --strict-peer-dependencies && pnpm dedupe --check && pnpm run ci"
+    "build:intor-translator": "pnpm --filter intor-translator build",
+    "build:intor": "pnpm --filter intor build && pnpm --filter intor build:types",
+    "build:readers": "pnpm -r --filter \"./packages/readers/**\" build",
+    "build:all": "pnpm build:intor-translator && pnpm build:intor && pnpm build:readers",
+    "ci": "pnpm build:all && pnpm type && pnpm lint && pnpm api:check && pnpm test && pnpm test:types",
+    "ci:clean": "rm -rf node_modules && pnpm install --frozen-lockfile --strict-peer-dependencies && pnpm dedupe --check && pnpm run ci"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

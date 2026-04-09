@@ -62,10 +62,9 @@
     "test:types": "tsx scripts/test-types.ts",
     "clean": "rm -rf dist",
     "build": "tsup",
-    "build:release": "pnpm clean && pnpm build && pnpm api:build",
     "api:check": "api-extractor run -c api-extractor/index.json",
     "api:build": "api-extractor run -c api-extractor/index.json --local",
-    "prepublishOnly": "pnpm build:release",
+    "prepublishOnly": "pnpm clean && pnpm build",
     "bench:runtime": "tsx bench/runtime/index.ts",
     "examples:html": "vite --config examples/html/vite.config.ts"
   },
