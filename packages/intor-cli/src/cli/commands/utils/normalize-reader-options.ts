@@ -1,6 +1,6 @@
 import type { ReaderOptions } from "../../../core";
 import type { ExtraExt } from "../../../shared";
-import type { CliOptions } from "../options/options";
+import type { CliOptions } from "../options";
 import { toArray } from "./to-array";
 
 /**

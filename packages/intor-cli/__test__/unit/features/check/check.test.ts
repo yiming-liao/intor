@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { extractUsages, prepareSchema } from "../../../../src/core";
 import { check } from "../../../../src/features/check/check";
 import {
@@ -58,18 +58,8 @@ vi.mock("../../../../src/features/check/render-config-summary", () => ({
 }));
 
 describe("check", () => {
-  const exitSpy = vi.spyOn(process, "exit").mockImplementation(((
-    code?: number,
-  ) => {
-    throw new Error(`EXIT:${code}`);
-  }) as never);
-
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  afterAll(() => {
-    exitSpy.mockRestore();
   });
 
   it("collects diagnostics per config and renders human output", async () => {
@@ -159,17 +149,14 @@ describe("check", () => {
     );
   });
 
-  it("prints a source file error and exits when no source files are found", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("throws when no source files are found", async () => {
     vi.mocked(prepareSchema).mockResolvedValue({
       defaultEntry: { id: "web" } as any,
       schemaEntries: [] as any,
     });
     vi.mocked(loadSourceFiles).mockReturnValue([]);
 
-    await expect(check({})).rejects.toThrow("EXIT:1");
-
-    expect(errorSpy).toHaveBeenCalledWith(
+    await expect(check({})).rejects.toThrow(
       [
         "No source files found.",
         "",
@@ -180,18 +167,11 @@ describe("check", () => {
       ].join("\n"),
     );
     expect(spinner.stop).toHaveBeenCalledTimes(2);
-
-    errorSpy.mockRestore();
   });
 
-  it("prints non-Error failures and exits", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("throws non-Error failures", async () => {
     vi.mocked(prepareSchema).mockRejectedValue("boom");
 
-    await expect(check({ format: "json" })).rejects.toThrow("EXIT:1");
-
-    expect(errorSpy).toHaveBeenCalledWith("boom");
-
-    errorSpy.mockRestore();
+    await expect(check({ format: "json" })).rejects.toBe("boom");
   });
 });

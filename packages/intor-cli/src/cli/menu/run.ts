@@ -15,13 +15,20 @@ import { promptValidate } from "./prompts/prompt-validate";
 async function runAction<T>(
   prompt: () => Promise<T | null>,
   action: (options: T) => Promise<void>,
-) {
-  const options = await prompt();
-  if (!options) {
-    outro(pc.dim("Cancelled"));
-    process.exit(0);
+): Promise<boolean> {
+  try {
+    const options = await prompt();
+    if (!options) {
+      outro(pc.dim("Cancelled"));
+      process.exit(0);
+    }
+    await action(options);
+    return true;
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+    return false;
   }
-  await action(options);
 }
 
 /**
@@ -46,26 +53,30 @@ export async function run() {
     process.exit(0);
   }
 
+  let completed = false;
+
   switch (action) {
     case "discover": {
-      await runAction(promptDiscover, discover);
+      completed = await runAction(promptDiscover, discover);
       break;
     }
     case "check": {
-      await runAction(promptCheck, check);
+      completed = await runAction(promptCheck, check);
       break;
     }
     case "generate": {
-      await runAction(promptGenerate, (options) =>
+      completed = await runAction(promptGenerate, (options) =>
         generate({ ...options, toolVersion: VERSION }),
       );
       break;
     }
     case "validate": {
-      await runAction(promptValidate, validate);
+      completed = await runAction(promptValidate, validate);
       break;
     }
   }
 
-  outro(pc.green("Completed"));
+  if (completed) {
+    outro(pc.green("Completed"));
+  }
 }

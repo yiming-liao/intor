@@ -1,4 +1,4 @@
-import type { CliOption } from "./options";
+import type { CliOptions } from "./options";
 import type { CAC } from "cac";
 import { generate } from "../../features";
 import { FEATURES } from "../../shared";
@@ -29,17 +29,17 @@ export function registerGenerateCommand(cli: CAC) {
     .action(
       async (
         options: Pick<
-          CliOption,
+          CliOptions,
           "debug" | "messageFile" | "messageFiles" | "ext" | "reader"
         >,
       ) => {
         const { debug, messageFile, messageFiles, ...rawReaderOptions } =
           options;
 
-        const result = normalizeMessageFiles(messageFile, messageFiles);
-        const readerOptions = normalizeReaderOptions(rawReaderOptions);
-
         try {
+          const result = normalizeMessageFiles(messageFile, messageFiles);
+          const readerOptions = normalizeReaderOptions(rawReaderOptions);
+
           await generate({
             messageSource: result,
             ...(debug !== undefined ? { debug } : {}),

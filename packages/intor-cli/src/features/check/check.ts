@@ -87,7 +87,6 @@ export async function check({
     if (format === "json") await writeJsonReport(report, output);
   } catch (error) {
     if (isHuman) spinner.stop();
-    console.error(error instanceof Error ? error.message : String(error));
-    process.exit(1);
+    throw error;
   }
 }

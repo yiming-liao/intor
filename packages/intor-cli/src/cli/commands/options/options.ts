@@ -6,17 +6,17 @@ export const options = {
 
   tsconfig: [
     "--tsconfig <path>",
-    "Path to tsconfig.json (default: tsconfig.json)",
+    "Path to the tsconfig file (default: tsconfig.json)",
   ],
 
   messageFile: [
     "--message-file <file>",
-    "Explicit message file for single-config projects",
+    "Path to a message file for the default locale",
   ],
 
   messageFiles: [
     "--message-files <mapping>",
-    "Explicit message file mapping in the form <configId=path> (repeatable)",
+    "Map config IDs to message files as <configId=path> (repeatable)",
     { default: [] },
   ],
 
@@ -28,7 +28,7 @@ export const options = {
 
   reader: [
     "--reader <mapping>",
-    "Custom reader mapping in the form <ext=path> (repeatable)",
+    "Map file extensions to reader modules as <ext=path> (repeatable)",
     { default: [] },
   ],
 

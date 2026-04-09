@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFile } from "node:fs/promises";
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   buildSchema,
   buildTypes,
@@ -85,12 +85,6 @@ vi.mock(
 );
 
 describe("generate", () => {
-  const exitSpy = vi.spyOn(process, "exit").mockImplementation(((
-    code?: number,
-  ) => {
-    throw new Error(`EXIT:${code}`);
-  }) as never);
-
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(performance, "now")
@@ -98,8 +92,7 @@ describe("generate", () => {
       .mockReturnValueOnce(3100);
   });
 
-  afterAll(() => {
-    exitSpy.mockRestore();
+  afterEach(() => {
     vi.restoreAllMocks();
   });
 
@@ -253,38 +246,24 @@ describe("generate", () => {
     expect(renderOverrides).not.toHaveBeenCalled();
   });
 
-  it("prints an error and exits when no config is discovered", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("throws when no config is discovered", async () => {
     vi.mocked(discoverConfigs).mockResolvedValue([]);
 
-    await expect(generate({})).rejects.toThrow("EXIT:1");
-
-    expect(errorSpy).toHaveBeenCalledWith("No Intor config found.");
+    await expect(generate({})).rejects.toThrow("No Intor config found.");
     expect(spinner.stop).toHaveBeenCalledTimes(1);
-
-    errorSpy.mockRestore();
   });
 
-  it("prints failures and exits", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("throws failures", async () => {
     vi.mocked(discoverConfigs).mockRejectedValue(new Error("discover failed"));
 
-    await expect(generate({})).rejects.toThrow("EXIT:1");
+    await expect(generate({})).rejects.toThrow("discover failed");
 
     expect(spinner.stop).toHaveBeenCalledTimes(1);
-    expect(errorSpy).toHaveBeenCalledWith("discover failed");
-
-    errorSpy.mockRestore();
   });
 
-  it("prints non-Error failures and exits", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("throws non-Error failures", async () => {
     vi.mocked(discoverConfigs).mockRejectedValue("boom");
 
-    await expect(generate({})).rejects.toThrow("EXIT:1");
-
-    expect(errorSpy).toHaveBeenCalledWith("boom");
-
-    errorSpy.mockRestore();
+    await expect(generate({})).rejects.toBe("boom");
   });
 });

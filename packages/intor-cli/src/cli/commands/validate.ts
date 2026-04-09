@@ -1,4 +1,4 @@
-import type { CliOptions } from "./options/options";
+import type { CliOptions } from "./options";
 import type { CAC } from "cac";
 import { validate } from "../../features";
 import { FEATURES } from "../../shared";
@@ -33,9 +33,9 @@ export function registerValidateCommand(cli: CAC) {
       ) => {
         const { debug, format, output, ...rawReaderOptions } = options;
 
-        const readerOptions = normalizeReaderOptions(rawReaderOptions);
-
         try {
+          const readerOptions = normalizeReaderOptions(rawReaderOptions);
+
           await validate({
             ...(debug !== undefined ? { debug } : {}),
             ...(format !== undefined ? { format } : {}),

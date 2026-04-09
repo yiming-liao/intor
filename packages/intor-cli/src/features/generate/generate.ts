@@ -104,7 +104,6 @@ export async function generate({
     renderSummary(toRelativePath(DEFAULT_OUT_DIR), duration, true);
   } catch (error) {
     spinner.stop();
-    console.error(error instanceof Error ? error.message : String(error));
-    process.exit(1);
+    throw error;
   }
 }

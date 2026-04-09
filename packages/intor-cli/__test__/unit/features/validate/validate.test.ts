@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   collectNonDefaultLocaleMessages,
   discoverConfigs,
@@ -49,18 +49,8 @@ vi.mock("../../../../src/features/validate/render-config-summary", () => ({
 }));
 
 describe("validate", () => {
-  const exitSpy = vi.spyOn(process, "exit").mockImplementation(((
-    code?: number,
-  ) => {
-    throw new Error(`EXIT:${code}`);
-  }) as never);
-
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  afterAll(() => {
-    exitSpy.mockRestore();
   });
 
   it("collects missing results per non-default locale and renders human output", async () => {
@@ -206,8 +196,7 @@ describe("validate", () => {
     );
   });
 
-  it("prints failures from schema preparation and exits", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("throws failures from schema preparation", async () => {
     vi.mocked(discoverConfigs).mockResolvedValue([
       {
         config: {
@@ -219,16 +208,12 @@ describe("validate", () => {
     ] as any);
     vi.mocked(prepareSchema).mockRejectedValue(new Error("schema failed"));
 
-    await expect(validate({})).rejects.toThrow("EXIT:1");
+    await expect(validate({})).rejects.toThrow("schema failed");
 
-    expect(errorSpy).toHaveBeenCalledWith("schema failed");
     expect(spinner.stop).toHaveBeenCalledTimes(1);
-
-    errorSpy.mockRestore();
   });
 
-  it("prints non-Error failures without stopping the spinner in json mode", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("throws non-Error failures without stopping the spinner in json mode", async () => {
     vi.mocked(discoverConfigs).mockResolvedValue([
       {
         config: {
@@ -240,12 +225,8 @@ describe("validate", () => {
     ] as any);
     vi.mocked(prepareSchema).mockRejectedValue("boom");
 
-    await expect(validate({ format: "json" })).rejects.toThrow("EXIT:1");
-
-    expect(errorSpy).toHaveBeenCalledWith("boom");
+    await expect(validate({ format: "json" })).rejects.toBe("boom");
     expect(spinner.stop).not.toHaveBeenCalled();
-
-    errorSpy.mockRestore();
   });
 
   it("throws when no config is discovered", async () => {

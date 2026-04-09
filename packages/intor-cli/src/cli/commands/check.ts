@@ -1,4 +1,4 @@
-import type { CliOption } from "./options";
+import type { CliOptions } from "./options";
 import type { CAC } from "cac";
 import { check } from "../../features";
 import { FEATURES } from "../../shared";
@@ -24,7 +24,7 @@ export function registerCheckCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     .action(
       async (
-        options: Pick<CliOption, "debug" | "tsconfig" | "format" | "output">,
+        options: Pick<CliOptions, "debug" | "tsconfig" | "format" | "output">,
       ) => {
         const { debug, tsconfig, format, output } = options;
 

@@ -1,4 +1,4 @@
-import type { CliOption } from "./options";
+import type { CliOptions } from "./options";
 import type { CAC } from "cac";
 import { discover } from "../../features";
 import { FEATURES } from "../../shared";
@@ -19,7 +19,7 @@ export function registerDiscoverCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     // Action
     // -----------------------------------------------------------------------
-    .action(async (options: Pick<CliOption, "debug">) => {
+    .action(async (options: Pick<CliOptions, "debug">) => {
       const { debug } = options;
 
       try {
