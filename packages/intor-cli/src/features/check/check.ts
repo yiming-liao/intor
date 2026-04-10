@@ -1,10 +1,7 @@
 import type { Diagnostic } from "./diagnostics";
-import { extractUsages } from "../../core";
-import { prepareSchema } from "../../core";
+import { extractUsages, prepareSchema } from "../../core";
 import { writeJsonReport } from "../../infrastructure";
-import { renderTitle } from "../../shared";
-import { FEATURES } from "../../shared";
-import { spinner } from "../../shared/log/spinner";
+import { renderTitle, spinner, FEATURES, type Format } from "../../shared";
 import { collectDiagnostics, groupDiagnostics } from "./diagnostics";
 import { filterUsagesByConfig } from "./filter-usages-by-config";
 import { loadSourceFiles } from "./load-source-files";
@@ -12,7 +9,7 @@ import { renderConfigSummary } from "./render-config-summary";
 
 export interface CheckOptions {
   tsconfigPath?: string;
-  format?: "human" | "json";
+  format?: Format;
   output?: string;
   debug?: boolean;
 }

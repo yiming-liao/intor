@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cac } from "cac";
-import { validate } from "../../../../src/features";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { registerValidateCommand } from "../../../../src/cli/commands/validate";
+import { validate } from "../../../../src/features";
 
 vi.mock("../../../../src/features", () => ({
   discover: vi.fn(),
@@ -19,7 +19,9 @@ function getAction() {
     throw new Error("Validate command action not found.");
   }
 
-  return command.commandAction as (options: Record<string, unknown>) => Promise<void>;
+  return command.commandAction as (
+    options: Record<string, unknown>,
+  ) => Promise<void>;
 }
 
 describe("registerValidateCommand", () => {

@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cac } from "cac";
-import { discover } from "../../../../src/features";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { registerDiscoverCommand } from "../../../../src/cli/commands/discover";
+import { discover } from "../../../../src/features";
 
 vi.mock("../../../../src/features", () => ({
   discover: vi.fn(),
@@ -19,7 +19,9 @@ function getAction() {
     throw new Error("Discover command action not found.");
   }
 
-  return command.commandAction as (options: Record<string, unknown>) => Promise<void>;
+  return command.commandAction as (
+    options: Record<string, unknown>,
+  ) => Promise<void>;
 }
 
 describe("registerDiscoverCommand", () => {

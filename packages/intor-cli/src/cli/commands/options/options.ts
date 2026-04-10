@@ -1,4 +1,4 @@
-import type { ExtraExt } from "../../../shared";
+import type { ExtraExt, Format } from "../../../shared";
 import type { CAC } from "cac";
 
 export const options = {
@@ -51,6 +51,6 @@ export interface CliOptions {
   messageFiles?: string | string[];
   ext?: ExtraExt | ExtraExt[];
   reader?: string | string[];
-  format?: "human" | "json";
+  format?: Format;
   output?: string;
 }

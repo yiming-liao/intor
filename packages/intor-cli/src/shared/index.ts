@@ -4,6 +4,8 @@ export {
   DEFAULT_SCHEMA_FILE_PATH,
   EXTRA_EXTS,
   type ExtraExt,
+  FORMAT,
+  type Format,
   FEATURES,
 } from "./constants";
 

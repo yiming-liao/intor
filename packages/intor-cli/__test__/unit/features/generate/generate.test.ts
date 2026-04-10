@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFile } from "node:fs/promises";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -39,21 +40,18 @@ vi.mock("../../../../src/infrastructure", () => ({
   ensureDirAndWriteFile: vi.fn(),
 }));
 
-vi.mock("../../../../src/shared", () => ({
-  FEATURES: {
-    discover: { name: "discover", title: "Discover intor configs" },
-    generate: { name: "generate", title: "Generate types & schemas" },
-    check: { name: "check", title: "Check translation usages" },
-    validate: { name: "validate", title: "Validate messages" },
-  },
-  DEFAULT_OUT_DIR: ".intor",
-  DEFAULT_TYPES_FILE_PATH: ".intor/types.d.ts",
-  DEFAULT_SCHEMA_FILE_PATH: ".intor/schema.json",
-  br: vi.fn(),
-  renderConfigs: vi.fn(),
-  renderTitle: vi.fn(),
-  toRelativePath: vi.fn(),
-}));
+vi.mock("../../../../src/shared", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../src/shared")>();
+
+  return {
+    ...actual,
+    br: vi.fn(),
+    renderConfigs: vi.fn(),
+    renderTitle: vi.fn(),
+    toRelativePath: vi.fn(),
+  };
+});
 
 vi.mock("../../../../src/shared/log/spinner", () => ({
   spinner: {

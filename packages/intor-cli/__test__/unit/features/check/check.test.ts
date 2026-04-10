@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { extractUsages, prepareSchema } from "../../../../src/core";
@@ -10,31 +11,25 @@ import { filterUsagesByConfig } from "../../../../src/features/check/filter-usag
 import { loadSourceFiles } from "../../../../src/features/check/load-source-files";
 import { renderConfigSummary } from "../../../../src/features/check/render-config-summary";
 import { writeJsonReport } from "../../../../src/infrastructure";
-import { renderTitle } from "../../../../src/shared";
-import { FEATURES } from "../../../../src/shared";
-import { spinner } from "../../../../src/shared/log/spinner";
+import { renderTitle, FEATURES, spinner } from "../../../../src/shared";
 
 vi.mock("../../../../src/core", () => ({
   extractUsages: vi.fn(),
   prepareSchema: vi.fn(),
 }));
 
-vi.mock("../../../../src/shared", () => ({
-  FEATURES: {
-    discover: { name: "discover", title: "Discover intor configs" },
-    generate: { name: "generate", title: "Generate types & schemas" },
-    check: { name: "check", title: "Check translation usages" },
-    validate: { name: "validate", title: "Validate messages" },
-  },
-  renderTitle: vi.fn(),
-}));
-
-vi.mock("../../../../src/shared/log/spinner", () => ({
-  spinner: {
-    start: vi.fn(),
-    stop: vi.fn(),
-  },
-}));
+vi.mock("../../../../src/shared", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../src/shared")>();
+  return {
+    ...actual,
+    renderTitle: vi.fn(),
+    spinner: {
+      start: vi.fn(),
+      stop: vi.fn(),
+    },
+  };
+});
 
 vi.mock("../../../../src/infrastructure", () => ({
   writeJsonReport: vi.fn(),

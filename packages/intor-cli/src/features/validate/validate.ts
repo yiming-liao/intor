@@ -1,16 +1,17 @@
 import type { MissingReport, MissingByLocale } from "./types";
-import { discoverConfigs, type ReaderOptions } from "../../core";
-import { collectNonDefaultLocaleMessages } from "../../core";
-import { prepareSchema } from "../../core";
+import type { ReaderOptions } from "../../core";
+import {
+  discoverConfigs,
+  prepareSchema,
+  collectNonDefaultLocaleMessages,
+} from "../../core";
 import { writeJsonReport } from "../../infrastructure";
-import { renderTitle } from "../../shared";
-import { FEATURES } from "../../shared";
-import { spinner } from "../../shared/log/spinner";
+import { renderTitle, spinner, FEATURES, type Format } from "../../shared";
 import { collectMissing } from "./missing";
 import { renderConfigSummary } from "./render-config-summary";
 
 export interface ValidateOptions extends ReaderOptions {
-  format?: "human" | "json";
+  format?: Format;
   output?: string;
   debug?: boolean;
 }

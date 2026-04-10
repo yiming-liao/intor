@@ -8,5 +8,8 @@ export {
 // extra-exts
 export { EXTRA_EXTS, type ExtraExt } from "./extra-exts";
 
+// format
+export { FORMAT, type Format } from "./format";
+
 // features
 export { FEATURES } from "./features";
