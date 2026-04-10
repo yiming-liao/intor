@@ -7,7 +7,7 @@ import {
   registerCheckCommand,
   registerValidateCommand,
 } from "./commands";
-import { run } from "./menu";
+import { menu } from "./menu";
 import { VERSION } from "./version";
 
 async function main() {
@@ -18,7 +18,7 @@ async function main() {
   // Interactive menu bypasses CAC entirely
   // -------------------------------------------------------------------
   if (args.length === 0) {
-    await run();
+    await menu.start();
     return;
   }
 
