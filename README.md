@@ -16,6 +16,8 @@ The i18n library for modern JavaScript
 
 <div align="center">
 
-#### [![Documentation ↗](https://img.shields.io/badge/%20Documentation%20%F0%9F%93%9A%20-3e668c?style=for-the-badge)](https://intor.dev)
+<a href="https://intor.dev">
+    <img src="./documentation.png" width="200px" alt="Intor Documentation" />
+</a>
 
 </div>
