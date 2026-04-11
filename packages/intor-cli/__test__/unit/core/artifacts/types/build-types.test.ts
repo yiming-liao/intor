@@ -1,6 +1,12 @@
 import type { SchemaEntry } from "../../../../../src/core/artifacts/types";
 import { describe, it, expect } from "vitest";
 import { buildTypes } from "../../../../../src/core/artifacts/types/build-types";
+import {
+  DEFAULT_CONFIG_KEY,
+  GENERATED_FIELD,
+  GENERATED_INTERFACE_NAME,
+  INTOR_GENERATED_KEY,
+} from "../../../../../src/core/artifacts/types/contract";
 
 describe("buildTypes", () => {
   it("emits deterministic locale and property ordering", () => {
@@ -36,7 +42,7 @@ describe("buildTypes", () => {
 
     const output = buildTypes(schemaEntries);
 
-    expect(output).toContain('Locales: "zh" | "en";');
+    expect(output).toContain(`${GENERATED_FIELD.locales}: "zh" | "en";`);
     expect(output.indexOf('"a": string;')).toBeLessThan(
       output.indexOf('"z": string;'),
     );
@@ -48,7 +54,7 @@ describe("buildTypes", () => {
     );
   });
 
-  it("emits __default__ once and keeps additional config entries", () => {
+  it("emits the default config key once and keeps additional config entries", () => {
     const schemaEntries: SchemaEntry[] = [
       {
         id: "first",
@@ -72,8 +78,27 @@ describe("buildTypes", () => {
 
     const output = buildTypes(schemaEntries);
 
-    expect(output.match(/__default__/g)).toHaveLength(1);
+    expect(output.match(new RegExp(DEFAULT_CONFIG_KEY, "g"))).toHaveLength(1);
     expect(output).toContain('"first": {');
     expect(output).toContain('"second": {');
+  });
+
+  it("emits the shared generated sentinel key in the global interface", () => {
+    const schemaEntries: SchemaEntry[] = [
+      {
+        id: "app",
+        locales: ["en"],
+        shapes: {
+          messages: { kind: "none" },
+          replacements: { kind: "none" },
+          rich: { kind: "none" },
+        },
+      },
+    ];
+
+    const output = buildTypes(schemaEntries);
+
+    expect(output).toContain(`interface ${GENERATED_INTERFACE_NAME} {`);
+    expect(output).toContain(`${INTOR_GENERATED_KEY}: true;`);
   });
 });

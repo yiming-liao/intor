@@ -84,7 +84,7 @@ export type GenConfig<CK extends GenConfigKeys> = HasGen extends true ? CK exten
 export type GenConfigKeys = HasGen extends true ? [GeneratedConfigKeys] extends [never] ? string : GeneratedConfigKeys : string;
 
 // @public
-export type GeneratedConfigKeys = HasGen extends true ? Exclude<keyof IntorGeneratedTypes, INTOR_GENERATED_KEY> : never;
+export type GeneratedConfigKeys = HasGen extends true ? Exclude<keyof IntorGeneratedTypes, IntorGeneratedKey> : never;
 
 // @public (undocumented)
 export type GenLocale<CK extends GenConfigKeys> = GenConfig<CK>["Locales"];
@@ -104,7 +104,7 @@ export function getClientLocale<CK extends GenConfigKeys = "__default__">(config
 export { HandlerContext }
 
 // @public
-export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes ? true : false;
+export type HasGen = IntorGeneratedKey extends keyof IntorGeneratedTypes ? true : false;
 
 // @public
 export type HtmlTagRenderers<RichShape = Rich> = TagRenderers<string, RichShape>;
@@ -126,9 +126,6 @@ export const INTOR_ERROR_CODE: {
     readonly CONFIG_MISSING_SUPPORTED_LOCALES: "INTOR_CONFIG_MISSING_SUPPORTED_LOCALES";
     readonly CONFIG_UNSUPPORTED_DEFAULT_LOCALE: "INTOR_CONFIG_UNSUPPORTED_DEFAULT_LOCALE";
 };
-
-// @public
-export type INTOR_GENERATED_KEY = "__intor_generated__";
 
 // @public
 export type IntorConfig = IntorResolvedConfig;
@@ -154,6 +151,9 @@ export interface IntorErrorOptions {
     // (undocumented)
     message: string;
 }
+
+// @public
+export type IntorGeneratedKey = "__intor_generated__";
 
 // @public
 export type IntorRawConfig = {

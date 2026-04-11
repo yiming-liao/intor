@@ -1,4 +1,5 @@
 import { LOCALE_PLACEHOLDER } from "intor";
+import { GENERATED_FIELD, INTOR_GENERATED_KEY } from "./contract";
 import { indent } from "./utils/indent";
 
 // Wrap a type block under the locale placeholder key.
@@ -25,10 +26,10 @@ export function appendConfigBlock(
 ) {
   lines.push(
     `${indent(2)}${id}: {`,
-    `${indent(3)}Locales: ${locales};`,
-    `${indent(3)}Messages: ${wrapWithLocale(messages)};`,
-    `${indent(3)}Replacements: ${wrapWithLocale(replacements)};`,
-    `${indent(3)}Rich: ${wrapWithLocale(rich)};`,
+    `${indent(3)}${GENERATED_FIELD.locales}: ${locales};`,
+    `${indent(3)}${GENERATED_FIELD.messages}: ${wrapWithLocale(messages)};`,
+    `${indent(3)}${GENERATED_FIELD.replacements}: ${wrapWithLocale(replacements)};`,
+    `${indent(3)}${GENERATED_FIELD.rich}: ${wrapWithLocale(rich)};`,
     `${indent(2)}};`,
   );
 }
@@ -37,9 +38,6 @@ export function appendConfigBlock(
 export function appendFooter(lines: string[]) {
   lines.push(`${indent(1)}}`, `}`, `export type __dummy = void;`);
 }
-
-// TODO: align with the generated types key in intor
-export const INTOR_GENERATED_KEY = "__intor_generated__";
 
 // Append the declaration prologue for the generated global interface.
 export function appendHeader(lines: string[], interfaceName: string) {

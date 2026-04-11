@@ -72,7 +72,7 @@ export type GenConfig<CK extends GenConfigKeys> = HasGen extends true ? CK exten
 export type GenConfigKeys = HasGen extends true ? [GeneratedConfigKeys] extends [never] ? string : GeneratedConfigKeys : string;
 
 // @public
-export type GeneratedConfigKeys = HasGen extends true ? Exclude<keyof IntorGeneratedTypes, INTOR_GENERATED_KEY> : never;
+export type GeneratedConfigKeys = HasGen extends true ? Exclude<keyof IntorGeneratedTypes, IntorGeneratedKey> : never;
 
 // @public (undocumented)
 export type GenLocale<CK extends GenConfigKeys> = GenConfig<CK>["Locales"];
@@ -110,7 +110,7 @@ export interface GetTranslatorParams {
 }
 
 // @public
-export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes ? true : false;
+export type HasGen = IntorGeneratedKey extends keyof IntorGeneratedTypes ? true : false;
 
 // @public
 export type HtmlTagRenderers<RichShape = Rich> = TagRenderers<string, RichShape>;
@@ -119,10 +119,10 @@ export type HtmlTagRenderers<RichShape = Rich> = TagRenderers<string, RichShape>
 export function intor<CK extends GenConfigKeys = "__default__">(config: IntorConfig, locale: string, options?: IntorOptions): Promise<IntorValue<CK>>;
 
 // @public
-export type INTOR_GENERATED_KEY = "__intor_generated__";
+export type IntorConfig = IntorResolvedConfig;
 
 // @public
-export type IntorConfig = IntorResolvedConfig;
+export type IntorGeneratedKey = "__intor_generated__";
 
 // @public
 export interface IntorOptions {

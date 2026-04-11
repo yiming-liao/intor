@@ -89,7 +89,7 @@ export {
 //--------------------------------------------------------------
 export type {
   // generated
-  INTOR_GENERATED_KEY,
+  IntorGeneratedKey,
   GenConfigKeys,
   GeneratedConfigKeys,
   HasGen,

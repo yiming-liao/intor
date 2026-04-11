@@ -15,7 +15,7 @@ export type {
   MessagesLoader,
 
   // types (generated)
-  INTOR_GENERATED_KEY,
+  IntorGeneratedKey,
   GenConfigKeys,
   GeneratedConfigKeys,
   HasGen,

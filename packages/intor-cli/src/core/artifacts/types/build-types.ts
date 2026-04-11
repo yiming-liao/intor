@@ -1,11 +1,9 @@
 import type { SchemaEntry } from "../types";
 import { sortKeysDeep } from "../sort-keys-deep";
 import { appendHeader, appendConfigBlock, appendFooter } from "./append";
+import { DEFAULT_CONFIG_KEY, GENERATED_INTERFACE_NAME } from "./contract";
 import { normalizeRichInferNode } from "./utils/normalize-rich-infer-node";
 import { renderInferNode } from "./utils/render-infer-node";
-
-// TODO: align with the generated types key in intor
-const GENERATED_INTERFACE_NAME = "IntorGeneratedTypes";
 
 /**
  * Builds the global TypeScript declaration from inferred typegen inputs.
@@ -36,7 +34,7 @@ export function buildTypes(schemaEntries: SchemaEntry[]): string {
     // First entry is mirrored as __default__ for backwards compatibility.
     if (index === 0) {
       appendConfigBlock(lines, {
-        id: "__default__",
+        id: DEFAULT_CONFIG_KEY,
         locales: localesType,
         messages: messagesType,
         replacements: replacementsType,

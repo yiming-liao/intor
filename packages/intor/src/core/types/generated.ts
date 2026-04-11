@@ -15,7 +15,7 @@ import "./generated-registry";
  *
  * @public
  */
-export type INTOR_GENERATED_KEY = "__intor_generated__";
+export type IntorGeneratedKey = "__intor_generated__";
 
 /**
  * Detect generation mode.
@@ -24,7 +24,7 @@ export type INTOR_GENERATED_KEY = "__intor_generated__";
  *
  * @public
  */
-export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes
+export type HasGen = IntorGeneratedKey extends keyof IntorGeneratedTypes
   ? true
   : false;
 
@@ -37,7 +37,7 @@ export type HasGen = INTOR_GENERATED_KEY extends keyof IntorGeneratedTypes
  * @public
  */
 export type GeneratedConfigKeys = HasGen extends true
-  ? Exclude<keyof IntorGeneratedTypes, INTOR_GENERATED_KEY>
+  ? Exclude<keyof IntorGeneratedTypes, IntorGeneratedKey>
   : never;
 
 /**
