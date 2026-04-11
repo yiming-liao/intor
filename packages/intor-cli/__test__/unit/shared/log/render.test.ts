@@ -9,6 +9,20 @@ import {
 } from "../../../../src/shared/log/render";
 import { toRelativePath } from "../../../../src/shared/utils/to-relative-path";
 
+vi.mock("picocolors", () => ({
+  default: {
+    dim: vi.fn((value: string) => value),
+    cyan: vi.fn((value: string) => value),
+    green: vi.fn((value: string) => value),
+    bold: vi.fn((value: string) => value),
+    italic: vi.fn((value: string) => value),
+    gray: vi.fn((value: string) => value),
+    yellow: vi.fn((value: string) => value),
+    red: vi.fn((value: string) => value),
+    bgBlack: vi.fn((value: string) => value),
+  },
+}));
+
 vi.mock("../../../../src/shared/log/logger", () => ({
   createLogger: vi.fn(),
 }));
