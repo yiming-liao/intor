@@ -4,6 +4,7 @@ import type {
   GenMessages,
   GenReplacements,
   GenRich,
+  TranslatorKeyMode,
 } from "../../../core";
 import type { IntlFormatter, LocalizedPreKey } from "intor-translator";
 import { derived, get } from "svelte/store";
@@ -17,12 +18,11 @@ import { getIntorContext } from "../provider";
  */
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementShape = GenReplacements<CK>,
-  RichShape = GenRich<CK>,
+  KM extends TranslatorKeyMode = "loose",
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): SvelteTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK> {
+): SvelteTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM> {
   const { translator, locale, setLocale } = getIntorContext();
   const scoped = derived(translator, ($t) => $t.scoped(preKey));
 
@@ -45,5 +45,11 @@ export function useTranslator<
     t: derived(scoped, ($t) => $t.t),
     tRich: derived(scoped, ($t) => createTRich($t.t)),
     format,
-  } as SvelteTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
+  } as SvelteTranslator<
+    GenMessages<CK>,
+    GenReplacements<CK>,
+    GenRich<CK>,
+    PK,
+    KM
+  >;
 }

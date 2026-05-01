@@ -5,6 +5,7 @@ import type {
   GenReplacements,
   GenRich,
   BaseTranslator,
+  TranslatorKeyMode,
 } from "../../core";
 import type {} from "../../edge";
 import type { Context } from "hono";
@@ -23,14 +24,15 @@ import {
  */
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementShape = GenReplacements<CK>,
-  RichShape = GenRich<CK>,
+  KM extends TranslatorKeyMode = "loose",
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   config: IntorConfig,
   c: Context,
   params?: Omit<GetTranslatorParams, "locale"> & { preKey?: PK },
-): Promise<BaseTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>> {
+): Promise<
+  BaseTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>
+> {
   const locale = c.get("intor")?.locale ?? config.defaultLocale;
 
   return getTranslatorCore(config, { locale, ...(params ?? {}) });

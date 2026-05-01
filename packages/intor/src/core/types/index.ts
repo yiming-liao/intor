@@ -18,7 +18,11 @@ export type {
 } from "./generated";
 
 // translator
-export type { BaseTranslator } from "./translator";
+export type {
+  BaseTranslator,
+  TranslatorKeyMode,
+  TranslatorKeyInput,
+} from "./translator";
 
 // routing
 export type {

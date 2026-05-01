@@ -16,6 +16,23 @@ import {
 } from "intor-translator";
 
 /**
+ * Translator key typing mode.
+ *
+ * @public
+ */
+export type TranslatorKeyMode = "loose" | "strict";
+
+/**
+ * Translator key input type for the given typing mode.
+ *
+ * @public
+ */
+export type TranslatorKeyInput<
+  K,
+  M extends TranslatorKeyMode = "loose",
+> = M extends "loose" ? K | (string & {}) : K;
+
+/**
  * Base translator interface.
  *
  * This type represents the minimal, framework-independent translator contract.
@@ -23,10 +40,11 @@ import {
  * @public
  */
 export type BaseTranslator<
-  M extends LocaleMessages,
+  M extends LocaleMessages = LocaleMessages,
   ReplacementShape = Replacement,
   RichShape = Rich,
   PK extends string | undefined = undefined,
+  KM extends TranslatorKeyMode = "loose",
 > = {
   /** Localized message map. */
   messages: M;
@@ -35,19 +53,17 @@ export type BaseTranslator<
   locale: Locale<M>;
 
   /** Check if a given key exists in the messages. */
-  hasKey: <
-    K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
-  >(
-    key?: K | (string & {}),
+  hasKey: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>>(
+    key?: TranslatorKeyInput<K, KM>,
     targetLocale?: Locale<M>,
   ) => boolean;
 
   /** Resolve a localized value for the given key. */
   t: <
-    K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
+    K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     R extends Replacement = LocalizedReplacement<ReplacementShape, K>,
   >(
-    key?: K | (string & {}),
+    key?: TranslatorKeyInput<K, KM>,
     replacements?: R | Replacement,
   ) => [
     PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>,
@@ -59,7 +75,7 @@ export type BaseTranslator<
 
   /** Resolve a localized value and apply rich tag renderers. */
   tRich: <
-    K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
+    K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
       ? ScopedRich<RichShape, PK, K>
       : LocalizedRich<RichShape, K>,
@@ -67,7 +83,7 @@ export type BaseTranslator<
       ? ScopedReplacement<ReplacementShape, PK, K>
       : LocalizedReplacement<ReplacementShape, K>,
   >(
-    key?: K | (string & {}),
+    key?: TranslatorKeyInput<K, KM>,
     tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers,
     replacements?: RE | Replacement,
   ) => string;

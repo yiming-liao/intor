@@ -4,6 +4,7 @@ import type {
   GenMessages,
   GenReplacements,
   GenRich,
+  TranslatorKeyMode,
 } from "../../../core";
 import type { IntlFormatter, LocalizedPreKey } from "intor-translator";
 import { computed } from "vue";
@@ -17,12 +18,11 @@ import { createTRich } from "./create-t-rich";
  */
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
-  ReplacementShape = GenReplacements<CK>,
-  RichShape = GenRich<CK>,
+  KM extends TranslatorKeyMode = "loose",
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,
-): VueTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK> {
+): VueTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM> {
   const intor = injectIntorContext();
   const translator = intor.value.translator;
   const scoped = computed(() => translator.value.scoped(preKey));
@@ -48,5 +48,5 @@ export function useTranslator<
     tRich: (...args: Parameters<ReturnType<typeof createTRich>>) =>
       createTRich(scoped.value.t)(...args),
     format,
-  } as VueTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
+  } as VueTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>;
 }

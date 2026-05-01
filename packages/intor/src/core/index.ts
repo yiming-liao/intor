@@ -107,6 +107,8 @@ export type {
 
   // translator
   BaseTranslator,
+  TranslatorKeyMode,
+  TranslatorKeyInput,
 
   // routing
   RoutingLocaleSignal,

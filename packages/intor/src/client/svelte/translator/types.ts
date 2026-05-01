@@ -1,4 +1,4 @@
-import type { BaseTranslator } from "../../../core";
+import type { BaseTranslator, TranslatorKeyMode } from "../../../core";
 import {
   type Locale,
   type LocaleMessages,
@@ -20,15 +20,16 @@ export type SvelteTranslator<
   ReplacementShape = Replacement,
   RichShape = Rich,
   PK extends string | undefined = undefined,
+  KM extends TranslatorKeyMode = "loose",
 > = {
   /** Localized message map. */
   messages: Readable<
-    BaseTranslator<M, ReplacementShape, RichShape, PK>["messages"]
+    BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["messages"]
   >;
 
   /** Active locale. */
   locale: Writable<
-    BaseTranslator<M, ReplacementShape, RichShape, PK>["locale"]
+    BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["locale"]
   >;
 
   /** Whether translations are loading. */
@@ -39,15 +40,17 @@ export type SvelteTranslator<
 
   /** Check if a given key exists in the messages. */
   hasKey: Readable<
-    BaseTranslator<M, ReplacementShape, RichShape, PK>["hasKey"]
+    BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["hasKey"]
   >;
 
   /** Resolve a localized value for the given key. */
-  t: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK>["t"]>;
+  t: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["t"]>;
 
   /** Resolve a localized value and apply rich tag renderers. */
-  tRich: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK>["tRich"]>;
+  tRich: Readable<
+    BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["tRich"]
+  >;
 
   /** Formatting helpers. */
-  format: BaseTranslator<M, ReplacementShape, RichShape, PK>["format"];
+  format: BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["format"];
 };

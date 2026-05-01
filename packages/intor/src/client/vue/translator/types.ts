@@ -1,4 +1,8 @@
-import type { BaseTranslator } from "../../../core";
+import type {
+  BaseTranslator,
+  TranslatorKeyInput,
+  TranslatorKeyMode,
+} from "../../../core";
 import type { VueTagRenderers } from "../render";
 import type { ComputedRef, VNodeChild } from "vue";
 import {
@@ -27,8 +31,9 @@ export type VueTranslator<
   ReplacementShape = Replacement,
   RichShape = Rich,
   PK extends string | undefined = undefined,
+  KM extends TranslatorKeyMode = "loose",
 > = Omit<
-  BaseTranslator<M, ReplacementShape, RichShape, PK>,
+  BaseTranslator<M, ReplacementShape, RichShape, PK, KM>,
   "tRich" | "messages" | "locale"
 > & {
   /** Localized message map. */
@@ -45,7 +50,7 @@ export type VueTranslator<
 
   /** Resolve a localized value and render it as Vue nodes. */
   tRich: <
-    K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
+    K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
       ? ScopedRich<RichShape, PK, K>
       : LocalizedRich<RichShape, K>,
@@ -53,7 +58,7 @@ export type VueTranslator<
       ? ScopedReplacement<ReplacementShape, PK, K>
       : LocalizedReplacement<ReplacementShape, K>,
   >(
-    key?: K | (string & {}),
+    key?: TranslatorKeyInput<K, KM>,
     tagRenderers?: VueTagRenderers<RI> | VueTagRenderers,
     replacements?: RE | Replacement,
   ) => VNodeChild[];

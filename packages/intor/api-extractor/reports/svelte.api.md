@@ -29,14 +29,14 @@ import type { TranslateHook } from 'intor-translator';
 import { Writable } from 'svelte/store';
 
 // @public
-export type BaseTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined> = {
+export type BaseTranslator<M extends LocaleMessages = LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined, KM extends TranslatorKeyMode = "loose"> = {
     messages: M;
     locale: Locale<M>;
-    hasKey: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>>(key?: K | (string & {}), targetLocale?: Locale<M>) => boolean;
-    t: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, R extends Replacement = LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), replacements?: R | Replacement) => [
+    hasKey: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>>(key?: TranslatorKeyInput<K, KM>, targetLocale?: Locale<M>) => boolean;
+    t: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, R extends Replacement = LocalizedReplacement<ReplacementShape, K>>(key?: TranslatorKeyInput<K, KM>, replacements?: R | Replacement) => [
     PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>
     ] extends [never] ? string : PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>;
-    tRich: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers, replacements?: RE | Replacement) => string;
+    tRich: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: TranslatorKeyInput<K, KM>, tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers, replacements?: RE | Replacement) => string;
     format: IntlFormatter;
 };
 
@@ -319,15 +319,15 @@ export type SafeExtract<T> = T extends {
 export type ServerLoaderOptions = LoaderOptions;
 
 // @public
-export type SvelteTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined> = {
-    messages: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK>["messages"]>;
-    locale: Writable<BaseTranslator<M, ReplacementShape, RichShape, PK>["locale"]>;
+export type SvelteTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined, KM extends TranslatorKeyMode = "loose"> = {
+    messages: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["messages"]>;
+    locale: Writable<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["locale"]>;
     isLoading: Readable<boolean>;
     setLocale: (locale: Locale<M>) => void;
-    hasKey: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK>["hasKey"]>;
-    t: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK>["t"]>;
-    tRich: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK>["tRich"]>;
-    format: BaseTranslator<M, ReplacementShape, RichShape, PK>["format"];
+    hasKey: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["hasKey"]>;
+    t: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["t"]>;
+    tRich: Readable<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["tRich"]>;
+    format: BaseTranslator<M, ReplacementShape, RichShape, PK, KM>["format"];
 };
 
 // @public
@@ -339,6 +339,12 @@ export type TagRenderers<Output = string, RichShape = Rich> = {
 } & Record<string, TagRenderer<Output>>;
 
 // @public
+export type TranslatorKeyInput<K, M extends TranslatorKeyMode = "loose"> = M extends "loose" ? K | (string & {}) : K;
+
+// @public
+export type TranslatorKeyMode = "loose" | "strict";
+
+// @public
 export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
@@ -346,7 +352,7 @@ export type TranslatorOptions = {
 };
 
 // @public
-export function useTranslator<CK extends GenConfigKeys = "__default__", ReplacementShape = GenReplacements<CK>, RichShape = GenRich<CK>, PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined>(preKey?: PK): SvelteTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
+export function useTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose", PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined>(preKey?: PK): SvelteTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>;
 
 // (No @packageDocumentation comment for this package)
 

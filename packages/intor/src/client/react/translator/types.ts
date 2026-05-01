@@ -1,4 +1,8 @@
-import type { BaseTranslator } from "../../../core";
+import type {
+  BaseTranslator,
+  TranslatorKeyInput,
+  TranslatorKeyMode,
+} from "../../../core";
 import type { ReactTagRenderers } from "../render";
 import type * as React from "react";
 import {
@@ -27,7 +31,8 @@ export type ReactTranslator<
   ReplacementShape = Replacement,
   RichShape = Rich,
   PK extends string | undefined = undefined,
-> = Omit<BaseTranslator<M, ReplacementShape, RichShape, PK>, "tRich"> & {
+  KM extends TranslatorKeyMode = "loose",
+> = Omit<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>, "tRich"> & {
   /** Whether translations are loading. */
   isLoading: boolean;
 
@@ -36,7 +41,7 @@ export type ReactTranslator<
 
   /** Resolve a localized value and render it as React nodes. */
   tRich: <
-    K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
+    K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>,
     RI = PK extends string
       ? ScopedRich<RichShape, PK, K>
       : LocalizedRich<RichShape, K>,
@@ -44,7 +49,7 @@ export type ReactTranslator<
       ? ScopedReplacement<ReplacementShape, PK, K>
       : LocalizedReplacement<ReplacementShape, K>,
   >(
-    key?: K | (string & {}),
+    key?: TranslatorKeyInput<K, KM>,
     tagRenderers?: ReactTagRenderers<RI> | ReactTagRenderers,
     replacements?: RE | Replacement,
   ) => React.ReactNode[];

@@ -37,14 +37,14 @@ import { VNode } from 'vue';
 import type { VNodeChild } from 'vue';
 
 // @public
-export type BaseTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined> = {
+export type BaseTranslator<M extends LocaleMessages = LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined, KM extends TranslatorKeyMode = "loose"> = {
     messages: M;
     locale: Locale<M>;
-    hasKey: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>>(key?: K | (string & {}), targetLocale?: Locale<M>) => boolean;
-    t: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, R extends Replacement = LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), replacements?: R | Replacement) => [
+    hasKey: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>>(key?: TranslatorKeyInput<K, KM>, targetLocale?: Locale<M>) => boolean;
+    t: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, R extends Replacement = LocalizedReplacement<ReplacementShape, K>>(key?: TranslatorKeyInput<K, KM>, replacements?: R | Replacement) => [
     PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>
     ] extends [never] ? string : PK extends string ? ScopedValue<M, PK, K> : LocalizedValue<M, K>;
-    tRich: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers, replacements?: RE | Replacement) => string;
+    tRich: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: TranslatorKeyInput<K, KM>, tagRenderers?: HtmlTagRenderers<RI> | HtmlTagRenderers, replacements?: RE | Replacement) => string;
     format: IntlFormatter;
 };
 
@@ -361,6 +361,12 @@ required: false;
 }>> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, any>;
 
 // @public
+export type TranslatorKeyInput<K, M extends TranslatorKeyMode = "loose"> = M extends "loose" ? K | (string & {}) : K;
+
+// @public
+export type TranslatorKeyMode = "loose" | "strict";
+
+// @public
 export type TranslatorOptions = {
     loadingMessage?: string;
     missingMessage?: string;
@@ -371,18 +377,18 @@ export type TranslatorOptions = {
 export function useIntor(config: IntorConfig, loader: MessagesLoader): Omit<IntorValue, "handlers" | "hooks">;
 
 // @public
-export function useTranslator<CK extends GenConfigKeys = "__default__", ReplacementShape = GenReplacements<CK>, RichShape = GenRich<CK>, PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined>(preKey?: PK): VueTranslator<GenMessages<CK>, ReplacementShape, RichShape, PK>;
+export function useTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose", PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined>(preKey?: PK): VueTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>;
 
 // @public
 export type VueTagRenderers<RichShape = Rich> = TagRenderers<VNodeChild, RichShape>;
 
 // @public
-export type VueTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined> = Omit<BaseTranslator<M, ReplacementShape, RichShape, PK>, "tRich" | "messages" | "locale"> & {
+export type VueTranslator<M extends LocaleMessages, ReplacementShape = Replacement, RichShape = Rich, PK extends string | undefined = undefined, KM extends TranslatorKeyMode = "loose"> = Omit<BaseTranslator<M, ReplacementShape, RichShape, PK, KM>, "tRich" | "messages" | "locale"> & {
     messages: ComputedRef<M>;
     locale: ComputedRef<Locale<M>>;
     isLoading: ComputedRef<boolean>;
     setLocale: (locale: Locale<M>) => void;
-    tRich: <K extends string = PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: K | (string & {}), tagRenderers?: VueTagRenderers<RI> | VueTagRenderers, replacements?: RE | Replacement) => VNodeChild[];
+    tRich: <K extends PK extends string ? ScopedKey<M, PK> : LocalizedKey<M>, RI = PK extends string ? ScopedRich<RichShape, PK, K> : LocalizedRich<RichShape, K>, RE = PK extends string ? ScopedReplacement<ReplacementShape, PK, K> : LocalizedReplacement<ReplacementShape, K>>(key?: TranslatorKeyInput<K, KM>, tagRenderers?: VueTagRenderers<RI> | VueTagRenderers, replacements?: RE | Replacement) => VNodeChild[];
 };
 
 // (No @packageDocumentation comment for this package)

@@ -1,6 +1,6 @@
 import type { BaseTranslator } from "../../../../dist/types/export/internal";
 import type { GeneratedTypesFixture } from "../../__fixtures__/generated-types";
-import { expectType } from "tsd";
+import { expectError, expectType } from "tsd";
 
 declare global {
   interface IntorGeneratedTypes {
@@ -28,4 +28,16 @@ type RI = GeneratedTypesFixture["config2"]["Rich"];
 
   expectType<string>(t("key"));
   expectType<string>(t("this.key.does.not.exist")); // fallback to string
+}
+
+{
+  const { t, hasKey, tRich }: BaseTranslator<M, RE, RI, "nested", "strict"> =
+    {} as any;
+
+  expectType<string>(t("key"));
+  expectError(t("this.key.does.not.exist"));
+  expectType<boolean>(hasKey("key"));
+  expectError(hasKey("this.key.does.not.exist"));
+  expectType<string>(tRich("key"));
+  expectError(tRich("this.key.does.not.exist"));
 }

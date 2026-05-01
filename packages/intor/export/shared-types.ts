@@ -28,6 +28,8 @@ export type {
   GenRich,
   // types (translator)
   BaseTranslator,
+  TranslatorKeyMode,
+  TranslatorKeyInput,
   // types (routing)
   RoutingLocaleCarrier,
   RoutingLocaleSignal,
