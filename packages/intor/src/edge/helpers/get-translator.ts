@@ -33,6 +33,37 @@ export interface GetTranslatorParams {
  *
  * @public
  */
+export function getTranslator<
+  CK extends GenConfigKeys = "__default__",
+  KM extends TranslatorKeyMode = "loose",
+>(
+  config: IntorConfig,
+  params: GetTranslatorParams,
+): Promise<
+  BaseTranslator<
+    GenMessages<CK>,
+    GenReplacements<CK>,
+    GenRich<CK>,
+    undefined,
+    KM
+  >
+>;
+
+/** @public */
+export function getTranslator<
+  CK extends GenConfigKeys = "__default__",
+  KM extends TranslatorKeyMode = "loose",
+  PK extends LocalizedPreKey<GenMessages<CK>> = LocalizedPreKey<
+    GenMessages<CK>
+  >,
+>(
+  config: IntorConfig,
+  params: GetTranslatorParams & { preKey: PK },
+): Promise<
+  BaseTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>
+>;
+
+/** @public */
 export async function getTranslator<
   CK extends GenConfigKeys = "__default__",
   KM extends TranslatorKeyMode = "loose",

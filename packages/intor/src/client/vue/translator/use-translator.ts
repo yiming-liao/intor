@@ -19,6 +19,29 @@ import { createTRich } from "./create-t-rich";
 export function useTranslator<
   CK extends GenConfigKeys = "__default__",
   KM extends TranslatorKeyMode = "loose",
+>(): VueTranslator<
+  GenMessages<CK>,
+  GenReplacements<CK>,
+  GenRich<CK>,
+  undefined,
+  KM
+>;
+
+/** @public */
+export function useTranslator<
+  CK extends GenConfigKeys = "__default__",
+  KM extends TranslatorKeyMode = "loose",
+  PK extends LocalizedPreKey<GenMessages<CK>> = LocalizedPreKey<
+    GenMessages<CK>
+  >,
+>(
+  preKey: PK,
+): VueTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>;
+
+/** @public */
+export function useTranslator<
+  CK extends GenConfigKeys = "__default__",
+  KM extends TranslatorKeyMode = "loose",
   PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined,
 >(
   preKey?: PK,

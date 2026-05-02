@@ -352,7 +352,10 @@ export type TranslatorOptions = {
 };
 
 // @public
-export function useTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose", PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined>(preKey?: PK): SvelteTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>;
+export function useTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose">(): SvelteTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, undefined, KM>;
+
+// @public (undocumented)
+export function useTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose", PK extends LocalizedPreKey<GenMessages<CK>> = LocalizedPreKey<GenMessages<CK>>>(preKey: PK): SvelteTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>;
 
 // (No @packageDocumentation comment for this package)
 

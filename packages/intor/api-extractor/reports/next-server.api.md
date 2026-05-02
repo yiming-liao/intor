@@ -90,8 +90,11 @@ export type GenRich<CK extends GenConfigKeys> = GenConfig<CK>["Rich"];
 export const getLocale: <CK extends GenConfigKeys = "__default__">(config: IntorConfig) => Promise<GenLocale<CK>>;
 
 // @public
-export function getTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose", PK extends LocalizedPreKey<GenMessages<CK>> | undefined = undefined>(config: IntorConfig, params?: Omit<GetTranslatorParams, "locale"> & {
-    preKey?: PK;
+export function getTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose">(config: IntorConfig, params?: Omit<GetTranslatorParams, "locale">): Promise<BaseTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, undefined, KM>>;
+
+// @public (undocumented)
+export function getTranslator<CK extends GenConfigKeys = "__default__", KM extends TranslatorKeyMode = "loose", PK extends LocalizedPreKey<GenMessages<CK>> = LocalizedPreKey<GenMessages<CK>>>(config: IntorConfig, params: Omit<GetTranslatorParams, "locale"> & {
+    preKey: PK;
 }): Promise<BaseTranslator<GenMessages<CK>, GenReplacements<CK>, GenRich<CK>, PK, KM>>;
 
 // @public
