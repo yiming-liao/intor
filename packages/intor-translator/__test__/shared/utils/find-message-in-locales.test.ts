@@ -74,4 +74,69 @@ describe("findMessageInLocales", () => {
     });
     expect(result).toBeNull();
   });
+
+  it("should find flat messages whose key contains dots", () => {
+    const messages = {
+      en: {
+        "dashboard.hello": "hello",
+      },
+    };
+    const result = findMessageInLocales({
+      messages,
+      candidateLocales: ["en"],
+      key: "dashboard.hello",
+    });
+    expect(result).toBe("hello");
+  });
+
+  it("should prefer exact key match before nested traversal", () => {
+    const messages = {
+      en: {
+        "dashboard.hello": "flat",
+        dashboard: {
+          hello: "nested",
+        },
+      },
+    };
+    const result = findMessageInLocales({
+      messages,
+      candidateLocales: ["en"],
+      key: "dashboard.hello",
+    });
+    expect(result).toBe("flat");
+  });
+
+  it("should find nested values under a flat dotted parent key", () => {
+    const messages = {
+      en: {
+        "a.b": {
+          c: "hello",
+        },
+      },
+    };
+    const result = findMessageInLocales({
+      messages,
+      candidateLocales: ["en"],
+      key: "a.b.c",
+    });
+    expect(result).toBe("hello");
+  });
+
+  it("should find nested values under mixed dotted keys across levels", () => {
+    const messages = {
+      en: {
+        a: {
+          "b.c": {
+            d: "hello",
+          },
+        },
+      },
+    };
+    const result = findMessageInLocales({
+      messages,
+      candidateLocales: ["en"],
+      key: "a.b.c.d",
+    });
+    expect(result).toBe("hello");
+  });
 });

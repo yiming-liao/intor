@@ -6,6 +6,40 @@ interface FindMessageInLocalesOptions {
   key: string;
 }
 
+function findMessageByPath(
+  candidate: MessageValue | undefined,
+  segments: string[],
+  start = 0,
+): MessageValue | undefined {
+  if (start >= segments.length) {
+    return candidate;
+  }
+
+  if (candidate === null || typeof candidate !== "object") {
+    return undefined;
+  }
+
+  const objectCandidate = candidate as Record<string, MessageValue>;
+
+  for (let end = segments.length; end > start; end--) {
+    const segment = segments.slice(start, end).join(".");
+
+    if (!(segment in objectCandidate)) continue;
+
+    const next = objectCandidate[segment];
+    if (end === segments.length) {
+      return next;
+    }
+
+    const resolved = findMessageByPath(next, segments, end);
+    if (resolved !== undefined) {
+      return resolved;
+    }
+  }
+
+  return undefined;
+}
+
 /**
  * Finds the first available message value for a given key across a list of locales.
  *
@@ -38,21 +72,7 @@ export const findMessageInLocales = ({
     const messagesForLocale = messages[locale];
     if (!messagesForLocale) continue;
 
-    let candidate: MessageValue | undefined = messagesForLocale;
-    const keys = key.split(".");
-
-    for (const key of keys) {
-      if (
-        candidate !== null &&
-        typeof candidate === "object" &&
-        key in candidate
-      ) {
-        candidate = (candidate as Record<string, MessageValue>)[key];
-      } else {
-        candidate = undefined;
-        break;
-      }
-    }
+    const candidate = findMessageByPath(messagesForLocale, key.split("."));
 
     if (candidate !== undefined) {
       return candidate;
