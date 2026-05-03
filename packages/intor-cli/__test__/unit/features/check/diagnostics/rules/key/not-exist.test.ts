@@ -62,4 +62,41 @@ describe("keyNotExist", () => {
     );
     expect(diagnostics).toEqual([]);
   });
+
+  it("accepts exact dotted keys in schema", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        "dashboard.hello": { kind: "primitive", type: "string" },
+      },
+    };
+
+    const diagnostics = keyNotExist(
+      createUsage({ key: "dashboard.hello" }),
+      schema,
+    );
+
+    expect(diagnostics).toEqual([]);
+  });
+
+  it("accepts hybrid dotted keys across levels in schema", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        "dashboard.hello": {
+          kind: "object",
+          properties: {
+            title: { kind: "primitive", type: "string" },
+          },
+        },
+      },
+    };
+
+    const diagnostics = keyNotExist(
+      createUsage({ key: "dashboard.hello.title" }),
+      schema,
+    );
+
+    expect(diagnostics).toEqual([]);
+  });
 });

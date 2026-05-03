@@ -2,6 +2,7 @@ import type { MissingResult } from "./types";
 import type { InferNode } from "../../../core";
 import type { MessageObject } from "intor";
 import { extractInterpolationNames } from "../../../core";
+import { findMessageValue } from "./find-message-value";
 
 /**
  * Collect missing interpolation replacements from locale messages.
@@ -24,11 +25,13 @@ export function collectMissingReplacements(
     const node = shapes.properties[key];
     if (!node) continue;
 
-    const value = messages[key];
     const fullPath = path ? `${path}.${key}` : key;
+    const value = findMessageValue(messages, fullPath);
 
-    // Shape requires this key, but message does not provide it
-    if (value === undefined) continue;
+    if (value === undefined) {
+      collectMissingReplacements(node, messages, result, fullPath);
+      continue;
+    }
 
     // -----------------------------------------------------------------------
     // Leaf string message: validate interpolation replacements
@@ -48,12 +51,7 @@ export function collectMissingReplacements(
 
     // Recurse into nested message objects
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      collectMissingReplacements(
-        node,
-        value as MessageObject,
-        result,
-        fullPath,
-      );
+      collectMissingReplacements(node, messages, result, fullPath);
     }
   }
 }

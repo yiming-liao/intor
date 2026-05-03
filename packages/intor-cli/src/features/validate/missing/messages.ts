@@ -1,6 +1,7 @@
 import type { MissingResult } from "./types";
 import type { InferNode } from "../../../core";
 import type { MessageObject } from "intor";
+import { findMessageValue } from "./find-message-value";
 
 /**
  * Collect missing message keys from a locale message object.
@@ -23,18 +24,27 @@ export function collectMissingMessages(
     const node = shapes.properties[key];
     if (!node) continue;
 
-    const value = messageObject[key];
     const fullPath = path ? `${path}.${key}` : key;
+    const value = findMessageValue(messageObject, fullPath);
 
-    // Shape requires this key, but message does not provide it
-    if (value === undefined) {
-      result.missingMessages.push(fullPath);
+    if (node.kind === "object") {
+      if (value === undefined) {
+        collectMissingMessages(node, messageObject, result, fullPath);
+        continue;
+      }
+
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        collectMissingMessages(node, messageObject, result, fullPath);
+      }
       continue;
     }
 
-    // Recurse into nested message objects
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      collectMissingMessages(node, value as MessageObject, result, fullPath);
+    if (value === undefined) {
+      result.missingMessages.push(fullPath);
     }
   }
 }

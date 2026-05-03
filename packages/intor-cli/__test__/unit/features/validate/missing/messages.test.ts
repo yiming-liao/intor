@@ -59,6 +59,57 @@ describe("collectMissingMessages", () => {
     expect(result.missingMessages).toEqual(["home.subtitle"]);
   });
 
+  it("treats flat dotted keys as equivalent to nested message paths", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        home: {
+          kind: "object",
+          properties: {
+            title: { kind: "none" },
+          },
+        },
+      },
+    };
+    const messages = {
+      "home.title": "Hello",
+    };
+    const result = createResult();
+
+    collectMissingMessages(schema, messages, result);
+
+    expect(result.missingMessages).toEqual([]);
+  });
+
+  it("treats hybrid dotted keys as equivalent to nested message paths", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        home: {
+          kind: "object",
+          properties: {
+            title: {
+              kind: "object",
+              properties: {
+                label: { kind: "none" },
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = {
+      "home.title": {
+        label: "Hello",
+      },
+    };
+    const result = createResult();
+
+    collectMissingMessages(schema, messages, result);
+
+    expect(result.missingMessages).toEqual([]);
+  });
+
   it("produces no errors when messages fully satisfy schema", () => {
     const schema: InferNode = {
       kind: "object",

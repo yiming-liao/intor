@@ -2,6 +2,7 @@ import type { MissingResult } from "./types";
 import type { InferNode } from "../../../core";
 import type { MessageObject } from "intor";
 import { tokenize, type Token } from "intor-translator/internal";
+import { findMessageValue } from "./find-message-value";
 
 /**
  * Check whether a token is an opening rich tag.
@@ -33,11 +34,13 @@ export function collectMissingRich(
     const node = shapes.properties[key];
     if (!node) continue;
 
-    const value = messages[key];
     const fullPath = path ? `${path}.${key}` : key;
+    const value = findMessageValue(messages, fullPath);
 
-    // Shape requires this key, but message does not provide it
-    if (value === undefined) continue;
+    if (value === undefined) {
+      collectMissingRich(node, messages, result, fullPath);
+      continue;
+    }
 
     // -----------------------------------------------------------------------
     // Leaf string message: validate rich tags
@@ -60,7 +63,7 @@ export function collectMissingRich(
 
     // Recurse into nested message objects
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      collectMissingRich(node, value as MessageObject, result, fullPath);
+      collectMissingRich(node, messages, result, fullPath);
     }
   }
 }

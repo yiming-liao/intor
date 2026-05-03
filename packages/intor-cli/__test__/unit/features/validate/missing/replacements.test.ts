@@ -91,6 +91,67 @@ describe("collectMissingReplacements", () => {
     ]);
   });
 
+  it("treats flat dotted keys as equivalent to nested replacement paths", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        home: {
+          kind: "object",
+          properties: {
+            title: {
+              kind: "object",
+              properties: {
+                name: { kind: "primitive", type: "string" },
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = {
+      "home.title": "Hello {name}",
+    };
+    const result = createResult();
+
+    collectMissingReplacements(schema, messages, result);
+
+    expect(result.missingReplacements).toEqual([]);
+  });
+
+  it("treats hybrid dotted keys as equivalent to nested replacement paths", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        home: {
+          kind: "object",
+          properties: {
+            title: {
+              kind: "object",
+              properties: {
+                label: {
+                  kind: "object",
+                  properties: {
+                    name: { kind: "primitive", type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = {
+      "home.title": {
+        label: "Hello {name}",
+      },
+    };
+    const result = createResult();
+
+    collectMissingReplacements(schema, messages, result);
+
+    expect(result.missingReplacements).toEqual([]);
+  });
+
   it("ignores non-string message values", () => {
     const schema: InferNode = {
       kind: "object",

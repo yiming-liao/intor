@@ -67,4 +67,41 @@ describe("preKeyNotExist", () => {
     );
     expect(diagnostics).toEqual([]);
   });
+
+  it("accepts preKey prefixes for flat dotted keys", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        "dashboard.hello": { kind: "primitive", type: "string" },
+      },
+    };
+
+    const diagnostics = preKeyNotExist(
+      createUsage({ key: "hello", preKey: "dashboard" }),
+      schema,
+    );
+
+    expect(diagnostics).toEqual([]);
+  });
+
+  it("accepts preKey prefixes for hybrid dotted keys", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        "dashboard.hello": {
+          kind: "object",
+          properties: {
+            title: { kind: "primitive", type: "string" },
+          },
+        },
+      },
+    };
+
+    const diagnostics = preKeyNotExist(
+      createUsage({ key: "title", preKey: "dashboard.hello" }),
+      schema,
+    );
+
+    expect(diagnostics).toEqual([]);
+  });
 });

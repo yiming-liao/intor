@@ -1,7 +1,7 @@
 import type { PreKeyUsage, InferNode } from "../../../../../core";
 import type { Diagnostic } from "../../types";
 import { DIAGNOSTIC_MESSAGES } from "../../messages";
-import { getNodeAtPath } from "../../utils/get-node-at-path";
+import { hasNodeAtPathPrefix } from "../../utils/get-node-at-path";
 
 /**
  * @example
@@ -21,9 +21,7 @@ export function preKeyNotExist(
 
   if (!preKey) return [];
 
-  const node = getNodeAtPath(shape, preKey);
-
-  if (!node) {
+  if (!hasNodeAtPathPrefix(shape, preKey)) {
     return [
       {
         origin: factory,

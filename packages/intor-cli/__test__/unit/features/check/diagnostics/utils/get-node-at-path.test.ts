@@ -26,9 +26,69 @@ describe("getNodeAtPath", () => {
     expect(node).toEqual({ kind: "primitive", type: "string" });
   });
 
+  it("prefers an exact dotted key match before nested traversal", () => {
+    const dottedSchema: InferNode = {
+      kind: "object",
+      properties: {
+        "a.b": { kind: "primitive", type: "string" },
+        a: {
+          kind: "object",
+          properties: {
+            b: { kind: "primitive", type: "number" },
+          },
+        },
+      },
+    };
+
+    const node = getNodeAtPath(dottedSchema, "a.b");
+
+    expect(node).toEqual({ kind: "primitive", type: "string" });
+  });
+
   it("returns the node for a nested key path", () => {
     const node = getNodeAtPath(schema, "a.b.c");
     expect(node).toEqual({ kind: "primitive", type: "number" });
+  });
+
+  it("resolves nested values under a flat dotted parent key", () => {
+    const hybridSchema: InferNode = {
+      kind: "object",
+      properties: {
+        "a.b": {
+          kind: "object",
+          properties: {
+            c: { kind: "primitive", type: "string" },
+          },
+        },
+      },
+    };
+
+    const node = getNodeAtPath(hybridSchema, "a.b.c");
+
+    expect(node).toEqual({ kind: "primitive", type: "string" });
+  });
+
+  it("resolves nested values under mixed dotted keys across levels", () => {
+    const hybridSchema: InferNode = {
+      kind: "object",
+      properties: {
+        a: {
+          kind: "object",
+          properties: {
+            "b.c": {
+              kind: "object",
+              properties: {
+                d: { kind: "primitive", type: "boolean" },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const node = getNodeAtPath(hybridSchema, "a.b.c.d");
+
+    expect(node).toEqual({ kind: "primitive", type: "boolean" });
   });
 
   it("returns null for a non-existing top-level key", () => {

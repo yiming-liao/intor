@@ -92,6 +92,67 @@ describe("collectMissingRich", () => {
     ]);
   });
 
+  it("treats flat dotted keys as equivalent to nested rich paths", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        section: {
+          kind: "object",
+          properties: {
+            title: {
+              kind: "object",
+              properties: {
+                strong: { kind: "none" },
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = {
+      "section.title": "<strong>hello</strong>",
+    };
+    const result = createResult();
+
+    collectMissingRich(schema, messages, result);
+
+    expect(result.missingRich).toEqual([]);
+  });
+
+  it("treats hybrid dotted keys as equivalent to nested rich paths", () => {
+    const schema: InferNode = {
+      kind: "object",
+      properties: {
+        section: {
+          kind: "object",
+          properties: {
+            title: {
+              kind: "object",
+              properties: {
+                body: {
+                  kind: "object",
+                  properties: {
+                    strong: { kind: "none" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = {
+      "section.title": {
+        body: "<strong>hello</strong>",
+      },
+    };
+    const result = createResult();
+
+    collectMissingRich(schema, messages, result);
+
+    expect(result.missingRich).toEqual([]);
+  });
+
   it("ignores non-string message values", () => {
     const schema: InferNode = {
       kind: "object",
