@@ -6,6 +6,7 @@ describe("resolveCookieOptions", () => {
   it("should return default options when cookie is undefined", () => {
     const result = resolveCookieOptions();
     expect(result).toEqual(DEFAULT_COOKIE_OPTIONS);
+    expect(result.maxAge).toBeUndefined();
   });
 
   it("should override default options with provided cookie options", () => {

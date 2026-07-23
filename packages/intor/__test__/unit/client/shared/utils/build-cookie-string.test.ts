@@ -91,7 +91,7 @@ describe("buildCookieString", () => {
     const result = buildCookieString(
       {
         ...baseCookie,
-        maxAge: undefined as any,
+        maxAge: undefined,
       },
       "en-US",
     );

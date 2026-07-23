@@ -6,7 +6,7 @@ export const DEFAULT_COOKIE_OPTIONS: CookieResolvedOptions = {
   name: "intor.locale",
   domain: undefined,
   path: "/",
-  maxAge: 60 * 60 * 24 * 365, // 365 days
+  maxAge: undefined,
   httpOnly: false,
   secure: process.env["NODE_ENV"] !== "development",
   sameSite: "lax",

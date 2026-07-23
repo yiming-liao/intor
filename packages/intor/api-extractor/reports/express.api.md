@@ -56,8 +56,9 @@ export type CookieRawOptions = {
 };
 
 // @public
-export type CookieResolvedOptions = Required<Omit<CookieRawOptions, "domain">> & {
+export type CookieResolvedOptions = Required<Omit<CookieRawOptions, "domain" | "maxAge">> & {
     domain: string | undefined;
+    maxAge: number | undefined;
 };
 
 // @public

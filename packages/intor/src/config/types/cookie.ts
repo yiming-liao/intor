@@ -16,7 +16,7 @@ export type CookieRawOptions = {
   /** Cookie path scope. Defaults to "/" */
   path?: string;
 
-  /** Cookie max age in seconds. Defaults to 365 days */
+  /** Cookie lifetime in seconds. Defaults to undefined */
   maxAge?: number;
 
   /** Restrict cookie access to HTTP(S) only. Defaults to false */
@@ -35,7 +35,8 @@ export type CookieRawOptions = {
  * @public
  */
 export type CookieResolvedOptions = Required<
-  Omit<CookieRawOptions, "domain">
+  Omit<CookieRawOptions, "domain" | "maxAge">
 > & {
   domain: string | undefined;
+  maxAge: number | undefined;
 };
