@@ -44,7 +44,7 @@ export type ClientLoaderOptions = Omit<RemoteLoader, "mode">;
 
 // @public
 export type CookieRawOptions = {
-    persist?: boolean;
+    enabled?: boolean;
     name?: string;
     domain?: string;
     path?: string;

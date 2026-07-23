@@ -14,7 +14,7 @@ vi.mock("../../../../../src/core", async (original) => {
 describe("getLocale (Next adapter)", () => {
   const config = {
     defaultLocale: "en",
-    cookie: { name: "locale" },
+    cookie: { name: "locale", enabled: true },
     supportedLocales: ["en", "fr"],
   } as any;
 
@@ -65,6 +65,23 @@ describe("getLocale (Next adapter)", () => {
       get: vi.fn(() => undefined),
     });
     const result = await getLocale(config);
+    expect(result).toBe("en");
+  });
+
+  it("does not read cookie when disabled", async () => {
+    (headers as any).mockResolvedValue({
+      get: vi.fn(() => null),
+    });
+    const getCookie = vi.fn(() => ({ value: "fr" }));
+    (cookies as any).mockResolvedValue({ get: getCookie });
+
+    const result = await getLocale({
+      ...config,
+      cookie: { ...config.cookie, enabled: false },
+    });
+
+    expect(cookies).not.toHaveBeenCalled();
+    expect(getCookie).not.toHaveBeenCalled();
     expect(result).toBe("en");
   });
 });

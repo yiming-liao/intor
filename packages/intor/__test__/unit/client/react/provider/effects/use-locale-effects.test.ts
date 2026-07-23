@@ -12,7 +12,7 @@ describe("useLocaleEffects", () => {
   const baseConfig: any = {
     cookie: {
       name: "locale",
-      persist: true,
+      enabled: true,
     },
     routing: {
       inbound: {
@@ -63,12 +63,12 @@ describe("useLocaleEffects", () => {
     expect(setCookieSpy).toHaveBeenCalledWith(baseConfig.cookie, "fr");
   });
 
-  it("does not persist on subsequent changes when cookie.persist is false", () => {
+  it("does not persist on subsequent changes when cookie.enabled is false", () => {
     const config = {
       ...baseConfig,
       cookie: {
         ...baseConfig.cookie,
-        persist: false,
+        enabled: false,
       },
     };
     vi.spyOn(utils, "getLocaleFromCookie").mockReturnValue("en");
@@ -80,5 +80,20 @@ describe("useLocaleEffects", () => {
     );
     rerender({ locale: "fr" });
     expect(setCookieSpy).not.toHaveBeenCalled();
+  });
+
+  it("does not read cookie when disabled", () => {
+    const config = {
+      ...baseConfig,
+      cookie: {
+        ...baseConfig.cookie,
+        enabled: false,
+      },
+    };
+    const getCookieSpy = vi.spyOn(utils, "getLocaleFromCookie");
+
+    renderHook(() => useLocaleEffects(config as any, "en"));
+
+    expect(getCookieSpy).not.toHaveBeenCalled();
   });
 });

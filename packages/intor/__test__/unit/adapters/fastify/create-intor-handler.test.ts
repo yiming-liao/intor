@@ -27,7 +27,7 @@ describe("createIntorHandler (Fastify)", () => {
   const config = {
     supportedLocales: ["en", "fr"],
     defaultLocale: "en",
-    cookie: { name: "locale" },
+    cookie: { name: "locale", enabled: true },
   } as any;
 
   let request: Partial<FastifyRequest> & Record<string, any>;
@@ -130,6 +130,25 @@ describe("createIntorHandler (Fastify)", () => {
         }),
       );
     });
+
+    it("does not read cookie when disabled", async () => {
+      mockInbound("en");
+      (request.headers ?? {}).cookie = "locale=fr";
+      const handler = createIntorHandler({
+        ...config,
+        cookie: { ...config.cookie, enabled: false },
+      });
+
+      await handler(request as FastifyRequest);
+
+      expect(parseCookieHeader).not.toHaveBeenCalled();
+      expect(resolveInbound).toHaveBeenCalledWith(
+        expect.any(Object),
+        "/",
+        expect.not.objectContaining({ cookie: expect.anything() }),
+      );
+    });
+
     it("does not pass detected when localeFromAcceptLanguage is undefined", async () => {
       (getLocaleFromAcceptLanguage as any).mockReturnValue(undefined);
       (parseCookieHeader as any).mockReturnValue({});

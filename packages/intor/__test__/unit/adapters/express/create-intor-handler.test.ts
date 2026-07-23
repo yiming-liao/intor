@@ -27,7 +27,7 @@ describe("createIntorHandler (Express)", () => {
   const config = {
     supportedLocales: ["en", "fr"],
     defaultLocale: "en",
-    cookie: { name: "locale" },
+    cookie: { name: "locale", enabled: true },
   } as any;
 
   let req: Partial<Request> & Record<string, any>;
@@ -130,6 +130,25 @@ describe("createIntorHandler (Express)", () => {
         }),
       );
     });
+
+    it("does not read cookie when disabled", async () => {
+      mockInbound("en");
+      (req.headers ?? {}).cookie = "locale=fr";
+      const handler = createIntorHandler({
+        ...config,
+        cookie: { ...config.cookie, enabled: false },
+      });
+
+      await handler(req as Request, res as Response, next);
+
+      expect(parseCookieHeader).not.toHaveBeenCalled();
+      expect(resolveInbound).toHaveBeenCalledWith(
+        expect.any(Object),
+        "/",
+        expect.not.objectContaining({ cookie: expect.anything() }),
+      );
+    });
+
     it("does not pass detected when localeFromAcceptLanguage is undefined", async () => {
       (getLocaleFromAcceptLanguage as any).mockReturnValue(undefined);
       (parseCookieHeader as any).mockReturnValue({});

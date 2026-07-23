@@ -17,8 +17,9 @@ export function resolveInboundFromRequest(
   const headers = request.headers;
 
   // Cookie
-  const cookies = parseCookieHeader(headers.get("cookie") ?? undefined);
-  const cookieLocale = cookies[config.cookie.name];
+  const cookieLocale = config.cookie.enabled
+    ? parseCookieHeader(headers.get("cookie") ?? undefined)[config.cookie.name]
+    : undefined;
 
   // Query
   const normalizedQuery = normalizeQuery(Object.fromEntries(url.searchParams));

@@ -11,6 +11,9 @@ describe("resolveInbound()", () => {
   });
 
   const baseConfig = {
+    cookie: {
+      enabled: true,
+    },
     routing: {
       inbound: {
         queryKey: "lang",
@@ -91,6 +94,33 @@ describe("resolveInbound()", () => {
     expect(callArgs).not.toHaveProperty("query");
     expect(callArgs).not.toHaveProperty("cookie");
     expect(callArgs).toHaveProperty("detected");
+  });
+
+  it("ignores supplied cookie input when disabled", () => {
+    vi.spyOn(localeModule, "getLocaleFromPathname").mockReturnValue(undefined);
+    vi.spyOn(localeModule, "getLocaleFromHost").mockReturnValue(undefined);
+    vi.spyOn(localeModule, "getLocaleFromQuery").mockReturnValue(undefined);
+    vi.spyOn(resolveLocaleModule, "resolveLocale").mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+    } as any);
+    vi.spyOn(resolvePathModule, "resolvePathname").mockReturnValue({
+      pathname: "/",
+      shouldRedirect: false,
+    });
+
+    resolveInbound({ ...baseConfig, cookie: { enabled: false } }, "/", {
+      cookie: "fr",
+    });
+
+    const localeContext = (resolveLocaleModule.resolveLocale as any).mock
+      .calls[0][1];
+    expect(localeContext).not.toHaveProperty("cookie");
+    expect(resolvePathModule.resolvePathname).toHaveBeenCalledWith(
+      expect.any(Object),
+      "/",
+      expect.objectContaining({ hasPersisted: false }),
+    );
   });
 
   it("handles missing options safely", () => {

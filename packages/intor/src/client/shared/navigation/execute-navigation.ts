@@ -40,7 +40,7 @@ export function executeNavigation(
   if (kind === "reload") {
     e?.preventDefault();
     if (shouldSyncLocale(locale, currentLocale)) {
-      if (cookie.persist) {
+      if (cookie.enabled) {
         setLocaleCookie(cookie, locale);
       }
     }
@@ -53,7 +53,7 @@ export function executeNavigation(
   // ------------------------------------------------------
   if (shouldSyncLocale(locale, currentLocale)) {
     // Eagerly persist locale to avoid stale cookie during client-side navigation.
-    if (cookie.persist) {
+    if (cookie.enabled) {
       setLocaleCookie(cookie, locale);
     }
     setLocale(locale);

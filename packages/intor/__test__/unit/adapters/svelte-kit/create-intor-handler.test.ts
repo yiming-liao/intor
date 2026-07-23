@@ -28,7 +28,7 @@ describe("createIntorHandler (SvelteKit)", () => {
   const config = {
     defaultLocale: "en",
     supportedLocales: ["en", "fr"],
-    cookie: { name: "locale" },
+    cookie: { name: "locale", enabled: true },
   } as any;
 
   let event: any;
@@ -111,6 +111,32 @@ describe("createIntorHandler (SvelteKit)", () => {
       config,
       "/about",
       expect.objectContaining({ cookie: "fr" }),
+    );
+  });
+
+  it("does not read cookie when disabled", async () => {
+    (isSvelteKitSSG as any).mockReturnValue(false);
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    const getCookie = vi.fn(() => "fr");
+    event.cookies.get = getCookie;
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/about",
+      shouldRedirect: false,
+    });
+    const handler: Handle = createIntorHandler({
+      ...config,
+      cookie: { ...config.cookie, enabled: false },
+    });
+
+    await handler({ event, resolve });
+
+    expect(getCookie).not.toHaveBeenCalled();
+    expect(resolveInbound).toHaveBeenCalledWith(
+      expect.any(Object),
+      "/about",
+      expect.not.objectContaining({ cookie: expect.anything() }),
     );
   });
 

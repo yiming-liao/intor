@@ -24,7 +24,9 @@ export function attachLocaleEffects(
     if (isFirstSync) {
       isFirstSync = false;
 
-      const localeCookie = getLocaleFromCookie(cookie.name);
+      const localeCookie = cookie.enabled
+        ? getLocaleFromCookie(cookie.name)
+        : undefined;
       const isFirstVisit = !localeCookie;
 
       if (
@@ -32,7 +34,7 @@ export function attachLocaleEffects(
           isFirstVisit,
           routing.inbound.firstVisit.persist,
         ) &&
-        cookie.persist
+        cookie.enabled
       ) {
         setLocaleCookie(cookie, currentLocale);
       }
@@ -43,7 +45,7 @@ export function attachLocaleEffects(
     // -------------------------------------------------------------
     // Subsequent locale changes (user-driven)
     // -------------------------------------------------------------
-    if (cookie.persist) {
+    if (cookie.enabled) {
       setLocaleCookie(cookie, currentLocale);
     }
   });

@@ -9,7 +9,7 @@ describe("attachLocaleEffects (svelte)", () => {
   const baseConfig: any = {
     cookie: {
       name: "locale",
-      persist: true,
+      enabled: true,
     },
     routing: {
       inbound: {
@@ -59,12 +59,12 @@ describe("attachLocaleEffects (svelte)", () => {
     expect(setCookieSpy).toHaveBeenCalledWith(baseConfig.cookie, "fr");
   });
 
-  it("does not persist on subsequent changes when cookie.persist is false", () => {
+  it("does not persist on subsequent changes when cookie.enabled is false", () => {
     const config = {
       ...baseConfig,
       cookie: {
         ...baseConfig.cookie,
-        persist: false,
+        enabled: false,
       },
     };
     vi.spyOn(utils, "getLocaleFromCookie").mockReturnValue("en");

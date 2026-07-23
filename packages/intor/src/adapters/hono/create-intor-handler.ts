@@ -30,9 +30,9 @@ export function createIntorHandler(
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
     const url = new URL(c.req.url);
-    const cookie = parseCookieHeader(c.req.header("cookie"))[
-      config.cookie.name
-    ];
+    const cookie = config.cookie.enabled
+      ? parseCookieHeader(c.req.header("cookie"))[config.cookie.name]
+      : undefined;
     const { locale, localeSource, pathname } = resolveInbound(
       config,
       url.pathname,

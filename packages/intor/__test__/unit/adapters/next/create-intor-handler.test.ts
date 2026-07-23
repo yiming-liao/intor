@@ -17,7 +17,7 @@ describe("createIntorHandler (Next.js)", () => {
   const config = {
     supportedLocales: ["en", "fr"],
     defaultLocale: "en",
-    cookie: { name: "locale" },
+    cookie: { name: "locale", enabled: true },
   } as any;
 
   let request: Partial<NextRequest> & Record<string, any>;
@@ -158,6 +158,31 @@ describe("createIntorHandler (Next.js)", () => {
       expect.objectContaining({
         cookie: "fr",
       }),
+      expect.any(Object),
+    );
+  });
+
+  it("does not read cookie when disabled", () => {
+    const getCookie = vi.fn(() => ({ value: "fr" }));
+    (request.cookies as any).get = getCookie;
+    (getLocaleFromAcceptLanguage as any).mockReturnValue(undefined);
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/",
+      shouldRedirect: false,
+    });
+
+    createIntorHandler({
+      ...config,
+      cookie: { ...config.cookie, enabled: false },
+    })(request as NextRequest);
+
+    expect(getCookie).not.toHaveBeenCalled();
+    expect(resolveInbound).toHaveBeenCalledWith(
+      expect.any(Object),
+      "/",
+      expect.not.objectContaining({ cookie: expect.anything() }),
       expect.any(Object),
     );
   });

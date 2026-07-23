@@ -41,7 +41,9 @@ export function createIntorHandler(config: IntorConfig): Handle {
         shouldRedirect: false,
       };
     } else {
-      const cookie = event.cookies.get(config.cookie.name);
+      const cookie = config.cookie.enabled
+        ? event.cookies.get(config.cookie.name)
+        : undefined;
       const { host, searchParams, pathname: rawPathname } = event.url;
       inboundResult = resolveInbound(config, rawPathname, {
         host,

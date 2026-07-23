@@ -4,8 +4,8 @@
  * @public
  */
 export type CookieRawOptions = {
-  /** Whether to persist the resolved locale in a cookie. Defaults to true */
-  persist?: boolean;
+  /** Whether to use the locale cookie for reading and writing. Defaults to true */
+  enabled?: boolean;
 
   /** Cookie name used to store the locale. Defaults to "intor.locale" */
   name?: string;

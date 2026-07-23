@@ -23,8 +23,9 @@ export const getLocale = async <CK extends GenConfigKeys = "__default__">(
   }
 
   // Persisted state
-  const cookieStore = await cookies();
-  const cookieLocale = cookieStore.get(config.cookie.name)?.value;
+  const cookieLocale = config.cookie.enabled
+    ? (await cookies()).get(config.cookie.name)?.value
+    : undefined;
   if (cookieLocale) {
     const matched = matchLocale(cookieLocale, config.supportedLocales);
     if (matched) return matched;

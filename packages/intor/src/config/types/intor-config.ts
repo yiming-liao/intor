@@ -36,7 +36,7 @@ export type IntorRawConfig = {
 
   /** Locale-aware routing behavior and redirection strategy. */
   readonly routing?: RoutingRawOptions;
-  /** Cookie persistence settings for locale resolution. */
+  /** Cookie settings for locale resolution. */
   readonly cookie?: CookieRawOptions;
 
   /** Messages loading configuration shared across runtimes. */

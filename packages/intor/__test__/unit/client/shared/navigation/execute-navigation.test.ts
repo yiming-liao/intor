@@ -13,7 +13,7 @@ vi.mock("../../../../../src/client/shared/utils", () => ({
 }));
 
 describe("executeNavigation", () => {
-  const baseConfig = { cookie: { persist: true } } as any;
+  const baseConfig = { cookie: { enabled: true } } as any;
 
   let setLocale: any;
 
@@ -69,13 +69,13 @@ describe("executeNavigation", () => {
     expect(globalThis.location.href).toBe("/en/about");
   });
 
-  it("reloads without persisting cookie when persist is false", () => {
+  it("reloads without persisting cookie when enabled is false", () => {
     const e = { preventDefault: vi.fn() };
     (shouldSyncLocale as any).mockReturnValue(true);
     executeNavigation(
       { kind: "reload", destination: "/fr/about", locale: "fr" },
       {
-        config: { cookie: { persist: false } } as any,
+        config: { cookie: { enabled: false } } as any,
         currentLocale: "en",
         setLocale,
       },
@@ -111,12 +111,12 @@ describe("executeNavigation", () => {
     expect(setLocale).not.toHaveBeenCalled();
   });
 
-  it("does not persist cookie when cookie.persist is false", () => {
+  it("does not persist cookie when cookie.enabled is false", () => {
     (shouldSyncLocale as any).mockReturnValue(true);
     executeNavigation(
       { kind: "client", destination: "/fr/about", locale: "fr" },
       {
-        config: { cookie: { persist: false } } as any,
+        config: { cookie: { enabled: false } } as any,
         currentLocale: "en",
         setLocale,
       },

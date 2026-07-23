@@ -45,7 +45,8 @@ export function resolveInbound(
     ...(pathLocale !== undefined && { path: { locale: pathLocale } }),
     ...(hostLocale !== undefined && { host: { locale: hostLocale } }),
     ...(queryLocale !== undefined && { query: { locale: queryLocale } }),
-    ...(cookie !== undefined && { cookie: { locale: cookie } }),
+    ...(config.cookie.enabled &&
+      cookie !== undefined && { cookie: { locale: cookie } }),
     ...(detected !== undefined && { detected: { locale: detected } }),
   });
 
@@ -55,7 +56,7 @@ export function resolveInbound(
   const { pathname, shouldRedirect } = resolvePathname(config, rawPathname, {
     locale,
     hasPathLocale: !!pathLocale,
-    hasPersisted: !!cookie,
+    hasPersisted: config.cookie.enabled && !!cookie,
     hasRedirected: !!options?.hasRedirected,
   });
 

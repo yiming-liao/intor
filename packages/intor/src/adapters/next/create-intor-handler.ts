@@ -37,7 +37,9 @@ export function createIntorHandler(config: IntorConfig) {
     // ----------------------------------------------------------
     // Resolve inbound routing decision (pure computation)
     // ----------------------------------------------------------
-    const cookie = request.cookies.get(config.cookie.name)?.value;
+    const cookie = config.cookie.enabled
+      ? request.cookies.get(config.cookie.name)?.value
+      : undefined;
     const { locale, localeSource, pathname, shouldRedirect } = resolveInbound(
       config,
       rawPathname,

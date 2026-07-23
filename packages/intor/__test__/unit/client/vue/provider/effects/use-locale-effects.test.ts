@@ -9,7 +9,7 @@ describe("useLocaleEffects (vue)", () => {
   const baseConfig: any = {
     cookie: {
       name: "locale",
-      persist: true,
+      enabled: true,
     },
     routing: {
       inbound: {
@@ -64,12 +64,12 @@ describe("useLocaleEffects (vue)", () => {
     expect(setCookieSpy).toHaveBeenCalledWith(baseConfig.cookie, "fr");
   });
 
-  it("does not persist on subsequent changes when cookie.persist is false", async () => {
+  it("does not persist on subsequent changes when cookie.enabled is false", async () => {
     const config = {
       ...baseConfig,
       cookie: {
         ...baseConfig.cookie,
-        persist: false,
+        enabled: false,
       },
     };
     vi.spyOn(utils, "getLocaleFromCookie").mockReturnValue("en");

@@ -9,7 +9,7 @@ describe("resolveInboundFromRequest()", () => {
   const baseConfig = {
     supportedLocales: ["en", "zh"],
     defaultLocale: "en",
-    cookie: { name: "lang" },
+    cookie: { name: "lang", enabled: true },
   } as any;
 
   beforeEach(() => {
@@ -95,6 +95,26 @@ describe("resolveInboundFromRequest()", () => {
     resolveInboundFromRequest(baseConfig, request);
     const args = inboundSpy.mock.calls[0]![2];
     expect(args).not.toHaveProperty("cookie");
+  });
+
+  it("does not read cookie when disabled", () => {
+    const parseSpy = vi.spyOn(coreModule, "parseCookieHeader");
+    vi.spyOn(coreModule, "normalizeQuery").mockReturnValue({});
+    vi.spyOn(localeModule, "getLocaleFromAcceptLanguage").mockReturnValue("en");
+    const inboundSpy = vi
+      .spyOn(inboundModule, "resolveInbound")
+      .mockReturnValue({} as any);
+    const request = new Request("https://example.com", {
+      headers: { cookie: "lang=zh" },
+    });
+
+    resolveInboundFromRequest(
+      { ...baseConfig, cookie: { ...baseConfig.cookie, enabled: false } },
+      request,
+    );
+
+    expect(parseSpy).not.toHaveBeenCalled();
+    expect(inboundSpy.mock.calls[0]![2]).not.toHaveProperty("cookie");
   });
 
   it("handles missing cookie header safely", () => {

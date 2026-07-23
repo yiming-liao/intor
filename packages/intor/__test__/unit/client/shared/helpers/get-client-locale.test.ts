@@ -6,7 +6,7 @@ import { getClientLocale } from "../../../../../src/client/shared/helpers/get-cl
 const mockConfig = {
   defaultLocale: "en-US",
   supportedLocales: ["en-US", "zh-TW", "fr-FR"],
-  cookie: { name: "intor.locale" },
+  cookie: { name: "intor.locale", enabled: true },
 } as unknown as IntorResolvedConfig;
 
 // @ts-expect-error globalThis
@@ -30,6 +30,16 @@ describe("getClientLocale", () => {
     vi.stubGlobal("document", { cookie: "" } as any);
     vi.stubGlobal("navigator", { languages: ["zh-TW"], language: "zh-TW" });
     const locale = getClientLocale(mockConfig);
+    expect(locale).toBe("zh-TW");
+  });
+
+  it("does not read the cookie when disabled", () => {
+    vi.stubGlobal("document", { cookie: "intor.locale=fr-FR" } as any);
+    vi.stubGlobal("navigator", { languages: ["zh-TW"], language: "zh-TW" });
+    const locale = getClientLocale({
+      ...mockConfig,
+      cookie: { ...mockConfig.cookie, enabled: false },
+    });
     expect(locale).toBe("zh-TW");
   });
 

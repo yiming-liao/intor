@@ -24,7 +24,9 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
     if (isFirstSyncRef.current) {
       isFirstSyncRef.current = false;
 
-      const localeCookie = getLocaleFromCookie(cookie.name);
+      const localeCookie = cookie.enabled
+        ? getLocaleFromCookie(cookie.name)
+        : undefined;
       const isFirstVisit = !localeCookie;
 
       if (
@@ -32,7 +34,7 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
           isFirstVisit,
           routing.inbound.firstVisit.persist,
         ) &&
-        cookie.persist
+        cookie.enabled
       ) {
         setLocaleCookie(cookie, locale);
       }
@@ -43,7 +45,7 @@ export function useLocaleEffects(config: IntorResolvedConfig, locale: Locale) {
     // -----------------------------------------------------------------------
     // Subsequent locale changes (user-driven)
     // -----------------------------------------------------------------------
-    if (cookie.persist) {
+    if (cookie.enabled) {
       setLocaleCookie(cookie, locale);
     }
   }, [locale, cookie, routing.inbound.firstVisit.persist]);

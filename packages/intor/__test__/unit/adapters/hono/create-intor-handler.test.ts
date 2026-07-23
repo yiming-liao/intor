@@ -27,7 +27,7 @@ describe("createIntorHandler (Hono)", () => {
   const config = {
     supportedLocales: ["en", "fr"],
     defaultLocale: "en",
-    cookie: { name: "locale" },
+    cookie: { name: "locale", enabled: true },
   } as any;
 
   let c: Partial<Context> & Record<string, any>;
@@ -182,6 +182,36 @@ describe("createIntorHandler (Hono)", () => {
       expect.objectContaining({
         cookie: "fr",
       }),
+    );
+  });
+
+  it("does not read cookie when disabled", async () => {
+    (c.req as any).header = vi.fn((key: string) =>
+      key === "cookie" ? "locale=fr" : undefined,
+    );
+    (getLocaleFromAcceptLanguage as any).mockReturnValue("en");
+    (resolveInbound as any).mockReturnValue({
+      locale: "en",
+      localeSource: "default",
+      pathname: "/",
+    });
+    (getTranslator as any).mockResolvedValue({
+      hasKey: vi.fn(),
+      t: vi.fn(),
+      tRich: vi.fn(),
+    });
+    const handler = createIntorHandler({
+      ...config,
+      cookie: { ...config.cookie, enabled: false },
+    });
+
+    await handler(c as Context, next);
+
+    expect(parseCookieHeader).not.toHaveBeenCalled();
+    expect(resolveInbound).toHaveBeenCalledWith(
+      expect.any(Object),
+      "/",
+      expect.not.objectContaining({ cookie: expect.anything() }),
     );
   });
 
