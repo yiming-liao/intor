@@ -157,4 +157,4 @@ For framework details, start with the relevant entry point and API signatures:
 - [Client integrations](../packages/intor/src/client/) and [framework adapters](../packages/intor/src/adapters/).
 - [Behavior tests](../packages/intor/__test__/).
 
-Do not assume that similarly named APIs from other i18n libraries behave the same way. For development on Intor itself, this repository uses a pnpm workspace (pnpm 10.32.0). Run `pnpm install --frozen-lockfile` and `pnpm build:all` from the root; use `pnpm ci` for the full check suite.
+Do not assume that similarly named APIs from other i18n libraries behave the same way. For development on Intor itself, this repository uses a pnpm workspace (pnpm 10.32.0). Run `pnpm install --frozen-lockfile` and `pnpm build:all` from the root; use `pnpm run ci` for the full check suite.
