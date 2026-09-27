@@ -1,0 +1,4 @@
+interface:
+  display_name: "Intor Release Notes"
+  short_description: "Draft Intor release notes from verified release history"
+  default_prompt: "Use $release-notes to draft English release notes for the target Intor release using the repository template."

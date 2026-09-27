@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare Intor Release"
+  short_description: "Prepare and verify Intor releases for manual publishing"
+  default_prompt: "Use $prepare-release to inspect the Intor release state, prepare the agreed package versions, and report readiness for manual publication."

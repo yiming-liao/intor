@@ -4,6 +4,24 @@ This repository uses Changesets 2.x to support the Node 20 and 22 CI matrix.
 Releases are performed manually. Each public package has its own version;
 private workspace packages are not versioned or published.
 
+## Prepare with Codex
+
+Invoke `$prepare-release` to inspect release readiness, or specify an intended
+version, for example `$prepare-release prepare intor@2.11.0`. The
+[project skill](../.agents/skills/prepare-release/SKILL.md) reads this guide,
+reviews the complete package plan, applies agreed version changes when needed,
+and verifies the resulting artifacts.
+
+It distinguishes pending changesets from already prepared or published
+versions, so repeated invocation does not imply another version bump. It
+reports unresolved versioning or compatibility decisions before applying
+those changes. Existing agreement in the conversation remains valid.
+
+The skill does not publish, push, create tags, or create a GitHub Release.
+Commits require a user request or existing authorization. Use `$release-notes`
+for the release text and perform publication manually with `pnpm release`
+after preparation is complete.
+
 ## Version and dependency policy
 
 Public packages use independent versions (`fixed` and `linked` are empty).
@@ -111,6 +129,28 @@ push the release commit and the new release tags to the remote.
 New tags use Changesets' `package-name@version` convention; older tags such as
 `intor-v2.9.0` remain unchanged. If publication partially fails, inspect npm
 versions before retrying; already published versions cannot be overwritten.
+
+## Write GitHub Release notes
+
+Use the project skill with `$release-notes intor@2.10.0` (substitute the target
+tag) to draft notes in Codex. It reads the template and release evidence and
+returns an English draft; publication remains manual. The skill lives in
+[.agents/skills/release-notes](../.agents/skills/release-notes/SKILL.md).
+
+Use the [release notes template](release-notes-template.md) for each GitHub
+Release. Write English notes from the package changelogs and verified tag
+comparison, including intermediate npm releases since the previous GitHub
+Release. The template is applied manually; Changesets continues to manage
+per-package changelogs.
+
+Use the primary package's existing tag as the Release title and tag. For a
+coordinated batch, summarize related package versions in the same notes.
+Explain behavior changes and migration steps even when a minor version is
+an explicitly agreed exception. Remove empty sections and placeholders.
+
+After npm availability and remote tags are verified, the maintainer reviews
+and publishes the GitHub Release manually. Creating notes does not publish
+packages or create tags, and `pnpm release` does not create a GitHub Release.
 
 ## References
 
