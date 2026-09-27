@@ -14,9 +14,14 @@
     "build:readers": "pnpm -r --filter \"./packages/readers/**\" build",
     "build:all": "pnpm build:intor-translator && pnpm build:intor && pnpm build:readers",
     "ci": "pnpm build:all && pnpm type && pnpm lint && pnpm api:check && pnpm test && pnpm test:types",
-    "ci:clean": "rm -rf node_modules && pnpm install --frozen-lockfile --strict-peer-dependencies && pnpm dedupe --check && pnpm run ci"
+    "ci:clean": "rm -rf node_modules && pnpm install --frozen-lockfile --strict-peer-dependencies && pnpm dedupe --check && pnpm run ci",
+    "changeset": "changeset",
+    "release:version": "pnpm changeset version && pnpm install --lockfile-only",
+    "release:check": "pnpm run ci",
+    "release": "pnpm release:check && pnpm changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "2.31.1",
     "@eslint/js": "^9.39.4",
     "@microsoft/api-extractor": "^7.57.6",
     "@rollup/plugin-alias": "^6.0.0",

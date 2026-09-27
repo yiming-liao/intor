@@ -52,6 +52,6 @@
     "@iarna/toml": "^2.2.5"
   },
   "peerDependencies": {
-    "intor": "workspace:*"
+    "intor": "workspace:2.9.1 || 2.10.0"
   }
 }
