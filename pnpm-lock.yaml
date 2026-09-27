@@ -226,17 +226,17 @@ importers:
         specifier: ^1.0.0
         version: 1.1.0
       '@intor/reader-json5':
-        specifier: ^0.1.1
-        version: 0.1.1(intor@packages+intor)
+        specifier: workspace:^0.1.2
+        version: link:../readers/json5
       '@intor/reader-md':
-        specifier: ^0.1.5
-        version: 0.1.5(intor@packages+intor)
+        specifier: workspace:^0.1.6
+        version: link:../readers/md
       '@intor/reader-toml':
-        specifier: ^0.1.1
-        version: 0.1.1(intor@packages+intor)
+        specifier: workspace:^0.1.2
+        version: link:../readers/toml
       '@intor/reader-yaml':
-        specifier: ^0.1.2
-        version: 0.1.2(intor@packages+intor)
+        specifier: workspace:^0.1.3
+        version: link:../readers/yaml
       cac:
         specifier: 6.7.14
         version: 6.7.14
@@ -943,30 +943,6 @@ packages:
     peerDependenciesMeta:
       '@types/node':
         optional: true
-
-  '@intor/reader-json5@0.1.1':
-    resolution: {integrity: sha512-kqQZwG/3dmjKoot7N8UgIWrmoC/hY8SACsdACTGEL62SXtB6tKd+9IUxYGHBYqcvsqKZ9/eFl6IZO9UWEnizJQ==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      intor: ^2.4.12
-
-  '@intor/reader-md@0.1.5':
-    resolution: {integrity: sha512-+Smt3m8KtFgSWVuTDPRPplT0v0wGSm+wPUaACfch4u000QhU4aAxl9Mb3e5BKUUXL5sWJHYhs6NrFk0s0khncA==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      intor: ^2.4.12
-
-  '@intor/reader-toml@0.1.1':
-    resolution: {integrity: sha512-5y0QsjA2HJmzJ5nwbohhbt6ikj9682d33PpmEithcEh9vEK1F7WJzoPTj8abaKFBOCJV53U1GxBZtksh/r4oZA==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      intor: ^2.4.12
-
-  '@intor/reader-yaml@0.1.2':
-    resolution: {integrity: sha512-t9Znof5vlQcYpFBEgZe8gDfozNbBdFpOCfBOkPwTCPEtI4K4rgsRQKAAmvN3Fr80DTqsbNEgY6CTnRHPRRScUQ==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      intor: ^2.4.12
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -5535,29 +5511,6 @@ snapshots:
       iconv-lite: 0.7.3
     optionalDependencies:
       '@types/node': 24.12.0
-
-  '@intor/reader-json5@0.1.1(intor@packages+intor)':
-    dependencies:
-      intor: link:packages/intor
-      json5: 2.2.3
-
-  '@intor/reader-md@0.1.5(intor@packages+intor)':
-    dependencies:
-      intor: link:packages/intor
-      remark: 15.0.1
-      remark-gfm: 4.0.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@intor/reader-toml@0.1.1(intor@packages+intor)':
-    dependencies:
-      '@iarna/toml': 2.2.5
-      intor: link:packages/intor
-
-  '@intor/reader-yaml@0.1.2(intor@packages+intor)':
-    dependencies:
-      intor: link:packages/intor
-      yaml: 2.9.1
 
   '@isaacs/cliui@8.0.2':
     dependencies:

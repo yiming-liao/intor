@@ -8,7 +8,9 @@ private workspace packages are not versioned or published.
 
 Public packages use independent versions (`fixed` and `linked` are empty).
 Keep existing exact workspace dependencies for Intor and the CLI; dependent
-packages may receive patch releases when those dependencies change.
+packages may receive patch releases when those dependencies change. The CLI
+uses explicit `workspace:^<version>` ranges for readers, so release preparation
+resolves local packages and publication preserves caret ranges.
 
 Readers declare `workspace:2.9.1 || 2.10.0` as their Intor peer range. Packing
 removes the workspace prefix and preserves the explicit supported versions.

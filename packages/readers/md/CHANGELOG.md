@@ -1,0 +1,7 @@
+# @intor/reader-md
+
+## 0.1.6
+
+### Patch Changes
+
+- 5f39e84: Declare compatibility with Intor 2.9.1 and 2.10.0 instead of requiring a single exact Intor version. Reader behavior is unchanged. Other Intor versions are outside this explicitly validated range.

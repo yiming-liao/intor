@@ -1,6 +1,6 @@
 {
   "name": "@intor/reader-json5",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "JSON5 reader for intor",
   "author": {
     "name": "Yiming Liao",

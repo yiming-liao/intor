@@ -4,7 +4,7 @@ For AI coding agents and developers integrating Intor into an existing applicati
 
 ## Scope
 
-Based on this repository's source: `intor@2.9.1`, `intor-translator@1.6.2`, and `intor-cli@1.0.2`. These are repository versions, not a lookup of the latest npm releases.
+Based on this repository's source: `intor@2.10.0`, `intor-translator@1.6.2`, and `intor-cli@1.0.3`. These are repository versions, not a lookup of the latest npm releases.
 
 Last reviewed: 2026-09-27. If the target application uses different versions, check their exports and APIs before adapting these examples.
 
@@ -34,8 +34,8 @@ Intor is an internationalization library for JavaScript and TypeScript. Data flo
 Requires Node.js ≥20. Install in the target application using the versions represented in this repository:
 
 ````sh
-pnpm add intor@2.9.1
-pnpm add -D intor-cli@1.0.2
+pnpm add intor@2.10.0
+pnpm add -D intor-cli@1.0.3
 ````
 
 Create a dedicated `intor.config.ts`. The locales and messages below are examples. The outermost keys in `messages` must be locales; interpolation uses `{name}`.
@@ -143,6 +143,7 @@ After completing an integration, AI agents should report changed files, checks a
 
 ## Integration constraints
 
+- Locale cookies are disabled by default. Set `cookie.enabled: true` to enable reading and writing. Set `cookie.maxAge` in seconds for persistent cookies; omitting it uses a session cookie. Enabling cookies does not represent user consent.
 - `defaultLocale` must appear in `supportedLocales`. When using multiple configs, each `id` must be unique; the default is `"default"`.
 - Static `messages` work without a loader. Node loaders support `local` and `remote` sources; browser-side dynamic loading uses remote sources. Configure `fallbackLocales` explicitly when fallback is required.
 - `routing.localePrefix` defaults to `"none"`. Switching the Provider locale does not perform framework URL navigation; locale-prefixed routing requires the corresponding adapter.
