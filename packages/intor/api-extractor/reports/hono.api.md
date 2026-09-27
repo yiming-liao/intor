@@ -298,12 +298,14 @@ export type RuntimeFetch = (input: string | URL | Request, init?: RequestInit) =
 // @public
 export type SafeExtract<T> = T extends {
     Locales: infer L extends string;
-    Messages: Record<"{locale}", infer M extends LocaleMessages[string]>;
+    Messages: Record<"{locale}", infer M>;
     Replacements: infer RE;
     Rich: infer RI;
 } ? {
     Locales: L;
-    Messages: Record<L, M>;
+    Messages: Record<L, [
+    M
+    ] extends [LocaleMessages[string]] ? M : LocaleMessages[string]>;
     Replacements: RE;
     Rich: RI;
 } : FallbackConfig;

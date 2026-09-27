@@ -71,18 +71,22 @@ export type FallbackConfig = {
  *
  * - Never leaks `never` to public API.
  * - Handles malformed generated types defensively.
+ * - Preserves locale keys when message content cannot be inferred.
  *
  * @public
  */
 export type SafeExtract<T> = T extends {
   Locales: infer L extends string;
-  Messages: Record<"{locale}", infer M extends LocaleMessages[string]>;
+  Messages: Record<"{locale}", infer M>;
   Replacements: infer RE;
   Rich: infer RI;
 }
   ? {
       Locales: L;
-      Messages: Record<L, M>;
+      Messages: Record<
+        L,
+        [M] extends [LocaleMessages[string]] ? M : LocaleMessages[string]
+      >;
       Replacements: RE;
       Rich: RI;
     }

@@ -380,7 +380,9 @@ expectError(
     preKey: "missing",
   }),
 );
-expectError(getNextServerTranslator<"config2">({} as any, { preKey: "missing" }));
+expectError(
+  getNextServerTranslator<"config2">({} as any, { preKey: "missing" }),
+);
 expectError(
   getExpressTranslator<"config2">({} as any, {} as any, {
     preKey: "missing",
@@ -396,3 +398,36 @@ expectError(
     preKey: "missing",
   }),
 );
+
+// CLI output without message inference still retains the configured locales.
+{
+  const react = useReactTranslator<"sitero-web-client">();
+  const scoped = useReactTranslator<"sitero-web-client">("remote");
+  const vue = useVueTranslator<"sitero-web-client">();
+  const svelte = useSvelteTranslator<"sitero-web-client">();
+
+  expectType<"zh-TW" | "en-US">(react.locale);
+  expectType<"zh-TW" | "en-US">(scoped.locale);
+  expectType<ComputedRef<"zh-TW" | "en-US">>(vue.locale);
+  expectType<Writable<"zh-TW" | "en-US">>(svelte.locale);
+  expectType<(locale: "zh-TW" | "en-US") => void>(react.setLocale);
+  react.setLocale("zh-TW");
+  expectError(react.setLocale("fr-FR"));
+  expectError(vue.setLocale("fr-FR"));
+  expectError(svelte.setLocale("fr-FR"));
+  expectType<boolean>(react.hasKey("remote.key", "en-US"));
+  expectError(react.hasKey("remote.key", "fr-FR"));
+  react.t("remote.key");
+  scoped.t("key");
+}
+
+void (async () => {
+  const server = await getServerTranslator<"sitero-web-client">({} as any, {
+    locale: "zh-TW",
+  });
+  const edge = await getEdgeTranslator<"sitero-web-client">({} as any, {
+    locale: "en-US",
+  });
+  expectType<"zh-TW" | "en-US">(server.locale);
+  expectType<"zh-TW" | "en-US">(edge.locale);
+})();

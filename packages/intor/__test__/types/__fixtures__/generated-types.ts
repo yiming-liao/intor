@@ -15,6 +15,12 @@ export type GeneratedTypesFixture = {
       "{locale}": { hello: { a: Record<string, never> } };
     };
   };
+  "sitero-web-client": {
+    Locales: "zh-TW" | "en-US";
+    Messages: { "{locale}": unknown };
+    Replacements: { "{locale}": unknown };
+    Rich: { "{locale}": Record<string, never> };
+  };
   config1: {
     Locales: "en-US" | "zh-TW";
     Messages: {
