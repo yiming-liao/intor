@@ -53,6 +53,6 @@
     "remark-gfm": "^4.0.1"
   },
   "peerDependencies": {
-    "intor": "workspace:2.9.1 || 2.10.0"
+    "intor": "workspace:2.9.1 || 2.10.0 || 2.11.0"
   }
 }
