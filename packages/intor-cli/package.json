@@ -1,6 +1,6 @@
 {
   "name": "intor-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The Intor CLI",
   "author": {
     "name": "Yiming Liao",
@@ -45,10 +45,10 @@
   },
   "dependencies": {
     "@clack/prompts": "^1.0.0",
-    "@intor/reader-json5": "workspace:^0.1.2",
-    "@intor/reader-md": "workspace:^0.1.6",
-    "@intor/reader-toml": "workspace:^0.1.2",
-    "@intor/reader-yaml": "workspace:^0.1.3",
+    "@intor/reader-json5": "workspace:^0.1.3",
+    "@intor/reader-md": "workspace:^0.1.7",
+    "@intor/reader-toml": "workspace:^0.1.3",
+    "@intor/reader-yaml": "workspace:^0.1.4",
     "cac": "6.7.14",
     "fast-glob": "3.3.3",
     "intor": "workspace:*",

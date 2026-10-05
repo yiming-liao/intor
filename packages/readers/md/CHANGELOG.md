@@ -1,5 +1,11 @@
 # @intor/reader-md
 
+## 0.1.7
+
+### Patch Changes
+
+- 9b47ed2: Add Intor 2.11.0 to the supported peer versions after validating packed readers, Markdown metadata, and TypeScript reader contracts.
+
 ## 0.1.6
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@intor/reader-toml",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "TOML reader for intor",
   "author": {
     "name": "Yiming Liao",

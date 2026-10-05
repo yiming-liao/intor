@@ -1,5 +1,11 @@
 # intor
 
+## 2.11.0
+
+### Minor Changes
+
+- eb7b068: Re-export `LocalizedKey` so consumers can derive message key unions with `LocalizedKey<GenMessages<ConfigKey>>` directly from `intor`.
+
 ## 2.10.0
 
 ### Minor Changes
