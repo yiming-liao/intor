@@ -209,6 +209,8 @@ export { LocaleMessages }
 // @public
 export type LocalePathPrefix = "none" | "all" | "except-default";
 
+export { LocalizedKey }
+
 // @public
 export interface LocalizedPathname {
     canonicalPathname: string;

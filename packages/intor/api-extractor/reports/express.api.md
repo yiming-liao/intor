@@ -179,6 +179,8 @@ export type LoaderOptions = LocalLoader | RemoteLoader;
 // @public
 export type LocalePathPrefix = "none" | "all" | "except-default";
 
+export { LocalizedKey }
+
 // @public
 export interface LocalLoader {
     concurrency?: number;
