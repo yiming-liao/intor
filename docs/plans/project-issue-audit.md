@@ -120,7 +120,7 @@ Dotted-key 補充：跨檔案的 literal dotted／nested key 與 dotted parent �
 
 BUG-05／06 修正紀錄：cookie 與 browser candidate 分別匹配；cookie decoding 失敗回傳 undefined。新增 4 個回歸案例（修正前皆失敗），涵蓋 unsupported cookie、兩種 malformed encoding 與 default fallback。Intor 全部 699 tests、type check 與修改檔案 ESLint 通過；有效 cookie 優先與 cookie disabled 的既有測試持續通過。加入 patch changeset，未 commit；尚未使用真實瀏覽器驗證。
 
-後續整合驗證：bug 修正後，再於 `apps/` 建立極簡 Next.js workspace fixture，驗證 Web／CMS、多 config、local SSR → Provider／hydration、fallback 與錯誤傳遞。純 CSR cookie helper 使用 client 案例驗證，不假定 Next.js SSR 會呼叫它；remote refetch 另設案例。尚未建立 fixture。
+整合驗證：已於 `apps/next-fixture` 建立極簡 Next.js workspace fixture，涵蓋 Web／CMS、多 config、local SSR → Provider／hydration、fallback 與錯誤傳遞的驗證入口。純 CSR cookie helper 使用 client 案例，不假定 Next.js SSR 會呼叫它；remote refetch 尚未建立。經契約討論後，redirect 定位為使用 server request context 的 API，改由 `intor/next/server` 匯出。目前版本 production build 通過；先前相同 export 方案的六個 HTTP SSR 案例曾通過。使用者已回報實際瀏覽器測試未出現問題；此為使用者手動驗證，非自動瀏覽器測試。
 
 ## 2. 已確認行為；不直接列為 bug
 
@@ -152,7 +152,10 @@ Local cache 可讀取既有結果；只有 production 且 `allowCacheWrite` 為 
 | AUDIT-04 | RTL 作用範圍 | 區分 locale 方向資訊、區域 dir 與 document dir；多 config 不應直接假定同一份全域方向。尚未決定新增功能。 |
 | AUDIT-05 | 過度設計 | 檢查 hooks／handlers、loader overrides、remote、公開 API 的重疊與真實用途；尚未判定應移除任何能力。 |
 | AUDIT-06 | Rich replacement 的語意 | 已實測：插值發生於 rich parse 之前，`name = "<b>Alice</b>"` 會變成 tag，`name = "<b>"` 會拋出 unclosed tag。React `createTRich` 也使用此呼叫順序。需確認 replacement 是純文字還是允許 markup；未直接列為 bug，也未宣稱 XSS。 |
-| AUDIT-07 | Next.js 多 config routing context | `getLocale(config)` 直接回傳共用 `x-intor-locale` header，未依 config 檢查 supportedLocales 或 config ID。可能讓不同 config 共用不適用的 locale；尚未用實際 Next.js app 重現。 |
+| AUDIT-07 | Next.js 多 config routing context | `getLocale(config)` 直接回傳共用 `x-intor-locale` header，未依 config 檢查 supportedLocales 或 config ID。已在 fixture `/zh-TW` 重現：`getLocale(cmsConfig)` 回傳 CMS 不支援的 `zh-TW`。此證據限於同一 request 讀取另一份 config；一般 Web／CMS 各自使用 config 的 flow 尚未發現錯誤。 |
+| AUDIT-08 | Next.js 公開 entry point 的 server/client boundary | `apps/next-fixture` 在 Next.js 16.1.7 webpack production build 重現失敗：client 匯入 `useRouter` 經 `intor/next` barrel 觸及 server redirect 的 `next/headers`；proxy 匯入 handler 也觸及未標 client boundary 的 hooks。已保留 useRouter 的 client boundary，並將 request-context redirect 移至 server entry；目前 production build 通過，本批已 freeze。 |
+
+AUDIT-08 進度：經使用者確認，保留 `getLocale(config)` 的 server request context 語意，不新增 Client render redirect 支援；Client event navigation 使用既有 `useRouter()`。`redirect` 改由 `intor/next/server` 匯出，原 `intor/next` export 移除，函式簽章與 runtime 行為不變。保留 `useRouter` 的 `"use client"`。已更新公開 API reports、quickstart 與 major changeset，尚未更新版本；本批已 freeze。目前 Intor build、699 tests、修改檔案 lint 與 Next.js fixture production build 通過。本次已在 `apps/next-fixture` 重跑六個 HTTP SSR／conflict 案例並通過；新增四個 redirect HTTP 案例：en-US／zh-TW／fr-FR 分別以 307 導向自己的 locale root，CMS vi-VN cookie request 以 307 導向 `/cms`。使用者已回報瀏覽器測試未出現問題；此為手動驗證回報，未建立自動瀏覽器測試。
 
 CLI config import 診斷已有獨立紀錄，參見 [CLI config loading plan](cli-config-loading.md)。該文件的既有證據與歷史重現限制維持有效，不能視為本輪重新驗證。
 

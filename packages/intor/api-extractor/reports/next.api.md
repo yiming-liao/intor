@@ -20,7 +20,6 @@ import type { LogryPreset } from 'logry';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import * as React_2 from 'react';
-import type { RedirectType } from 'next/navigation';
 import { Replacement } from 'intor-translator';
 import { Rich } from 'intor-translator';
 import { ScopedKey } from 'intor-translator';
@@ -183,12 +182,6 @@ export type MessagesReader = (filePath: string) => Promise<unknown>;
 
 // @public
 export type MessagesReaders = Record<string, MessagesReader>;
-
-// @public
-export const redirect: <CK extends GenConfigKeys = "__default__">(config: IntorConfig, url: string, options?: {
-    locale?: GenLocale<CK>;
-    type?: RedirectType;
-}) => Promise<never>;
 
 // @public
 export interface RemoteHeaders {

@@ -16,6 +16,7 @@ import { LocalizedRich } from 'intor-translator';
 import { LocalizedValue } from 'intor-translator';
 import type { LogryLevel } from 'logry';
 import type { LogryPreset } from 'logry';
+import type { RedirectType } from 'next/navigation';
 import { Replacement } from 'intor-translator';
 import { Rich } from 'intor-translator';
 import { ScopedKey } from 'intor-translator';
@@ -229,6 +230,12 @@ export function readIntorUrlState(): Promise<{
     pathname: string;
     search: string;
 }>;
+
+// @public
+export const redirect: <CK extends GenConfigKeys = "__default__">(config: IntorConfig, url: string, options?: {
+    locale?: GenLocale<CK>;
+    type?: RedirectType;
+}) => Promise<never>;
 
 // @public
 export interface RemoteHeaders {

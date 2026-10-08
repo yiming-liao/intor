@@ -1,3 +1,5 @@
+"use client";
+
 import type { GenConfigKeys, GenLocale } from "../../core";
 import { useRouter as useNextRouter, usePathname } from "next/navigation";
 import { executeNavigation } from "../../client";

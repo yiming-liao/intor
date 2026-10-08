@@ -2,6 +2,8 @@
 
 export * from "../../shared-types";
 
+export { redirect } from "../../../src/adapters/next/redirect";
+
 export {
   intor,
   getLocale,
