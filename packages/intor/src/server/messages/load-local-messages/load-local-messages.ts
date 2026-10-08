@@ -51,8 +51,8 @@ export const loadLocalMessages = async ({
       "loaderType:local",
       rootDir,
       locale,
-      fallbackLocales?.sort().join(","),
-      namespaces?.sort().join(","),
+      fallbackLocales?.join(","),
+      namespaces ? [...namespaces].sort().join(",") : undefined,
     ].filter(Boolean),
   );
 

@@ -2,7 +2,7 @@
 
 更新日期：2026-10-08
 
-狀態：盤點與逐項修正中；BUG-03 已修正，其餘項目見各節。
+狀態：盤點與逐項修正中；BUG-01／03 已修正，其餘項目見各節。
 
 目的：先記錄與確認當前 bug、契約缺口及驗證限制，再逐項決定修正範圍。這不是完整 audit 的結論，也不是已批准的功能 roadmap。
 
@@ -10,7 +10,7 @@
 
 ### BUG-01：Local loader 改寫 fallback 優先順序
 
-- 狀態：已透過實際 local loader 重現。
+- 狀態：已修正，尚未發布。原問題已透過實際 local loader 重現。
 - 位置：[load-local-messages.ts](../../packages/intor/src/server/messages/load-local-messages/load-local-messages.ts)，cache key 建立處。
 - 觸發：傳入有多個語言且順序不同於字典排序的 `fallbackLocales`。
 - 原因：`fallbackLocales?.sort()` 原地修改陣列；後續 candidate locales 使用修改後的順序。上層 `loadMessages` 傳入的是 config 中的陣列，因此也會修改 config。
@@ -28,9 +28,11 @@
 
 修正驗收：
 
-- [ ] 載入不修改輸入 fallback 陣列與 config。
-- [ ] 缺少目前語言時，依宣告順序選取第一份可用資源。
-- [ ] Cache key 區分不同 fallback 優先順序；只改成複製後排序仍不足。
+- [x] 載入不修改輸入 fallback 陣列與 config。
+- [x] 缺少目前語言時，依宣告順序選取第一份可用資源。
+- [x] Cache key 區分不同 fallback 優先順序；只改成複製後排序仍不足。
+
+修正紀錄：fallback 直接依原順序建立 key，namespace 排序改用副本。新增 2 個回歸案例，修正前皆失敗；不改變第一份可用語言即停止的策略。加入 Intor patch changeset。
 
 附帶觀察：`namespaces?.sort()` 也會修改輸入陣列。這是已確認的副作用，但尚未重現 namespace 排序造成的消費者功能錯誤，不列為另一個已重現 bug。
 

@@ -45,6 +45,44 @@ describe("loadLocalMessages()", () => {
     expect(readModule.readLocaleMessages).not.toHaveBeenCalled();
   });
 
+  it("preserves input arrays and uses the declared fallback order", async () => {
+    pool.get.mockReturnValue(undefined);
+    const fallbackLocales = ["zh-TW", "en-US"];
+    const namespaces = ["ui", "auth"];
+    vi.mocked(readModule.readLocaleMessages).mockImplementation(
+      async ({ locale }) => ({
+        [locale]: locale === "fr" ? {} : { hello: locale },
+      }),
+    );
+    const result = await loadLocalMessages({
+      id: "test",
+      locale: "fr",
+      fallbackLocales,
+      namespaces,
+    } as any);
+    expect(result).toEqual({ "zh-TW": { hello: "zh-TW" } });
+    expect(fallbackLocales).toEqual(["zh-TW", "en-US"]);
+    expect(namespaces).toEqual(["ui", "auth"]);
+  });
+
+  it("distinguishes fallback priorities in cache keys", async () => {
+    pool.get.mockReturnValue(undefined);
+    vi.mocked(readModule.readLocaleMessages).mockResolvedValue({});
+    for (const fallbackLocales of [
+      ["zh-TW", "en-US"],
+      ["en-US", "zh-TW"],
+    ]) {
+      await loadLocalMessages({
+        id: "test",
+        locale: "fr",
+        fallbackLocales,
+      } as any);
+    }
+    const calls = vi.mocked(coreModule.normalizeCacheKey).mock.calls;
+    expect(calls).toHaveLength(2);
+    expect(calls[0]?.[0]).not.toEqual(calls[1]?.[0]);
+  });
+
   it("loads messages for primary locale", async () => {
     pool.get.mockReturnValue(undefined);
     (readModule.readLocaleMessages as any).mockResolvedValue({
