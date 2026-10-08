@@ -2,7 +2,7 @@
 
 更新日期：2026-10-08
 
-狀態：盤點與逐項修正中；BUG-01／02／03 已提交，BUG-04 已實作但未提交，其餘項目見各節。
+狀態：盤點與逐項修正中；BUG-01～04 已提交，BUG-05／06 已修正但未提交，其餘項目見各節。
 
 目的：先記錄與確認當前 bug、契約缺口及驗證限制，再逐項決定修正範圍。這不是完整 audit 的結論，也不是已批准的功能 roadmap。
 
@@ -79,7 +79,7 @@ t("hello")："hello"
 
 ### BUG-04：Local 訊息覆寫結果依非同步讀取完成順序改變（P2）
 
-- 狀態：已實作修正，未 commit／發布。原問題直接呼叫 `parseFileEntries`，使用自訂 reader 與受控延遲重現。
+- 狀態：已提交為 `47870e9`，尚未發布。原問題直接呼叫 `parseFileEntries`，使用自訂 reader 與受控延遲重現。
 - 位置：[parse-file-entries.ts](../../packages/intor/src/server/messages/load-local-messages/read-locale-messages/parse-file-entries/parse-file-entries.ts)，第 95 與 111 行。
 - 觸發：多份合法資源形成相同 message path，例如 `auth/index` 內有 `login.title`，同時存在 `auth/login` 的 `title`。
 - 原因：並行 reader 完成後 push 結果，再按完成順序 deep merge。
@@ -102,7 +102,7 @@ Dotted-key 補充：跨檔案的 literal dotted／nested key 與 dotted parent �
 
 ### BUG-05：不支援的 locale cookie 遮蔽有效瀏覽器語言（P2）
 
-- 狀態：透過 `getClientLocale`、模擬 document／navigator 重現。
+- 狀態：已修正，未提交／發布。原問題透過 `getClientLocale`、模擬 document／navigator 重現。
 - 位置：[get-client-locale.ts](../../packages/intor/src/client/shared/helpers/get-client-locale.ts)，第 31–33 行。
 - 觸發：cookie enabled，cookie 有值但不匹配 supportedLocales；瀏覽器偏好可匹配。
 - 原因：先用 cookie 或 browser 選一個 candidate，再只 match 一次；cookie 不匹配直接進入 default。
@@ -111,12 +111,16 @@ Dotted-key 補充：跨檔案的 literal dotted／nested key 與 dotted parent �
 
 ### BUG-06：格式錯誤的 locale cookie 使 client locale 解析拋錯（P2）
 
-- 狀態：透過 `getClientLocale`、模擬 document／navigator 重現。
+- 狀態：已修正，未提交／發布。原問題透過 `getClientLocale`、模擬 document／navigator 重現。
 - 位置：[get-locale-from-cookie.ts](../../packages/intor/src/client/shared/utils/locale/get-locale-from-cookie.ts)，第 14 行。
 - 觸發：cookie enabled，cookie 值含不合法的 URI encoding，例如 `%ZZ`。
 - 原因：`decodeURIComponent` 的 URIError 未處理。
 - 影響：無法退回瀏覽器語言或 default；若在 app 初始化呼叫，例外會中斷初始化。
 - 驗收：格式錯誤的 cookie 可被忽略，locale 解析繼續依既有優先序進行。
+
+BUG-05／06 修正紀錄：cookie 與 browser candidate 分別匹配；cookie decoding 失敗回傳 undefined。新增 4 個回歸案例（修正前皆失敗），涵蓋 unsupported cookie、兩種 malformed encoding 與 default fallback。Intor 全部 699 tests、type check 與修改檔案 ESLint 通過；有效 cookie 優先與 cookie disabled 的既有測試持續通過。加入 patch changeset，未 commit；尚未使用真實瀏覽器驗證。
+
+後續整合驗證：bug 修正後，再於 `apps/` 建立極簡 Next.js workspace fixture，驗證 Web／CMS、多 config、local SSR → Provider／hydration、fallback 與錯誤傳遞。純 CSR cookie helper 使用 client 案例驗證，不假定 Next.js SSR 會呼叫它；remote refetch 另設案例。尚未建立 fixture。
 
 ## 2. 已確認行為；不直接列為 bug
 

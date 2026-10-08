@@ -13,6 +13,21 @@ const mockConfig = {
 const deleteGlobal = (name: string) => delete globalThis[name];
 
 describe("getClientLocale", () => {
+  it.each(["de-DE", "%ZZ", "%E0%A4%A"])(
+    "uses browser locale when cookie %s is unsupported or malformed",
+    (value) => {
+      vi.stubGlobal("document", { cookie: `intor.locale=${value}` });
+      vi.stubGlobal("navigator", { languages: ["zh-TW"], language: "zh-TW" });
+      expect(getClientLocale(mockConfig)).toBe("zh-TW");
+    },
+  );
+
+  it("uses default locale when a malformed cookie has no matching browser locale", () => {
+    vi.stubGlobal("document", { cookie: "intor.locale=%ZZ" });
+    vi.stubGlobal("navigator", { languages: ["de-DE"], language: "de-DE" });
+    expect(getClientLocale(mockConfig)).toBe("en-US");
+  });
+
   afterEach(() => {
     vi.unstubAllGlobals();
   });

@@ -28,7 +28,9 @@ export function getClientLocale<CK extends GenConfigKeys = "__default__">(
   // Locale from browser preference
   const browserLocale = detectBrowserLocale();
 
-  const localeCandidate = cookieLocale || browserLocale;
-
-  return matchLocale(localeCandidate, supportedLocales) || defaultLocale;
+  return (
+    matchLocale(cookieLocale, supportedLocales) ||
+    matchLocale(browserLocale, supportedLocales) ||
+    defaultLocale
+  );
 }

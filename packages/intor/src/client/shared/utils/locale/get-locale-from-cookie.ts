@@ -11,5 +11,10 @@ export function getLocaleFromCookie(cookieName: string): string | undefined {
 
   if (!entry) return undefined;
 
-  return decodeURIComponent(entry.slice(cookieName.length + 1));
+  try {
+    return decodeURIComponent(entry.slice(cookieName.length + 1));
+  } catch {
+    // Malformed persisted values must not prevent locale resolution.
+    return undefined;
+  }
 }
