@@ -3,14 +3,18 @@ import type { IntorResolvedConfig } from "../../../../../src/config";
 import type { LocaleMessages } from "intor-translator";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createRefetchMessages } from "../../../../../src/client/shared/messages/create-refetch-messages";
-import { loadRemoteMessages, mergeMessages } from "../../../../../src/core";
+import { loadRemoteMessages } from "../../../../../src/core";
+import { mergeMessages } from "../../../../../src/core/messages/merge-messages";
+
+vi.mock("../../../../../src/core/messages/merge-messages", () => ({
+  mergeMessages: vi.fn(),
+}));
 
 vi.mock("../../../../../src/core", async () => {
   const actual = await vi.importActual<any>("../../../../../src/core");
   return {
     ...actual,
     loadRemoteMessages: vi.fn(),
-    mergeMessages: vi.fn(),
   };
 });
 

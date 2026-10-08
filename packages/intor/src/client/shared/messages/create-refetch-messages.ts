@@ -1,7 +1,7 @@
 import type { IntorResolvedConfig } from "../../../config";
 import type { Locale, LocaleMessages } from "intor-translator";
 import { loadRemoteMessages, resolveLoaderOptions } from "../../../core";
-import { mergeMessages } from "../../../core";
+import { mergeLoadedMessages } from "../../../core/messages/merge-loaded-messages";
 
 interface CreateRefetchMessagesParams {
   config: IntorResolvedConfig;
@@ -61,12 +61,7 @@ export const createRefetchMessages = ({
         controller === currentController &&
         !currentController.signal.aborted
       ) {
-        onMessages?.(
-          mergeMessages(config.messages, loadedMessages, {
-            config,
-            locale: newLocale,
-          }),
-        );
+        onMessages?.(mergeLoadedMessages(config, loadedMessages, newLocale));
       }
     } finally {
       // Clear loading state only if this request is still the active one

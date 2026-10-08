@@ -6,7 +6,7 @@ import type {
   TranslateHook,
 } from "intor-translator";
 import { Translator } from "intor-translator";
-import { mergeMessages } from "../../core/messages/merge-messages";
+import { mergeLoadedMessages } from "../messages/merge-loaded-messages";
 
 export interface CreateTranslatorParams {
   config: IntorResolvedConfig;
@@ -29,10 +29,7 @@ export function createTranslator(
   const { config, locale, messages, handlers, hooks } = params;
 
   // Merge static config messages with runtime-loaded messages
-  const finalMessages = mergeMessages(config.messages, messages, {
-    config,
-    locale,
-  });
+  const finalMessages = mergeLoadedMessages(config, messages, locale);
 
   const { loadingMessage, missingMessage, formatDefaults } =
     config.translator ?? {};

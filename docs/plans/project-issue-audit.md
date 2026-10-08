@@ -2,7 +2,7 @@
 
 更新日期：2026-10-08
 
-狀態：盤點與逐項修正中；BUG-01／03 已修正，其餘項目見各節。
+狀態：盤點與逐項修正中；BUG-01／02／03 已修正，其餘項目見各節。
 
 目的：先記錄與確認當前 bug、契約缺口及驗證限制，再逐項決定修正範圍。這不是完整 audit 的結論，也不是已批准的功能 roadmap。
 
@@ -38,7 +38,7 @@
 
 ### BUG-02：載入成功的 fallback messages 在 translator 建立流程被丟棄
 
-- 狀態：已透過 `initTranslator` 與實際 local 資源重現。
+- 狀態：已修正，尚未發布。原問題已透過 `initTranslator` 與實際 local 資源重現。
 - 位置：[merge-messages.ts](../../packages/intor/src/core/messages/merge-messages.ts)、[create-translator.ts](../../packages/intor/src/core/translator/create-translator.ts)。
 - 觸發：目前 locale 沒有可用資源，loader 回傳另一個 fallback locale 的 messages，且 config 沒有可提供同一訊息的靜態 fallback messages。
 - 原因：`mergeMessages` 僅合併 `b[locale]` 並保留 `a` 的其他語言；載入結果 `b` 的其他語言不會保留。
@@ -58,11 +58,13 @@ t("hello")："hello"
 
 修正驗收：
 
-- [ ] 成功載入的 fallback 語言可被 translator 查找。
-- [ ] 保留訊息原本的 locale 身分，不把 fallback 冒充目前語言。
-- [ ] 目前 locale 不因 fallback 而切換。
-- [ ] 既有靜態與載入訊息的覆寫規則不受破壞。
-- [ ] 評估各 merge 呼叫點的契約，不直接假定共用函式應全面改成合併所有語言。
+- [x] 成功載入的 fallback 語言可被 translator 查找。
+- [x] 保留訊息原本的 locale 身分，不把 fallback 冒充目前語言。
+- [x] 目前 locale 不因 fallback 而切換。
+- [x] 既有靜態與載入訊息的覆寫規則不受破壞。
+- [x] 評估各 merge 呼叫點的契約，不直接假定共用函式應全面改成合併所有語言。
+
+修正紀錄：保留公開 `mergeMessages` 的單一 locale 契約；新增內部 `mergeLoadedMessages`，於 server translator 建立與 client refetch 共用，逐一合併實際載入的 locale。未擴大 loader 載入範圍。新增 3 個 smoke 案例，涵蓋真實 local fallback、靜態／loaded 覆寫與 mock fetch 的 client fallback；Intor 670 tests 通過。加入 patch changeset。
 
 ### BUG-03：Translator 將繼承屬性誤判為訊息 key（P2）
 
