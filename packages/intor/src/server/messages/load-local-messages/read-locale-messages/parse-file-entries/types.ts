@@ -12,6 +12,7 @@ export interface ParseFileEntriesParams {
 }
 
 export interface ParsedFileEntries {
+  fullPath: string;
   namespace: string;
   messages: MessageObject;
 }

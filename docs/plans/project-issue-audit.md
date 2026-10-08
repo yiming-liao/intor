@@ -2,7 +2,7 @@
 
 更新日期：2026-10-08
 
-狀態：盤點與逐項修正中；BUG-01／02／03 已修正，其餘項目見各節。
+狀態：盤點與逐項修正中；BUG-01／02／03 已提交，BUG-04 已實作但未提交，其餘項目見各節。
 
 目的：先記錄與確認當前 bug、契約缺口及驗證限制，再逐項決定修正範圍。這不是完整 audit 的結論，也不是已批准的功能 roadmap。
 
@@ -79,7 +79,7 @@ t("hello")："hello"
 
 ### BUG-04：Local 訊息覆寫結果依非同步讀取完成順序改變（P2）
 
-- 狀態：直接呼叫 `parseFileEntries`，使用自訂 reader 與受控延遲重現；未透過真實 filesystem 延遲重現。
+- 狀態：已實作修正，未 commit／發布。原問題直接呼叫 `parseFileEntries`，使用自訂 reader 與受控延遲重現。
 - 位置：[parse-file-entries.ts](../../packages/intor/src/server/messages/load-local-messages/read-locale-messages/parse-file-entries/parse-file-entries.ts)，第 95 與 111 行。
 - 觸發：多份合法資源形成相同 message path，例如 `auth/index` 內有 `login.title`，同時存在 `auth/login` 的 `title`。
 - 原因：並行 reader 完成後 push 結果，再按完成順序 deep merge。
@@ -92,7 +92,13 @@ index 較慢：auth.login.title = "INDEX"
 login 較慢：auth.login.title = "FILE"
 ````
 
-驗收：相同輸入不因完成順序改變結果。重複 key 應拒絕、警告或採固定優先序，尚待決策，不假定哪個檔案應勝出。
+採用契約：同一 locale 資源樹的重複 leaf key（即使值相同）與 leaf／object 結構衝突均拒絕；不同檔案可補充同一物件中的不同 keys。跨 locale 不互相比較；static config／loaded messages 的跨層覆寫保持不變。
+
+Dotted-key 補充：跨檔案的 literal dotted／nested key 與 dotted parent 使用完整查詢 key 比對。只登記實際節點，不為 dotted property 建立虛擬中間物件；同一檔案內 aliases 不新增限制。保留每個 query key 的各來源定義，避免同一檔案的 object／leaf aliases 遮蔽後續跨檔案衝突。新增 9 個邊界案例；連同直接 unit tests 與 smoke tests，Intor 完整 695 tests、type check、runtime build、declaration build 與 API check 通過。修改檔案 ESLint 通過。API Extractor 提示其 bundled TypeScript 版本較舊，但未造成檢查失敗。仍未 commit 或更新版本。
+
+修正：按輸入順序收集並解析合併結果，追蹤每個結構路徑的來源；拋出內部 `MessageConflictError`，包含 key 與兩個完整來源檔案路徑。Local loader 不吞掉此錯誤、不繼續 fallback。Reader 原有一般讀取／格式錯誤處理不變。
+
+驗證：新增 7 個 smoke 案例，涵蓋完成順序、leaf／object 衝突、合法分組與真實 JSON loader 的錯誤傳遞；Intor 全部 677 tests 通過。這是更嚴格的消費者行為，依賴檔案內重複 key 的應用需移除重複定義；release 分級與 changeset 尚待確認，不假定可直接作 patch 發布。
 
 ### BUG-05：不支援的 locale cookie 遮蔽有效瀏覽器語言（P2）
 

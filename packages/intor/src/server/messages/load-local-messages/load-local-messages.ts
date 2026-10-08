@@ -4,6 +4,7 @@ import path from "node:path";
 import pLimit from "p-limit";
 import { getLogger, normalizeCacheKey } from "../../../core";
 import { getMessagesPool } from "./cache/messages-pool";
+import { MessageConflictError } from "./message-conflict-error";
 import { readLocaleMessages } from "./read-locale-messages";
 
 /**
@@ -92,7 +93,8 @@ export const loadLocalMessages = async ({
         messages = result;
         break;
       }
-    } catch {
+    } catch (error) {
+      if (error instanceof MessageConflictError) throw error;
       if (isLast) {
         logger.warn("Failed to load messages for all candidate locales.", {
           locale,

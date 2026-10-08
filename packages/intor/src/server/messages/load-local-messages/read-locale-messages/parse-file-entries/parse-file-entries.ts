@@ -7,6 +7,7 @@ import {
   deepMerge,
   nestObjectFromPath,
 } from "../../../../../core";
+import { assertNoMessageConflicts } from "./assert-no-message-conflicts";
 import { jsonReader } from "./utils/json-reader";
 
 /**
@@ -48,10 +49,8 @@ export async function parseFileEntries({
   const logger = baseLogger.child({ scope: "parse-file-entries" });
 
   // Read and parse all file entries
-  const parsedFileEntries: ParsedFileEntries[] = [];
-
   const tasks = fileEntries.map(({ namespace, segments, basename, fullPath }) =>
-    limit(async () => {
+    limit(async (): Promise<ParsedFileEntries | undefined> => {
       try {
         // -------------------------------------------------------------------
         // Read and validate file content
@@ -92,17 +91,22 @@ export async function parseFileEntries({
         // Nest the parsed content based on the path segments
         const nestedMessages = nestObjectFromPath(keyPath, raw);
 
-        parsedFileEntries.push({ namespace, messages: nestedMessages });
+        return { namespace, messages: nestedMessages, fullPath };
       } catch (error) {
         logger.warn("Failed to read or parse file.", {
           path: fullPath,
           error,
         });
+        return undefined;
       }
     }),
   );
 
-  await Promise.all(tasks);
+  const parsedFileEntries = (await Promise.all(tasks)).filter(
+    (entry): entry is ParsedFileEntries => entry !== undefined,
+  );
+
+  assertNoMessageConflicts(parsedFileEntries);
 
   // ---------------------------------------------------------------------------
   // Merge parsed entries by namespace
