@@ -19,6 +19,38 @@ const messages = {
 };
 
 describe("findMessageInLocales", () => {
+  it.each(["toString", "constructor", "__proto__", "auth.toString"])(
+    "ignores inherited message key %s",
+    (key) => {
+      expect(
+        findMessageInLocales({ messages, candidateLocales: ["en"], key }),
+      ).toBeUndefined();
+    },
+  );
+
+  it("continues to a fallback when the primary key is only inherited", () => {
+    expect(
+      findMessageInLocales({
+        messages: { en: {}, fr: { toString: "Fallback" } },
+        candidateLocales: ["en", "fr"],
+        key: "toString",
+      }),
+    ).toBe("Fallback");
+  });
+
+  it.each(["toString", "constructor", "__proto__"])(
+    "preserves explicitly defined message key %s",
+    (key) => {
+      expect(
+        findMessageInLocales({
+          messages: { en: { [key]: "Own message" } },
+          candidateLocales: ["en"],
+          key,
+        }),
+      ).toBe("Own message");
+    },
+  );
+
   it("should find message in the first locale", () => {
     const result = findMessageInLocales({
       messages,

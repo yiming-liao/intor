@@ -24,7 +24,8 @@ function findMessageByPath(
   for (let end = segments.length; end > start; end--) {
     const segment = segments.slice(start, end).join(".");
 
-    if (!(segment in objectCandidate)) continue;
+    if (!Object.prototype.hasOwnProperty.call(objectCandidate, segment))
+      continue;
 
     const next = objectCandidate[segment];
     if (end === segments.length) {
