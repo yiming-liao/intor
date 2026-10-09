@@ -37,12 +37,13 @@ export type MissingHandler = (ctx: HandlerContext) => MessageValue;
 /**
  * Formats a resolved raw message before it becomes final output.
  *
- * `rawMessage` is guaranteed to be a string at this stage.
+ * `rawMessage` is a resolved message value; handlers must narrow it before
+ * passing it to formatters that only accept strings.
  *
  * @public
  */
 export type FormatHandler = (
-  ctx: HandlerContext & { rawMessage: string },
+  ctx: Omit<HandlerContext, "rawMessage"> & { rawMessage: MessageValue },
 ) => MessageValue;
 
 /**

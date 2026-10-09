@@ -287,3 +287,40 @@ message README 的 fail-closed syntax 是 tokenizer 層的敘述，不是完整 
 ### AUDIT-06 正式整合測試與使用說明
 
 新增 packages/intor/__test__/integration/rich-replacements.test.ts：真實 Translator → HTML／React createTRich → React static markup，無 parser／renderer mocks。七個案例覆蓋 message tags、比較符號、replacement markup、未閉合／未配對 tags、pre-escaped entities 與 href placeholder 的 renderer 差異。作為 current-behavior characterization，不建立永久 trust policy。docs/quickstart.md 補上處理順序、錯誤與文字語意限制、React tag renderer props 用法。Intor 全部 706 tests、type check 通過；runtime／公開 API／changeset 未修改，尚未 commit。
+
+
+### BUG-07 formatHandler 的 string 型別保證與 runtime 不一致
+
+已用真實 Translator 重現：formatHandler 使用型別允許的 rawMessage.toUpperCase()，string message 成功；number／boolean／array／object message 拋 TypeError，null message 拋讀取 null 屬性錯誤。這些值都在公開 MessageValue 的允許範圍內。
+
+原因：FormatHandler 宣告 HandlerContext & { rawMessage: string }，文件寫明 rawMessage 保證為 string；format hook 只檢查 undefined，直接以 type assertion 將其他值傳入 handler。這是型別／runtime 契約不一致，不是 rich replacement 契約問題。
+
+既有 format hook tests 只涵蓋 string、undefined 與沒有 handler，沒有非 string 案例。本輪只重現與記錄，未修改 runtime／型別或加入 changeset。建議下一批先確認 formatHandler 的既有 string-only 保證是否維持；若維持，format hook 應略過非 string message 並讓原值繼續走 pipeline。此為待批准修法，不在本輪實作。
+
+
+### BUG-07 契約研究補充
+
+公開 FormatHandler 型別與 JSDoc 都承諾 rawMessage 為 string；packages/intor-translator/examples/handler.ts 的 ICU formatter 也直接將它交給 IntlMessageFormat，未對非 string 做 narrowing。這支持維持 string-only input，而不是將公開 handler 型別拓寬並要求所有 consumer 新增 guards。
+
+Pipeline lookup 支援 MessageValue，null 也算找到的值（只有 undefined 走 missing）；interpolate 對非 string 原值直接寫入 finalMessage。因此若 built-in format 略過非 string，number／boolean／array／object／null 可維持原本直接翻譯的值，不需強制 String() 或改動 rich parser。
+
+Input 與 output 必須區分：FormatHandler 的 output 仍為 MessageValue，string handler 可以產生其他型態；不應為修正 input guard 而限制 output。字串輸入的 formatter、hook 順序與 replacement 行為應維持。自訂 hooks 仍能自行讀取所有 MessageValue，不需要藉 built-in formatHandler 保留非 string 轉換。
+
+相容性限制：JS consumer 若曾依賴 runtime 傳入非 string，略過將改變其行為；這種使用目前不在公開 FormatHandler 型別承諾內，仍應在 changeset 明示。尚未實作或新增 regression tests。
+
+
+### BUG-07 string-only 實驗紀錄（已撤回）
+
+format hook 改為僅在 typeof rawMessage === string 時呼叫 formatHandler，維持公開 string-only input 契約。新增 11 個真實 CoreTranslator pipeline 案例：六個非 string 原值（number、true／false、null、array、object）保留且不呼叫 handler；string formatter output 繼續插值；四個非 string formatter output 保留。六個 input 回歸案例在修正前失敗、修正後通過。沒有修改公開型別、rich parser 或 hook order。新增 translator patch changeset，明示 JS consumer 若依賴非 string input 的行為改變。Translator 190 tests、type check、build、API check 與修改檔案 lint 通過。本批尚未 commit。
+
+
+### BUG-07 最終契約：保留通用 message 轉換能力
+
+作者確認 formatHandler 原設計接受非 string message，不應為 ICU adapter 縮限系統能力。撤回 string guard 與 patch changeset，恢復原本 rawMessage !== undefined 的呼叫條件；公開 FormatHandler.rawMessage 修正為 MessageValue，format hook 的 context assertion 同步修正。ICU example 自行檢查 typeof rawMessage === string，非 string 原樣回傳。
+
+新增測試改為證明六個非 string 值確實傳入 handler，以及 handler 能把 number 轉成 string；字串 output interpolation 與非 string output 既有流程維持。共 12 個真實 pipeline 案例，translator 全部 191 tests／type check／build 通過，公開 API report 已更新。既有 null formatter output 的 nullish fallback 行為不在本批修改範圍。
+
+輸入型別拓寬會讓既有 TypeScript string-only handlers 需要 narrowing，故新增 major changeset 明示型別相容性變更；runtime 原本能力保留。先前 string-only 研究是歷史提案，不能作為最終契約。本批尚未 commit。
+
+
+BUG-07 freeze 驗證補充：新增獨立 tsd handler suite，確認 rawMessage 精確為 MessageValue、string-only 函式不能直接接受它、typeof narrowing 後為 string。FormatHandler 使用 Omit<HandlerContext, "rawMessage"> 重定義欄位，避免交集型別干擾 narrowing。七組 translator 型別測試、build、API check 與 12 個 handler runtime 案例通過；原本完整 translator 191／Intor 706 tests 已通過。ICU 範例只處理 string 是此 adapter 的明確範圍；IntlMessageFormat 也支援專用預解析 AST，不等同任意 MessageValue array。此批 freeze 不更新 package 版本、不發布。

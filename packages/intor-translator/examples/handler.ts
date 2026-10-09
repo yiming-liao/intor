@@ -8,6 +8,7 @@ import { Translator } from "intor-translator";
 
 // A custom formatter using ICU MessageFormat
 const formatHandler: FormatHandler = ({ rawMessage, locale, replacements }) => {
+  if (typeof rawMessage !== "string") return rawMessage;
   const formatter = new IntlMessageFormat(
     rawMessage,
     locale,

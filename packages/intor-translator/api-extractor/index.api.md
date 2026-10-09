@@ -91,8 +91,8 @@ export interface FormatDefaults {
 }
 
 // @public
-export type FormatHandler = (ctx: HandlerContext & {
-    rawMessage: string;
+export type FormatHandler = (ctx: Omit<HandlerContext, "rawMessage"> & {
+    rawMessage: MessageValue;
 }) => MessageValue;
 
 // @public

@@ -13,7 +13,7 @@ export const format = rura.createHook<TranslateContext, MessageValue>(
 
     // Use custom handler if provided
     ctx.formattedMessage = formatHandler(
-      makeHandlerContext(ctx) as HandlerContext & { rawMessage: string },
+      makeHandlerContext(ctx) as HandlerContext & { rawMessage: MessageValue },
     );
   },
   500,

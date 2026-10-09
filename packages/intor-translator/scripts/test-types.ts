@@ -7,3 +7,6 @@ run("tsd __test__/types/value");
 run("tsd __test__/types/replacement");
 run("tsd __test__/types/rich");
 run("tsd __test__/types/scoped-translator");
+
+// handler input contracts
+run("tsd __test__/types/handlers");
