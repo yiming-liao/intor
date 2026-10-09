@@ -183,3 +183,107 @@ CLI config import 診斷已有獨立紀錄，參見 [CLI config loading plan](cl
 新增 BUG-03～06 與 AUDIT-06～07。重現使用一次性 `node --import tsx` scripts；沒有新增 runtime 程式碼或持久測試。Rich parsing 與 cookie 案例使用來源碼與模擬輸入，沒有執行瀏覽器／Next.js 端到端驗證。
 
 本輪在兩個 package 目錄分別執行 `pnpm test run`：translator 30 files／171 tests、intor 114 files／665 tests，皆通過。起初以套件名稱 filter 的命令也選到同名 root，造成 `vitest run run` 命令失敗；已改用 package 目錄執行，非產品測試失敗。未重新執行 type、build 或 API check。
+
+
+### AUDIT-07 契約待確認；config ID 實驗已撤回
+
+使用者確認撤回 Next config ID header、reader 歸屬檢查、對應測試與 changeset。先前 703 tests 與 fixture 隔離案例的通過結果屬於已撤回實驗，不代表目前行為。已 freeze 的 AUDIT-08 redirect entry／useRouter boundary 保留。
+
+正常 Web／CMS 按路徑選 handler 並搭配相應 config 的 flow 尚未發現錯誤。跨 config 案例是刻意在 Web request 呼叫 getLocale(cmsConfig)，證明現有 request routing locale 會被繼承，不足以判定為 bug。Config 設定／messages 隔離不必然要求 locale 隔離。
+
+待確認契約：getLocale(config) 是取得 request routing locale（config 提供 cookie/default fallback），還是獨立取得該 config 的 locale？在實際需求與契約明確前，維持既有 request-scoped 行為，不推進歸屬機制修改。
+
+### AUDIT-07 跨 adapter 契約盤點（尚未實作）
+
+待確認的共同契約：request routing locale 是否允許被多份 config 共用？以下為現況盤點，不將未檢查 config 歸屬直接判為缺陷。
+
+| Adapter | Context | Reader 現況 | 驗證狀態 |
+| --- | --- | --- | --- |
+| Next | x-intor-* headers | 維持原本 request routing locale；config ID 實驗已撤回 | 跨 config 繼承已觀察，契約待確認 |
+| Express | req.intor | getTranslator(config, req) 直接採用 req.intor.locale | 程式碼確認，未補跨 config 重現測試 |
+| Fastify | request.intor | getTranslator(config, request) 直接採用 request.intor.locale | 程式碼確認，未補跨 config 重現測試 |
+| Hono | c.get("intor") | getTranslator(config, c) 直接採用 context.locale | 程式碼確認，未補跨 config 重現測試 |
+| SvelteKit | event.locals.intor | adapter 沒有對應 getTranslator reader，由 consumer 使用 locals | 未確認 consumer 跨 config 使用情境 |
+
+Express／Fastify／Hono 的既有 getTranslator 測試覆蓋 context locale、缺少 context 時的 default 與 params 傳遞，沒有 config 歸屬案例。Handler 自己建立 translator 時使用同一 config 與當次 locale，未發現該路徑的配對問題；跨 config reader 與多 handler 覆寫單一 context 是另外的邊界。
+
+InboundContext 是公開 routing 型別，目前等於 Omit<InboundResult, "shouldRedirect">，也由純 routing helper 回傳。不能直接把 framework config 身分變成純 routing result 的必填欄位而不檢查公開型別與 consumer 相容性。
+
+待決策：其他 adapter 目前不從 cookie 做 reader fallback（只有 default），不能直接宣稱 Next 的 cookie → default 契約已套用所有 adapter。先確認實際跨 config 需求與 request locale 共用契約，再決定是否需要歸屬檢查。本輪不修改任何 adapter 或共同 InboundContext。
+
+
+### AUDIT-03 React 非同步生命週期檢查
+
+本輪限 React useMessagesEffects、IntorProvider 與共用 createRefetchMessages。未修改 runtime。一次性 characterization tests 使用真實 hook／refetcher，僅 mock remote loader 並以 deferred promise 控制完成時間；執行後移除暫存測試，不將已知問題的行為鎖成正式期待。
+
+已重現：config A remote 請求進行中，rerender 為 config B local（locale 不變）。舊 signal 沒有 abort，loading 維持 true；A 請求完成後，onMessages 收到 A messages，onLoadingEnd 寫入 false。原因是 refetcher 的 controller 僅在自身 instance 內有效，config 更換建立新 instance，而 effect 沒有 cleanup。Provider 的 runtimeMessages 優先於新 config／external messages，因此舊回寫可污染仍掛載的 Provider；是否正式支援同一 Provider 更換 config 仍需確認，不先擴大 API。
+
+已重現清理缺口：請求進行中 unmount，signal 未 abort；完成後 messages／loading 回呼仍執行。此證據不代表新 Provider 被污染，也未宣稱 React warning 或記憶體洩漏。
+
+未發現同一 refetcher 的快速 locale 切換舊結果覆蓋：既有測試確認 abort 前一請求、只套用最新結果。六個共用 refetcher tests 與兩個一次性生命週期案例共八個 tests 通過；生命週期案例是證明現有異常行為，不是修正後 regression。
+
+失敗處理：來源碼確認一般 HTTP／network／invalid-message 失敗由 fetchRemoteResource 吸收，loadRemoteMessages 回傳 undefined，active refetcher finally 結束 loading。未實測真實網路故障。對相同 locale 再呼叫 setLocale 是 no-op，沒有獨立公開 retry 操作；這是目前能力／契約，不直接列為 bug。
+
+另需確認：runtimeMessages 非 null 後，新 external messages／config.messages 仍被 runtime 優先遮蓋，effect 沒有 reset；此為來源碼觀察，尚未用完整 Provider 測試重現。下一步先確認 config／external value 更新契約，再補必要的回歸測試；不從此次檢查直接推出新 retry API 或跨 framework 改造。
+
+
+### Local SSR → React Provider 外部 value 更新
+
+一次性測試使用真實 IntorProvider／Translator／messages effect，local config 不使用 remote。相同掛載的 Consumer 經 rerender 更新 en messages A → B，再更新 locale fr 與 Bonjour messages，文字與 locale 都正確，Consumer instance 維持一份；測試通過後移除暫存測試。這條正常 local value 更新未發現 bug，不修改 runtime。
+
+apps/next-fixture 的導覽改用 next/link；新增 ClientProbe mount ID、local counter、router.refresh 與 ?probe=A／B server messages 更新入口。Production build 與 A／B HTTP 初始 server/client markup 檢查通過。使用者回報上述瀏覽器測試看起來都沒有問題，包含 refresh counter 保留的觀察；此為使用者手動驗證，非自動 E2E。
+
+
+### Local loader cache 與錯誤恢復
+
+以一次性 script、真實檔案與獨立 Map pool 實測，allowCacheWrite=true：development 的 invalid JSON 全失敗不寫 cache，修好後可讀取；A → B 檔案更新下次載入得到 B，pool 仍為空。Production 成功結果寫入 process-level cache，檔案更新後仍回傳舊值；清 pool 後讀到新值。符合既有 lifetime cache 設計，未發現失敗 promise／undefined 卡住恢復。
+
+另確認容錯限制：production 同 locale 中一份有效檔案、一份 invalid JSON，壞檔會 warn 並略過，其餘部分結果可快取。修好壞檔後，同 process cache hit 仍不包含該檔；清 pool 後恢復完整結果。這是 partial-success 容錯與 process cache 的組合，不直接列為 bug；是否要 fail-fast／避免快取部分結果仍需先確認契約，不修改 loader 策略。
+
+本輪只更新 audit，未修改 runtime、公開 API 或新增 release 內容。實測僅單 process 本機檔案，不宣稱涵蓋多 worker／部署快取。
+
+
+### AUDIT-06 rich replacement 實測補充
+
+一次性 script 使用真實 Translator.t、HTML createTRich、React createTRich 與 react-dom/server renderToStaticMarkup。未修改 runtime，測試 script 執行後移除。React SSR rendering 不是瀏覽器執行測試。
+
+| replacement name | t() | HTML／React rich 結果 |
+| --- | --- | --- |
+| Alice | 普通字串插值 | 普通文字 |
+| 2 < 3 & 5 > 4 | 保留原字元 | text nodes 正常 escape，顯示原文字 |
+| <b>Alice</b> | 保留 tag 字串 | 解析為 b 元素，不是 literal replacement 文字 |
+| <b> | 保留字串 | 兩個 renderer 前的 AST validation 都拋 Unclosed tag |
+| </b> | 保留字串 | 都拋 Unmatched closing tag |
+| &lt;b&gt;Alice&lt;/b&gt; | 保留 entity 字串 | ampersand 再 escape，不會解碼成原始 <b> 文字 |
+| <a href="/probe">Alice</a> | 保留 tag 字串 | HTML 保留 href；React 預設 renderer 忽略 attributes，只建立 a 元素 |
+
+處理順序：t 完成插值 → tokenize／AST → renderer。Tokenizer 註解明示 variables assumed interpolated beforehand，現有順序有設計依據；但未找到清楚定義 replacement 是否允許 markup 的 consumer 文件。Text escaping 發生於解析之後，因此不能阻止合法 replacement tag 改變 rich 結構。不能簡單先 HTML-escape replacement，否則會有 entity 字串顯示的相容性問題。
+
+目前分類仍為契約待確認：若 replacement 預期普通資料，tag 被解讀與單一輸入拋錯值得修正；若刻意允許 rich markup，則需界定信任邊界及錯誤策略。未執行 script/event exploit，不宣稱 React XSS 或 HTML 使用端可直接安全插入任何不可信 replacement。此輪沒有新增 escaping、sanitizer、公開 API 或 changeset。
+
+
+### AUDIT-06 契約與相容性研究
+
+Replacement 型別為 Record<string, unknown>，沒有 trusted markup 標記；built-in interpolate 只替換 string／number，未找到要求 replacement 注入 semantic tag 的測試。React createTRich 既有測試 mock renderRichMessage，主要驗證 composition 與 element key，未覆蓋真實使用者文字插值。Tokenizer 註解卻明確假設先插值，因此現有順序不能直接視為意外。
+
+建議討論的邊界：message template／formatter 產生 rich 結構，普通 replacement 表示資料；這尚未成為已批准契約。若採用此方向，需要保留 formatHandler／hooks：format stage 先於 interpolate，formatHandler 可讀 replacements 並回傳完整 MessageValue。單純 rich parse 前移至 raw template 會跳過格式化後的結構，直接包裝 replacement escaping 則可能改變 formatHandler 的輸入值；皆不作為本輪修法。
+
+另外需界定 attribute placeholder（例如 message 中 href="{url}"）：HTML renderer 目前支持解析 attributes，React default renderer 忽略 attributes。Text slot 與 attribute slot 不可假定相同處理；現有 tag-renderer callback 接收 children，可由 consumer closure 提供 URL／props。未決定移除 template attributes 或要求 consumer 遷移。
+
+下一個必要決策是：是否曾刻意把 <b>…</b> 等 markup 放進 replacements，以及是否依賴 attributes 中的 placeholder？在這兩項使用範圍未明確前，只保留研究紀錄，不修改 pipeline 或增加新選項。
+
+
+### AUDIT-06 三層測試契約對照
+
+明確已有測試：tokenizer 支援 semantic tags、多 attributes（含 href）、普通比較符號；AST 驗證未閉合／未配對 tags；replaceValues 支援 nested string／number 插值及缺值保留 placeholder；HTML renderer escape text／attribute values。這些能力應保留。
+
+沒有找到三層整合測試明確要求：replacement markup 必須成為 rich tag，或 attribute placeholder 必須由 replacements 插入。兩者目前能運作是 string interpolation → rich parse 的組合行為；沒有 dedicated test 不代表從未被 consumer 使用，不以此作移除依據。
+
+message README 的 fail-closed syntax 是 tokenizer 層的敘述，不是完整 rich API 保證任何輸入都回傳文字；invalid opening tag 可能成為 text，但其 closing tag 仍被辨識，AST 可因此拋 unmatched closing error。避免把這句描述等同 sanitizer 或 never-throw 契約。
+
+目前建議保留 runtime 相容性並將 replacement 資料／markup 邊界列為設計待決策；不撤除 attributes，不修改 t() 的 plain string 行為，不直接套 HTML escaping 到 replacements。
+
+
+### AUDIT-06 正式整合測試與使用說明
+
+新增 packages/intor/__test__/integration/rich-replacements.test.ts：真實 Translator → HTML／React createTRich → React static markup，無 parser／renderer mocks。七個案例覆蓋 message tags、比較符號、replacement markup、未閉合／未配對 tags、pre-escaped entities 與 href placeholder 的 renderer 差異。作為 current-behavior characterization，不建立永久 trust policy。docs/quickstart.md 補上處理順序、錯誤與文字語意限制、React tag renderer props 用法。Intor 全部 706 tests、type check 通過；runtime／公開 API／changeset 未修改，尚未 commit。

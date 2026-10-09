@@ -159,3 +159,22 @@ For framework details, start with the relevant entry point and API signatures:
 - [Behavior tests](../packages/intor/__test__/).
 
 Do not assume that similarly named APIs from other i18n libraries behave the same way. For development on Intor itself, this repository uses a pnpm workspace (pnpm 10.32.0). Run `pnpm install --frozen-lockfile` and `pnpm build:all` from the root; use `pnpm run ci` for the full check suite.
+
+## Rich messages and replacements
+
+`tRich()` resolves `t(key, replacements)` first, then parses the resulting message for semantic tags. The following describes current behavior, rather than a guarantee that replacements are literal text.
+
+For a message such as `Hello <b>{name}</b>!`, `name: "Alice"` renders the message-defined bold element. Ordinary comparison text such as `2 < 3 & 5 > 4` remains text and is escaped by the HTML renderer or React when serialized.
+
+A replacement containing valid markup, such as `name: "<b>Alice</b>"`, is also parsed as rich structure. An unclosed or unmatched tag in a replacement can throw during rich parsing. Text escaping happens after parsing; it does not make replacement markup literal or sanitize the complete rich output. Pre-escaping a replacement with HTML entities is not a workaround: entity text is escaped again rather than decoded.
+
+The HTML renderer retains parsed attributes, so `<a href="{url}">{name}</a>` interpolates both placeholders and renders the attribute. The default React renderer ignores parsed attributes. For React links, supply a tag renderer that creates the link with application-provided props:
+
+````tsx
+const url = "/pricing";
+tRich("pricingLink", {
+  a: (children) => <a href={url}>{children}</a>,
+}, { name: "Pricing" });
+````
+
+Use a message such as `<a>{name}</a>` for this example. Attribute escaping in HTML output does not validate a URL's protocol. Custom tag renderers control their own output. When passing user-provided text, account for the current markup-parsing behavior; the rich API does not currently distinguish literal replacement text from markup.
