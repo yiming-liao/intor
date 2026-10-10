@@ -397,3 +397,15 @@ LocalizedValue／ScopedValue 依原 messages shape 推導；runtime/dynamic shap
 本輪只記錄已重現問題，未修改 runtime。後續修正範圍應聚焦自有 property 語意、保留 JSON key 與現有 merge 優先序；驗證 nested keys、namespace 與 override events，避免順便重設合併契約。
 
 修正已實作（尚未 commit）：deepMerge 只讀取 base 的自有 property，並以 data property 寫入結果，保留普通物件 prototype 與既有 b 覆寫 a 的順序。Local parseFileEntries 根節點直接接收 deepMerge 回傳值，namespace 以自有 property 讀寫，避免 Object.assign／__proto__ setter。新增兩個 deepMerge 回歸案例與四個不 mock 合併的 integration 案例，涵蓋 root／nested／namespace 的 __proto__、constructor、toString，以及 remote resource path 合併後真實 Translator 查找。Intor 119 files／713 tests、type check 與修改檔案 lint 通過；共用工具的 routing resolver 測試包含在全套檢查。新增 intor patch changeset；不改 translator API、型別、合併優先序或資料格式。未執行 Next fixture browser 驗證，本批證據為直接合併／loader 整合與 package 測試。
+
+Freeze：formatter null 批次為 4b7a652；特殊 key 合併批次為 e20f575。兩批分開 commit，未推送或更新版本。
+
+### AUDIT-11 Local cache 的 namespace 空陣列碰撞
+
+已用真實 index.json／ui.json、production 環境、獨立 Map pool 與 source loadLocalMessages 重現。namespaces 未指定時載入 root + ui；隨後同 pool 呼叫 namespaces: []，仍取得 root + ui。改用空 pool 執行 namespaces: [] 則只取得 root。暫存檔案已刪除；NODE_ENV 僅於 probe process 設定，未改專案環境。
+
+原因：collectFileEntries 以 namespaces 是否存在決定過濾，[] 表示只保留 index；cache key 卻將 [].sort().join(",") 產生的空字串經 filter(Boolean) 移除，與未指定 namespaces 使用相同 key。Production cache 命中後會略過 namespace 過濾，結果取決於之前哪一種載入先寫入；不限於多 config，同 id/root/locale 的 loader override 也能觸發。這不同於先前 BUG-01 的 namespace sort mutation。
+
+本輪只記錄，未修正。最小修正需讓 key 保留「未指定」與「明確空陣列」的差異，保留既有 [] 只載入 root 的行為，並測試兩種寫入順序。
+
+修正驗證：新增真實檔案與獨立 production pool integration，先在原實作執行：all-first 與 root-first 兩個案例失敗，namespace 重排案例通過。Local key 改為明示 namespaces:all 或 namespaces:<排序後 JSON array>；[] 與未指定分離，排序仍使用複本且不改 loader 篩選語意。修正後三個案例通過，Intor 120 files／716 tests、type check 與修改檔案 lint 通過。新增 intor patch changeset；尚未 commit，不變更公共 API 或額外 loading。

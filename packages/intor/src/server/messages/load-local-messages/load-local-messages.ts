@@ -53,7 +53,9 @@ export const loadLocalMessages = async ({
       rootDir,
       locale,
       fallbackLocales?.join(","),
-      namespaces ? [...namespaces].sort().join(",") : undefined,
+      namespaces !== undefined
+        ? `namespaces:${JSON.stringify([...namespaces].sort())}`
+        : "namespaces:all",
     ].filter(Boolean),
   );
 
