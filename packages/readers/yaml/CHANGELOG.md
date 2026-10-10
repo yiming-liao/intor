@@ -1,5 +1,13 @@
 # @intor/reader-yaml
 
+## 0.1.5
+
+### Patch Changes
+
+- 4d0b486: Add verified support for Intor 2.12.0 to the explicit peer dependency range.
+  All four readers pass packed runtime and TypeScript Bundler compatibility
+  checks, including Markdown metadata from `intor/internal`.
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@intor/reader-yaml",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "YAML reader for intor",
   "author": {
     "name": "Yiming Liao",

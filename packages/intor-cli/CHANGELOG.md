@@ -1,5 +1,29 @@
 # intor-cli
 
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies [57dbf03]
+- Updated dependencies [ec44378]
+- Updated dependencies [2a95318]
+- Updated dependencies [2233a7b]
+- Updated dependencies [cae74f8]
+- Updated dependencies [152ead7]
+- Updated dependencies [e20f575]
+- Updated dependencies [95b784c]
+- Updated dependencies [f5c8da7]
+- Updated dependencies [0e2fe9a]
+- Updated dependencies [4d0b486]
+- Updated dependencies [4869270]
+- Updated dependencies [4b7a652]
+  - intor@2.12.0
+  - intor-translator@1.7.0
+  - @intor/reader-json5@0.1.4
+  - @intor/reader-md@0.1.8
+  - @intor/reader-toml@0.1.4
+  - @intor/reader-yaml@0.1.5
+
 ## 1.0.4
 
 ### Patch Changes
