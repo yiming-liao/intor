@@ -30,7 +30,7 @@ packages may receive patch releases when those dependencies change. The CLI
 uses explicit `workspace:^<version>` ranges for readers, so release preparation
 resolves local packages and publication preserves caret ranges.
 
-Readers declare `workspace:2.9.1 || 2.10.0 || 2.11.0` as their Intor peer range.
+Readers declare `workspace:2.9.1 || 2.10.0 || 2.11.0 || 2.12.0` as their Intor peer range.
 Packing removes the workspace prefix and preserves the explicit supported versions.
 Do not widen this to all of 2.x without validating the reader contract:
 the Markdown reader uses runtime constants from `intor/internal`, which is
@@ -50,6 +50,9 @@ that all four exports satisfy `MessagesReader` in TypeScript.
 For 2.9.1, 2.10.0, and the 2.11.0 candidate, runtime checks and TypeScript
 5.9.3 with `moduleResolution: "Bundler"` pass. The 2.11.0 candidate also passes
 strict peer installation and an exact generated message key union check.
+The 2.12.0 candidate passes isolated strict peer installation, all four
+reader runtime checks (including Markdown metadata), and TypeScript 5.9.3
+with `moduleResolution: "Bundler"`.
 Strict `NodeNext` checking fails in 2.9.1 and 2.10.0 because Intor's generated
 declaration imports omit extensions. This is an existing declaration-packaging
 limitation; these checks do not establish NodeNext support for 2.11.0.
