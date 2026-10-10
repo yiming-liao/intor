@@ -2,6 +2,19 @@ import { describe, it, expect } from "vitest";
 import { getLocaleFromAcceptLanguage } from "../../../../src/routing";
 
 describe("getLocaleFromAcceptLanguage", () => {
+  it.each(["en;q=0", "fr;q=1,en;q=0", "en;q=oops"])(
+    "does not select a zero-weight supported candidate from %s",
+    (header) => {
+      expect(getLocaleFromAcceptLanguage(header, ["en"])).toBeUndefined();
+    },
+  );
+
+  it("selects a positive-weight candidate over an excluded language", () => {
+    expect(getLocaleFromAcceptLanguage("en;q=0,fr;q=0.1", ["en", "fr"])).toBe(
+      "fr",
+    );
+  });
+
   it("returns undefined when header is missing", () => {
     const result = getLocaleFromAcceptLanguage(undefined, ["en", "zh"]);
     expect(result).toBeUndefined();

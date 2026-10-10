@@ -35,16 +35,16 @@ export const getLocaleFromAcceptLanguage = (
       rawQ !== undefined ? Number.parseFloat(rawQ.split("=")[1] ?? "") : 1;
     return {
       lang,
-      q: Number.isNaN(q) ? 0 : q, // Invalid q values have lowest priority
+      q: Number.isNaN(q) ? 0 : q, // Invalid q values are treated as unacceptable
     };
   });
 
   // 2. Sort by priority (highest first)
   const sortedByPriority = parsedLanguages.sort((a, b) => b.q - a.q);
 
-  // 3. Pick the first language explicitly supported
-  const preferred = sortedByPriority.find(({ lang }) =>
-    supportedLocalesSet.has(lang),
+  // 3. Pick the first acceptable language explicitly supported (q=0 excludes it)
+  const preferred = sortedByPriority.find(
+    ({ lang, q }) => q > 0 && supportedLocalesSet.has(lang),
   )?.lang;
 
   return preferred;

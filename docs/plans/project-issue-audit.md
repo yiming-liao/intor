@@ -409,3 +409,19 @@ Freeze：formatter null 批次為 4b7a652；特殊 key 合併批次為 e20f575�
 本輪只記錄，未修正。最小修正需讓 key 保留「未指定」與「明確空陣列」的差異，保留既有 [] 只載入 root 的行為，並測試兩種寫入順序。
 
 修正驗證：新增真實檔案與獨立 production pool integration，先在原實作執行：all-first 與 root-first 兩個案例失敗，namespace 重排案例通過。Local key 改為明示 namespaces:all 或 namespaces:<排序後 JSON array>；[] 與未指定分離，排序仍使用複本且不改 loader 篩選語意。修正後三個案例通過，Intor 120 files／716 tests、type check 與修改檔案 lint 通過。新增 intor patch changeset；尚未 commit，不變更公共 API 或額外 loading。
+
+AUDIT-11 已 freeze 為 2233a7b，未推送。
+
+### AUDIT-12 Accept-Language 的零權重候選
+
+Source getLocaleFromAcceptLanguage probe 重現：supportedLocales=["en"]，header 為 en;q=0 或 fr;q=1,en;q=0 時仍回傳 en；en;q=oops 也回傳 en。Parser 將 invalid q 設為 0，但排序後未排除 q=0，故仍可能作為 detected locale。
+
+[RFC 9110 §12.4.2](https://www.rfc-editor.org/rfc/rfc9110.html#section-12.4.2) 定義 q=0 為 not acceptable，並非最低優先序的可接受選項。這是 header 候選解析層的問題，不代表 app 最後不能用 defaultLocale：規範允許 server 忽略 negotiation，Intor 的預設語系策略應保持獨立。未查到正權重 supported 候選時，parser 可回傳 undefined，讓後續 locale resolution 決定。
+
+本輪只記錄，未修改 runtime／matching／wildcard 策略。後續最小修正應排除零權重，並確認非法權重的既有容錯行為；不得順便改成新的 locale 匹配算法。
+
+下游確認：以真實 defineIntorConfig + Web Request + resolveInboundFromRequest 實測（無 mocks、未啟動 framework app），supportedLocales=[fr,en]、defaultLocale=fr、localePrefix=all。沒有 header → fr/default、pathname=/fr；en;q=0 → en/detected、pathname=/en；en;q=oops 同樣選 en；en;q=0.8 正常選 en。明確 /fr path 或有效 fr cookie 都優先於 detected，維持 fr。因此問題主要影響沒有較高優先序 locale signal 的請求，不是所有請求都受影響。這個 probe 未直接驗證 framework redirect response。
+
+Next／Express／Fastify／Hono／SvelteKit adapters 均呼叫共用 getLocaleFromAcceptLanguage，來源碼確認共用解析範圍；pure CSR getClientLocale 使用 navigator，不走 HTTP header parser。現有測試僅涵蓋 malformed q 搭配另一個正權重候選，沒有「唯一 supported candidate 為零權重」的案例，也沒有要求 q=0 必须返回語系的明示契約。最小修正可以只在選擇 supported candidate 時要求 q>0，invalid q 仍以既有 0 處理並被略過；不新增 wildcard／語言近似匹配／406 response，defaultLocale 決策維持後續 resolver 處理。
+
+修正已實作，尚未 commit：候選選擇要求 q>0，保留既有解析、排序與 exact supported matching。新增四個 parser 案例及五個真實 Web Request routing integration 案例；原實作五個回歸案例失敗，修正後 Intor 121 files／725 tests、type check、修改檔案 lint 通過。涵蓋零權重、malformed-only、正權重與 path/cookie 優先序。新增 intor patch changeset。未跑 Next fixture browser，也未擴大到完整 qvalue grammar 驗證、wildcard 或 matching 重設。
