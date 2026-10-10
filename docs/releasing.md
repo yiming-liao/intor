@@ -72,6 +72,17 @@ one-time versioning-policy exception. The release notes must explain that
 cookies now require `cookie.enabled: true` to preserve the previous behavior.
 This exception does not make future breaking changes minor by default.
 
+The maintainer has also explicitly chosen `intor@2.12.0` and
+`intor-translator@1.7.0` for the current audit-fix batch, reflecting the
+project's limited adoption. This batch intentionally includes breaking
+changes in minor releases: the Next redirect import moves to the server
+entry, format handlers must narrow `MessageValue` inputs, formatter `null`
+becomes an empty result, and conflicting local definitions now throw.
+Release notes must describe these changes and their migration steps.
+This is a batch-specific exception, not a change to the default SemVer policy.
+Dependent CLI and reader releases remain subject to dependency and validated
+peer compatibility checks; do not suppress them by widening untested ranges.
+
 ## Prepare versions
 
 Start from a clean working tree with the implementation and its changesets
