@@ -425,3 +425,17 @@ Source getLocaleFromAcceptLanguage probe 重現：supportedLocales=["en"]，head
 Next／Express／Fastify／Hono／SvelteKit adapters 均呼叫共用 getLocaleFromAcceptLanguage，來源碼確認共用解析範圍；pure CSR getClientLocale 使用 navigator，不走 HTTP header parser。現有測試僅涵蓋 malformed q 搭配另一個正權重候選，沒有「唯一 supported candidate 為零權重」的案例，也沒有要求 q=0 必须返回語系的明示契約。最小修正可以只在選擇 supported candidate 時要求 q>0，invalid q 仍以既有 0 處理並被略過；不新增 wildcard／語言近似匹配／406 response，defaultLocale 決策維持後續 resolver 處理。
 
 修正已實作，尚未 commit：候選選擇要求 q>0，保留既有解析、排序與 exact supported matching。新增四個 parser 案例及五個真實 Web Request routing integration 案例；原實作五個回歸案例失敗，修正後 Intor 121 files／725 tests、type check、修改檔案 lint 通過。涵蓋零權重、malformed-only、正權重與 path/cookie 優先序。新增 intor patch changeset。未跑 Next fixture browser，也未擴大到完整 qvalue grammar 驗證、wildcard 或 matching 重設。
+
+AUDIT-12 零權重批次已 freeze 為 ec44378。
+
+### Accept-Language weight grammar 研究（尚未實作）
+
+對照 RFC 9110 §12.4.2／§12.5.4：q 參數名不分大小寫；數值合法格式為 0 或 1，可有小數點及最多三位小數，1 的小數部分只能是 0。0.／1. 也符合 ABNF；.9、2、Infinity、1.001、0.9000、0.9oops 不符合。Accept-Language 每個 language-range 後只有一個可選 weight；foo=1 或重複 q 不屬合法 entry。規範定義合法語法，但不要求 Intor 必須採某一種 malformed-input recovery。
+
+Source probe 配合 fr;q=0.8 重現：en;q=2、Infinity、0.9oops、.9、0.9000、1.001、en;foo=1 與 en;q=0.9;q=0 均選 en。原 parser 只讀第二段、忽略後續段，且未驗證參數名與完整數值。en;Q=0.9 與 en;q=1. 的接受是合法行為，应保留。
+
+建議收斂為 entry-level 容錯：沒有 weight → 1；合法 weight → 指定值；零值 → 排除；非法 weight／額外不合法參數 → 略過該 entry，繼續處理其他 entry，不拒絕整個 request、不把非法候選升成預設權重。這是設計建議，尚未修改 runtime。此改動會影響原本非標準輸入的容忍度，應在 changeset 說明，不宣稱規範強制必須略過。維持 exact matching、同權重原順序及既有 resolver fallback；不加入第三方 parser／strict-loose 模式。
+
+經使用者確認已實作，尚未 commit：使用完整 q=value 語法驗證，允許大小寫 q 與 0./1.，拒絕多於一個參數、未知參數、非法範圍／精度與 numeric prefix。每個非法 entry 個別略過，不影響其他 entry。新增 21 個 parser 案例（原實作其中 8 個失敗），並擴充 3 個真實 request fallback 案例。修正後 Intor 121 files／749 tests、type check 與修改檔案 lint 通過；新增 intor patch changeset。維持 zero exclusion、exact matching、同權重順序、default resolution；這不是完整 language-range／wildcard parser 的支援宣告。未跑 Next fixture browser。
+
+驗證補強：新增最小正權重 0.001／0.01／0.1、1.0000／指數／正號／前導零拒絕、空列表項容錯；request integration 確認非法 entry 放在合法候選前後均不影響它。另以實際 NextRequest + createIntorHandler（不 mock parser／routing）驗證三個 307 response 的 Location 與 locale/source headers。兩個 focused files 共 55 tests 通過；此為 adapter integration，不宣稱已啟動 Next app 或跑瀏覽器 E2E。

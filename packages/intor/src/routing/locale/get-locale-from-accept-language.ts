@@ -26,17 +26,19 @@ export const getLocaleFromAcceptLanguage = (
   const supportedLocalesSet = new Set(supportedLocales);
 
   // 1. Parse Accept-Language header into language + priority pairs
-  const parsedLanguages = acceptLanguageHeader.split(",").map((part) => {
+  const parsedLanguages = acceptLanguageHeader.split(",").flatMap((part) => {
     const segments = part.split(";");
+    // Each entry permits one optional weight; skip malformed entries only.
+    if (segments.length > 2) return [];
     const rawLang = segments[0]!;
     const rawQ = segments[1];
     const lang = rawLang.trim();
-    const q =
-      rawQ !== undefined ? Number.parseFloat(rawQ.split("=")[1] ?? "") : 1;
-    return {
-      lang,
-      q: Number.isNaN(q) ? 0 : q, // Invalid q values are treated as unacceptable
-    };
+    if (rawQ === undefined) return [{ lang, q: 1 }];
+
+    // RFC 9110 qvalue: at most three decimals, and only zeros after 1.
+    const weight = /^q=(0(?:\.[0-9]{0,3})?|1(?:\.0{0,3})?)$/i.exec(rawQ.trim());
+    if (!weight) return [];
+    return [{ lang, q: Number(weight[1]) }];
   });
 
   // 2. Sort by priority (highest first)
