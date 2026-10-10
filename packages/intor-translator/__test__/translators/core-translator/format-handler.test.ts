@@ -47,15 +47,20 @@ describe("formatHandler message value input contract", () => {
     expect(translator.t("value", { name: "Alice" })).toBe("hello, Alice!");
   });
 
-  it.each<MessageValue>([42, false, ["formatted"], { label: "formatted" }])(
-    "allows a string handler to return non-string output %j",
-    (output) => {
-      const translator = new CoreTranslator<LocaleMessages>({
-        locale: "en",
-        messages: { en: { value: "hello" } },
-        handlers: { formatHandler: () => output },
-      });
-      expect(translator.t("value")).toEqual(output);
-    },
-  );
+  it.each<MessageValue>([
+    null,
+    0,
+    "",
+    42,
+    false,
+    ["formatted"],
+    { label: "formatted" },
+  ])("preserves formatter output %j", (output) => {
+    const translator = new CoreTranslator<LocaleMessages>({
+      locale: "en",
+      messages: { en: { value: "hello" } },
+      handlers: { formatHandler: () => output },
+    });
+    expect(translator.t("value")).toEqual(output);
+  });
 });

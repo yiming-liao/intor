@@ -19,6 +19,22 @@ describe("interpolate", () => {
     expect(ctx.finalMessage).toBe("formatted");
   });
 
+  it("preserves formatted null instead of interpolating the raw message", () => {
+    const ctx = {
+      config: {},
+      messages: {},
+      locale: "en",
+      key: "message",
+      candidateLocales: [],
+      meta: {},
+      rawMessage: "Hello {name}",
+      formattedMessage: null,
+      replacements: { name: "Alice" },
+    } as TranslateContext;
+    interpolate.run(ctx);
+    expect(ctx.finalMessage).toBeNull();
+  });
+
   it("should fallback to rawMessage when formattedMessage is not provided", () => {
     const ctx = {
       rawMessage: "raw-only",

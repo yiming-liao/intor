@@ -178,3 +178,11 @@ tRich("pricingLink", {
 ````
 
 Use a message such as `<a>{name}</a>` for this example. Attribute escaping in HTML output does not validate a URL's protocol. Custom tag renderers control their own output. When passing user-provided text, account for the current markup-parsing behavior; the rich API does not currently distinguish literal replacement text from markup.
+
+### Formatter results
+
+`formatHandler` receives a resolved `MessageValue` and may return another `MessageValue`. Narrow the input before passing it to a string-template formatter. Return `rawMessage` to leave the message unchanged.
+
+A returned `null` is an intentional empty result: `t()` returns `null`, HTML `tRich()` returns an empty string, and React/Vue `tRich()` return no nodes. It does not trigger message or locale fallback. Previously, formatter `null` selected the raw message; migrate handlers that used this behavior to `return rawMessage`.
+
+Only an unset (`undefined`) formatted result selects the raw message. `undefined` is not a valid `FormatHandler` return value. Other falsy results (`false`, `0`, and `""`) remain valid outputs. String formatter output is interpolated afterward; arrays and objects are preserved without recursive interpolation.

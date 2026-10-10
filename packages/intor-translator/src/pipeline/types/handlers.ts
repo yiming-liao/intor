@@ -39,6 +39,7 @@ export type MissingHandler = (ctx: HandlerContext) => MessageValue;
  *
  * `rawMessage` is a resolved message value; handlers must narrow it before
  * passing it to formatters that only accept strings.
+ * Return `null` for an empty result, or `rawMessage` to leave it unchanged.
  *
  * @public
  */

@@ -36,6 +36,23 @@ function createFunctions(message: string) {
 // Characterization of the current interpolation-before-parsing contract.
 // These cases document compatibility; they do not establish a trust policy.
 describe("rich replacements across real translation and render pipelines", () => {
+  it("renders a formatter's null result as empty HTML and React output", () => {
+    const translator = new Translator<LocaleMessages>({
+      locale: "en",
+      messages: { en: { message: "Hello {name}" } },
+      handlers: { formatHandler: () => null },
+    });
+    const t = (key = "message", replacements?: Replacement) =>
+      translator.t(key, replacements);
+    expect(t("message", { name: "Alice" })).toBeNull();
+    expect(createHtmlTRich(t)("message", undefined, { name: "Alice" })).toBe(
+      "",
+    );
+    expect(
+      createReactTRich(t)("message", undefined, { name: "Alice" }),
+    ).toEqual([]);
+  });
+
   it("preserves message-defined tags around interpolated text", () => {
     const { html, reactHtml } = createFunctions("Hello <b>{name}</b>!");
     expect(html("message", undefined, { name: "Alice" })).toBe(

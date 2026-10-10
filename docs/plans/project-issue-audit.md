@@ -324,3 +324,74 @@ format hook 改為僅在 typeof rawMessage === string 時呼叫 formatHandler，
 
 
 BUG-07 freeze 驗證補充：新增獨立 tsd handler suite，確認 rawMessage 精確為 MessageValue、string-only 函式不能直接接受它、typeof narrowing 後為 string。FormatHandler 使用 Omit<HandlerContext, "rawMessage"> 重定義欄位，避免交集型別干擾 narrowing。七組 translator 型別測試、build、API check 與 12 個 handler runtime 案例通過；原本完整 translator 191／Intor 706 tests 已通過。ICU 範例只處理 string 是此 adapter 的明確範圍；IntlMessageFormat 也支援專用預解析 AST，不等同任意 MessageValue array。此批 freeze 不更新 package 版本、不發布。
+
+
+### Formatter null output 檢查（尚未修正）
+
+一次性真實 Translator script 實測：formatHandler 回傳 null 時，t("value", {name: "Alice"}) 使用原始 "Raw {name}" 並回傳 "Raw Alice"。false／0／空字串正確保留；array／object 正確保留且不遞迴插值；string output 繼續插值。原 message null，以及 loadingHandler／missingHandler 回傳 null，均保留 null。暫存 script 已移除，未修改 runtime。
+
+來源是 interpolate 的 formattedMessage ?? rawMessage。公開 MessageValue 含 null，formattedMessage 可選欄位以 undefined 表示未設定；translate final invariant 也僅拒絕 undefined。未找到明示 formatHandler 的 null 代表 fallback 的文件或測試；因此目前與其他 null message 路徑存在不一致，但先確認契約再修改。
+
+建議契約：undefined 表示沒有 formatter 結果，null 表示有效空值。如果確認採用，僅在 interpolation 選擇 formattedMessage 時改為排除 undefined，而不改 array/object 插值、hook order 或 handler output 型別。需回歸 formatter null／raw null／其他 falsy outputs／無 formatter；尚未實作與 commit。
+
+
+### Formatter null 下游影響盤點
+
+未修改 interpolation。一次性 probe 將 null MessageValue 交給真實 HTML／React／Vue createTRich：HTML 得到空字串；React／Vue 得到空陣列，React static markup 空字串，Vue SSR 僅 Fragment 邊界註解。Svelte 使用同一 core HTML createTRich，來源碼確認同一路徑；未執行 Svelte component。Vue Trans 為 tRich 的 Fragment wrapper，來源碼確認空 nodes 可傳遞，未單獨 mount Trans。
+
+若 formatter null 改為有效 output，影響集中於回傳值：t 由原 message（可能插值）改成 null；rich 輸出清空；String(t(...)) 會得到 literal "null"，string-only methods 可拋錯，JSON serialization 保留 null。isLoading／hasKey／locale／loader／messages cache 不由 formatter result 回寫，無新增載入或 lookup fallback；已找到的 message 不會因 output null 再尋找其他 locale。自訂 interpolation 後的 hooks 若曾假定 string 也需評估。
+
+回傳型別既存限制：LocalizedValue 在 dynamic/runtime messages 模式回傳 string，在 static 模式由原 message shape 決定，不會因 FormatHandler 回傳 MessageValue 自動改變；number/object formatter output 已有同樣問題，並非 null 修正獨有。本輪只記錄，不拓寬整個 t() API。
+
+契約建議仍是 undefined 代表未設定、null 代表有效空值，理由是 MessageValue／raw null／loading與missing outputs／rich parser 已一致支持 null。FormatHandler 公開 return type 不允許 undefined，因此沒有轉換的 handler 應明確 return rawMessage；不為保留旧 null fallback 新增 sentinel 或模式。代價是依賴 null fallback 的既有 handlers／直接 t consumer 行為變更，應明示 release 分類，不僅以 renderer 不拋錯判為無影響。尚未批准或實作此契約変更。
+
+
+### Formatter null 契約實作
+
+使用者確認採用 null 為有效空值。Interpolation 改為只在 formattedMessage === undefined 時取 rawMessage；null 不再被 ?? 覆蓋。FormatHandler JSDoc 與 quickstart 明示 null 空值／return rawMessage 不轉換。新增 translator null 交接回歸測試，pipeline output 矩陣增加 null、0、空字串；Intor 真實 HTML／React integration 確認 formatter null → t null／HTML 空字串／React 空 nodes。Translator 195 tests、Intor 707 tests、兩套件 type check、translator build／API check 與修改檔案 lint 通過。新增 major changeset 記錄原 null fallback 用法的遷移。本批不改 t() 回傳型別推導、不改 locale／loader 行為，尚未 commit。
+
+
+### AUDIT-09 t() 型別與自訂 pipeline output 的落差
+
+已用實際 TypeScript compile 與真實 Translator 重現：static message 為 string，formatHandler 回傳 42；const result: string = translator.t("value") 與 result.toUpperCase() 都通過 strict tsc，但 runtime result 為 number 並拋 TypeError。使用數字重現以排除本輪 null output 修改造成問題的誤判。
+
+LocalizedValue／ScopedValue 依原 messages shape 推導；runtime/dynamic shape 直接回傳 string。CoreTranslator 的 t 以 assertion 將 pipeline result cast 成該型別，Intor 的 translator 型別也引用這些推導。Handler／hooks 可以改變結果，型別未追蹤轉換。這是既存型別可靠性限制，不是只缺 string | null。
+
+本輪不擴大 null runtime 修正、不自動拓寬所有 t return types。待確認產品契約：一般 messages 的精確型別是否僅描述預設 pipeline；使用自訂轉換的 consumer 是否需要另行聲明 output？需先盤點生成型別、scoped t、missing/loading outputs 與各 framework API 的相容性，再決定修法。本輪暫存 probe 已刪除，只更新 audit。
+
+
+### AUDIT-09 回傳契約範圍研究
+
+新增一次性 strict tsc compile + runtime probe（已刪除）：number message 搭配 loadingMessage 回傳 "Loading"，可被宣告為 number；setMessages 移除原 key 後 missingMessage 回傳 "Missing"，也仍宣告 number；scoped number key 搭配 formatter 回傳 string，型別仍 number；dynamic Translator setMessages 為 boolean false，t() 宣告 string。四個案例編譯通過、runtime 輸出與型別不一致。
+
+因此不僅是 formatter：預設 loading／missing 分支、動態 messages 也不遵守單純從 message shape 推導的 output。Intor BaseTranslator 的 loose unknown-key fallback 宣告 string；strict 模式只限 key，不能自行限制 pipeline output。Scoped methods 與 React／Vue／Svelte translator 介面沿用相同結果型別來源，屬跨 package 公開 API 範圍。
+
+生成的 messages shape 可用於 key／replacement／rich 與原始資料型別，但並非 arbitrary handlers/hooks 的輸出證明。不能因修正 output 型別就撤除 key 的精確提示；兩個保證應分開評估。Html tRich output string、React/Vue rich nodes 則由 renderer 固定輸出形式，不需因 t() 問題直接拓寬。
+
+本輪沒有修改 output 泛型／宣告／生成系統。下一步決策必須涵蓋：既有普遍 string message DX、非 string 原資料支援、loading/missing 的 return union、dynamic MessageValue 與 arbitrary hooks 是否作為 trusted extension。尚未選定輸出型別策略，不為每個觸發點追加獨立模式。
+
+業界對照：[next-intl](https://next-intl.dev/docs/usage/translations) 用 t.rich／t.markup／t.raw 區分渲染與原資料，raw 支援任意 JSON value；[i18next](https://www.i18next.com/overview/typescript) 透過 returnObjects／returnNull 等型別設定描述可接受結果。這些是能力邊界的參考，不代表 Intor 必須採相同 API。
+
+設計待確認：Intor 的 t 是否保證保留原 message 的資料型別，或描述整個 pipeline 的最終結果？目前 runtime 實際執行後者，型別主要描述前者。即使只追蹤 FormatHandler ReturnType，loading／missing 提早輸出與後續自訂 hooks 仍可能改變結果，無法單獨解決。應先決定自訂 pipeline 是否需要遵守可檢查的輸出契約，再決定精確推導或保守 union；不先新增模式／泛型，也不把所有結果直接改為 MessageValue。
+
+### AUDIT-09 預設 pipeline 的字串保證盤點
+
+直接執行 source ScopeTranslator（export 的 Translator 所使用實作），完成八個 runtime probe，未新增永久測試或修改 runtime：字串搭配數字 replacement → "Hello 42"；missing → key 字串；loadingMessage → "Loading"；loading 無 override 且 raw false → false；父節點 → object；fallback number → 42；字串 interpolation → "Hello Alice"；setMessages 將原 string key 改為 false → false。
+
+沒有自訂 handlers／hooks、執行期間 messages 符合宣告，且該 key 在所有可能被查到的 locale 中為 string 或不存在時，預設 pipeline 的正常完成結果可保證 string：lookup 找到字串，missing 回傳 string，loadingMessage 也是 string，interpolation 的 replaceValues 回傳 string。isLoading 本身不必然短路；未指定 loading handler/message 時繼續查到的原值。
+
+不能把「所有葉節點都是 string」當作所有 key 都回傳 string：GeneratePaths 包含父物件，runtime lookup 也確實允許 t("section") 回傳物件。保證必須針對該 key 與 candidate locales 評估。Generated registry 提供宣告 schema，並未在 runtime 驗證 local/remote/custom loader payload，setMessages 也明確允許不同 shape；因此生成型別是資料契約，不是資料驗證結果。
+
+另一個精度邊界：LocalizedValue 直接保留 string literal 型別，但 interpolation 可以把 "Hello {name}" 改為 "Hello Alice"，missing/loading 也能回傳其他字串；所以預設字串保證是 string 種類，不能保證原字串 literal。這與任意 MessageValue output 應分開評估。
+
+下一步範圍收斂：保留 MessageValue runtime 能力；保留 key/replacement/rich schema 精確提示；分別評估預設輸出（字串應為 string、非字串需涵蓋 missing/loading string）與自訂 pipeline 的輸出承諾。未選定新泛型/API，也不把 CLI 納入本批修改。
+
+### AUDIT-10 合併未保留特殊自有 key
+
+已用 source deepMerge 與 findMessageInLocales 重現：JSON.parse 取得 {"__proto__":{"title":"Own message"},"normal":"Normal"}；原資料有自有 __proto__，lookup("__proto__.title") 回傳 "Own message"。deepMerge({}, source) 後，自有 key 消失、lookup 為 undefined，Object.getPrototypeOf(result).title 卻變成 "Own message"。本次 probe 的 Object.prototype 未被污染，不宣稱全域污染。
+
+原因：result[key] = value 對普通物件的 __proto__ 觸發繼承 setter，而不是建立自有 data property；a[key] 也會把繼承值當作原訊息。另重現 toString／constructor 新增訊息的 merge event 被誤分類為 override，prev 是繼承的 function。
+
+影響路徑：mergeMessages、remote resource 合併、local parseFileEntries 均使用 deepMerge；routing options 也使用此工具。Local loader 的 Object.assign(result, merged) 與 result[namespace] 賦值另有同類特殊 key 問題，因此不能只改 deepMerge 就宣稱整條 loader 已修復。既有 BUG-03 lookup 已支援自有特殊 key，merge 應與其一致。
+
+本輪只記錄已重現問題，未修改 runtime。後續修正範圍應聚焦自有 property 語意、保留 JSON key 與現有 merge 優先序；驗證 nested keys、namespace 與 override events，避免順便重設合併契約。

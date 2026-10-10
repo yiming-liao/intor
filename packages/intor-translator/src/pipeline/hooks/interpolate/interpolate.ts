@@ -7,7 +7,8 @@ export const interpolate = rura.createHook<TranslateContext, MessageValue>(
   "interpolate",
   (ctx) => {
     const { rawMessage, formattedMessage, replacements } = ctx;
-    const message = formattedMessage ?? rawMessage;
+    const message =
+      formattedMessage !== undefined ? formattedMessage : rawMessage;
 
     // Interpolation applies only to string messages with replacement values.
     // Structural or function-based replacements are handled later.
