@@ -111,16 +111,23 @@ export async function parseFileEntries({
   // ---------------------------------------------------------------------------
   // Merge parsed entries by namespace
   // ---------------------------------------------------------------------------
-  const result: MessageObject = {};
+  let result: MessageObject = {};
   for (const { namespace, messages } of parsedFileEntries) {
     // Root-level namespace (e.g. [locale]/index.json)
     if (namespace === "index") {
-      Object.assign(result, deepMerge(result, messages));
+      result = deepMerge(result, messages);
     } else {
-      result[namespace] = deepMerge(
-        result[namespace] as MessageObject,
-        messages,
-      );
+      Object.defineProperty(result, namespace, {
+        value: deepMerge(
+          Object.prototype.hasOwnProperty.call(result, namespace)
+            ? (result[namespace] as MessageObject)
+            : undefined,
+          messages,
+        ),
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      });
     }
   }
 

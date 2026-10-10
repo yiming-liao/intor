@@ -395,3 +395,5 @@ LocalizedValue／ScopedValue 依原 messages shape 推導；runtime/dynamic shap
 影響路徑：mergeMessages、remote resource 合併、local parseFileEntries 均使用 deepMerge；routing options 也使用此工具。Local loader 的 Object.assign(result, merged) 與 result[namespace] 賦值另有同類特殊 key 問題，因此不能只改 deepMerge 就宣稱整條 loader 已修復。既有 BUG-03 lookup 已支援自有特殊 key，merge 應與其一致。
 
 本輪只記錄已重現問題，未修改 runtime。後續修正範圍應聚焦自有 property 語意、保留 JSON key 與現有 merge 優先序；驗證 nested keys、namespace 與 override events，避免順便重設合併契約。
+
+修正已實作（尚未 commit）：deepMerge 只讀取 base 的自有 property，並以 data property 寫入結果，保留普通物件 prototype 與既有 b 覆寫 a 的順序。Local parseFileEntries 根節點直接接收 deepMerge 回傳值，namespace 以自有 property 讀寫，避免 Object.assign／__proto__ setter。新增兩個 deepMerge 回歸案例與四個不 mock 合併的 integration 案例，涵蓋 root／nested／namespace 的 __proto__、constructor、toString，以及 remote resource path 合併後真實 Translator 查找。Intor 119 files／713 tests、type check 與修改檔案 lint 通過；共用工具的 routing resolver 測試包含在全套檢查。新增 intor patch changeset；不改 translator API、型別、合併優先序或資料格式。未執行 Next fixture browser 驗證，本批證據為直接合併／loader 整合與 package 測試。

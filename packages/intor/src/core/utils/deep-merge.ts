@@ -40,7 +40,9 @@ export const deepMerge = <T extends PlainObject, U extends PlainObject>(
   for (const key in b) {
     if (!Object.prototype.hasOwnProperty.call(b, key)) continue;
 
-    const aValue = a[key as keyof T];
+    const aValue = Object.prototype.hasOwnProperty.call(a, key)
+      ? a[key as keyof T]
+      : undefined;
     const bValue = b[key as keyof U];
     const nextPath = [...basePath, key];
 
@@ -53,11 +55,16 @@ export const deepMerge = <T extends PlainObject, U extends PlainObject>(
       !Array.isArray(aValue) &&
       !Array.isArray(bValue)
     ) {
-      result[key] = deepMerge(
-        aValue as PlainObject,
-        bValue as PlainObject,
-        options ? { ...options, _path: nextPath } : undefined,
-      );
+      Object.defineProperty(result, key, {
+        value: deepMerge(
+          aValue as PlainObject,
+          bValue as PlainObject,
+          options ? { ...options, _path: nextPath } : undefined,
+        ),
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      });
     } else {
       // Emit override event only when debugging is enabled
       const isAdd = aValue === undefined;
@@ -68,7 +75,12 @@ export const deepMerge = <T extends PlainObject, U extends PlainObject>(
         kind: isAdd ? "add" : "override",
       });
 
-      result[key] = bValue;
+      Object.defineProperty(result, key, {
+        value: bValue,
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      });
     }
   }
 

@@ -2,6 +2,40 @@ import { describe, it, expect } from "vitest";
 import { deepMerge } from "../../../../src/core/utils";
 
 describe("deepMerge", () => {
+  it("preserves own prototype-named keys without changing prototypes", () => {
+    const a = JSON.parse('{"nested":{"__proto__":{"old":"Old"}}}');
+    const b = JSON.parse(
+      '{"__proto__":{"title":"Title"},"nested":{"__proto__":{"next":"Next"}}}',
+    );
+    const result = deepMerge(a, b);
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    expect(Object.hasOwn(result, "__proto__")).toBe(true);
+    expect(result.__proto__).toEqual({ title: "Title" });
+    expect(Object.getPrototypeOf(result.nested)).toBe(Object.prototype);
+    expect(Object.hasOwn(result.nested, "__proto__")).toBe(true);
+    expect(result.nested.__proto__).toEqual({ old: "Old", next: "Next" });
+    expect(a.nested.__proto__).toEqual({ old: "Old" });
+    expect(Object.hasOwn(Object.prototype, "title")).toBe(false);
+  });
+
+  it("does not merge inherited base values and reports special keys as additions", () => {
+    const a = Object.create({ nested: { inherited: "Inherited" } });
+    const b = JSON.parse(
+      '{"nested":{"own":"Own"},"toString":"Label","constructor":"Heading"}',
+    );
+    const events: Array<{ path: string; kind: string; prev: unknown }> = [];
+    const result = deepMerge(a, b, {
+      onOverride: ({ path, kind, prev }) => events.push({ path, kind, prev }),
+    });
+    expect(result.nested).toEqual({ own: "Own" });
+    expect(events).toEqual([
+      { path: "nested", kind: "add", prev: undefined },
+      { path: "toString", kind: "add", prev: undefined },
+      { path: "constructor", kind: "add", prev: undefined },
+    ]);
+    expect(deepMerge(result, { toString: "Updated" }).toString).toBe("Updated");
+  });
+
   it("treats undefined inputs as empty objects", () => {
     expect(deepMerge(undefined, undefined)).toEqual({});
     expect(deepMerge({ x: 1 }, undefined)).toEqual({ x: 1 });
