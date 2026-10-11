@@ -28,20 +28,21 @@
   "license": "MIT",
   "type": "module",
   "files": [
+    "bin",
     "src",
     "README.md",
     "LICENSE"
   ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^20.12.0 || >=22.0.0"
   },
   "scripts": {
-    "intor": "tsx src/cli/index.ts",
+    "intor": "node bin/intor.mjs",
     "type": "tsc -p tsconfig.json --noEmit",
     "test": "vitest"
   },
   "bin": {
-    "intor": "src/cli/index.ts"
+    "intor": "bin/intor.mjs"
   },
   "dependencies": {
     "@clack/prompts": "^1.0.0",

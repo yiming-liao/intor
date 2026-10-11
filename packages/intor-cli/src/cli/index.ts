@@ -1,5 +1,3 @@
-#!/usr/bin/env tsx
-
 import { cac } from "cac";
 import {
   registerDiscoverCommand,

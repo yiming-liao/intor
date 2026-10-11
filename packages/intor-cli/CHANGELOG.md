@@ -4,6 +4,10 @@
 
 ### Patch Changes
 
+- **Node support change:** Require Node `^20.12.0 || >=22.0.0`, matching the loader and existing dependency API requirements. Upgrade older Node installations before using this CLI release. This support-range correction is intentionally included in the current patch release as a maintainer-approved version-policy exception.
+
+- Start the CLI through a Node entry point that loads its own `tsx` dependency. Isolated installations no longer require a separate `tsx` executable on the consumer PATH.
+
 - Updated dependencies [57dbf03]
 - Updated dependencies [ec44378]
 - Updated dependencies [2a95318]

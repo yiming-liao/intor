@@ -8,6 +8,9 @@
 
 </div>
 
+Requires Node.js `^20.12.0 || >=22.0.0`. The CLI includes its own `tsx`
+dependency; consumers do not need to install it separately.
+
 ## Overview
 
 - **discover** — config discovery

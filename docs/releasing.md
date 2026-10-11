@@ -82,6 +82,12 @@ changes in minor releases: the Next redirect import moves to the server
 entry, format handlers must narrow `MessageValue` inputs, formatter `null`
 becomes an empty result, and conflicting local definitions now throw.
 Release notes must describe these changes and their migration steps.
+The unpublished CLI 1.0.5 candidate also corrects its executable to load its
+own tsx dependency and requires Node `^20.12.0 || >=22.0.0`. This support-range
+change is intentionally included in the patch release as a maintainer-approved
+exception. A dedicated CI job builds on Node 22 and runs CLI runtime smoke
+checks on exactly Node 20.12.0, independently of development-tool requirements.
+
 This is a batch-specific exception, not a change to the default SemVer policy.
 Dependent CLI and reader releases remain subject to dependency and validated
 peer compatibility checks; do not suppress them by widening untested ranges.
