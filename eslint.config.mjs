@@ -9,6 +9,7 @@ import { unusedImportsConfig } from "./eslint/unused-imports.mjs";
 
 const eslintConfig = defineConfig([
   globalIgnores([
+    "apps/**",
     "**/.rollup.cache/**",
     "**/dist/**",
     "**/scripts/**",
