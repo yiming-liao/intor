@@ -10,6 +10,7 @@ import {
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { stripVTControlCharacters } from "node:util";
 
 const packageDir = fileURLToPath(new URL("../", import.meta.url));
 const cwd = mkdtempSync(path.join(tmpdir(), "intor-cli-minimum-"));
@@ -27,7 +28,11 @@ function run(args, status = 0) {
   );
   assert.ifError(result.error);
   assert.equal(result.status, status, result.stdout + result.stderr);
-  return result;
+  return {
+    ...result,
+    stdout: stripVTControlCharacters(result.stdout),
+    stderr: stripVTControlCharacters(result.stderr),
+  };
 }
 try {
   symlinkSync(
